@@ -1,0 +1,38 @@
+version: "3.9"
+
+services:
+  sbs:
+    user: "${DOCKER_UID}:${DOCKER_GID}"
+    depends_on:
+      - mongodb
+    build: "./"
+    command: [ "yarn", "Server" ]
+    restart: always
+    environment:
+      - MONGODB_PORT=27017
+      - MONGODB_HOST=mongodb-sbs
+      - MONGODB_USER=sbs
+      - MONGODB_PASSWD=sbs
+      - MONGODB_DATABASE=sbs
+    ports:
+      - "25000:80"
+    volumes:
+      # config for the cashboard if you want to edit that copy to a other path and mount it to here.
+      - ../mount/:/mount/
+    networks:
+      - sbs-network
+
+  mongodb-sbs:
+    # user: "${DOCKER_UID}:${DOCKER_GID}"
+    image: mongo
+    volumes:
+      - '../mount/mongodb:/data/db'
+    environment:
+      MONGO_INITDB_DATABASE: sbs
+      MONGO_INITDB_ROOT_USERNAME: sbs
+      MONGO_INITDB_ROOT_PASSWORD: sbs
+    networks:
+      - sbs-network
+
+networks:
+  sbs-network:

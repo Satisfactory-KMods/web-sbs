@@ -1,0 +1,12 @@
+stages:
+  - build
+  - deploy
+  - release
+
+test:
+  image: node:alpine
+  stage: build
+  script:
+    - yarn install
+    - yarn lint
+    - yarn build

@@ -1,0 +1,5 @@
+@tailwind preflight;
+.bg-sky-300{
+    --tw-bg-opacity: 1;
+    background-color: rgb(125 211 252 / var(--tw-bg-opacity))
+}
