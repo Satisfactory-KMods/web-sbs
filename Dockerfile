@@ -4,7 +4,6 @@ WORKDIR ./
 
 # Copy main configs
 COPY .eslintrc ./
-COPY .env ./
 COPY *.ts ./
 COPY *.js ./
 COPY *.json ./
