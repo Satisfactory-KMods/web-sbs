@@ -10,10 +10,9 @@ COPY *.js ./
 COPY *.json ./
 
 # Copy source folder
-COPY ./lib ./lib
-COPY ./pages ./pages
+COPY ./src ./src
+COPY ./server ./server
 COPY ./public ./public
-COPY ./pages ./pages
 
 # create main files
 RUN yarn build

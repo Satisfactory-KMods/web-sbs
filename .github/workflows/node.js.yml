@@ -1,4 +1,4 @@
-name: Test Template
+name: Build and Deploy
 
 on: [ push ]
 

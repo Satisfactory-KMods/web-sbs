@@ -18,7 +18,8 @@ export const TopNavLink : FunctionComponent<ITopNavProps> = ( { href, children }
 
 	return (
 		<li>
-			<Link to={ href } className={ `nav-link px-2 link-secondary ${ pathname === href }` }>{ children }</Link>
+			<Link to={ href }
+			      className={ `nav-link px-2 link-secondary ${ pathname === href ? "link-dark" : "" }` }>{ children }</Link>
 		</li>
 	);
 };
@@ -68,17 +69,17 @@ const TopNav : FunctionComponent = () => {
 					<div className="dropdown text-end">
 						<Link to="#" className="d-block link-dark text-decoration-none dropdown-toggle"
 						      data-bs-toggle="dropdown" aria-expanded="false">
-							<img src="https://github.com/mdo.png" alt="mdo" width="32" height="32"
+							<img src="" alt="" width="32" height="32"
 							     className="rounded-circle"/>
 						</Link>
 						<ul className="dropdown-menu text-small">
-							<li><Link className="dropdown-item" to="#">New project...</Link></li>
-							<li><Link className="dropdown-item" to="#">Settings</Link></li>
-							<li><Link className="dropdown-item" to="#">Profile</Link></li>
+							<li><Link className="dropdown-item" to="#"></Link></li>
+							<li><Link className="dropdown-item" to="#"></Link></li>
+							<li><Link className="dropdown-item" to="#"></Link></li>
 							<li>
 								<hr className="dropdown-divider"/>
 							</li>
-							<li><Link className="dropdown-item" to="#">Sign out</Link></li>
+							<li><Link className="dropdown-item" to="#"></Link></li>
 						</ul>
 					</div>
 				</div>
