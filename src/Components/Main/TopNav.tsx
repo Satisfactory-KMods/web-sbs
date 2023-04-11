@@ -1,13 +1,14 @@
 import {
 	FunctionComponent,
-	PropsWithChildren
+	PropsWithChildren,
+	useContext
 }                       from "react";
 import {
 	Link,
 	useLocation
 }                       from "react-router-dom";
 import { LangReadable } from "../../Lib/lang/lang";
-import { useLang }      from "../../Lib/hooks/useLang";
+import LangContext      from "../../Context/LangContext";
 
 interface ITopNavProps extends PropsWithChildren {
 	href : string;
@@ -19,19 +20,17 @@ export const TopNavLink : FunctionComponent<ITopNavProps> = ( { href, children }
 	return (
 		<li>
 			<Link to={ href }
-			      className={ `nav-link px-2 link-secondary ${ pathname === href ? "link-dark" : "" }` }>{ children }</Link>
+			      className={ `nav-link px-2 link-secondary ${ pathname === href ? "text-light" : "" }` }>{ children }</Link>
 		</li>
 	);
 };
 
 
 const TopNav : FunctionComponent = () => {
-	const { Lang, setLang, Code, AllCodes } = useLang();
-
-	console.log( Code );
+	const { Lang, setLang, Code, AllCodes } = useContext( LangContext );
 
 	return (
-		<header className="p-3 mb-3 border-bottom">
+		<header className="p-3 border-bottom flex-grow-0">
 			<div className="container">
 				<div
 					className="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">

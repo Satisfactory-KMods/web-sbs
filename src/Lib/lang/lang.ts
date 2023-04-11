@@ -7,6 +7,13 @@ export interface ILang {
 		AddBlueprint : string,
 		MyBlueprints : string
 	};
+	ErrorPage : {
+		BackToHome : string,
+		ErrorTitle : string,
+		Err401 : string,
+		Err404 : string,
+		Err403 : string
+	};
 }
 
 export const SupportedLangs : Record<string, ILang> = {

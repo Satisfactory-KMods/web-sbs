@@ -3,5 +3,12 @@
     "Home": "Home",
     "AddBlueprint": "Create Blueprint",
     "MyBlueprints": "My Blueprints"
+  },
+  "ErrorPage": {
+    "BackToHome": "Back to home",
+    "ErrorTitle": "We are sorry...",
+    "Err401": "Unfortunately, this action is not allowed for you.",
+    "Err404": "The requested page could not be found.",
+    "Err403": "Unfortunately, this action is not allowed for you."
   }
 }

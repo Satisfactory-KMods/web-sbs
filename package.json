@@ -5,7 +5,7 @@
   "scripts": {
     "start": "vite preview",
     "preview": "vite preview",
-    "dev": "yarn tailwindcss && concurrently -m 2 \"vite --host --port 3000\" \"nodemon\"",
+    "dev": "concurrently -m 2 \"vite --host --port 3000\" \"nodemon\"",
     "build": "yarn build.lint && yarn build.server && yarn build.vite",
     "build.server": "tsc --project ./server/tsconfig.json",
     "build.lint": "eslint src --fix && eslint server/src --fix",

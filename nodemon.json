@@ -1,6 +1,11 @@
 {
-  "watch": ["server"],
+  "watch": [
+    "server"
+  ],
   "ext": "ts",
-  "ignore": ["server/**/*.spec.ts", "server/**/*.test.ts"],
-  "exec": "yarn ServerDev"
+  "ignore": [
+    "server/**/*.spec.ts",
+    "server/**/*.test.ts"
+  ],
+  "exec": "ts-node server/src"
 }

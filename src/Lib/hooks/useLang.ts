@@ -9,7 +9,14 @@ import {
 	SupportedLangs
 }                          from "../lang/lang";
 
-export function useLang() {
+export interface IuseLang {
+	AllCodes : string[],
+	Code : string,
+	Lang : ILang,
+	setLang : ( Value : string ) => void
+}
+
+export function useLang() : IuseLang {
 	const { Storage, SetStorage } = useLocalStorage( "lang", "en_us" );
 	const [ Lang, setLang ] = useState<ILang>( GetLanguage( Storage ) );
 

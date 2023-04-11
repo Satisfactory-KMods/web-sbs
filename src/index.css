@@ -1,3 +1,7 @@
 @tailwind preflight;
 @tailwind components;
 @tailwind utilities;
+
+body, html, .container-fluid #root, body > div {
+    height: 100%;
+}
