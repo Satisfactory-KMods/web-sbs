@@ -7,6 +7,7 @@ COPY .eslintrc ./
 COPY *.ts ./
 COPY *.js ./
 COPY *.json ./
+COPY *.html ./
 
 # Copy source folder
 COPY ./src ./src
