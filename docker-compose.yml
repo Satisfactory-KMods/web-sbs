@@ -3,7 +3,7 @@ version: "3.9"
 services:
   sbs:
     depends_on:
-      - mongodb
+      - mongodb-sbs
     build: "./"
     command: [ "yarn", "Server" ]
     restart: always
