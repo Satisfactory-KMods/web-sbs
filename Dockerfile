@@ -14,6 +14,7 @@ COPY ./server ./server
 COPY ./public ./public
 
 # create main files
+RUM yarn install
 RUN yarn build
 
 CMD yarn start
