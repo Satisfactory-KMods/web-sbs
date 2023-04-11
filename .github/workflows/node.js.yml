@@ -45,4 +45,4 @@ jobs:
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
           port: 22
-          script: ~/docker/github.sh "${{ github.head_ref || github.ref_name }}"
+          script: ~/docker/github.sh "${{ github.event.repository.name }}" "${{ github.head_ref || github.ref_name }}"
