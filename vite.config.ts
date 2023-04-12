@@ -7,9 +7,6 @@ import eslint           from "vite-plugin-eslint";
 import tailwindcss      from "tailwindcss";
 
 export default defineConfig( {
-	optimizeDeps: {
-		include: [ "esm-dep > cjs-dep" ]
-	},
 	server: {
 		watch: {
 			usePolling: false
@@ -18,8 +15,7 @@ export default defineConfig( {
 			"/api": {
 				target: "http://127.0.0.1:80",
 				changeOrigin: true,
-				secure: false,
-				ws: true
+				secure: false
 			}
 		}
 	},

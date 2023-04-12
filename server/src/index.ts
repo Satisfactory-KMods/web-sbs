@@ -12,11 +12,14 @@ import * as mongoose       from "mongoose";
 import "@kyri123/k-javascript-utils/lib/useAddons";
 import fs                  from "fs";
 import { SystemLib_Class } from "./Lib/System.Lib";
+import DB_UserAccount      from "./MongoDB/DB_UserAccount";
 
 global.__BaseDir = __dirname;
-global.__MountDir = path.join( global.__BaseDir, "../..", "mount" );
-!fs.existsSync( path.join( __MountDir, "Logs" ) ) && fs.mkdirSync( path.join( __MountDir, "Logs" ) );
-global.__LogFile = path.join( __MountDir, "Logs", `${ new Date().toString() }.log` );
+global.__MountDir = path.join( __BaseDir, "../..", "mount" );
+( !fs.existsSync( path.join( __MountDir, "Logs" ) ) ) && fs.mkdirSync( path.join( __MountDir, "Logs" ), { recursive: true } );
+global.__LogFile = path.join( __MountDir, "Logs", `${ Date.now() }.log` );
+global.__BlueprintDir = path.join( __MountDir, "Blueprints", `${ Date.now() }.log` );
+( !fs.existsSync( __BlueprintDir ) ) && fs.mkdirSync( __BlueprintDir, { recursive: true } );
 
 global.SystemLib = new SystemLib_Class();
 
@@ -31,7 +34,10 @@ global.SocketIO = new Server<IListenEvents, IEmitEvents>( global.HttpServer, {
 } );
 
 
-global.Api.use( function( req, res, next ) {
+Api.use( express.json() );
+Api.use( express.static( path.join( __BaseDir, "build" ) ) );
+
+Api.use( function( req, res, next ) {
 	res.setHeader( "Access-Control-Allow-Origin", "*" );
 	res.setHeader( "Access-Control-Allow-Methods", "GET, POST" );
 	res.setHeader(
@@ -42,7 +48,13 @@ global.Api.use( function( req, res, next ) {
 	next();
 } );
 
-InstallRoutings( path.join( global.__BaseDir, "Routings/Router", "Routings" ), global.Api );
+
+InstallRoutings( path.join( __BaseDir, "Routings/Router" ) );
+Api.all( "*", function( { res } ) {
+	if ( res ) {
+		res.sendFile( path.join( __dirname, "../..", "build", "index.html" ) );
+	}
+} );
 
 mongoose
 	.connect(
@@ -53,11 +65,21 @@ mongoose
 		}
 	)
 	.then( async() => {
-		global.SystemLib.Log( "[DB] Connected... Start API and SOCKETIO" );
-		HttpServer.listen( process.env.API_EXPRESS_HTTP_PORT, () =>
-			global.SystemLib.Log(
+		if ( !await DB_UserAccount.findOne() ) {
+			const NewUser = new DB_UserAccount();
+			NewUser.email = "admin@kmods.de";
+			NewUser.username = "Kyrium";
+			NewUser.roles = [ "admin" ];
+			NewUser.setPassword( "123456" );
+			SystemLib.LogWarning( "[DB] Default user was created." );
+			await NewUser.save();
+		}
+
+		SystemLib.Log( "[DB] Connected... Start API and SOCKETIO" );
+		HttpServer.listen( 80, () =>
+			SystemLib.Log(
 				"[API/SOCKETIO] API listen on port",
-				process.env.API_EXPRESS_HTTP_PORT
+				80
 			)
 		);
 	} );
