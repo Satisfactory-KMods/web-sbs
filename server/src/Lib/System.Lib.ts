@@ -93,8 +93,6 @@ export class SystemLib_Class {
 	}
 
 	public DebugLog( ...data : any[] ) {
-		const OutLog : string = Util.format( ...data );
-
 		if ( this.DebugMode() ) {
 			data.addAtIndex(
 				this.ToBashColor( "Magenta" ) +
