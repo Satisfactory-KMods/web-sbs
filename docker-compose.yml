@@ -5,10 +5,10 @@ services:
     depends_on:
       - mongodb-sbs
     build: "./"
-    command: [ "yarn", "Server" ]
+    command: [ "yarn", "start" ]
     restart: always
     env_file:
-      - .env
+      - ../.SBS.env
     environment:
       - MONGODB_PORT=27017
       - MONGODB_HOST=mongodb-sbs
