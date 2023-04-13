@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "start": "vite preview",
+    "start": "ts-node server/src",
     "preview": "vite preview",
     "dev": "concurrently -m 2 \"vite --host --port 3000\" \"nodemon\"",
     "build": "yarn build.lint && yarn build.server && yarn build.vite",
