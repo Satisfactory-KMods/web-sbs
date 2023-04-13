@@ -5,7 +5,7 @@ services:
     depends_on:
       - mongodb-sbs
     build: "./"
-    command: [ "yarn", "Server" ]
+    command: [ "yarn", "start" ]
     restart: always
     env_file:
       - ../.SBS.env
