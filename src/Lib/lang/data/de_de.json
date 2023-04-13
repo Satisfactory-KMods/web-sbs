@@ -1,4 +1,9 @@
 {
+  "Auth": {
+    "Signup": "Account Erstellen",
+    "Signin": "Einloggen",
+    "Logout": "Ausloggen"
+  },
   "Navigation": {
     "Home": "Startseite",
     "AddBlueprint": "Blaupause erstellen",

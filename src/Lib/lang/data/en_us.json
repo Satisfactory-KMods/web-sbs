@@ -1,4 +1,9 @@
 {
+  "Auth": {
+    "Signup": "Signup",
+    "Signin": "Signin",
+    "Logout": "Logout"
+  },
   "Navigation": {
     "Home": "Home",
     "AddBlueprint": "Create Blueprint",
