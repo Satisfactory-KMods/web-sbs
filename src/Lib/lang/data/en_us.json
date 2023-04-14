@@ -2,7 +2,8 @@
   "Auth": {
     "Signup": "Signup",
     "Signin": "Signin",
-    "Logout": "Logout"
+    "Logout": "Logout",
+    "AccSettings": "Account Settings"
   },
   "Navigation": {
     "Home": "Home",

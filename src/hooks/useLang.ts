@@ -7,7 +7,7 @@ import {
 	GetLanguage,
 	ILang,
 	SupportedLangs
-}                          from "../lang/lang";
+}                          from "../Lib/lang/lang";
 
 export interface IuseLang {
 	AllCodes : string[],

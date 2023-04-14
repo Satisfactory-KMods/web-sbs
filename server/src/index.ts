@@ -13,6 +13,7 @@ import "@kyri123/k-javascript-utils/lib/useAddons";
 import fs                  from "fs";
 import { SystemLib_Class } from "./Lib/System.Lib";
 import DB_UserAccount      from "./MongoDB/DB_UserAccount";
+import { ERoles }          from "../../src/Shared/Enum/ERoles";
 
 global.__BaseDir = __dirname;
 global.__MountDir = path.join( __BaseDir, "../..", "mount" );
@@ -69,7 +70,7 @@ mongoose
 			const NewUser = new DB_UserAccount();
 			NewUser.email = "admin@kmods.de";
 			NewUser.username = "Kyrium";
-			NewUser.roles = [ "admin" ];
+			NewUser.role = ERoles.admin;
 			NewUser.setPassword( "123456" );
 			SystemLib.LogWarning( "[DB] Default user was created." );
 			await NewUser.save();

@@ -1,10 +1,10 @@
-import { TApiPath }    from "../../../src/Shared/Enum/EApiPath";
+import { TApiPath } from "../../../src/Shared/Enum/EApiPath";
 import {
 	NextFunction,
 	Request,
 	Response
-}                      from "express";
-import { TPermission } from "../../../src/Shared/Enum/EPermission";
+}                   from "express";
+import { ERoles }   from "../../../src/Shared/Enum/ERoles";
 
 type ExpressRequest = { req : Request, res : Response, next : NextFunction };
 
@@ -18,6 +18,6 @@ export async function MW_Auth( { req, res, next } : ExpressRequest ) {
 	next();
 }
 
-export async function MW_Permission( { req, res, next } : ExpressRequest, Permission : TPermission ) {
+export async function MW_Permission( { req, res, next } : ExpressRequest, Permission : ERoles ) {
 	next();
 }

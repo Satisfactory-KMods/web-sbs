@@ -2,17 +2,23 @@ import en_us from "./data/en_us.json";
 import de_de from "./data/de_de.json";
 
 export interface ILang {
-	Navigation : {
-		Home : string,
-		AddBlueprint : string,
-		MyBlueprints : string
+	"Auth" : {
+		"Signup" : string,
+		"Signin" : string,
+		"Logout" : string,
+		"AccSettings" : string
+	},
+	"Navigation" : {
+		"Home" : string,
+		"AddBlueprint" : string,
+		"MyBlueprints" : string
 	};
-	ErrorPage : {
-		BackToHome : string,
-		ErrorTitle : string,
-		Err401 : string,
-		Err404 : string,
-		Err403 : string
+	"ErrorPage" : {
+		"BackToHome" : string,
+		"ErrorTitle" : string,
+		"Err401" : string,
+		"Err404" : string,
+		"Err403" : string
 	};
 }
 

@@ -1,4 +1,5 @@
 import { EDesignerSize } from "../Enum/EDesignerSize";
+import { ERoles }        from "../Enum/ERoles";
 
 export interface IMongoDB {
 	_id : string,
@@ -18,8 +19,8 @@ export interface IMO_Blueprint extends IMongoDB {
 
 export interface IMO_UserAccount extends IMongoDB {
 	username : string,
-	hash : string,
-	salt : string,
+	hash? : string,
+	salt? : string,
 	email : string,
-	roles : string[]
+	role : ERoles
 }

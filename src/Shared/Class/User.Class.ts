@@ -1,6 +1,8 @@
 import { IMO_UserAccount } from "../Types/MongoDB";
 import { JwtPayload }      from "jsonwebtoken";
 import jwt                 from "jwt-decode";
+import { ERoles }          from "../Enum/ERoles";
+import { DefaultUser }     from "../Default/Auth.Default";
 
 export class User {
 	private JsonWebToken;
@@ -8,7 +10,14 @@ export class User {
 
 	constructor( JsonWebToken : string ) {
 		this.JsonWebToken = JsonWebToken;
-		this.UserData = jwt( JsonWebToken );
+		try {
+			this.UserData = jwt( JsonWebToken );
+		}
+		catch ( e ) {
+			this.UserData = {
+				...DefaultUser
+			};
+		}
 	}
 
 	public setUserData( Data : IMO_UserAccount ) {
@@ -31,5 +40,13 @@ export class User {
 
 	public get Get() {
 		return this.UserData;
+	}
+
+	public GetUserImage() {
+		return this.IsValid ? "/images/default/unknown.png" : "/images/default/unknown.png";
+	}
+
+	public HasPermssion( Permssion : ERoles ) {
+		return this.UserData.role >= Permssion && this.IsValid;
 	}
 }

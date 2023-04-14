@@ -11,7 +11,7 @@ export interface IUserAccountMethods {
 const UserAccountSchema = new mongoose.Schema<IMO_UserAccount>( {
 	username: { type: String, required: true },
 	email: { type: String, required: true },
-	roles: { type: [ String ], required: true },
+	role: { type: Number, required: true },
 	hash: { type: String, required: true },
 	salt: { type: String, required: true }
 }, { timestamps: true } );

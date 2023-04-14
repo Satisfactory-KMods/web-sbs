@@ -9,6 +9,7 @@ import {
 }                       from "react-router-dom";
 import { LangReadable } from "../../Lib/lang/lang";
 import LangContext      from "../../Context/LangContext";
+import AuthContext      from "../../Context/AuthContext";
 
 interface ITopNavProps extends PropsWithChildren {
 	href : string;
@@ -27,6 +28,7 @@ export const TopNavLink : FunctionComponent<ITopNavProps> = ( { href, children }
 
 
 const TopNav : FunctionComponent = () => {
+	const { UserData, Logout } = useContext( AuthContext );
 	const { Lang, setLang, Code, AllCodes } = useContext( LangContext );
 
 	return (
@@ -44,7 +46,7 @@ const TopNav : FunctionComponent = () => {
 						<TopNavLink href="/my">{ Lang.Navigation.MyBlueprints }</TopNavLink>
 					</ul>
 
-					<div className="dropdown text-end me-4">
+					<div className="dropdown text-end me-2">
 						<Link to="#" className="d-block link-dark text-decoration-none dropdown-toggle"
 						      data-bs-toggle="dropdown" aria-expanded="false">
 							<img alt="flag" src={ `/images/lang/${ Code }.png` }
@@ -68,17 +70,26 @@ const TopNav : FunctionComponent = () => {
 					<div className="dropdown text-end">
 						<Link to="#" className="d-block link-dark text-decoration-none dropdown-toggle"
 						      data-bs-toggle="dropdown" aria-expanded="false">
-							<img src="" alt="" width="32" height="32"
+							<img src={ UserData.GetUserImage() } alt="" width="40"
 							     className="rounded-circle"/>
 						</Link>
 						<ul className="dropdown-menu text-small">
-							<li><Link className="dropdown-item" to="#"></Link></li>
-							<li><Link className="dropdown-item" to="#"></Link></li>
-							<li><Link className="dropdown-item" to="#"></Link></li>
-							<li>
-								<hr className="dropdown-divider"/>
-							</li>
-							<li><Link className="dropdown-item" to="#"></Link></li>
+							{ UserData.IsValid ? (
+								<>
+									<li><Link className="dropdown-item"
+									          to="/account-settings">{ Lang.Auth.AccSettings }</Link></li>
+									<li>
+										<hr className="dropdown-divider"/>
+									</li>
+									<li><Link className="dropdown-item text-danger" to="#"
+									          onClick={ Logout }>{ Lang.Auth.Logout }</Link></li>
+								</>
+							) : (
+								<>
+									<li><Link className="dropdown-item" to="/signin">{ Lang.Auth.Signin }</Link></li>
+									<li><Link className="dropdown-item" to="/signup">{ Lang.Auth.Signup }</Link></li>
+								</>
+							) }
 						</ul>
 					</div>
 				</div>
