@@ -36,6 +36,7 @@ export function useAuthCheck( Config : Partial<{
 
 	useEffect( () => {
 		Check();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [ UserData, IsLoggedIn, Token ] );
 
 	return Check();
