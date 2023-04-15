@@ -54,11 +54,9 @@ export default function() {
 		const Request : TRequest_Tags_Mods = req.body;
 
 		try {
-			const SearchOptions : FilterQuery<IMO_Tag> = {};
+			let SearchOptions : FilterQuery<IMO_Tag> = {};
 			if ( Request.filter ) {
-				SearchOptions.$or = [
-					{ DisplayName: { $contains: Request.filter } }
-				];
+				SearchOptions = { DisplayName: { $contains: Request.filter } };
 			}
 			Response.Data = await DB_Tags.find( SearchOptions, Request.limit ? { limit: Request.limit } : {} );
 		}

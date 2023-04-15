@@ -32,12 +32,12 @@ const SignUp : FunctionComponent = () => {
 	const handleSubmit = async( e : FormEvent<HTMLFormElement> ) => {
 		e.preventDefault();
 		setIsSending( true );
-		const Result = await API_QueryLib.PostToAPI<TResponse_Auth_SignUp>( EApiAuth.signup, {
-			Login,
-			EMail,
-			Password,
-			RepeatPassword
-		} );
+		const Data = new FormData();
+		Data.append( "Login", Login );
+		Data.append( "EMail", EMail );
+		Data.append( "Password", Password );
+		Data.append( "RepeatPassword", RepeatPassword );
+		const Result = await API_QueryLib.PostToAPI<TResponse_Auth_SignUp>( EApiAuth.signup, Data );
 
 		if ( Result.Success && Result.Auth && Result.Data ) {
 			UpdateToken( Result.Data.Token );

@@ -9,8 +9,15 @@ export enum EApiBlueprintUtils {
 	parseblueprint = "blueprintutils/parseblueprint"
 }
 
+
+export enum EApiBlueprint {
+	get = "blueprints/get",
+	num = "blueprints/num"
+}
+
 export enum EApiUserBlueprints {
-	create = "userbp/create"
+	create = "userbp/create",
+	like = "userbp/like"
 }
 
 export enum EApiTags {
@@ -22,4 +29,10 @@ export enum EApiAdminBlueprints {
 	remove = "adminbp/remove"
 }
 
-export type TApiPath = EApiAuth | EApiBlueprintUtils | EApiUserBlueprints | EApiAdminBlueprints | EApiTags;
+export type TApiPath =
+	EApiAuth
+	| EApiBlueprintUtils
+	| EApiUserBlueprints
+	| EApiAdminBlueprints
+	| EApiTags
+	| EApiBlueprint;

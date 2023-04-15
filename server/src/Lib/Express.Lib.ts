@@ -11,7 +11,7 @@ import { ResponseBase }          from "../../../src/Shared/Types/API_Response";
 import { User }                  from "../../../src/Shared/Class/User.Class";
 import DB_SessionToken           from "../MongoDB/DB_SessionToken";
 
-export function ApiUrl( Url : TApiPath ) {
+export function ApiUrl( Url : TApiPath | string ) {
 	const EndUrl = `/api/v1/${ Url }`;
 	SystemLib.Log( "[URL] Routing registered:", SystemLib.ToBashColor( "Red" ), EndUrl );
 	return EndUrl;

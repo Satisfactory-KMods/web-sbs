@@ -29,7 +29,10 @@ const SignIn : FunctionComponent = () => {
 	const handleSubmit = async( e : FormEvent<HTMLFormElement> ) => {
 		e.preventDefault();
 		setIsSending( true );
-		const Result = await API_QueryLib.PostToAPI<TResponse_Auth_SignIn>( EApiAuth.signin, { Login, Password } );
+		const Data = new FormData();
+		Data.append( "Login", Login );
+		Data.append( "Password", Password );
+		const Result = await API_QueryLib.PostToAPI<TResponse_Auth_SignIn>( EApiAuth.signin, Data );
 
 		if ( Result.Success && Result.Auth && Result.Data ) {
 			UpdateToken( Result.Data.Token );

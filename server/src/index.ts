@@ -21,7 +21,7 @@ global.__BaseDir = __dirname;
 global.__MountDir = path.join( __BaseDir, "../..", "mount" );
 ( !fs.existsSync( path.join( __MountDir, "Logs" ) ) ) && fs.mkdirSync( path.join( __MountDir, "Logs" ), { recursive: true } );
 global.__LogFile = path.join( __MountDir, "Logs", `${ Date.now() }.log` );
-global.__BlueprintDir = path.join( __MountDir, "Blueprints", `${ Date.now() }.log` );
+global.__BlueprintDir = path.join( __MountDir, "Blueprints" );
 ( !fs.existsSync( __BlueprintDir ) ) && fs.mkdirSync( __BlueprintDir, { recursive: true } );
 
 global.SystemLib = new SystemLib_Class();

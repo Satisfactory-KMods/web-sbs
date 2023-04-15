@@ -1,6 +1,7 @@
 /** @format */
 import { Blueprint } from "@etothepii/satisfactory-file-parser";
 import {
+	IMO_Blueprint,
 	IMO_Mod,
 	IMO_Tag
 }                    from "./MongoDB";
@@ -27,6 +28,13 @@ export type TResponse_Auth_SignUp = IAPIResponseBase<{
 export type TResponse_Auth_SignIn = TResponse_Auth_SignUp;
 export type TResponse_Auth_Vertify = IAPIResponseBase<>;
 
+// --------------------------------------
+// ----------------- BP -----------------
+// --------------------------------------
+
+export type TResponse_BP_Get = IAPIResponseBase<IMO_Blueprint[]>;
+export type TResponse_BP_Num = IAPIResponseBase<number>;
+
 // -------------------------------------------
 // ----------------- BP_Util -----------------
 // -------------------------------------------
@@ -38,6 +46,7 @@ export type TResponse_BPU_ParseBlueprint = IAPIResponseBase<Blueprint>;
 // -------------------------------------------
 
 export type TResponse_BPUser_Create = IAPIResponseBase<string>;
+export type TResponse_BPUser_ToggleLike = IAPIResponseBase<string[]>;
 
 // ----------------------------------------
 // ----------------- Tags -----------------

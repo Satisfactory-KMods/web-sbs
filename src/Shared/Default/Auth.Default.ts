@@ -18,7 +18,7 @@ export const DefaultResponseFailed : IAPIResponseBase = {
 };
 
 export const DefaultResponseSuccess : IAPIResponseBase = {
-	Success: false,
+	Success: true,
 	Auth: false,
 	Reached: true,
 	MessageCode: ""

@@ -1,5 +1,11 @@
-import { User }         from "../Class/User.Class";
-import { UploadedFile } from "express-fileupload";
+import { User }          from "../Class/User.Class";
+import { UploadedFile }  from "express-fileupload";
+import { EDesignerSize } from "../Enum/EDesignerSize";
+import { IMO_Blueprint } from "./MongoDB";
+import {
+	FilterQuery,
+	QueryOptions
+}                        from "mongoose";
 
 export type RequestWithUser<T = any> = {
 	UserClass? : T;
@@ -38,15 +44,35 @@ export type TRequest_BPU_ParseBlueprint = IRequestBody<{
 	BlueprintName : string;
 }>;
 
+// --------------------------------------
+// ----------------- BP -----------------
+// --------------------------------------
+
+export type TRequest_BP_Get = IRequestBody<{
+	Filter : FilterQuery<IMO_Blueprint>,
+	Options : QueryOptions<IMO_Blueprint>
+}>;
+
+export type TRequest_BP_Num = IRequestBody<{
+	Filter : FilterQuery<IMO_Blueprint>,
+	Options : QueryOptions<IMO_Blueprint>
+}>;
+
+
 // -------------------------------------------
 // ----------------- BP_User -----------------
 // -------------------------------------------
 
+
+export type TRequest_BPUser_ToggleLike = IRequestBody<{
+	Id : string;
+}>;
 export type TRequest_BPUser_Create = IRequestBody<{
 	BlueprintName : string;
 	BlueprintDesc : string;
 	BlueprintTags : string[];
 	BlueprintMods : string[];
+	DesignerSize : EDesignerSize;
 }>;
 export type TRequest_BPUser_Create_Files = Partial<{
 	SBP : UploadedFile;

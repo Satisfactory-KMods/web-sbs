@@ -11,12 +11,13 @@ export interface IMongoDB {
 
 export interface IMO_Blueprint extends IMongoDB {
 	name : string,
+	DesignerSize : EDesignerSize,
 	description : string,
 	tags : string[],
 	mods : string[],
 	likes : string[],
-	size : EDesignerSize,
-	owner : string
+	owner : string,
+	blacklisted? : boolean
 }
 
 export interface IMO_UserAccount extends IMongoDB {

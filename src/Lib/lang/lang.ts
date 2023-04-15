@@ -36,6 +36,7 @@ export interface ILang {
 		"Err403" : string
 	};
 	"CreateBlueprint" : {
+		Import : any;
 		"ImportFromFiles" : string,
 		"BlueprintName" : string,
 		"BlueprintDescripton" : string,
@@ -44,7 +45,10 @@ export interface ILang {
 		"Image" : string
 		"Logo" : string,
 		"Submit" : string,
-		"Information" : string
+		"Information" : string,
+		"DesignerSize" : string,
+		"Tags" : string,
+		"Mods" : string
 	};
 	"ApiMessgaes" : Record<string, IApiMessage>,
 }

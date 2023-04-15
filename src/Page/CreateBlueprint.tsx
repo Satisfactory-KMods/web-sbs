@@ -1,26 +1,40 @@
-import {
+import React, {
 	ChangeEvent,
 	FormEvent,
 	FunctionComponent,
 	useContext,
 	useEffect,
 	useState
-}                       from "react";
-import { useAuthCheck } from "../hooks/useAuthCheck";
-import { useNavigate }  from "react-router-dom";
-import LangContext      from "../Context/LangContext";
-import FloatInput       from "../Components/Boostrap/FloatInput";
-import LoadingButton    from "../Components/Boostrap/LoadingButton";
-import FloatTextarea    from "../Components/Boostrap/FloatTextarea";
-import ReactMarkdown    from "react-markdown";
-import FileUploadInput  from "../Components/Boostrap/FileUploadInput";
-import { API_QueryLib } from "../Lib/Api/API_Query.Lib";
+}                         from "react";
+import { useAuthCheck }   from "../hooks/useAuthCheck";
+import { useNavigate }    from "react-router-dom";
+import LangContext        from "../Context/LangContext";
+import FloatInput         from "../Components/Boostrap/FloatInput";
+import LoadingButton      from "../Components/Boostrap/LoadingButton";
+import FloatTextarea      from "../Components/Boostrap/FloatTextarea";
+import ReactMarkdown      from "react-markdown";
+import FileUploadInput    from "../Components/Boostrap/FileUploadInput";
+import { API_QueryLib }   from "../Lib/Api/API_Query.Lib";
 import {
 	EApiBlueprintUtils,
+	EApiTags,
 	EApiUserBlueprints
-}                       from "../Shared/Enum/EApiPath";
-import { Blueprint }    from "@etothepii/satisfactory-file-parser";
-import { Button }       from "react-bootstrap";
+}                         from "../Shared/Enum/EApiPath";
+import { Blueprint }      from "@etothepii/satisfactory-file-parser";
+import {
+	Button,
+	InputGroup
+}                         from "react-bootstrap";
+import Select, {
+	MultiValue,
+	SingleValue
+}                         from "react-select";
+import {
+	TResponse_Tags_Mods,
+	TResponse_Tags_Tags
+}                         from "../Shared/Types/API_Response";
+import { IModTagOptions } from "../Shared/Types/SelectOptions";
+import { EDesignerSize }  from "../Shared/Enum/EDesignerSize";
 
 export interface IFile {
 	Content : FileList | undefined,
@@ -36,6 +50,16 @@ const CreateBlueprint : FunctionComponent = () => {
 	const [ BlueprintName, setBlueprintName ] = useState( "" );
 	const [ BlueprintDesc, setBlueprintDesc ] = useState( "" );
 
+	const [ Tags, setTags ] = useState<MultiValue<IModTagOptions>>( [] );
+	const [ Mods, setMods ] = useState<MultiValue<IModTagOptions>>( [] );
+	const [ DesignerSize, setDesignerSize ] = useState<SingleValue<IModTagOptions<EDesignerSize>>>( {
+		value: EDesignerSize.mk1,
+		label: EDesignerSize.mk1
+	} );
+
+	const [ SelectTags, setSelectTags ] = useState<IModTagOptions[]>( [] );
+	const [ SelectMods, setSelectMods ] = useState<IModTagOptions[]>( [] );
+
 	const [ CanImport, setCanImport ] = useState( false );
 	const [ BlueprintData, setBlueprintData ] = useState<Blueprint | undefined>( undefined );
 
@@ -43,6 +67,19 @@ const CreateBlueprint : FunctionComponent = () => {
 	const [ SBPCFG, setSBPCFG ] = useState<File | undefined>();
 	const [ Logo, setLogo ] = useState<File | undefined>();
 	const [ Image, setImage ] = useState<File | undefined>();
+
+	useEffect( () => {
+		Promise.all( [
+			API_QueryLib.PostToAPI<TResponse_Tags_Tags>( EApiTags.tags, {} ).then( R => setSelectTags( R.Data?.map( R => ( {
+				label: R.DisplayName,
+				value: R._id
+			} ) ) || [] ) ),
+			API_QueryLib.PostToAPI<TResponse_Tags_Mods>( EApiTags.mods, {} ).then( R => setSelectMods( R.Data?.map( R => ( {
+				label: R.name,
+				value: R.mod_reference
+			} ) ) || [] ) )
+		] );
+	}, [] );
 
 	const HandleImport = async() => {
 		if ( BlueprintData ) {
@@ -80,10 +117,17 @@ const CreateBlueprint : FunctionComponent = () => {
 			const data = new FormData();
 			data.append( "BlueprintName", BlueprintName );
 			data.append( "BlueprintDesc", BlueprintDesc );
+			for ( const Tag of Tags ) {
+				data.append( "BlueprintTags", Tag.value );
+			}
+			for ( const Mod of Mods ) {
+				data.append( "BlueprintMods", Mod.value );
+			}
 			data.append( "SBP", SBP! );
 			data.append( "SBPCFG", SBPCFG! );
 			data.append( "Image", Image! );
 			data.append( "Logo", Logo! );
+			data.append( "DesignerSize", DesignerSize!.value );
 			const Result = await API_QueryLib.PostToAPI( EApiUserBlueprints.create, data );
 			if ( Result.Success ) {
 				const ID = Result.Data as string;
@@ -155,6 +199,28 @@ const CreateBlueprint : FunctionComponent = () => {
 							<ReactMarkdown>{ BlueprintDesc }</ReactMarkdown>
 						</div>
 					</div>
+					<InputGroup className={ "mb-3" }>
+						<InputGroup.Text className="text-bg-secondary">{ Lang.CreateBlueprint.Mods }</InputGroup.Text>
+						<Select options={ SelectMods } isMulti={ true } value={ Mods } onChange={ setMods }
+						        isClearable={ true }
+
+						        className="my-react-select-container flex-1" classNamePrefix="my-react-select"/>
+					</InputGroup>
+					<InputGroup className={ "mb-3" }>
+						<InputGroup.Text className="text-bg-secondary">{ Lang.CreateBlueprint.Tags }</InputGroup.Text>
+						<Select options={ SelectTags } isMulti={ true } value={ Tags } onChange={ setTags }
+						        isClearable={ true }
+						        className="my-react-select-container flex-1" classNamePrefix="my-react-select"/>
+					</InputGroup>
+					<InputGroup className={ "mb-3" }>
+						<InputGroup.Text
+							className="text-bg-secondary">{ Lang.CreateBlueprint.DesignerSize }</InputGroup.Text>
+						<Select isClearable={ false } options={ Object.values( EDesignerSize ).map( R => ( {
+							value: R,
+							label: R
+						} as IModTagOptions<EDesignerSize> ) ) } value={ DesignerSize } onChange={ setDesignerSize }
+						        className="my-react-select-container flex-1" classNamePrefix="my-react-select"/>
+					</InputGroup>
 					<FileUploadInput BoxClassName={ "mb-3" } accept=".sbp" onChange={ HandleChange } name={ "sbp" }
 					                 type="file">{ Lang.CreateBlueprint.File1 }</FileUploadInput>
 					<FileUploadInput BoxClassName={ "mb-3" } accept=".sbpcfg" onChange={ HandleChange }

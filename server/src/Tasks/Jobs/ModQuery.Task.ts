@@ -65,7 +65,6 @@ export default new JobTask(
 				MaxReached = Data.getMods.count < Offset;
 			}
 			catch ( e ) {
-				console.error( e );
 				MaxReached = true;
 			}
 		}

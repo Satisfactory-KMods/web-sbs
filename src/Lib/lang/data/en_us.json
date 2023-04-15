@@ -18,7 +18,10 @@
     "Image": "Blueprint Image",
     "Logo": "Blueprint Logo",
     "Submit": "Create!",
-    "Information": "blablalala"
+    "Information": "blablalala",
+    "DesignerSize": "Designer Size",
+    "Tags": "Tags",
+    "Mods": "Mods"
   },
   "Navigation": {
     "Home": "Home",
@@ -67,6 +70,10 @@
     },
     "AccountCreated": {
       "text": "Account created successfully",
+      "icon": "success"
+    },
+    "BlueprintCreated": {
+      "text": "Blueprint created successfully",
       "icon": "success"
     }
   }
