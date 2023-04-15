@@ -6,15 +6,19 @@ import {
 }                                from "react";
 import LangContext               from "../Context/LangContext";
 import FloatInput                from "../Components/Boostrap/FloatInput";
-import { Button }                from "react-bootstrap";
 import { Link }                  from "react-router-dom";
 import { usePageTitle }          from "@kyri123/k-reactutils";
 import { API_QueryLib }          from "../Lib/Api/API_Query.Lib";
 import { TResponse_Auth_SignUp } from "../Shared/Types/API_Response";
 import { EApiAuth }              from "../Shared/Enum/EApiPath";
+import AuthContext               from "../Context/AuthContext";
+import LoadingButton             from "../Components/Boostrap/LoadingButton";
+import { useAuthCheck }          from "../hooks/useAuthCheck";
 
 
 const SignUp : FunctionComponent = () => {
+	const Render = useAuthCheck( { Auth: false } );
+	const { UpdateToken } = useContext( AuthContext );
 	const { Lang } = useContext( LangContext );
 	usePageTitle( `SBS - ${ Lang.Auth.Signup }` );
 
@@ -28,19 +32,23 @@ const SignUp : FunctionComponent = () => {
 	const handleSubmit = async( e : FormEvent<HTMLFormElement> ) => {
 		e.preventDefault();
 		setIsSending( true );
-		const Result = await API_QueryLib.PostToAPI<TResponse_Auth_SignUp>( EApiAuth.signin, {
+		const Result = await API_QueryLib.PostToAPI<TResponse_Auth_SignUp>( EApiAuth.signup, {
 			Login,
 			EMail,
 			Password,
 			RepeatPassword
 		} );
 
-		if ( Result.Success ) {
-			window.location.href = "/";
+		if ( Result.Success && Result.Auth && Result.Data ) {
+			UpdateToken( Result.Data.Token );
 		}
 
 		setIsSending( false );
 	};
+
+	if ( !Render ) {
+		return <></>;
+	}
 
 	return (
 		<div className={ "d-flex h-100 justify-content-center" }>
@@ -58,8 +66,8 @@ const SignUp : FunctionComponent = () => {
 				            value={ RepeatPassword }>{ Lang.Auth.PasswordAgain }</FloatInput>
 				<hr/>
 				<div className={ "d-flex" }>
-					<Button className={ "w-100 flex-1 me-1" } variant="success"
-					        type={ "submit" }>{ Lang.Auth.Signup }</Button>
+					<LoadingButton IsLoading={ IsSending } className={ "w-100 flex-1 me-1" } variant="success"
+					               type={ "submit" }>{ Lang.Auth.Signup }</LoadingButton>
 					<Link className={ "w-100 flex-1 ms-1 btn btn-primary" } to={ "/signin" }>{ Lang.Auth.Signin }</Link>
 				</div>
 			</form>

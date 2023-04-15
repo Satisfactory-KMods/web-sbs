@@ -26,6 +26,30 @@
       "title": "API is not reachable",
       "text": "Please check your internet connection and try again.",
       "icon": "error"
+    },
+    "Login_Invalid": {
+      "text": "Input is not valid or account does not exist",
+      "icon": "error"
+    },
+    "Reg_Account_Exsists": {
+      "text": "Account already exists",
+      "icon": "error"
+    },
+    "Reg_Invalid_Input": {
+      "text": "Input is not valid.",
+      "icon": "error"
+    },
+    "Logout": {
+      "text": "Successfully logged out",
+      "icon": "success"
+    },
+    "LoggedIn": {
+      "text": "Successfully logged in",
+      "icon": "success"
+    },
+    "AccountCreated": {
+      "text": "Account created successfully",
+      "icon": "success"
     }
   }
 }

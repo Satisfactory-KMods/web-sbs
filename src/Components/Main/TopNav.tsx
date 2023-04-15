@@ -10,13 +10,20 @@ import {
 import { LangReadable } from "../../Lib/lang/lang";
 import LangContext      from "../../Context/LangContext";
 import AuthContext      from "../../Context/AuthContext";
+import { ERoles }       from "../../Shared/Enum/ERoles";
 
 interface ITopNavProps extends PropsWithChildren {
 	href : string;
+	SessionRole? : ERoles;
 }
 
-export const TopNavLink : FunctionComponent<ITopNavProps> = ( { href, children } ) => {
+export const TopNavLink : FunctionComponent<ITopNavProps> = ( { SessionRole, href, children } ) => {
 	const { pathname } = useLocation();
+	const { UserData } = useContext( AuthContext );
+
+	if ( SessionRole !== undefined && !UserData.HasPermssion( SessionRole ) ) {
+		return null;
+	}
 
 	return (
 		<li>
@@ -43,8 +50,10 @@ const TopNav : FunctionComponent = () => {
 
 					<ul className="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0 ms-4">
 						<TopNavLink href="/">{ Lang.Navigation.Home }</TopNavLink>
-						<TopNavLink href="/create">{ Lang.Navigation.AddBlueprint }</TopNavLink>
-						<TopNavLink href="/my">{ Lang.Navigation.MyBlueprints }</TopNavLink>
+						<TopNavLink SessionRole={ ERoles.member }
+						            href="/create">{ Lang.Navigation.AddBlueprint }</TopNavLink>
+						<TopNavLink SessionRole={ ERoles.member }
+						            href="/my">{ Lang.Navigation.MyBlueprints }</TopNavLink>
 					</ul>
 
 					<div className="dropdown text-end me-2">

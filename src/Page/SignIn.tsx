@@ -12,9 +12,13 @@ import LoadingButton             from "../Components/Boostrap/LoadingButton";
 import { API_QueryLib }          from "../Lib/Api/API_Query.Lib";
 import { EApiAuth }              from "../Shared/Enum/EApiPath";
 import { TResponse_Auth_SignIn } from "../Shared/Types/API_Response";
+import AuthContext               from "../Context/AuthContext";
+import { useAuthCheck }          from "../hooks/useAuthCheck";
 
 
 const SignIn : FunctionComponent = () => {
+	const Render = useAuthCheck( { Auth: false } );
+	const { UpdateToken } = useContext( AuthContext );
 	const { Lang } = useContext( LangContext );
 	const [ IsSending, setIsSending ] = useState( false );
 	usePageTitle( `SBS - ${ Lang.Auth.Signin }` );
@@ -27,12 +31,16 @@ const SignIn : FunctionComponent = () => {
 		setIsSending( true );
 		const Result = await API_QueryLib.PostToAPI<TResponse_Auth_SignIn>( EApiAuth.signin, { Login, Password } );
 
-		if ( Result.Success ) {
-			window.location.href = "/";
+		if ( Result.Success && Result.Auth && Result.Data ) {
+			UpdateToken( Result.Data.Token );
 		}
 
 		setIsSending( false );
 	};
+
+	if ( !Render ) {
+		return <></>;
+	}
 
 	return (
 		<div className={ "d-flex h-100 justify-content-center" }>

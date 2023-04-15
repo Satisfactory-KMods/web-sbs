@@ -28,8 +28,8 @@ export class User {
 	}
 
 	public GetTimeLeft() {
-		if ( this.UserData.exp ) {
-			return Math.max( this.UserData.exp - Date.now(), 0 );
+		if ( this.UserData?.exp ) {
+			return Math.max( this.UserData.exp - Date.now() / 1000, 0 );
 		}
 		return 0;
 	}

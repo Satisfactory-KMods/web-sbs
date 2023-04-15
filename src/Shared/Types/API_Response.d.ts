@@ -16,6 +16,8 @@ export type TResponse_AnyData<MessageOpt extends boolean = false> = IAPIResponse
 // ----------------- Auth -----------------
 // ----------------------------------------
 
-export type TResponse_Auth_SignUp = IAPIResponseBase<>;
-export type TResponse_Auth_SignIn = IAPIResponseBase<>;
+export type TResponse_Auth_SignUp = IAPIResponseBase<{
+	Token : string;
+}>;
+export type TResponse_Auth_SignIn = TResponse_Auth_SignUp;
 export type TResponse_Auth_Vertify = IAPIResponseBase<>;

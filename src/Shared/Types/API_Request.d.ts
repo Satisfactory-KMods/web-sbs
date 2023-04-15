@@ -16,5 +16,12 @@ export type TRequest_Auth_SignIn = IRequestBody<{
 	Login : string;
 	Password : string;
 }>;
-export type TRequest_Auth_SignUp = IRequestBody<>;
-export type TRequest_Auth_Vertify = IRequestBody<>;
+export type TRequest_Auth_SignUp = IRequestBody<{
+	Login : string;
+	EMail : string;
+	Password : string;
+	RepeatPassword : string;
+}>;
+export type TRequest_Auth_Vertify = IRequestBody<{
+	Token : string
+}>;
