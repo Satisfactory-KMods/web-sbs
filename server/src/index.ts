@@ -1,20 +1,21 @@
-import * as path           from "path";
-import { Server }          from "socket.io";
+import * as path            from "path";
+import { Server }           from "socket.io";
 import {
 	IEmitEvents,
 	IListenEvents
-}                          from "../../src/Shared/Types/SocketIO";
-import http                from "http";
-import express             from "express";
-import { InstallRoutings } from "./Routings/InitRouter";
-import process             from "process";
-import * as mongoose       from "mongoose";
+}                           from "../../src/Shared/Types/SocketIO";
+import http                 from "http";
+import express              from "express";
+import { InstallRoutings }  from "./Routings/InitRouter";
+import process              from "process";
+import * as mongoose        from "mongoose";
 import "@kyri123/k-javascript-utils/lib/useAddons";
-import fs                  from "fs";
-import { SystemLib_Class } from "./Lib/System.Lib";
-import DB_UserAccount      from "./MongoDB/DB_UserAccount";
-import { ERoles }          from "../../src/Shared/Enum/ERoles";
-import fileUpload          from "express-fileupload";
+import fs                   from "fs";
+import { SystemLib_Class }  from "./Lib/System.Lib";
+import DB_UserAccount       from "./MongoDB/DB_UserAccount";
+import { ERoles }           from "../../src/Shared/Enum/ERoles";
+import fileUpload           from "express-fileupload";
+import { TaskManagerClass } from "./Tasks/TaskManager";
 
 global.__BaseDir = __dirname;
 global.__MountDir = path.join( __BaseDir, "../..", "mount" );
@@ -53,12 +54,6 @@ Api.use( function( req, res, next ) {
 	next();
 } );
 
-
-InstallRoutings( path.join( __BaseDir, "Routings/Router" ) );
-Api.get( "*", function( req, res ) {
-	res.sendFile( path.join( __BaseDir, "../..", "build", "index.html" ) );
-} );
-
 mongoose
 	.connect(
 		`mongodb://${ process.env.MONGODB_HOST }:${ process.env.MONGODB_PORT }`,
@@ -68,18 +63,28 @@ mongoose
 		}
 	)
 	.then( async() => {
+		SystemLib.Log( "[DB] Connected... Start API and SOCKETIO" );
+
+		await InstallRoutings( path.join( __BaseDir, "Routings/Router" ) );
+
+		Api.get( "*", function( req, res ) {
+			res.sendFile( path.join( __BaseDir, "../..", "build", "index.html" ) );
+		} );
+
 		if ( !await DB_UserAccount.findOne() ) {
 			const NewUser = new DB_UserAccount();
 			NewUser.email = "admin@kmods.de";
 			NewUser.username = "Kyrium";
 			NewUser.role = ERoles.admin;
 			NewUser.setPassword( "123456" );
-			SystemLib.LogWarning( "[DB] Default user was created." );
+			SystemLib.LogWarning( "[DB] Default user was created. Kyrium | 23456 | admin@kmods.de" );
 			await NewUser.save();
 		}
 
-		SystemLib.Log( "[DB] Connected... Start API and SOCKETIO" );
-		HttpServer.listen( 80, () =>
+		global.TaskManager = new TaskManagerClass();
+		await TaskManager.Init();
+
+		HttpServer.listen( 80, async() =>
 			SystemLib.Log(
 				"[API/SOCKETIO] API listen on port",
 				80

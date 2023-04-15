@@ -1,5 +1,6 @@
 import { EDesignerSize } from "../Enum/EDesignerSize";
 import { ERoles }        from "../Enum/ERoles";
+import { IMod }          from "./ModQuery";
 
 export interface IMongoDB {
 	_id : string,
@@ -24,6 +25,13 @@ export interface IMO_UserAccount extends IMongoDB {
 	salt? : string,
 	email : string,
 	role : ERoles
+}
+
+export interface IMO_Tag extends IMongoDB {
+	DisplayName : string;
+}
+
+export interface IMO_Mod extends IMongoDB, IMod {
 }
 
 export interface IMO_UserAccountToken extends IMongoDB {

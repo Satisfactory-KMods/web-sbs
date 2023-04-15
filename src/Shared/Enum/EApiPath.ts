@@ -13,8 +13,13 @@ export enum EApiUserBlueprints {
 	create = "userbp/create"
 }
 
+export enum EApiTags {
+	mods = "tags/getmods",
+	tags = "tags/gettags"
+}
+
 export enum EApiAdminBlueprints {
 	remove = "adminbp/remove"
 }
 
-export type TApiPath = EApiAuth | EApiBlueprintUtils | EApiUserBlueprints | EApiAdminBlueprints;
+export type TApiPath = EApiAuth | EApiBlueprintUtils | EApiUserBlueprints | EApiAdminBlueprints | EApiTags;

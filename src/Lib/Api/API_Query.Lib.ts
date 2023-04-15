@@ -34,8 +34,6 @@ export class API_QueryLib {
 			requestOptions.headers[ "Content-Type" ] = ContentType || "application/json";
 		}
 
-		console.log( requestOptions );
-
 		let Response : IAPIResponseBase<T> = {
 			Success: false,
 			Auth: false,

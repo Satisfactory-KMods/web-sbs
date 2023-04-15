@@ -1,4 +1,5 @@
-import { User } from "../Class/User.Class";
+import { User }         from "../Class/User.Class";
+import { UploadedFile } from "express-fileupload";
 
 export type RequestWithUser<T = any> = {
 	UserClass? : T;
@@ -35,4 +36,34 @@ export type TRequest_Auth_Vertify = IRequestBody<{
 
 export type TRequest_BPU_ParseBlueprint = IRequestBody<{
 	BlueprintName : string;
+}>;
+
+// -------------------------------------------
+// ----------------- BP_User -----------------
+// -------------------------------------------
+
+export type TRequest_BPUser_Create = IRequestBody<{
+	BlueprintName : string;
+	BlueprintDesc : string;
+	BlueprintTags : string[];
+	BlueprintMods : string[];
+}>;
+export type TRequest_BPUser_Create_Files = Partial<{
+	SBP : UploadedFile;
+	SBPCFG : UploadedFile;
+	Image : UploadedFile;
+	Logo : UploadedFile;
+}>
+
+// ----------------------------------------
+// ----------------- Tags -----------------
+// ----------------------------------------
+
+export type TRequest_Tags_Mods = IRequestBody<{
+	limit : number;
+	filter : string;
+}>;
+export type TRequest_Tags_Tags = IRequestBody<{
+	limit : number;
+	filter : string;
 }>;

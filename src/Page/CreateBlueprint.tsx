@@ -5,19 +5,22 @@ import {
 	useContext,
 	useEffect,
 	useState
-}                             from "react";
-import { useAuthCheck }       from "../hooks/useAuthCheck";
-import { useNavigate }        from "react-router-dom";
-import LangContext            from "../Context/LangContext";
-import FloatInput             from "../Components/Boostrap/FloatInput";
-import LoadingButton          from "../Components/Boostrap/LoadingButton";
-import FloatTextarea          from "../Components/Boostrap/FloatTextarea";
-import ReactMarkdown          from "react-markdown";
-import FileUploadInput        from "../Components/Boostrap/FileUploadInput";
-import { API_QueryLib }       from "../Lib/Api/API_Query.Lib";
-import { EApiBlueprintUtils } from "../Shared/Enum/EApiPath";
-import { Blueprint }          from "@etothepii/satisfactory-file-parser";
-import { Button }             from "react-bootstrap";
+}                       from "react";
+import { useAuthCheck } from "../hooks/useAuthCheck";
+import { useNavigate }  from "react-router-dom";
+import LangContext      from "../Context/LangContext";
+import FloatInput       from "../Components/Boostrap/FloatInput";
+import LoadingButton    from "../Components/Boostrap/LoadingButton";
+import FloatTextarea    from "../Components/Boostrap/FloatTextarea";
+import ReactMarkdown    from "react-markdown";
+import FileUploadInput  from "../Components/Boostrap/FileUploadInput";
+import { API_QueryLib } from "../Lib/Api/API_Query.Lib";
+import {
+	EApiBlueprintUtils,
+	EApiUserBlueprints
+}                       from "../Shared/Enum/EApiPath";
+import { Blueprint }    from "@etothepii/satisfactory-file-parser";
+import { Button }       from "react-bootstrap";
 
 export interface IFile {
 	Content : FileList | undefined,
@@ -77,11 +80,11 @@ const CreateBlueprint : FunctionComponent = () => {
 			const data = new FormData();
 			data.append( "BlueprintName", BlueprintName );
 			data.append( "BlueprintDesc", BlueprintDesc );
-			data.append( "files", SBP! );
-			data.append( "files", SBPCFG! );
-			data.append( "files", Image! );
-			data.append( "files", Logo! );
-			const Result = await API_QueryLib.PostToAPI( EApiBlueprintUtils.parseblueprint, data );
+			data.append( "SBP", SBP! );
+			data.append( "SBPCFG", SBPCFG! );
+			data.append( "Image", Image! );
+			data.append( "Logo", Logo! );
+			const Result = await API_QueryLib.PostToAPI( EApiUserBlueprints.create, data );
 			if ( Result.Success ) {
 				const ID = Result.Data as string;
 				Navigate( `/blueprint/${ ID }` );

@@ -53,6 +53,10 @@
       "text": "Input is not valid.",
       "icon": "error"
     },
+    "Failed": {
+      "text": "Request failed... Something went wrong.",
+      "icon": "error"
+    },
     "Logout": {
       "text": "Successfully logged out",
       "icon": "success"
