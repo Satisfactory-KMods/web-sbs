@@ -16,6 +16,10 @@ const Home = React.lazy( () => import("./Page/Home") );
 const ErrorPage = React.lazy( () => import("./Page/ErrorPage") );
 const SignIn = React.lazy( () => import("./Page/SignIn") );
 const SignUp = React.lazy( () => import("./Page/SignUp") );
+const CreateBlueprint = React.lazy( () => import("./Page/CreateBlueprint") );
+const EditBlueprint = React.lazy( () => import("./Page/EditBlueprint") );
+const ShowBlueprint = React.lazy( () => import("./Page/ShowBlueprint") );
+const MyBlueprints = React.lazy( () => import("./Page/MyBlueprints") );
 
 function App() {
 	const Lang = useLang();
@@ -34,6 +38,11 @@ function App() {
 
 								<Route path="/signin" element={ <SignIn/> }/>
 								<Route path="/signup" element={ <SignUp/> }/>
+
+								<Route path="/my" element={ <MyBlueprints/> }/>
+								<Route path="/create" element={ <CreateBlueprint/> }/>
+								<Route path="/edit/:id" element={ <EditBlueprint/> }/>
+								<Route path="/blueprint/:id" element={ <ShowBlueprint/> }/>
 
 								<Route path="/" element={ <Home/> }/>
 

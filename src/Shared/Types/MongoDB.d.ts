@@ -14,7 +14,8 @@ export interface IMO_Blueprint extends IMongoDB {
 	tags : string[],
 	mods : string[],
 	likes : string[],
-	size : EDesignerSize
+	size : EDesignerSize,
+	owner : string
 }
 
 export interface IMO_UserAccount extends IMongoDB {

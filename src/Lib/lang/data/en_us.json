@@ -9,6 +9,17 @@
     "Email": "E-Mail",
     "Username": "Username"
   },
+  "CreateBlueprint": {
+    "ImportFromFiles": "Import from Blueprint Files",
+    "BlueprintName": "Blueprint Name",
+    "BlueprintDescripton": "Description",
+    "File1": "Blueprint (.sbp)",
+    "File2": "Blueprint Config (.sbpcfg)",
+    "Image": "Blueprint Image",
+    "Logo": "Blueprint Logo",
+    "Submit": "Create!",
+    "Information": "blablalala"
+  },
   "Navigation": {
     "Home": "Home",
     "AddBlueprint": "Create Blueprint",

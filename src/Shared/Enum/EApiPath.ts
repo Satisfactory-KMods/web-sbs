@@ -5,5 +5,16 @@ export enum EApiAuth {
 	signin = "auth/signin"
 }
 
+export enum EApiBlueprintUtils {
+	parseblueprint = "blueprintutils/parseblueprint"
+}
 
-export type TApiPath = EApiAuth;
+export enum EApiUserBlueprints {
+	create = "userbp/create"
+}
+
+export enum EApiAdminBlueprints {
+	remove = "adminbp/remove"
+}
+
+export type TApiPath = EApiAuth | EApiBlueprintUtils | EApiUserBlueprints | EApiAdminBlueprints;

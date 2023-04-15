@@ -16,18 +16,25 @@ export class API_QueryLib {
 
 	static async PostToAPI<T extends IAPIResponseBase = IAPIResponseBase<any>, D = any>(
 		Path : TApiPath,
-		Data : D
+		Data : D,
+		ContentType? : "application/json" | "application/x-www-form-urlencoded" | "multipart/form-data"
 	) : Promise<T> {
 		const Token = window.localStorage.getItem( "session" );
 		const requestOptions : RequestInit = {
 			method: "POST",
 			headers: {
 				Authorization: "Bearer " + Token || "",
-				"User-Agent": "Frontend",
-				"Content-Type": "application/json"
+				"User-Agent": "Frontend"
 			},
-			body: JSON.stringify( Data )
+			body: Data instanceof FormData ? Data : JSON.stringify( Data )
 		};
+
+		if ( !( Data instanceof FormData ) ) {
+			// @ts-ignore
+			requestOptions.headers[ "Content-Type" ] = ContentType || "application/json";
+		}
+
+		console.log( requestOptions );
 
 		let Response : IAPIResponseBase<T> = {
 			Success: false,

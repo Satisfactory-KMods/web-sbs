@@ -28,3 +28,11 @@ export type TRequest_Auth_SignUp = IRequestBody<{
 export type TRequest_Auth_Vertify = IRequestBody<{
 	Token : string
 }>;
+
+// -------------------------------------------
+// ----------------- BP_Util -----------------
+// -------------------------------------------
+
+export type TRequest_BPU_ParseBlueprint = IRequestBody<{
+	BlueprintName : string;
+}>;

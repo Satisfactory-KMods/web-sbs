@@ -14,6 +14,7 @@ import fs                  from "fs";
 import { SystemLib_Class } from "./Lib/System.Lib";
 import DB_UserAccount      from "./MongoDB/DB_UserAccount";
 import { ERoles }          from "../../src/Shared/Enum/ERoles";
+import fileUpload          from "express-fileupload";
 
 global.__BaseDir = __dirname;
 global.__MountDir = path.join( __BaseDir, "../..", "mount" );
@@ -34,8 +35,11 @@ global.SocketIO = new Server<IListenEvents, IEmitEvents>( global.HttpServer, {
 	}
 } );
 
-
-Api.use( express.json() );
+Api.use( express.urlencoded( { extended: true } ) );
+Api.use( fileUpload( {
+	useTempFiles: true,
+	tempFileDir: "/tmp/"
+} ) );
 Api.use( express.static( path.join( __BaseDir, "../..", "build" ), { extensions: [ "js" ] } ) );
 
 Api.use( function( req, res, next ) {

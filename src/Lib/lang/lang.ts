@@ -35,6 +35,17 @@ export interface ILang {
 		"Err404" : string,
 		"Err403" : string
 	};
+	"CreateBlueprint" : {
+		"ImportFromFiles" : string,
+		"BlueprintName" : string,
+		"BlueprintDescripton" : string,
+		"File1" : string,
+		"File2" : string,
+		"Image" : string
+		"Logo" : string,
+		"Submit" : string,
+		"Information" : string
+	};
 	"ApiMessgaes" : Record<string, IApiMessage>,
 }
 

@@ -1,4 +1,5 @@
 /** @format */
+import { Blueprint } from "@etothepii/satisfactory-file-parser";
 
 type ResponseBase<T = any> = {
 	Success : boolean;
@@ -21,3 +22,9 @@ export type TResponse_Auth_SignUp = IAPIResponseBase<{
 }>;
 export type TResponse_Auth_SignIn = TResponse_Auth_SignUp;
 export type TResponse_Auth_Vertify = IAPIResponseBase<>;
+
+// -------------------------------------------
+// ----------------- BP_Util -----------------
+// -------------------------------------------
+
+export type TResponse_BPU_ParseBlueprint = IAPIResponseBase<Blueprint>;

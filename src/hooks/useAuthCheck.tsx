@@ -49,7 +49,7 @@ export function useAuthCheck( Config : Partial<{
 		return !( Config.Role && !UserData.HasPermssion( Config.Role ) );
 	};
 
-	const Redirect = !useMemo( Check, [ UserData, IsLoggedIn, Token ] );
+	const Redirect = !useMemo( Check, [ UserData, IsLoggedIn, Token, Config.Role, Config.Auth ] );
 
 	return {
 		AuthCheck: AuthRedirect,
