@@ -36,7 +36,7 @@ global.SocketIO = new Server<IListenEvents, IEmitEvents>( global.HttpServer, {
 
 
 Api.use( express.json() );
-Api.use( express.static( path.join( __BaseDir, "build" ) ) );
+Api.use( express.static( path.join( __BaseDir, "../..", "build" ), { extensions: [ "js" ] } ) );
 
 Api.use( function( req, res, next ) {
 	res.setHeader( "Access-Control-Allow-Origin", "*" );
@@ -51,10 +51,8 @@ Api.use( function( req, res, next ) {
 
 
 InstallRoutings( path.join( __BaseDir, "Routings/Router" ) );
-Api.all( "*", function( { res } ) {
-	if ( res ) {
-		res.sendFile( path.join( __dirname, "../..", "build", "index.html" ) );
-	}
+Api.all( "*", function( req, res ) {
+	res.sendFile( path.join( __BaseDir, "../..", "build", "index.html" ) );
 } );
 
 mongoose
