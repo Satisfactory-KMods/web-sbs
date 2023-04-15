@@ -3,7 +3,11 @@
     "Signup": "Signup",
     "Signin": "Signin",
     "Logout": "Logout",
-    "AccSettings": "Account Settings"
+    "AccSettings": "Account Settings",
+    "Password": "Password",
+    "PasswordAgain": "Repeat password",
+    "Email": "E-Mail",
+    "Username": "Username"
   },
   "Navigation": {
     "Home": "Home",
@@ -16,5 +20,12 @@
     "Err401": "Unfortunately, this action is not allowed for you.",
     "Err404": "The requested page could not be found.",
     "Err403": "Unfortunately, this action is not allowed for you."
+  },
+  "ApiMessgaes": {
+    "ApiNotReachable": {
+      "title": "API is not reachable",
+      "text": "Please check your internet connection and try again.",
+      "icon": "error"
+    }
   }
 }

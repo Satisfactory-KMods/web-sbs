@@ -51,7 +51,7 @@ Api.use( function( req, res, next ) {
 
 
 InstallRoutings( path.join( __BaseDir, "Routings/Router" ) );
-Api.all( "*", function( req, res ) {
+Api.get( "*", function( req, res ) {
 	res.sendFile( path.join( __BaseDir, "../..", "build", "index.html" ) );
 } );
 

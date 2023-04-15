@@ -3,8 +3,8 @@
 type ResponseBase<T = any> = {
 	Success : boolean;
 	Auth : boolean;
-	Data : T;
-	Reached? : boolean;
+	Data? : T;
+	Reached : boolean;
 	MessageCode? : string;
 }
 

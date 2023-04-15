@@ -1,12 +1,24 @@
-import en_us from "./data/en_us.json";
-import de_de from "./data/de_de.json";
+import en_us              from "./data/en_us.json";
+import de_de              from "./data/de_de.json";
+import * as _             from "lodash";
+import { SweetAlertIcon } from "sweetalert2";
+
+export interface IApiMessage {
+	title? : string,
+	text? : string,
+	icon : SweetAlertIcon
+}
 
 export interface ILang {
 	"Auth" : {
 		"Signup" : string,
 		"Signin" : string,
 		"Logout" : string,
-		"AccSettings" : string
+		"AccSettings" : string,
+		"Password" : string,
+		"PasswordAgain" : string,
+		"Email" : string,
+		"Username" : string,
 	},
 	"Navigation" : {
 		"Home" : string,
@@ -20,9 +32,10 @@ export interface ILang {
 		"Err404" : string,
 		"Err403" : string
 	};
+	"ApiMessgaes" : Record<string, IApiMessage>,
 }
 
-export const SupportedLangs : Record<string, ILang> = {
+export const SupportedLangs : Record<string, any> = {
 	"de_de": de_de,
 	"en_us": en_us
 };
@@ -38,11 +51,16 @@ export function GetLanguage( Lang : string | undefined ) : ILang {
 		Lang = "en_us";
 	}
 
-	const Fallback : ILang = SupportedLangs.en_us;
-	const LangData : ILang = SupportedLangs[ Lang ];
+	const Fallback : ILang = _.cloneDeep( SupportedLangs.en_us );
+	const LangData : ILang = _.cloneDeep( SupportedLangs[ Lang ] );
 
-	return {
-		...Fallback,
-		...LangData
-	};
+	return _.merge( Fallback, LangData );
+}
+
+export function GetApiMessage( Code? : string ) : IApiMessage | undefined {
+	if ( !Code ) {
+		return undefined;
+	}
+	const Lang = GetLanguage( window.localStorage.getItem( "lang" ) || undefined );
+	return Lang.ApiMessgaes[ Code ];
 }

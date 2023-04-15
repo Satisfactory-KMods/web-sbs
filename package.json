@@ -12,21 +12,18 @@
     "build.vite": "vite build"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^6.4.0",
-    "@fortawesome/free-brands-svg-icons": "^6.4.0",
-    "@fortawesome/free-regular-svg-icons": "^6.4.0",
-    "@fortawesome/free-solid-svg-icons": "^6.4.0",
-    "@fortawesome/react-fontawesome": "^0.2.0",
     "@kyri123/k-javascript-utils": "^0.2.1-build.12",
     "@kyri123/k-reactutils": "^0.2.8-build.26",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.4.3",
     "@types/express": "^4.17.17",
+    "@types/lodash": "^4.14.194",
     "bootstrap": "5.3.0-alpha3",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.0",
+    "lodash": "^4.17.21",
     "mongoose": "^7.0.3",
     "react": "^18.2.0",
     "react-bootstrap": "^2.7.2",
@@ -36,7 +33,9 @@
     "react-router-dom": "^6.10.0",
     "react-select": "^5.7.2",
     "socket.io": "^4.6.1",
-    "socket.io-client": "^4.6.1"
+    "socket.io-client": "^4.6.1",
+    "sweetalert2": "^11.7.3",
+    "sweetalert2-react-content": "^5.0.7"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.9",

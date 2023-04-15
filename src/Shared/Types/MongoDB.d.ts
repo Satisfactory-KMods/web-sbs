@@ -24,3 +24,9 @@ export interface IMO_UserAccount extends IMongoDB {
 	email : string,
 	role : ERoles
 }
+
+export interface IMO_UserAccountToken extends IMongoDB {
+	userid : string,
+	token : string,
+	expire : Date
+}

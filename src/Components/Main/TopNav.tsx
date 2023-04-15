@@ -32,15 +32,16 @@ const TopNav : FunctionComponent = () => {
 	const { Lang, setLang, Code, AllCodes } = useContext( LangContext );
 
 	return (
-		<header className="p-3 border-bottom flex-grow-0">
+		<header className="p-3 border-bottom flex-grow-0 bg-gray-800">
 			<div className="container">
 				<div
 					className="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
 					<Link to="/"
 					      className="d-flex align-items-center mb-2 mb-lg-0 link-body-emphasis text-decoration-none">
+						<img src={ "/images/logo.png" } alt="logo" className="w-10"/>
 					</Link>
 
-					<ul className="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+					<ul className="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0 ms-4">
 						<TopNavLink href="/">{ Lang.Navigation.Home }</TopNavLink>
 						<TopNavLink href="/create">{ Lang.Navigation.AddBlueprint }</TopNavLink>
 						<TopNavLink href="/my">{ Lang.Navigation.MyBlueprints }</TopNavLink>

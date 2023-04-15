@@ -14,6 +14,8 @@ import { useAuth }         from "./hooks/useAuth";
 
 const Home = React.lazy( () => import("./Page/Home") );
 const ErrorPage = React.lazy( () => import("./Page/ErrorPage") );
+const SignIn = React.lazy( () => import("./Page/SignIn") );
+const SignUp = React.lazy( () => import("./Page/SignUp") );
 
 function App() {
 	const Lang = useLang();
@@ -29,6 +31,9 @@ function App() {
 								<Route path="/error/401" element={ <ErrorPage ErrorCode={ 401 }/> }/>
 								<Route path="/error/403" element={ <ErrorPage ErrorCode={ 403 }/> }/>
 								<Route path="/error/404" element={ <ErrorPage ErrorCode={ 404 }/> }/>
+
+								<Route path="/signin" element={ <SignIn/> }/>
+								<Route path="/signup" element={ <SignUp/> }/>
 
 								<Route path="/" element={ <Home/> }/>
 
