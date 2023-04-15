@@ -1415,10 +1415,10 @@
   resolved "https://registry.yarnpkg.com/@kyri123/k-javascript-utils/-/k-javascript-utils-0.2.1-build.12.tgz#8235dcdc94955bab255b10ba8d3c28647010a3c6"
   integrity sha512-m97ZRWdjJYU58/l5hVe0FaFoB/5S5fQaqgLl5TDXix4uZ1v2lbaARDNtXyV7eqWjnKTpI+RlyCiszB3uYXgbYA==
 
-"@kyri123/k-reactutils@^0.2.8-build.26":
-  version "0.2.8-build.26"
-  resolved "https://registry.yarnpkg.com/@kyri123/k-reactutils/-/k-reactutils-0.2.8-build.26.tgz#9f8acef9999736811053ad81dc7aab07eda5b87f"
-  integrity sha512-aUkuAQTDP6Fk7fIMDzFXCe+t1TB76xQvWK61XTIgqnYqAOCxNuci1zmwPPqYUocNBz5fvkyuPfActY/5wbReXA==
+"@kyri123/k-reactutils@^0.2.9-build.29":
+  version "0.2.9-build.29"
+  resolved "https://registry.yarnpkg.com/@kyri123/k-reactutils/-/k-reactutils-0.2.9-build.29.tgz#cba52579cd915b75cfb5f0311540ff0c29e3c03b"
+  integrity sha512-v3KLWptSamWoV7+rtVG/oZ6ucJ4X8TWKs9ukZhfqnthv7vOvpO6PELdRbLwM73eaA2Agpg5APWJKSpKKsu7Tig==
   dependencies:
     copy-to-clipboard "^3.3.3"
     jwt-decode "^3.1.2"

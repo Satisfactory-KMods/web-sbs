@@ -19,11 +19,9 @@ export interface IUseAuth {
 export function useAuth() : IUseAuth {
 	const {
 		ClearSession,
-		SessionActive,
 		Token,
 		Session,
-		UpdateToken,
-		SecondsLeft
+		UpdateToken
 	} = useJWT<IMO_UserAccount>( "session" );
 
 	// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -37,9 +35,9 @@ export function useAuth() : IUseAuth {
 	};
 
 	useEffect( () => {
-		/*if ( Token.trim() === "" ) {
-		 return;
-		 }*/
+		if ( Token.trim() === "" ) {
+			return;
+		}
 
 		const Response = async() => {
 			return await API_QueryLib.PostToAPI( EApiAuth.validate, { Token } );

@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@kyri123/k-javascript-utils": "^0.2.1-build.12",
-    "@kyri123/k-reactutils": "^0.2.8-build.26",
+    "@kyri123/k-reactutils": "^0.2.9-build.29",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.4.3",

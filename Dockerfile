@@ -8,6 +8,7 @@ COPY *.ts ./
 COPY *.js ./
 COPY *.json ./
 COPY *.html ./
+COPY *.lock ./
 
 # Copy source folder
 COPY ./src ./src
