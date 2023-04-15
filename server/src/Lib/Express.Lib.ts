@@ -34,12 +34,14 @@ export async function MW_Auth( req : Request, res : Response, next : NextFunctio
 	if ( Token ) {
 		try {
 			const Result = jwt.verify( Token, process.env.JWTToken as string );
-			const UserData = new User( Token );
-			const Session = await DB_SessionToken.findOne( { token: Token, userid: UserData.Get._id } );
-			if ( Session ) {
-				req.body.UserClass = UserData;
-				next();
-				return;
+			if ( typeof Result === "object" ) {
+				const UserData = new User( Token );
+				const Session = await DB_SessionToken.findOne( { token: Token, userid: UserData.Get._id } );
+				if ( Session ) {
+					req.body.UserClass = UserData;
+					next();
+					return;
+				}
 			}
 		}
 		catch ( e ) {

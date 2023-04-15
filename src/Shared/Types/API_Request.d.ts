@@ -12,6 +12,9 @@ export type TRequest_Unknown<UseUser extends boolean = true, UserType = any> = I
 // ----------------- Auth -----------------
 // ----------------------------------------
 
+export type TRequest_Auth_Logout = IRequestBody<{
+	Token : string;
+}>;
 export type TRequest_Auth_SignIn = IRequestBody<{
 	Login : string;
 	Password : string;

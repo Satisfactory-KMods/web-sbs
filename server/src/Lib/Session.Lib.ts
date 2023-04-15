@@ -12,10 +12,11 @@ export async function CreateSession( User : Partial<IMO_UserAccount> ) : Promise
 		} );
 		const Decoded = jwt.verify( Token, process.env.JWTToken || "" ) as jwt.JwtPayload;
 		if ( Decoded ) {
+			await DB_SessionToken.deleteMany( { expire: { $lte: new Date() } } );
 			const session = await DB_SessionToken.create( {
 				token: Token,
 				userid: User._id,
-				expire: Decoded.exp || 0
+				expire: new Date( ( Decoded.exp || 0 ) * 1000 )
 			} );
 			return session.token;
 		}

@@ -16,18 +16,35 @@ import {
 	TResponse_Auth_Vertify
 }                        from "../../../../src/Shared/Types/API_Response";
 import {
+	TRequest_Auth_Logout,
 	TRequest_Auth_SignIn,
 	TRequest_Auth_SignUp
 }                        from "../../../../src/Shared/Types/API_Request";
 import DB_UserAccount    from "../../MongoDB/DB_UserAccount";
 import { CreateSession } from "../../Lib/Session.Lib";
 import { ERoles }        from "../../../../src/Shared/Enum/ERoles";
+import DB_SessionToken   from "../../MongoDB/DB_SessionToken";
 
 export default function() {
 	Api.post( ApiUrl( EApiAuth.validate ), MW_Auth, ( req : Request, res : Response ) => {
 		res.json( {
 			...DefaultResponseSuccess,
 			Auth: true
+		} as TResponse_Auth_Vertify );
+	} );
+
+	Api.post( ApiUrl( EApiAuth.logout ), async( req : Request, res : Response ) => {
+		const Request : TRequest_Auth_Logout = req.body;
+		if ( Request.Token ) {
+			try {
+				await DB_SessionToken.findOneAndRemove( { token: Request.Token } );
+			}
+			catch ( e ) {
+			}
+		}
+		res.json( {
+			...DefaultResponseSuccess,
+			Auth: false
 		} as TResponse_Auth_Vertify );
 	} );
 

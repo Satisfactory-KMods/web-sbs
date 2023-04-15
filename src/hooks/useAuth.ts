@@ -31,7 +31,10 @@ export function useAuth() : IUseAuth {
 
 	const Logout = () => {
 		ClearSession();
-		API_QueryLib.FireSwal( "Logout" );
+		Promise.all( [
+			API_QueryLib.FireSwal( "Logout" ),
+			API_QueryLib.PostToAPI( EApiAuth.logout, { Token } )
+		] ).then();
 	};
 
 	useEffect( () => {
