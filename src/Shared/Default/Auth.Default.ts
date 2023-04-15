@@ -9,7 +9,7 @@ export const DefaultUser : IMO_UserAccount = {
 	email: "ychag@example.com",
 	role: ERoles.member
 };
-
+ 
 export const DefaultResponseFailed : IAPIResponseBase = {
 	Success: false,
 	Auth: false,

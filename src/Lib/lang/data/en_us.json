@@ -12,7 +12,10 @@
   "Navigation": {
     "Home": "Home",
     "AddBlueprint": "Create Blueprint",
-    "MyBlueprints": "My Blueprints"
+    "MyBlueprints": "My Blueprints",
+    "Admin_Users": "Manager Users",
+    "Admin_Tags": "Manager Tags",
+    "Admin_BlacklistedBlueprints": "Manager Blacklisted Blueprints"
   },
   "ErrorPage": {
     "BackToHome": "Back to home",

@@ -86,13 +86,34 @@ const TopNav : FunctionComponent = () => {
 						<ul className="dropdown-menu text-small">
 							{ UserData.IsValid ? (
 								<>
-									<li><Link className="dropdown-item"
-									          to="/account-settings">{ Lang.Auth.AccSettings }</Link></li>
+									{ UserData.HasPermssion( ERoles.admin ) && (
+										<>
+											<li>
+												<Link className="dropdown-item"
+												      to="/admin/tags">{ Lang.Navigation.Admin_Tags }</Link>
+											</li>
+											<li>
+												<Link className="dropdown-item"
+												      to="/admin/users">{ Lang.Navigation.Admin_Users }</Link>
+											</li>
+											<li>
+												<Link className="dropdown-item"
+												      to="/admin/deletedblueprints">{ Lang.Navigation.Admin_BlacklistedBlueprints }</Link>
+											</li>
+											<li>
+												<hr className="dropdown-divider"/>
+											</li>
+										</>
+									) }
+									<li>
+										<Link className="dropdown-item"
+										      to="/account-settings">{ Lang.Auth.AccSettings }</Link></li>
 									<li>
 										<hr className="dropdown-divider"/>
 									</li>
-									<li><Link className="dropdown-item text-danger" to="#"
-									          onClick={ Logout }>{ Lang.Auth.Logout }</Link></li>
+									<li>
+										<Link className="dropdown-item text-danger" to="#"
+										      onClick={ Logout }>{ Lang.Auth.Logout }</Link></li>
 								</>
 							) : (
 								<>

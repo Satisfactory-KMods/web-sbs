@@ -12,6 +12,7 @@
     "build.vite": "vite build"
   },
   "dependencies": {
+    "@etothepii/satisfactory-file-parser": "^0.0.31",
     "@kyri123/k-javascript-utils": "^0.2.1-build.12",
     "@kyri123/k-reactutils": "^0.2.9-build.29",
     "@testing-library/jest-dom": "^5.16.5",
@@ -38,8 +39,6 @@
     "sweetalert2-react-content": "^5.0.7"
   },
   "devDependencies": {
-    "@tailwindcss/typography": "^0.5.9",
-    "@tailwindcss/ui": "^0.7.2",
     "@types/jsonwebtoken": "^9.0.1",
     "@types/node": "^18.15.11",
     "@types/react": "^18.0.28",

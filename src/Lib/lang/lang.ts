@@ -23,7 +23,10 @@ export interface ILang {
 	"Navigation" : {
 		"Home" : string,
 		"AddBlueprint" : string,
-		"MyBlueprints" : string
+		"MyBlueprints" : string,
+		"Admin_Users" : string,
+		"Admin_Tags" : string,
+		"Admin_BlacklistedBlueprints" : string
 	};
 	"ErrorPage" : {
 		"BackToHome" : string,
