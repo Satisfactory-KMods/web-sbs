@@ -94,7 +94,7 @@ const AdminTags : FunctionComponent = () => {
 						<th colSpan={ 2 }>
 							<h3 className="p-2 flex-1">{ Lang.Navigation.Admin_Tags }</h3>
 						</th>
-						<th colSpan={ 1 } valign={ "middle" } className={ "text-center" }>
+						<th colSpan={ 1 } className={ "text-center py-3" }>
 							<Button variant="success"
 							        onClick={ ToggleModalWithReset }><Icon.BsPlusLg/></Button>
 						</th>
