@@ -65,7 +65,6 @@ const CreateBlueprint : FunctionComponent = () => {
 
 	const [ SBP, setSBP ] = useState<File | undefined>();
 	const [ SBPCFG, setSBPCFG ] = useState<File | undefined>();
-	const [ Logo, setLogo ] = useState<File | undefined>();
 	const [ Image, setImage ] = useState<File | undefined>();
 
 	useEffect( () => {
@@ -106,7 +105,7 @@ const CreateBlueprint : FunctionComponent = () => {
 	};
 
 	const CheckInput = () => {
-		return SBP && SBPCFG && Image && Logo && BlueprintDesc.length >= 50 && BlueprintName.length >= 5;
+		return SBP && SBPCFG && Image && BlueprintDesc.length >= 50 && BlueprintName.length >= 5;
 	};
 
 	const HandleSubmit = async( e : FormEvent<HTMLFormElement> ) => {

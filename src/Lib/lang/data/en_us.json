@@ -12,6 +12,20 @@
   "ShowBlueprint": {
     "ObjectCount": "Object Count"
   },
+  "EditBlueprint": {
+    "Title": "Edit Blueprint",
+    "Submit": "Save!",
+    "Back": "Back to Blueprint"
+  },
+  "MyBlueprint": {
+    "CreatedAt": "Created At",
+    "BP": "Blueprint Name",
+    "Likes": "Likes",
+    "Mods": "Mods",
+    "Tags": "Tags",
+    "Actions": "Blueprint Actions",
+    "Downloads": "Downloads"
+  },
   "CreateBlueprint": {
     "ImportFromFiles": "Import from Blueprint Files",
     "BlueprintName": "Blueprint Name",
@@ -78,6 +92,14 @@
     },
     "BlueprintCreated": {
       "text": "Blueprint created successfully",
+      "icon": "success"
+    },
+    "BlueprintEdited": {
+      "text": "Blueprint edited successfully",
+      "icon": "success"
+    },
+    "BlueprintRemoved": {
+      "text": "Blueprint removed successfully",
       "icon": "success"
     }
   }

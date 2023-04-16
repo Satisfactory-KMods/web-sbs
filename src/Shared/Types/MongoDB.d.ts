@@ -17,6 +17,7 @@ export interface IMO_Blueprint extends IMongoDB {
 	mods : string[],
 	likes : string[],
 	owner : string,
+	downloads : number,
 	blacklisted? : boolean
 }
 

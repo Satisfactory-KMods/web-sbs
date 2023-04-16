@@ -78,6 +78,18 @@ export type TRequest_BPUser_Create_Files = Partial<{
 	Image : UploadedFile;
 }>
 
+export type TRequest_BPUser_Edit = IRequestBody<{
+	BlueprintId : string;
+	BlueprintName : string;
+	BlueprintDesc : string;
+	BlueprintTags : string[];
+	BlueprintMods : string[];
+	DesignerSize : EDesignerSize;
+}>;
+export type TRequest_BPUser_Edit_Files = Partial<{
+	Image : UploadedFile;
+}>
+
 // ----------------------------------------
 // ----------------- Tags -----------------
 // ----------------------------------------

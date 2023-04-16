@@ -9,7 +9,7 @@ import LangContext         from "../Context/LangContext";
 import { API_QueryLib }    from "../Lib/Api/API_Query.Lib";
 import { EApiQuestionary } from "../Shared/Enum/EApiPath";
 import { IMO_Blueprint }   from "../Shared/Types/MongoDB";
-import BlueprintCard       from "../Components/Home/BlueprintCard";
+import BlueprintCard       from "../Components/Blueprints/BlueprintCard";
 import { Row }             from "react-bootstrap";
 
 const Home : FunctionComponent = () => {
@@ -29,7 +29,8 @@ const Home : FunctionComponent = () => {
 				API_QueryLib.Qustionary<IMO_Blueprint>( EApiQuestionary.blueprints, {
 					Options: {
 						limit: 15,
-						skip: CurrentPage * 15
+						skip: CurrentPage * 15,
+						sort: { likes: -1 }
 					}
 				} )
 			] );

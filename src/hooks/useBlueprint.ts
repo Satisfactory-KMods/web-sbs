@@ -52,7 +52,7 @@ export function useBlueprint( InitValue : string | IMO_Blueprint ) {
 	}, [ InitValue ] );
 
 	const BlueprintValid = useMemo( () => {
-		return Blueprint._id !== "";
+		return Blueprint._id !== "" && !Blueprint.blacklisted;
 	}, [ Blueprint._id ] );
 
 	const QueryModsAndTags = async() => {
@@ -65,6 +65,7 @@ export function useBlueprint( InitValue : string | IMO_Blueprint ) {
 			API_QueryLib.Qustionary<IMO_Tag>( EApiQuestionary.tags, { Filter: { _id: { $in: Blueprint.tags } } } ),
 			API_QueryLib.PostToAPI( EApiBlueprintUtils.readblueprint, { Id: BlueprintID } )
 		] );
+
 		setMods( Mods.Data! );
 		setTags( Tags.Data! );
 		setBlueprintData( BlueprintRead.Data! );
@@ -73,7 +74,7 @@ export function useBlueprint( InitValue : string | IMO_Blueprint ) {
 	const Query = async() => {
 		const Result = await API_QueryLib.Qustionary<IMO_Blueprint>( EApiQuestionary.blueprints, { Filter: { _id: BlueprintID } } );
 		if ( Result.Data && Result.Data.length > 0 ) {
-			setBlueprint( () => Result.Data![ 0 ] );
+			setBlueprint( Result.Data![ 0 ] );
 			await QueryModsAndTags();
 		}
 	};
@@ -132,7 +133,7 @@ export function useBlueprint( InitValue : string | IMO_Blueprint ) {
 		BlueprintData,
 		Mods,
 		Tags,
-		AllowToLike: IsLoggedIn,
+		AllowToLike: IsLoggedIn && Blueprint.owner !== UserData.Get._id,
 		AllowToEdit,
 		BlueprintValid,
 		Update: Query,

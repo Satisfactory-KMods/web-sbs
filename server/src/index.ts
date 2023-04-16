@@ -66,6 +66,7 @@ mongoose
 		}
 	)
 	.then( async() => {
+		global.DownloadIPCached = [];
 		// Sockets need to connect on a room otherwise we will not be able to send messages
 		SocketIO.on( "connection", function( socket ) {
 			const query = socket.handshake.query;

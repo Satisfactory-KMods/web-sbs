@@ -60,7 +60,7 @@ const BlueprintCard : FunctionComponent<IBlueprintCardProps> = ( { Data } ) => {
 						</Link>
 						<Link to={ `/api/v1/download/${ Blueprint._id }` } target={ "_blank" }
 						      className={ "btn rounded-top-0 btn-dark" }>
-							<Icon.BsDownload/>
+							<Icon.BsDownload/> { Blueprint.downloads }
 						</Link>
 						{ AllowToEdit &&
 							<Link to={ `/blueprint/edit/${ Blueprint._id }` }

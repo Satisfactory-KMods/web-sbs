@@ -14,10 +14,13 @@ import {
 import {
 	TRequest_BPUser_Create,
 	TRequest_BPUser_Create_Files,
+	TRequest_BPUser_Edit,
+	TRequest_BPUser_Edit_Files,
 	TRequest_BPUser_ToggleLike
 }                             from "../../../../src/Shared/Types/API_Request";
 import {
 	TResponse_BPUser_Create,
+	TResponse_BPUser_Edit,
 	TResponse_BPUser_ToggleLike
 }                             from "../../../../src/Shared/Types/API_Response";
 import DB_Blueprints          from "../../MongoDB/DB_Blueprints";
@@ -66,6 +69,60 @@ export default function() {
 						Response.Data = ID;
 						Response.Success = true;
 						Response.MessageCode = "BlueprintCreated";
+					}
+				}
+			}
+		}
+		catch ( e ) {
+			console.error( e );
+		}
+
+		res.json( {
+			...Response
+		} );
+	} );
+
+
+	Api.post( ApiUrl( EApiUserBlueprints.edit ), MW_Auth, async( req : Request, res : Response ) => {
+		const Response : TResponse_BPUser_Edit = {
+			...DefaultResponseFailed
+		};
+
+		const Request : TRequest_BPUser_Edit = req.body;
+		const Files = req.files as TRequest_BPUser_Edit_Files;
+
+		try {
+			if ( Request.BlueprintName && Request.BlueprintDesc && Request.UserClass && Request.DesignerSize ) {
+				const Blueprint = await DB_Blueprints.findById( Request.BlueprintId );
+				if ( Blueprint ) {
+					Blueprint.description = Request.BlueprintDesc;
+					Blueprint.name = Request.BlueprintName;
+					Blueprint.tags = Request.BlueprintTags || [];
+					Blueprint.mods = Request.BlueprintMods || [];
+					Blueprint.owner = Request.UserClass.Get._id;
+					Blueprint.DesignerSize = Request.DesignerSize;
+					const ID = Blueprint._id.toString();
+
+					if ( await Blueprint.save() ) {
+						if ( Files?.Image ) {
+							for ( const [ Key, File ] of Object.entries( Files ) ) {
+								fs.mkdirSync( path.join( __BlueprintDir, ID ), { recursive: true } );
+								switch ( Key ) {
+									case "Image":
+										// eslint-disable-next-line no-case-declarations
+										const ImgPath = path.join( __BlueprintDir, ID, `img_${ ID }.jpg` );
+										fs.existsSync( ImgPath ) && fs.rmSync( ImgPath );
+										await File.mv( ImgPath );
+										break;
+									default:
+										break;
+								}
+							}
+						}
+
+						Response.Data = ID;
+						Response.Success = true;
+						Response.MessageCode = "BlueprintEdited";
 					}
 				}
 			}

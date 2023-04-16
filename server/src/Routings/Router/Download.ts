@@ -29,6 +29,17 @@ export default function() {
 			const BPName = blueprint.name.replace( /[^a-z0-9]/gi, "_" ).toLowerCase();
 			const ZipFile = path.join( __MountDir, "Zips", id, `${ BPName }.zip` );
 
+			if ( !DownloadIPCached.includes( req.ip ) ) {
+				if ( !blueprint.downloads ) {
+					blueprint.downloads = 0;
+				}
+				blueprint.downloads++;
+				if ( await blueprint.save() ) {
+					DownloadIPCached.push( req.ip );
+					SocketIO.to( blueprint._id.toString() ).emit( "BlueprintUpdated", blueprint.toJSON() );
+				}
+			}
+
 			if ( fs.existsSync( ZipFile ) ) {
 				return res.download( ZipFile, `${ BPName }.zip` );
 			}
@@ -56,6 +67,7 @@ export default function() {
 			} ).on( "error", ( err ) => {
 				return res.status( 404 ).json( { error: "Blueprint not found" } );
 			} );
+
 		}
 		catch ( e ) {
 			return res.status( 404 ).json( { error: "Blueprint not found" } );

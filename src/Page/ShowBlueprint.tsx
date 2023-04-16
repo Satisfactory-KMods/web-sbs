@@ -74,6 +74,10 @@ const ShowBlueprint : FunctionComponent = () => {
 						       className={ "my-0 table-bordered border-b-0 border-l-0 border-r-0" }>
 							<tbody>
 							<tr>
+								<td>{ Lang.MyBlueprint.Downloads }</td>
+								<td>{ Blueprint.downloads }</td>
+							</tr>
+							<tr>
 								<td>{ Lang.ShowBlueprint.ObjectCount }</td>
 								<td>{ BlueprintData?.objects.length }</td>
 							</tr>
@@ -112,7 +116,7 @@ const ShowBlueprint : FunctionComponent = () => {
 							}
 							<Link to={ `/api/v1/download/${ Blueprint._id }` } target={ "_blank" }
 							      className={ "btn rounded-top-0 btn-success" }>
-								<Icon.BsDownload/>
+								<Icon.BsDownload/> { Blueprint.downloads }
 							</Link>
 						</ButtonGroup>
 					</Card.Footer>
