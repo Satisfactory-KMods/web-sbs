@@ -48,6 +48,16 @@ export interface ILang {
 		"Submit" : string
 		"Back" : string
 	},
+	"AdminTags" : {
+		"Id" : string,
+		"DisplayName" : string,
+		"Actions" : string,
+		"ModalEdit" : string,
+		"ModalCreate" : string,
+		"Create" : string,
+		"Edit" : string,
+		"Close" : string
+	},
 	"MyBlueprint" : {
 		"BP" : string,
 		"CreatedAt" : string

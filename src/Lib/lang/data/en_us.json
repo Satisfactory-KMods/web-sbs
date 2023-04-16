@@ -4,6 +4,16 @@
     "IsVanilla": "Vanilla",
     "IsHot": "HOT!"
   },
+  "AdminTags": {
+    "Id": "Tag ID",
+    "DisplayName": "Tag Name",
+    "Actions": "Actions",
+    "ModalEdit": "Edit Tag",
+    "ModalCreate": "Create Tag",
+    "Create": "Create Tag",
+    "Edit": "Save edit",
+    "Close": "Close"
+  },
   "Auth": {
     "Signup": "Signup",
     "Signin": "Signin",

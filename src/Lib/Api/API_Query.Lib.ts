@@ -2,7 +2,10 @@ import {
 	IAPIResponseBase,
 	TResponse_BP_Questionary
 }                                  from "../../Shared/Types/API_Response";
-import { TApiPath }                from "../../Shared/Enum/EApiPath";
+import {
+	EApiQuestionary,
+	TApiPath
+}                                  from "../../Shared/Enum/EApiPath";
 import withReactContent            from "sweetalert2-react-content";
 import Swal                        from "sweetalert2";
 import { GetApiMessage }           from "../lang/lang";
@@ -19,7 +22,7 @@ export class API_QueryLib {
 	}
 
 	static async Qustionary<T = any>(
-		Path : TApiPath,
+		Path : EApiQuestionary,
 		Data : TRequest_BP_Questionary<T>,
 		ContentType? : "application/json" | "application/x-www-form-urlencoded" | "multipart/form-data"
 	) : Promise<TResponse_BP_Questionary<T[]>> {
