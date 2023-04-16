@@ -123,6 +123,8 @@ export default function() {
 						Response.Data = ID;
 						Response.Success = true;
 						Response.MessageCode = "BlueprintEdited";
+
+						SocketIO.to( Blueprint._id.toString() ).emit( "BlueprintUpdated", Blueprint.toJSON() );
 					}
 				}
 			}

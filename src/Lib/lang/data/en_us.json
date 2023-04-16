@@ -1,4 +1,9 @@
 {
+  "General": {
+    "IsModded": "Modded",
+    "IsVanilla": "Vanilla",
+    "IsHot": "HOT!"
+  },
   "Auth": {
     "Signup": "Signup",
     "Signin": "Signin",

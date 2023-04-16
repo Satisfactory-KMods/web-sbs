@@ -10,6 +10,11 @@ export interface IApiMessage {
 }
 
 export interface ILang {
+	"General" : {
+		"IsModded" : string,
+		"IsVanilla" : string,
+		"IsHot" : string
+	},
 	"Auth" : {
 		"Signup" : string,
 		"Signin" : string,

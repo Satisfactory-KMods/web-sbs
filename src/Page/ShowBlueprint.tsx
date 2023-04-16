@@ -18,6 +18,7 @@ import ReactMarkdown    from "react-markdown";
 import * as Icon        from "react-icons/bs";
 import AuthContext      from "../Context/AuthContext";
 import { useLang }      from "../hooks/useLang";
+import Ribbon           from "../Components/General/Ribbon";
 
 const ShowBlueprint : FunctionComponent = () => {
 	const { Lang } = useLang();
@@ -63,10 +64,10 @@ const ShowBlueprint : FunctionComponent = () => {
 						height: 350
 					} }></Card.Header>
 
-					<Card.Body>
-						<Card.Text>
-							<ReactMarkdown>{ Blueprint.description }</ReactMarkdown>
-						</Card.Text>
+					<Card.Body className={ "pb-0 relative" }>
+						<ReactMarkdown>{ Blueprint.description.length > 200 ? Blueprint.description.slice( 0, 200 ) + "..." : Blueprint.description }</ReactMarkdown>
+						<Ribbon
+							innerClassName={ Blueprint.mods.length >= 1 ? "text-bg-danger" : "text-bg-success" }>{ Blueprint.mods.length >= 1 ? Lang.General.IsModded : Lang.General.IsVanilla }</Ribbon>
 					</Card.Body>
 
 					<Card.Body className={ "p-0 border-t" }>
@@ -74,8 +75,8 @@ const ShowBlueprint : FunctionComponent = () => {
 						       className={ "my-0 table-bordered border-b-0 border-l-0 border-r-0" }>
 							<tbody>
 							<tr>
-								<td>{ Lang.MyBlueprint.Downloads }</td>
-								<td>{ Blueprint.downloads }</td>
+								<td>{ Lang.MyBlueprint.CreatedAt }</td>
+								<td>{ new Date( Blueprint.createdAt! ).toLocaleString() }</td>
 							</tr>
 							<tr>
 								<td>{ Lang.ShowBlueprint.ObjectCount }</td>

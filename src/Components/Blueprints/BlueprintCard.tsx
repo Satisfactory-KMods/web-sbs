@@ -14,6 +14,8 @@ import { Link }          from "react-router-dom";
 import * as Icon         from "react-icons/bs";
 import AuthContext       from "../../Context/AuthContext";
 import { useBlueprint }  from "../../hooks/useBlueprint";
+import Ribbon            from "../General/Ribbon";
+import ReactMarkdown     from "react-markdown";
 
 interface IBlueprintCardProps {
 	Data : IMO_Blueprint;
@@ -36,6 +38,8 @@ const BlueprintCard : FunctionComponent<IBlueprintCardProps> = ( { Data } ) => {
 			<Card className={ "h-100" }>
 				<Card.Header className={ "d-flex p-0" }>
 					<h4 className={ "py-1 pt-2 px-3 flex-1" }>{ Blueprint.name }</h4>
+					<Ribbon
+						innerClassName={ Blueprint.mods.length >= 1 ? "text-bg-danger" : "text-bg-success" }>{ Blueprint.mods.length >= 1 ? Lang.General.IsModded : Lang.General.IsVanilla }</Ribbon>
 				</Card.Header>
 
 				<Card.Header style={ {
@@ -45,14 +49,12 @@ const BlueprintCard : FunctionComponent<IBlueprintCardProps> = ( { Data } ) => {
 					height: 200
 				} }></Card.Header>
 
-				<Card.Body>
-					<Card.Text>
-						{ Blueprint.description.length > 200 ? Blueprint.description.slice( 0, 200 ) + "..." : Blueprint.description }
-					</Card.Text>
+				<Card.Body className={ "pb-0" }>
+					<ReactMarkdown>{ Blueprint.description.length > 200 ? Blueprint.description.slice( 0, 200 ) + "..." : Blueprint.description }</ReactMarkdown>
 				</Card.Body>
-				<Card.Footer>
+				{ Blueprint.mods.length >= 1 && <Card.Footer>
 					<b>{ Lang.CreateBlueprint.Mods }:</b> { Blueprint.mods.length >= 4 ? <>{ DisplayMods.map( R => R ) } [...{ MoreCount }]</> : DisplayMods }
-				</Card.Footer>
+				</Card.Footer> }
 				<Card.Footer className={ "p-0" }>
 					<ButtonGroup className={ "h-100 w-100" }>
 						<Link to={ `/blueprint/${ Blueprint._id }` } className={ "btn rounded-top-0 btn-dark" }>

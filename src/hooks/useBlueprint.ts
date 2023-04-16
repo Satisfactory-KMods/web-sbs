@@ -93,6 +93,13 @@ export function useBlueprint( InitValue : string | IMO_Blueprint ) {
 	}, [ InitValue, BlueprintValid ] );
 
 	useEffect( () => {
+		if ( BlueprintValid ) {
+			QueryModsAndTags();
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [ Blueprint.tags, Blueprint.mods ] );
+
+	useEffect( () => {
 		const SocketIO = GetSocket( BlueprintID );
 		const OnUpdate = async( BP : IMO_Blueprint ) => {
 			setBlueprint( () => BP );
