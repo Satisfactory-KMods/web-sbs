@@ -6,20 +6,20 @@ import React, {
 	useEffect,
 	useState
 }                         from "react";
-import { useAuthCheck }   from "../hooks/useAuthCheck";
+import { useAuthCheck }   from "../../hooks/useAuthCheck";
 import { useNavigate }    from "react-router-dom";
-import LangContext        from "../Context/LangContext";
-import FloatInput         from "../Components/Boostrap/FloatInput";
-import LoadingButton      from "../Components/Boostrap/LoadingButton";
-import FloatTextarea      from "../Components/Boostrap/FloatTextarea";
+import LangContext        from "../../Context/LangContext";
+import FloatInput         from "../../Components/Boostrap/FloatInput";
+import LoadingButton      from "../../Components/Boostrap/LoadingButton";
+import FloatTextarea      from "../../Components/Boostrap/FloatTextarea";
 import ReactMarkdown      from "react-markdown";
-import FileUploadInput    from "../Components/Boostrap/FileUploadInput";
-import { API_QueryLib }   from "../Lib/Api/API_Query.Lib";
+import FileUploadInput    from "../../Components/Boostrap/FileUploadInput";
+import { API_QueryLib }   from "../../Lib/Api/API_Query.Lib";
 import {
 	EApiBlueprintUtils,
 	EApiTags,
 	EApiUserBlueprints
-}                         from "../Shared/Enum/EApiPath";
+}                         from "../../Shared/Enum/EApiPath";
 import { Blueprint }      from "@etothepii/satisfactory-file-parser";
 import {
 	Button,
@@ -32,9 +32,9 @@ import Select, {
 import {
 	TResponse_Tags_Mods,
 	TResponse_Tags_Tags
-}                         from "../Shared/Types/API_Response";
-import { IModTagOptions } from "../Shared/Types/SelectOptions";
-import { EDesignerSize }  from "../Shared/Enum/EDesignerSize";
+}                         from "../../Shared/Types/API_Response";
+import { IModTagOptions } from "../../Shared/Types/SelectOptions";
+import { EDesignerSize }  from "../../Shared/Enum/EDesignerSize";
 
 export interface IFile {
 	Content : FileList | undefined,
@@ -43,7 +43,7 @@ export interface IFile {
 
 const CreateBlueprint : FunctionComponent = () => {
 	const { Lang } = useContext( LangContext );
-	const { AuthCheckProps, AuthCheck } = useAuthCheck( { Auth: true, RedirectTo: "/signin" } );
+	const { AuthCheckProps, AuthCheck } = useAuthCheck( { Auth: true, RedirectTo: "/account/signin" } );
 	const [ IsSending, setIsSending ] = useState( false );
 	const Navigate = useNavigate();
 

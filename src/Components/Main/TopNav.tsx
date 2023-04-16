@@ -98,7 +98,7 @@ const TopNav : FunctionComponent = () => {
 											</li>
 											<li>
 												<Link className="dropdown-item"
-												      to="/admin/deletedblueprints">{ Lang.Navigation.Admin_BlacklistedBlueprints }</Link>
+												      to="/admin/blueprints/blacklisted">{ Lang.Navigation.Admin_BlacklistedBlueprints }</Link>
 											</li>
 											<li>
 												<hr className="dropdown-divider"/>
@@ -107,7 +107,7 @@ const TopNav : FunctionComponent = () => {
 									) }
 									<li>
 										<Link className="dropdown-item"
-										      to="/account-settings">{ Lang.Auth.AccSettings }</Link></li>
+										      to="/account/settings">{ Lang.Auth.AccSettings }</Link></li>
 									<li>
 										<hr className="dropdown-divider"/>
 									</li>
@@ -117,8 +117,10 @@ const TopNav : FunctionComponent = () => {
 								</>
 							) : (
 								<>
-									<li><Link className="dropdown-item" to="/signin">{ Lang.Auth.Signin }</Link></li>
-									<li><Link className="dropdown-item" to="/signup">{ Lang.Auth.Signup }</Link></li>
+									<li><Link className="dropdown-item" to="/account/signin">{ Lang.Auth.Signin }</Link>
+									</li>
+									<li><Link className="dropdown-item" to="/account/signup">{ Lang.Auth.Signup }</Link>
+									</li>
 								</>
 							) }
 						</ul>

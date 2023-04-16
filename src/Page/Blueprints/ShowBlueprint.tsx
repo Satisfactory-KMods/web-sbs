@@ -6,8 +6,9 @@ import {
 	Link,
 	useParams
 }                       from "react-router-dom";
-import { useBlueprint } from "../hooks/useBlueprint";
+import { useBlueprint } from "../../hooks/useBlueprint";
 import {
+	Badge,
 	Button,
 	ButtonGroup,
 	Card,
@@ -16,9 +17,9 @@ import {
 import { usePageTitle } from "@kyri123/k-reactutils";
 import ReactMarkdown    from "react-markdown";
 import * as Icon        from "react-icons/bs";
-import AuthContext      from "../Context/AuthContext";
-import { useLang }      from "../hooks/useLang";
-import Ribbon           from "../Components/General/Ribbon";
+import AuthContext      from "../../Context/AuthContext";
+import { useLang }      from "../../hooks/useLang";
+import Ribbon           from "../../Components/General/Ribbon";
 
 const ShowBlueprint : FunctionComponent = () => {
 	const { Lang } = useLang();
@@ -101,7 +102,8 @@ const ShowBlueprint : FunctionComponent = () => {
 							</tr>
 							<tr>
 								<td>{ Lang.CreateBlueprint.Tags }</td>
-								<td>{ Tags.map( R => R.DisplayName ).join( ", " ) }</td>
+								<td>{ Tags.map( R => <Badge key={ R._id }
+								                            bg="secondary">{ R.DisplayName }</Badge> ) }</td>
 							</tr>
 							</tbody>
 						</Table>

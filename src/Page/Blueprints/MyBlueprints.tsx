@@ -4,19 +4,19 @@ import {
 	useEffect,
 	useState
 }                          from "react";
-import { useAuthCheck }    from "../hooks/useAuthCheck";
+import { useAuthCheck }    from "../../hooks/useAuthCheck";
 import { Table }           from "react-bootstrap";
-import LangContext         from "../Context/LangContext";
-import { IMO_Blueprint }   from "../Shared/Types/MongoDB";
-import { API_QueryLib }    from "../Lib/Api/API_Query.Lib";
-import { EApiQuestionary } from "../Shared/Enum/EApiPath";
-import BlueprintTableRow   from "../Components/Blueprints/BlueprintTableRow";
-import AuthContext         from "../Context/AuthContext";
+import LangContext         from "../../Context/LangContext";
+import { IMO_Blueprint }   from "../../Shared/Types/MongoDB";
+import { API_QueryLib }    from "../../Lib/Api/API_Query.Lib";
+import { EApiQuestionary } from "../../Shared/Enum/EApiPath";
+import BlueprintTableRow   from "../../Components/Blueprints/BlueprintTableRow";
+import AuthContext         from "../../Context/AuthContext";
 
 const MyBlueprints : FunctionComponent = () => {
 	const { Lang } = useContext( LangContext );
 	const { UserData } = useContext( AuthContext );
-	const { AuthCheckProps, AuthCheck } = useAuthCheck( { Auth: true, RedirectTo: "/signin" } );
+	const { AuthCheckProps, AuthCheck } = useAuthCheck( { Auth: true, RedirectTo: "/account/signin" } );
 	const [ MyBlueprints, setMyBlueprints ] = useState<IMO_Blueprint[]>( [] );
 
 	useEffect( () => {

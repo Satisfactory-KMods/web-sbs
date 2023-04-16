@@ -4,16 +4,16 @@ import {
 	useContext,
 	useState
 }                                from "react";
-import LangContext               from "../Context/LangContext";
-import FloatInput                from "../Components/Boostrap/FloatInput";
+import LangContext               from "../../Context/LangContext";
+import FloatInput                from "../../Components/Boostrap/FloatInput";
 import { Link }                  from "react-router-dom";
 import { usePageTitle }          from "@kyri123/k-reactutils";
-import LoadingButton             from "../Components/Boostrap/LoadingButton";
-import { API_QueryLib }          from "../Lib/Api/API_Query.Lib";
-import { EApiAuth }              from "../Shared/Enum/EApiPath";
-import { TResponse_Auth_SignIn } from "../Shared/Types/API_Response";
-import AuthContext               from "../Context/AuthContext";
-import { useAuthCheck }          from "../hooks/useAuthCheck";
+import LoadingButton             from "../../Components/Boostrap/LoadingButton";
+import { API_QueryLib }          from "../../Lib/Api/API_Query.Lib";
+import { EApiAuth }              from "../../Shared/Enum/EApiPath";
+import { TResponse_Auth_SignIn } from "../../Shared/Types/API_Response";
+import AuthContext               from "../../Context/AuthContext";
+import { useAuthCheck }          from "../../hooks/useAuthCheck";
 
 
 const SignIn : FunctionComponent = () => {
@@ -57,7 +57,7 @@ const SignIn : FunctionComponent = () => {
 						<LoadingButton IsLoading={ IsSending } className={ "w-100 flex-1 me-1" } variant="success"
 						               type={ "submit" }>{ Lang.Auth.Signin }</LoadingButton>
 						<Link className={ "w-100 flex-1 ms-1 btn btn-primary" }
-						      to={ "/signup" }>{ Lang.Auth.Signup }</Link>
+						      to={ "/account/signup" }>{ Lang.Auth.Signup }</Link>
 					</div>
 				</form>
 			</div>

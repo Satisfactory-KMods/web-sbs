@@ -6,8 +6,8 @@ import React, {
 	useEffect,
 	useState
 }                         from "react";
-import { useAuthCheck }   from "../hooks/useAuthCheck";
-import LangContext        from "../Context/LangContext";
+import { useAuthCheck }   from "../../hooks/useAuthCheck";
+import LangContext        from "../../Context/LangContext";
 import {
 	Navigate,
 	useNavigate,
@@ -17,33 +17,33 @@ import Select, {
 	MultiValue,
 	SingleValue
 }                         from "react-select";
-import { IModTagOptions } from "../Shared/Types/SelectOptions";
-import { EDesignerSize }  from "../Shared/Enum/EDesignerSize";
-import { API_QueryLib }   from "../Lib/Api/API_Query.Lib";
+import { IModTagOptions } from "../../Shared/Types/SelectOptions";
+import { EDesignerSize }  from "../../Shared/Enum/EDesignerSize";
+import { API_QueryLib }   from "../../Lib/Api/API_Query.Lib";
 import {
 	TResponse_Tags_Mods,
 	TResponse_Tags_Tags
-}                         from "../Shared/Types/API_Response";
+}                         from "../../Shared/Types/API_Response";
 import {
 	EApiTags,
 	EApiUserBlueprints
-}                         from "../Shared/Enum/EApiPath";
-import FloatInput         from "../Components/Boostrap/FloatInput";
-import FloatTextarea      from "../Components/Boostrap/FloatTextarea";
+}                         from "../../Shared/Enum/EApiPath";
+import FloatInput         from "../../Components/Boostrap/FloatInput";
+import FloatTextarea      from "../../Components/Boostrap/FloatTextarea";
 import ReactMarkdown      from "react-markdown";
 import {
 	Button,
 	InputGroup
 }                         from "react-bootstrap";
-import FileUploadInput    from "../Components/Boostrap/FileUploadInput";
-import LoadingButton      from "../Components/Boostrap/LoadingButton";
-import { useBlueprint }   from "../hooks/useBlueprint";
+import FileUploadInput    from "../../Components/Boostrap/FileUploadInput";
+import LoadingButton      from "../../Components/Boostrap/LoadingButton";
+import { useBlueprint }   from "../../hooks/useBlueprint";
 
 const EditBlueprint : FunctionComponent = () => {
 	const { id } = useParams();
 	const { Blueprint, AllowToEdit, BlueprintValid, ...BP } = useBlueprint( id! );
 	const { Lang } = useContext( LangContext );
-	const { AuthCheckProps, AuthCheck } = useAuthCheck( { Auth: true, RedirectTo: "/signin" } );
+	const { AuthCheckProps, AuthCheck } = useAuthCheck( { Auth: true, RedirectTo: "/account/signin" } );
 	const [ IsSending, setIsSending ] = useState( false );
 	const Nav = useNavigate();
 
