@@ -9,10 +9,14 @@
     "Email": "E-Mail",
     "Username": "Username"
   },
+  "ShowBlueprint": {
+    "ObjectCount": "Object Count"
+  },
   "CreateBlueprint": {
     "ImportFromFiles": "Import from Blueprint Files",
     "BlueprintName": "Blueprint Name",
     "BlueprintDescripton": "Description",
+    "BlueprintSize": "Blueprintdesigner Size",
     "File1": "Blueprint (.sbp)",
     "File2": "Blueprint Config (.sbpcfg)",
     "Image": "Blueprint Image",

@@ -11,11 +11,16 @@ import {
 	DefaultResponseFailed,
 	DefaultResponseSuccess
 }                                       from "../../../../src/Shared/Default/Auth.Default";
-import { TRequest_BPU_ParseBlueprint }  from "../../../../src/Shared/Types/API_Request";
+import {
+	TRequest_BPU_ParseBlueprint,
+	TRequest_BPU_ReadBlueprint
+}                                       from "../../../../src/Shared/Types/API_Request";
 import { TResponse_BPU_ParseBlueprint } from "../../../../src/Shared/Types/API_Response";
 import { UploadedFile }                 from "express-fileupload";
 import fs                               from "fs";
 import { BlueprintParser }              from "../../Lib/BlueprintParser";
+import path                             from "path";
+import DB_Blueprints                    from "../../MongoDB/DB_Blueprints";
 
 export default function() {
 	Api.post( ApiUrl( EApiBlueprintUtils.parseblueprint ), MW_Auth, async( req : Request, res : Response ) => {
@@ -50,6 +55,35 @@ export default function() {
 					}
 				}
 			}
+		}
+
+		res.json( {
+			...Response
+		} );
+	} );
+
+	Api.post( ApiUrl( EApiBlueprintUtils.readblueprint ), async( req : Request, res : Response ) => {
+		let Response : TResponse_BPU_ParseBlueprint = {
+			...DefaultResponseFailed
+		};
+
+		const Request : TRequest_BPU_ReadBlueprint = req.body;
+
+		try {
+			const BP = ( await DB_Blueprints.findById( Request.Id ) )!;
+			const SBP : Buffer = fs.readFileSync( path.join( __BlueprintDir, Request.Id!, `${ Request.Id }.sbp` ) );
+			const SBPCFG : Buffer = fs.readFileSync( path.join( __BlueprintDir, Request.Id!, `${ Request.Id }.sbp` ) );
+
+			const Blueprint = new BlueprintParser( BP.name, SBP, SBPCFG );
+			if ( Blueprint.Success ) {
+				Response = {
+					...DefaultResponseSuccess,
+					Data: Blueprint.Get
+				};
+			}
+		}
+		catch ( e ) {
+
 		}
 
 		res.json( {

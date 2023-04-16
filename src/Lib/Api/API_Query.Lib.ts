@@ -1,8 +1,12 @@
-import { IAPIResponseBase } from "../../Shared/Types/API_Response";
-import { TApiPath }         from "../../Shared/Enum/EApiPath";
-import withReactContent     from "sweetalert2-react-content";
-import Swal                 from "sweetalert2";
-import { GetApiMessage }    from "../lang/lang";
+import {
+	IAPIResponseBase,
+	TResponse_BP_Questionary
+}                                  from "../../Shared/Types/API_Response";
+import { TApiPath }                from "../../Shared/Enum/EApiPath";
+import withReactContent            from "sweetalert2-react-content";
+import Swal                        from "sweetalert2";
+import { GetApiMessage }           from "../lang/lang";
+import { TRequest_BP_Questionary } from "../../Shared/Types/API_Request";
 
 export class API_QueryLib {
 
@@ -12,6 +16,14 @@ export class API_QueryLib {
 			const MySwal = withReactContent( Swal );
 			MySwal.fire( Message );
 		}
+	}
+
+	static async Qustionary<T = any>(
+		Path : TApiPath,
+		Data : TRequest_BP_Questionary<T>,
+		ContentType? : "application/json" | "application/x-www-form-urlencoded" | "multipart/form-data"
+	) : Promise<TResponse_BP_Questionary<T[]>> {
+		return API_QueryLib.PostToAPI<TResponse_BP_Questionary<T[]>, TRequest_BP_Questionary<T>>( Path, Data, ContentType );
 	}
 
 	static async PostToAPI<T extends IAPIResponseBase = IAPIResponseBase<any>, D = any>(

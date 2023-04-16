@@ -6,13 +6,16 @@ export enum EApiAuth {
 }
 
 export enum EApiBlueprintUtils {
-	parseblueprint = "blueprintutils/parseblueprint"
+	parseblueprint = "blueprintutils/parseblueprint",
+	readblueprint = "blueprintutils/readblueprint"
 }
 
 
-export enum EApiBlueprint {
-	get = "blueprints/get",
-	num = "blueprints/num"
+export enum EApiQuestionary {
+	blueprints = "questionary/blueprints",
+	num = "questionary/num",
+	tags = "questionary/tags",
+	mods = "questionary/mods"
 }
 
 export enum EApiUserBlueprints {
@@ -35,4 +38,4 @@ export type TApiPath =
 	| EApiUserBlueprints
 	| EApiAdminBlueprints
 	| EApiTags
-	| EApiBlueprint;
+	| EApiQuestionary;

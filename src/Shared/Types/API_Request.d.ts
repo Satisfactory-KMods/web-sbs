@@ -1,7 +1,6 @@
 import { User }          from "../Class/User.Class";
 import { UploadedFile }  from "express-fileupload";
 import { EDesignerSize } from "../Enum/EDesignerSize";
-import { IMO_Blueprint } from "./MongoDB";
 import {
 	FilterQuery,
 	QueryOptions
@@ -44,18 +43,17 @@ export type TRequest_BPU_ParseBlueprint = IRequestBody<{
 	BlueprintName : string;
 }>;
 
+export type TRequest_BPU_ReadBlueprint = IRequestBody<{
+	Id : string;
+}>;
+
 // --------------------------------------
 // ----------------- BP -----------------
 // --------------------------------------
 
-export type TRequest_BP_Get = IRequestBody<{
-	Filter : FilterQuery<IMO_Blueprint>,
-	Options : QueryOptions<IMO_Blueprint>
-}>;
-
-export type TRequest_BP_Num = IRequestBody<{
-	Filter : FilterQuery<IMO_Blueprint>,
-	Options : QueryOptions<IMO_Blueprint>
+export type TRequest_BP_Questionary<T = any> = IRequestBody<{
+	Filter : FilterQuery<T>,
+	Options : QueryOptions<T>
 }>;
 
 

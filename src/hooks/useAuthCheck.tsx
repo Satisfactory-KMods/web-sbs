@@ -49,6 +49,7 @@ export function useAuthCheck( Config : Partial<{
 		return !( Config.Role && !UserData.HasPermssion( Config.Role ) );
 	};
 
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	const Redirect = !useMemo( Check, [ UserData, IsLoggedIn, Token, Config.Role, Config.Auth ] );
 
 	return {

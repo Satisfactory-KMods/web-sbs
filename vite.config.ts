@@ -4,7 +4,6 @@ import { defineConfig } from "vite";
 import react            from "@vitejs/plugin-react";
 // @ts-ignore
 import eslint           from "vite-plugin-eslint";
-import tailwindcss      from "tailwindcss";
 
 export default defineConfig( {
 	server: {
@@ -25,7 +24,6 @@ export default defineConfig( {
 		outDir: "build"
 	},
 	plugins: [
-		tailwindcss(),
 		react( {
 			include: "{**/*,*}.{js,ts,jsx,tsx}",
 			babel: {

@@ -30,7 +30,6 @@ export default function() {
 			const ZipFile = path.join( __MountDir, "Zips", id, `${ BPName }.zip` );
 
 			if ( fs.existsSync( ZipFile ) ) {
-				console.error( ZipFile );
 				return res.download( ZipFile, `${ BPName }.zip` );
 			}
 

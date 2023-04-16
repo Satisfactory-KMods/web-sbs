@@ -35,11 +35,14 @@ export interface ILang {
 		"Err404" : string,
 		"Err403" : string
 	};
+	"ShowBlueprint" : {
+		"ObjectCount" : string;
+	};
 	"CreateBlueprint" : {
-		Import : any;
 		"ImportFromFiles" : string,
 		"BlueprintName" : string,
 		"BlueprintDescripton" : string,
+		"BlueprintSize" : string,
 		"File1" : string,
 		"File2" : string,
 		"Image" : string

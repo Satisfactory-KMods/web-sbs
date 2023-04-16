@@ -22,7 +22,7 @@ export async function CreateSession( User : Partial<IMO_UserAccount> ) : Promise
 		}
 	}
 	catch ( e ) {
-		console.log( e, process.env.JWTToken );
+		console.log( e );
 	}
 	return undefined;
 }

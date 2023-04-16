@@ -9,7 +9,7 @@
     "build": "yarn build.lint && yarn build.server && yarn build.vite",
     "build.server": "tsc --project ./server/tsconfig.json",
     "build.lint": "eslint src --fix && eslint server/src --fix",
-    "build.vite": "vite build"
+    "build.vite": "tsc && vite build"
   },
   "dependencies": {
     "@etothepii/satisfactory-file-parser": "^0.0.31",
@@ -34,7 +34,8 @@
     "react-select": "^5.7.2",
     "socket.io": "^4.6.1",
     "socket.io-client": "^4.6.1",
-    "sweetalert2": "^11.7.3"
+    "sweetalert2": "^11.7.3",
+    "sweetalert2-react-content": "^5.0.7"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.5",

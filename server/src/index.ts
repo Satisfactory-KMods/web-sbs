@@ -38,6 +38,7 @@ global.SocketIO = new Server<IListenEvents, IEmitEvents>( global.HttpServer, {
 	}
 } );
 
+Api.use( express.json() );
 Api.use( express.urlencoded( { extended: true } ) );
 Api.use( fileUpload( {
 	useTempFiles: true,

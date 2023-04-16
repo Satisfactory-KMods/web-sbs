@@ -20,7 +20,7 @@ interface IBlueprintCardProps {
 }
 
 const BlueprintCard : FunctionComponent<IBlueprintCardProps> = ( { Data } ) => {
-	const { Blueprint, ToggleLike } = useBlueprint( Data );
+	const { Blueprint, ToggleLike, AllowToLike } = useBlueprint( Data );
 	const { IsLoggedIn, UserData } = useContext( AuthContext );
 	const { Lang } = useLang();
 	const DisplayMods = [ ...Blueprint.mods ].splice( 0, 3 );
@@ -56,10 +56,10 @@ const BlueprintCard : FunctionComponent<IBlueprintCardProps> = ( { Data } ) => {
 						      className={ "btn rounded-top-0 btn-dark" }>
 							<Icon.BsDownload/>
 						</Link>
-						<Button
-							variant={ IsLoggedIn ? ( !Blueprint.likes.includes( UserData.Get._id ) ? "danger" : "success" ) : "dark" }
-							onClick={ ToggleLike } type={ "button" }
-							className={ "rounded-top-0" }>
+						<Button disabled={ !AllowToLike }
+						        variant={ IsLoggedIn ? ( !Blueprint.likes.includes( UserData.Get._id ) ? "danger" : "success" ) : "dark" }
+						        onClick={ ToggleLike } type={ "button" }
+						        className={ "rounded-top-0" }>
 							{ !Blueprint.likes.includes( UserData.Get._id ) ?
 								<Icon.BsFillHeartbreakFill className={ "me-2" }/> :
 								<Icon.BsFillHeartFill className={ "me-2" }/> } { Blueprint.likes.length }

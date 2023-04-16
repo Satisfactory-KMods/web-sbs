@@ -1,7 +1,6 @@
 /** @format */
 import { Blueprint } from "@etothepii/satisfactory-file-parser";
 import {
-	IMO_Blueprint,
 	IMO_Mod,
 	IMO_Tag
 }                    from "./MongoDB";
@@ -32,8 +31,7 @@ export type TResponse_Auth_Vertify = IAPIResponseBase<>;
 // ----------------- BP -----------------
 // --------------------------------------
 
-export type TResponse_BP_Get = IAPIResponseBase<IMO_Blueprint[]>;
-export type TResponse_BP_Num = IAPIResponseBase<number>;
+export type TResponse_BP_Questionary<T = any> = IAPIResponseBase<T>;
 
 // -------------------------------------------
 // ----------------- BP_Util -----------------
