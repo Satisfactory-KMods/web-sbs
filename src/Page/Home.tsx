@@ -21,37 +21,38 @@ const Home : FunctionComponent = () => {
 	const [ Total, setTotal ] = useState( 0 );
 	const [ Blueprints, setBlueprints ] = useState<IMO_Blueprint[]>( [] );
 
+	const DoFetch = async() => {
+		const [ CountQuery, Blueprints ] = await Promise.all( [
+			API_QueryLib.PostToAPI( EApiQuestionary.num, {} ),
+			API_QueryLib.Qustionary<IMO_Blueprint>( EApiQuestionary.blueprints, {
+				Options: {
+					limit: 15,
+					skip: CurrentPage * 15,
+					sort: { likes: -1 }
+				}
+			} )
+		] );
+
+		const Count = CountQuery.Data || 0;
+		const TotalPages = Math.ceil( Count / 15 );
+
+		setTotal( () => Count );
+		setTotalPages( TotalPages );
+		if ( CurrentPage > TotalPages ) {
+			setCurrentPage( Math.clamp( 0, CurrentPage, TotalPages ) );
+		}
+		setBlueprints( () => Blueprints.Data || [] );
+	};
 
 	useEffect( () => {
-		const DoFetch = async() => {
-			const [ CountQuery, Blueprints ] = await Promise.all( [
-				API_QueryLib.PostToAPI( EApiQuestionary.num, {} ),
-				API_QueryLib.Qustionary<IMO_Blueprint>( EApiQuestionary.blueprints, {
-					Options: {
-						limit: 15,
-						skip: CurrentPage * 15,
-						sort: { likes: -1 }
-					}
-				} )
-			] );
-
-			const Count = CountQuery.Data || 0;
-			const TotalPages = Math.ceil( Count / 15 );
-
-			setTotal( () => Count );
-			setTotalPages( TotalPages );
-			if ( CurrentPage > TotalPages ) {
-				setCurrentPage( Math.clamp( 0, CurrentPage, TotalPages ) );
-			}
-			setBlueprints( () => Blueprints.Data || [] );
-		};
 		DoFetch().then( () => {
 		} );
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [ CurrentPage ] );
 
 	return (
 		<Row>
-			{ Blueprints.map( BP => <BlueprintCard key={ BP._id } Data={ BP }/> ) }
+			{ Blueprints.map( BP => <BlueprintCard key={ BP._id } Data={ BP } onToggled={ DoFetch }/> ) }
 		</Row>
 	);
 };

@@ -79,6 +79,10 @@
       "text": "Input is not valid.",
       "icon": "error"
     },
+    "Unauthorized": {
+      "text": "You are not authorized to perform this action.",
+      "icon": "error"
+    },
     "Failed": {
       "text": "Request failed... Something went wrong.",
       "icon": "error"
@@ -105,6 +109,14 @@
     },
     "BlueprintRemoved": {
       "text": "Blueprint removed successfully",
+      "icon": "success"
+    },
+    "BlueprintBlacklisted": {
+      "text": "Blueprint blacklisted successfully",
+      "icon": "success"
+    },
+    "BlueprintUnBlacklisted": {
+      "text": "Blueprint removed from blacklist successfully",
       "icon": "success"
     }
   }

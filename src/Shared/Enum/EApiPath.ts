@@ -21,7 +21,9 @@ export enum EApiQuestionary {
 export enum EApiUserBlueprints {
 	create = "userbp/create",
 	edit = "userbp/edit",
-	like = "userbp/like"
+	like = "userbp/like",
+	blacklist = "userbp/blacklist",
+	remove = "userbp/remove"
 }
 
 export enum EApiTags {

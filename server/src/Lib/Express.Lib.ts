@@ -51,5 +51,13 @@ export async function MW_Auth( req : Request, res : Response, next : NextFunctio
 }
 
 export async function MW_Permission( req : Request, res : Response, next : NextFunction, Permission : ERoles ) {
-	next();
+	const Response : ResponseBase = {
+		...DefaultResponseFailed,
+		MessageCode: "Unauthorized"
+	};
+	if ( req.body.UserClass && req.body.UserClass.HasPermssion( Permission ) ) {
+		next();
+		return;
+	}
+	res.json( Response );
 }

@@ -17,13 +17,15 @@ import AuthContext       from "../../Context/AuthContext";
 import { useBlueprint }  from "../../hooks/useBlueprint";
 import Ribbon            from "../General/Ribbon";
 import ReactMarkdown     from "react-markdown";
+import { ERoles }        from "../../Shared/Enum/ERoles";
 
 interface IBlueprintCardProps {
 	Data : IMO_Blueprint;
+	onToggled? : () => void;
 }
 
-const BlueprintCard : FunctionComponent<IBlueprintCardProps> = ( { Data } ) => {
-	const { Blueprint, ToggleLike, AllowToLike, AllowToEdit, Mods, Tags } = useBlueprint( Data );
+const BlueprintCard : FunctionComponent<IBlueprintCardProps> = ( { Data, onToggled } ) => {
+	const { Blueprint, ToggleLike, AllowToLike, AllowToEdit, Mods, Tags, ToggleBlacklist } = useBlueprint( Data );
 	const { IsLoggedIn, UserData } = useContext( AuthContext );
 	const { Lang } = useLang();
 	const ModList = [ ...Mods ];
@@ -77,6 +79,16 @@ const BlueprintCard : FunctionComponent<IBlueprintCardProps> = ( { Data } ) => {
 						      className={ "btn rounded-top-0 btn-dark" }>
 							<Icon.BsDownload/> { Blueprint.downloads }
 						</Link>
+						{ UserData.HasPermssion( ERoles.moderator ) &&
+							<Button variant="danger" onClick={ async() => {
+								if ( await ToggleBlacklist() && onToggled ) {
+									onToggled();
+								}
+							} }
+							        className={ "rounded-top-0" }>
+								<Icon.BsTrashFill/>
+							</Button>
+						}
 						<Button disabled={ !AllowToLike }
 						        variant={ IsLoggedIn ? ( !Blueprint.likes.includes( UserData.Get._id ) ? "danger" : "success" ) : "dark" }
 						        onClick={ ToggleLike } type={ "button" }

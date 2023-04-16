@@ -21,7 +21,11 @@ import { GetSocket }     from "../Lib/SocketIO";
 import { ERoles }        from "../Shared/Enum/ERoles";
 import { Blueprint }     from "@etothepii/satisfactory-file-parser";
 
-export function useBlueprint( InitValue : string | IMO_Blueprint ) {
+export interface IBlueprintHookConfig {
+	IgnoreBlacklisted : boolean;
+}
+
+export function useBlueprint( InitValue : string | IMO_Blueprint, Config? : Partial<IBlueprintHookConfig> ) {
 	const [ Blueprint, setBlueprint ] = useState<IMO_Blueprint>( () => {
 		if ( typeof InitValue === "string" ) {
 			return {
@@ -53,8 +57,11 @@ export function useBlueprint( InitValue : string | IMO_Blueprint ) {
 	}, [ InitValue ] );
 
 	const BlueprintValid = useMemo( () => {
+		if ( Config?.IgnoreBlacklisted ) {
+			return Blueprint._id !== "";
+		}
 		return Blueprint._id !== "" && !Blueprint.blacklisted;
-	}, [ Blueprint._id, Blueprint.blacklisted ] );
+	}, [ Blueprint._id, Blueprint.blacklisted, Config?.IgnoreBlacklisted ] );
 
 	const QueryModsAndTags = async() => {
 		if ( !BlueprintValid ) {
@@ -114,30 +121,57 @@ export function useBlueprint( InitValue : string | IMO_Blueprint ) {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [] );
 
-	const ToggleLike = async() : Promise<string[]> => {
+	const ToggleLike = async() : Promise<void> => {
 		if ( !IsLoggedIn ) {
 			await API_QueryLib.FireSwal( "NotLoggedIn" );
-			return [];
+			return;
 		}
 
 		if ( !BlueprintValid ) {
-			return [];
+			return;
 		}
 
 		setDoQueryLikes( true );
-		const Form = new FormData();
-		Form.append( "Id", Blueprint._id );
-		const Result = await API_QueryLib.PostToAPI( EApiUserBlueprints.like, Form );
+		await API_QueryLib.PostToAPI( EApiUserBlueprints.like, { Id: Blueprint._id } );
 
-		if ( Result.Success && Result.Data ) {
-			setDoQueryLikes( false );
-			return Result.Data;
-		}
 		setDoQueryLikes( false );
-		return [];
+	};
+
+	const ToggleBlacklist = async() : Promise<boolean> => {
+		if ( !IsLoggedIn ) {
+			await API_QueryLib.FireSwal( "NotLoggedIn" );
+			return false;
+		}
+
+		if ( !BlueprintValid ) {
+			return false;
+		}
+
+		setDoQueryLikes( true );
+		const Result = await API_QueryLib.PostToAPI( EApiUserBlueprints.blacklist, { Id: Blueprint._id } );
+		setDoQueryLikes( false );
+		return Result.Success;
+	};
+
+	const Remove = async() : Promise<boolean> => {
+		if ( !IsLoggedIn ) {
+			await API_QueryLib.FireSwal( "NotLoggedIn" );
+			return false;
+		}
+
+		if ( !BlueprintValid ) {
+			return false;
+		}
+
+		setDoQueryLikes( true );
+		const Result = await API_QueryLib.PostToAPI( EApiUserBlueprints.remove, { Id: Blueprint._id } );
+		setDoQueryLikes( false );
+		return Result.Success;
 	};
 
 	return {
+		Remove,
+		ToggleBlacklist,
 		BlueprintData,
 		Mods,
 		Tags,

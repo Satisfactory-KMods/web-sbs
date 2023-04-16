@@ -20,12 +20,14 @@ import * as Icon        from "react-icons/bs";
 import AuthContext      from "../../Context/AuthContext";
 import { useLang }      from "../../hooks/useLang";
 import Ribbon           from "../../Components/General/Ribbon";
+import { ERoles }       from "../../Shared/Enum/ERoles";
 
 const ShowBlueprint : FunctionComponent = () => {
 	const { Lang } = useLang();
 	const { id } = useParams();
 	const { IsLoggedIn, UserData } = useContext( AuthContext );
 	const {
+		ToggleBlacklist,
 		Blueprint,
 		BlueprintValid,
 		AllowToLike,
@@ -116,6 +118,12 @@ const ShowBlueprint : FunctionComponent = () => {
 								      className={ "btn rounded-top-0 btn-secondary" }>
 									<Icon.BsGearFill/>
 								</Link>
+							}
+							{ UserData.HasPermssion( ERoles.moderator ) &&
+								<Button variant="danger" onClick={ ToggleBlacklist }
+								        className={ "rounded-top-0" }>
+									<Icon.BsTrashFill/>
+								</Button>
 							}
 							<Link to={ `/api/v1/download/${ Blueprint._id }` } target={ "_blank" }
 							      className={ "btn rounded-top-0 btn-success" }>

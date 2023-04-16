@@ -1,6 +1,7 @@
 import {
 	ApiUrl,
-	MW_Auth
+	MW_Auth,
+	MW_Permission
 }                             from "../../Lib/Express.Lib";
 import { EApiUserBlueprints } from "../../../../src/Shared/Enum/EApiPath";
 import {
@@ -26,6 +27,7 @@ import {
 import DB_Blueprints          from "../../MongoDB/DB_Blueprints";
 import path                   from "path";
 import fs                     from "fs";
+import { ERoles }             from "../../../../src/Shared/Enum/ERoles";
 
 export default function() {
 	Api.post( ApiUrl( EApiUserBlueprints.create ), MW_Auth, async( req : Request, res : Response ) => {
@@ -167,6 +169,74 @@ export default function() {
 				};
 
 				SocketIO.to( Document._id.toString() ).emit( "BlueprintUpdated", Document.toJSON() );
+			}
+		}
+		catch ( e ) {
+			console.error( e );
+		}
+
+		res.json( {
+			...Response
+		} );
+	} );
+
+	Api.post( ApiUrl( EApiUserBlueprints.blacklist ), MW_Auth, ( req, res, next ) => MW_Permission( req, res, next, ERoles.moderator ), async( req : Request, res : Response ) => {
+		let Response : TResponse_BPUser_ToggleLike = {
+			...DefaultResponseFailed
+		};
+
+		const Request : TRequest_BPUser_ToggleLike = req.body;
+
+		try {
+			if ( Request.Id && Request.UserClass ) {
+				const Document = ( await DB_Blueprints.findById( Request.Id ) )!;
+
+				Document.blacklisted = !Document.blacklisted;
+
+				await Document.save();
+
+				Response = {
+					...DefaultResponseSuccess,
+					Data: Document.likes,
+					MessageCode: Document.blacklisted ? "BlueprintBlacklisted" : "BlueprintUnBlacklisted"
+				};
+
+				SocketIO.to( Document._id.toString() ).emit( "BlueprintUpdated", Document.toJSON() );
+			}
+		}
+		catch ( e ) {
+			console.error( e );
+		}
+
+		res.json( {
+			...Response
+		} );
+	} );
+
+	Api.post( ApiUrl( EApiUserBlueprints.remove ), MW_Auth, ( req, res, next ) => MW_Permission( req, res, next, ERoles.admin ), async( req : Request, res : Response ) => {
+		let Response : TResponse_BPUser_ToggleLike = {
+			...DefaultResponseFailed
+		};
+
+		const Request : TRequest_BPUser_ToggleLike = req.body;
+
+		try {
+			if ( Request.Id && Request.UserClass ) {
+				const Document = ( await DB_Blueprints.findById( Request.Id ) )!;
+
+				const Zips = path.join( __MountDir, "Zips", Document._id.toString() );
+				const Files = path.join( __BlueprintDir, Document._id.toString() );
+
+				await Document.deleteOne();
+
+				fs.existsSync( Zips ) && fs.rmSync( Zips, { recursive: true } );
+				fs.existsSync( Files ) && fs.rmSync( Files, { recursive: true } );
+
+				Response = {
+					...DefaultResponseSuccess,
+					Data: Document.likes,
+					MessageCode: "BlueprintRemoved"
+				};
 			}
 		}
 		catch ( e ) {
