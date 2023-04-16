@@ -111,7 +111,7 @@ const ShowBlueprint : FunctionComponent = () => {
 						</tr>
 						<tr>
 							<td>{ Lang.CreateBlueprint.Tags }</td>
-							<td>{ Tags.map( R => <Badge key={ R._id }
+							<td>{ Tags.map( R => <Badge key={ R._id } className="me-2"
 							                            bg="secondary">{ R.DisplayName }</Badge> ) }</td>
 						</tr>
 						</tbody>

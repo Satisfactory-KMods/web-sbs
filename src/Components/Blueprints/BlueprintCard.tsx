@@ -70,7 +70,7 @@ const BlueprintCard : FunctionComponent<IBlueprintCardProps> = ( { Data, onToggl
 				</Card.Footer> }
 
 				{ Tags.length >= 1 && <Card.Footer>
-					{ Tags.map( R => <Badge key={ R._id } bg="secondary">{ R.DisplayName }</Badge> ) }
+					{ Tags.map( R => <Badge key={ R._id } bg="secondary" className="me-2">{ R.DisplayName }</Badge> ) }
 				</Card.Footer> }
 
 				<Card.Footer className={ "p-0" }>
