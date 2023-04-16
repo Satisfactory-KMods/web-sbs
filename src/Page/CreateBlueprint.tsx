@@ -126,7 +126,6 @@ const CreateBlueprint : FunctionComponent = () => {
 			data.append( "SBP", SBP! );
 			data.append( "SBPCFG", SBPCFG! );
 			data.append( "Image", Image! );
-			data.append( "Logo", Logo! );
 			data.append( "DesignerSize", DesignerSize!.value );
 			const Result = await API_QueryLib.PostToAPI( EApiUserBlueprints.create, data );
 			if ( Result.Success ) {
@@ -170,11 +169,6 @@ const CreateBlueprint : FunctionComponent = () => {
 			case "image":
 				if ( File && File.name.endsWith( ".jpg" ) ) {
 					setImage( () => File );
-				}
-				break;
-			case "logo":
-				if ( File && File.name.endsWith( ".jpg" ) ) {
-					setLogo( () => File );
 				}
 				break;
 			default:
@@ -228,8 +222,6 @@ const CreateBlueprint : FunctionComponent = () => {
 					                 type="file">{ Lang.CreateBlueprint.File2 }</FileUploadInput>
 					<FileUploadInput BoxClassName={ "mb-3" } type="file" onChange={ HandleChange } name={ "image" }
 					                 accept=".jpg,.jpeg">{ Lang.CreateBlueprint.Image }</FileUploadInput>
-					<FileUploadInput type="file" accept=".jpg" onChange={ HandleChange }
-					                 name={ "logo" }>{ Lang.CreateBlueprint.Logo }</FileUploadInput>
 					<hr/>
 					<LoadingButton variant={ "success" } type={ "submit" }
 					               disabled={ !CheckInput() }

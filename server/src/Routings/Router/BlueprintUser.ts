@@ -35,7 +35,7 @@ export default function() {
 
 		try {
 			if ( Request.BlueprintName && Request.BlueprintDesc && Request.UserClass && Request.DesignerSize ) {
-				if ( Files.SBP && Files.SBPCFG && Files.Image && Files.Logo ) {
+				if ( Files.SBP && Files.SBPCFG && Files.Image ) {
 					const Blueprint = new DB_Blueprints();
 					Blueprint.description = Request.BlueprintDesc;
 					Blueprint.name = Request.BlueprintName;
@@ -57,9 +57,6 @@ export default function() {
 									break;
 								case "Image":
 									await File.mv( path.join( __BlueprintDir, ID, `img_${ ID }.jpg` ) );
-									break;
-								case "Logo":
-									await File.mv( path.join( __BlueprintDir, ID, `logo_${ ID }.jpg` ) );
 									break;
 								default:
 									break;

@@ -76,7 +76,6 @@ export type TRequest_BPUser_Create_Files = Partial<{
 	SBP : UploadedFile;
 	SBPCFG : UploadedFile;
 	Image : UploadedFile;
-	Logo : UploadedFile;
 }>
 
 // ----------------------------------------

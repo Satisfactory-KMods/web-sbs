@@ -20,32 +20,38 @@ interface IBlueprintCardProps {
 }
 
 const BlueprintCard : FunctionComponent<IBlueprintCardProps> = ( { Data } ) => {
-	const { Blueprint, ToggleLike, AllowToLike } = useBlueprint( Data );
+	const { Blueprint, ToggleLike, AllowToLike, AllowToEdit, Mods } = useBlueprint( Data );
 	const { IsLoggedIn, UserData } = useContext( AuthContext );
 	const { Lang } = useLang();
-	const DisplayMods = [ ...Blueprint.mods ].splice( 0, 3 );
+	const ModList = [ ...Mods ];
+	const SpliceMods = ModList.splice( 0, 3 );
+	const MoreCount = ModList.length;
+	const DisplayMods = SpliceMods.map( R =>
+		<Link key={ R._id } to={ `https://ficsit.app/mod/${ R.mod_reference }` }
+		      target={ "_blank" }
+		      className={ " m-1 p-0" }>{ R.name }</Link> );
 
 	return (
-		<Col sm={ 12 } md={ 6 } xl={ 4 } className={ "mb-3 ps-0" }>
+		<Col sm={ 12 } md={ 6 } className={ "mb-3 ps-0" }>
 			<Card className={ "h-100" }>
-				<Card.Header style={ { /*backgroundImage: `url('/api/v1/image/${ Blueprint._id }/img')`*/ } }
-				             className={ "p-0 d-flex" }>
-					<img className={ "me-3 rounded-tl-lg" } src={ `/api/v1/image/${ Blueprint._id }/logo` }
-					     alt={ "logo" }
-					     style={ { height: 70, width: 70 } }/>
-					<div className={ "flex-1 align-middle pt-2" }>
-						<Card.Title>{ Blueprint.name }</Card.Title>
-						<Card.Subtitle
-							className="mb-2 text-muted">{ new Date( Blueprint.createdAt || 0 ).toLocaleString() }</Card.Subtitle>
-					</div>
+				<Card.Header className={ "d-flex p-0" }>
+					<h4 className={ "py-1 pt-2 px-3 flex-1" }>{ Blueprint.name }</h4>
 				</Card.Header>
+
+				<Card.Header style={ {
+					backgroundImage: `url('/api/v1/image/${ Blueprint._id }')`,
+					backgroundRepeat: "no-repeat",
+					backgroundSize: "cover",
+					height: 200
+				} }></Card.Header>
+
 				<Card.Body>
 					<Card.Text>
 						{ Blueprint.description.length > 200 ? Blueprint.description.slice( 0, 200 ) + "..." : Blueprint.description }
 					</Card.Text>
 				</Card.Body>
 				<Card.Footer>
-					<b>{ Lang.CreateBlueprint.Mods }:</b> { Blueprint.mods.length >= 4 ? `${ DisplayMods.join( ", " ) }, [...]` : DisplayMods.join( ", " ) }
+					<b>{ Lang.CreateBlueprint.Mods }:</b> { Blueprint.mods.length >= 4 ? <>{ DisplayMods.map( R => R ) } [...{ MoreCount }]</> : DisplayMods }
 				</Card.Footer>
 				<Card.Footer className={ "p-0" }>
 					<ButtonGroup className={ "h-100 w-100" }>
@@ -56,6 +62,12 @@ const BlueprintCard : FunctionComponent<IBlueprintCardProps> = ( { Data } ) => {
 						      className={ "btn rounded-top-0 btn-dark" }>
 							<Icon.BsDownload/>
 						</Link>
+						{ AllowToEdit &&
+							<Link to={ `/blueprint/edit/${ Blueprint._id }` }
+							      className={ "btn rounded-top-0 btn-dark" }>
+								<Icon.BsGearFill/>
+							</Link>
+						}
 						<Button disabled={ !AllowToLike }
 						        variant={ IsLoggedIn ? ( !Blueprint.likes.includes( UserData.Get._id ) ? "danger" : "success" ) : "dark" }
 						        onClick={ ToggleLike } type={ "button" }

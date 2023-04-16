@@ -57,7 +57,7 @@ const ShowBlueprint : FunctionComponent = () => {
 					</Card.Header>
 
 					<Card.Header style={ {
-						backgroundImage: `url('/api/v1/image/${ Blueprint._id }/img')`,
+						backgroundImage: `url('/api/v1/image/${ Blueprint._id }')`,
 						backgroundRepeat: "no-repeat",
 						backgroundSize: "cover",
 						height: 350
