@@ -1,64 +1,65 @@
 import {
 	ApiUrl,
-	MW_Auth
-}                                 from "../../Lib/Express.Lib";
-import { EApiTags }               from "../../../../src/Shared/Enum/EApiPath";
+	MW_Auth,
+	MW_Permission
+}                                from "../../Lib/Express.Lib";
+import { EApiTags }              from "../../../../src/Shared/Enum/EApiPath";
 import {
 	Request,
 	Response
-}                                 from "express";
-import { DefaultResponseSuccess } from "../../../../src/Shared/Default/Auth.Default";
-import { TRequest_Tags_Mods }     from "../../../../src/Shared/Types/API_Request";
-import { TResponse_Tags_Mods }    from "../../../../src/Shared/Types/API_Response";
-import DB_Mods                    from "../../MongoDB/DB_Mods";
-import { FilterQuery }            from "mongoose";
+}                                from "express";
 import {
-	IMO_Mod,
-	IMO_Tag
-}                                 from "../../../../src/Shared/Types/MongoDB";
-import DB_Tags                    from "../../MongoDB/DB_Tags";
+	DefaultResponseFailed,
+	DefaultResponseSuccess
+}                                from "../../../../src/Shared/Default/Auth.Default";
+import { TRequest_Tags_Modify }  from "../../../../src/Shared/Types/API_Request";
+import { TResponse_Tags_Modify } from "../../../../src/Shared/Types/API_Response";
+import { ERoles }                from "../../../../src/Shared/Enum/ERoles";
+import DB_Tags                   from "../../MongoDB/DB_Tags";
+import DB_Blueprints             from "../../MongoDB/DB_Blueprints";
 
 export default function() {
-	Api.post( ApiUrl( EApiTags.mods ), MW_Auth, async( req : Request, res : Response ) => {
-		const Response : TResponse_Tags_Mods = {
-			...DefaultResponseSuccess,
-			Data: []
+	Api.post( ApiUrl( EApiTags.modifytag ), MW_Auth, ( req, res, next ) => MW_Permission( req, res, next, ERoles.admin ), async( req : Request, res : Response ) => {
+		let Response : TResponse_Tags_Modify = {
+			...DefaultResponseFailed
 		};
 
-		const Request : TRequest_Tags_Mods = req.body;
+		const Request : TRequest_Tags_Modify = req.body;
 
 		try {
-			const SearchOptions : FilterQuery<IMO_Mod> = {};
-			if ( Request.filter ) {
-				SearchOptions.$or = [
-					{ name: { $contains: Request.filter } },
-					{ mod_reference: { $contains: Request.filter } }
-				];
+			if ( Request.Remove && Request.Id ) {
+				const Document = ( await DB_Tags.findById( Request.Id ) )!;
+				const ID = Document._id.toString();
+				if ( await Document.deleteOne() ) {
+					await DB_Blueprints.updateMany( {}, { $pull: { tags: ID } } );
+					Response = {
+						...DefaultResponseSuccess,
+						MessageCode: "Tags.Delete.Success"
+					};
+				}
 			}
-			Response.Data = await DB_Mods.find( SearchOptions, Request.limit ? { limit: Request.limit } : {} );
-		}
-		catch ( e ) {
-		}
+			else if ( Request.Id && Request.Data ) {
+				const Document = ( await DB_Tags.findById( Request.Id ) )!;
 
-		res.json( {
-			...Response
-		} );
-	} );
+				delete Request.Data._id;
+				delete Request.Data.__v;
 
-	Api.post( ApiUrl( EApiTags.tags ), MW_Auth, async( req : Request, res : Response ) => {
-		const Response : TResponse_Tags_Mods = {
-			...DefaultResponseSuccess,
-			Data: []
-		};
-
-		const Request : TRequest_Tags_Mods = req.body;
-
-		try {
-			let SearchOptions : FilterQuery<IMO_Tag> = {};
-			if ( Request.filter ) {
-				SearchOptions = { DisplayName: { $contains: Request.filter } };
+				if ( await Document.updateOne( Request.Data ) ) {
+					Response = {
+						...DefaultResponseSuccess,
+						MessageCode: "Tags.Modify.Success"
+					};
+				}
 			}
-			Response.Data = await DB_Tags.find( SearchOptions, Request.limit ? { limit: Request.limit } : {} );
+			else if ( !Request.Id && Request.Data ) {
+				const Document = await DB_Tags.create( Request.Data );
+				if ( Document ) {
+					Response = {
+						...DefaultResponseSuccess,
+						MessageCode: "Tags.Create.Success"
+					};
+				}
+			}
 		}
 		catch ( e ) {
 		}

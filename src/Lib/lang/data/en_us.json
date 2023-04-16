@@ -118,6 +118,18 @@
     "BlueprintUnBlacklisted": {
       "text": "Blueprint removed from blacklist successfully",
       "icon": "success"
+    },
+    "Tags.Modify.Success": {
+      "text": "Tag modified successfully",
+      "icon": "success"
+    },
+    "Tags.Create.Success": {
+      "text": "Tag created successfully",
+      "icon": "success"
+    },
+    "Tags.Delete.Success": {
+      "text": "Tag deleted successfully",
+      "icon": "success"
     }
   }
 }

@@ -5,6 +5,7 @@ import {
 	FilterQuery,
 	QueryOptions
 }                        from "mongoose";
+import { IMO_Tag }       from "./MongoDB";
 
 export type RequestWithUser<T = any> = {
 	UserClass? : T;
@@ -94,11 +95,8 @@ export type TRequest_BPUser_Edit_Files = Partial<{
 // ----------------- Tags -----------------
 // ----------------------------------------
 
-export type TRequest_Tags_Mods = IRequestBody<{
-	limit : number;
-	filter : string;
-}>;
-export type TRequest_Tags_Tags = IRequestBody<{
-	limit : number;
-	filter : string;
+export type TRequest_Tags_Modify = IRequestBody<{
+	Remove : boolean;
+	Id : string;
+	Data : Partial<IMO_Tag>;
 }>;

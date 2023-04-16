@@ -1,9 +1,5 @@
 /** @format */
 import { Blueprint } from "@etothepii/satisfactory-file-parser";
-import {
-	IMO_Mod,
-	IMO_Tag
-}                    from "./MongoDB";
 
 type ResponseBase<T = any> = {
 	Success : boolean;
@@ -51,5 +47,4 @@ export type TResponse_BPUser_ToggleLike = IAPIResponseBase<string[]>;
 // ----------------- Tags -----------------
 // ----------------------------------------
 
-export type TResponse_Tags_Mods = IAPIResponseBase<IMO_Mod[]>;
-export type TResponse_Tags_Tags = IAPIResponseBase<IMO_Tag[]>;
+export type TResponse_Tags_Modify = IAPIResponseBase;

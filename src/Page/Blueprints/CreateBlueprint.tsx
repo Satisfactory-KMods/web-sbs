@@ -17,7 +17,7 @@ import FileUploadInput    from "../../Components/Boostrap/FileUploadInput";
 import { API_QueryLib }   from "../../Lib/Api/API_Query.Lib";
 import {
 	EApiBlueprintUtils,
-	EApiTags,
+	EApiQuestionary,
 	EApiUserBlueprints
 }                         from "../../Shared/Enum/EApiPath";
 import { Blueprint }      from "@etothepii/satisfactory-file-parser";
@@ -29,12 +29,12 @@ import Select, {
 	MultiValue,
 	SingleValue
 }                         from "react-select";
-import {
-	TResponse_Tags_Mods,
-	TResponse_Tags_Tags
-}                         from "../../Shared/Types/API_Response";
 import { IModTagOptions } from "../../Shared/Types/SelectOptions";
 import { EDesignerSize }  from "../../Shared/Enum/EDesignerSize";
+import {
+	IMO_Mod,
+	IMO_Tag
+}                         from "../../Shared/Types/MongoDB";
 
 export interface IFile {
 	Content : FileList | undefined,
@@ -69,11 +69,11 @@ const CreateBlueprint : FunctionComponent = () => {
 
 	useEffect( () => {
 		Promise.all( [
-			API_QueryLib.PostToAPI<TResponse_Tags_Tags>( EApiTags.tags, {} ).then( R => setSelectTags( R.Data?.map( R => ( {
+			API_QueryLib.Qustionary<IMO_Tag>( EApiQuestionary.tags, {} ).then( R => setSelectTags( R.Data?.map( R => ( {
 				label: R.DisplayName,
 				value: R._id
 			} ) ) || [] ) ),
-			API_QueryLib.PostToAPI<TResponse_Tags_Mods>( EApiTags.mods, {} ).then( R => setSelectMods( R.Data?.map( R => ( {
+			API_QueryLib.Qustionary<IMO_Mod>( EApiQuestionary.mods, {} ).then( R => setSelectMods( R.Data?.map( R => ( {
 				label: R.name,
 				value: R.mod_reference
 			} ) ) || [] ) )

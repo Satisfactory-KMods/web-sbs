@@ -27,8 +27,7 @@ export enum EApiUserBlueprints {
 }
 
 export enum EApiTags {
-	mods = "tags/getmods",
-	tags = "tags/gettags"
+	modifytag = "tags/modifytag"
 }
 
 export enum EApiAdminBlueprints {
