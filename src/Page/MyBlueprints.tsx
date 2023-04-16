@@ -29,7 +29,7 @@ const MyBlueprints : FunctionComponent = () => {
 					setMyBlueprints( R.Data );
 				}
 			} );
-	}, [] );
+	}, [ UserData.Get._id ] );
 
 	return (
 		<AuthCheck { ...AuthCheckProps }>

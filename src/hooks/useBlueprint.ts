@@ -25,6 +25,7 @@ export function useBlueprint( InitValue : string | IMO_Blueprint ) {
 	const [ Blueprint, setBlueprint ] = useState<IMO_Blueprint>( () => {
 		if ( typeof InitValue === "string" ) {
 			return {
+				downloads: 0,
 				name: "",
 				DesignerSize: EDesignerSize.mk1,
 				description: "",
@@ -53,7 +54,7 @@ export function useBlueprint( InitValue : string | IMO_Blueprint ) {
 
 	const BlueprintValid = useMemo( () => {
 		return Blueprint._id !== "" && !Blueprint.blacklisted;
-	}, [ Blueprint._id ] );
+	}, [ Blueprint._id, Blueprint.blacklisted ] );
 
 	const QueryModsAndTags = async() => {
 		if ( !BlueprintValid ) {
