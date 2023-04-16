@@ -51,9 +51,9 @@ const TopNav : FunctionComponent = () => {
 					<ul className="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0 ms-4">
 						<TopNavLink href="/">{ Lang.Navigation.Home }</TopNavLink>
 						<TopNavLink SessionRole={ ERoles.member }
-						            href="/create">{ Lang.Navigation.AddBlueprint }</TopNavLink>
+						            href="/blueprint/create">{ Lang.Navigation.AddBlueprint }</TopNavLink>
 						<TopNavLink SessionRole={ ERoles.member }
-						            href="/my">{ Lang.Navigation.MyBlueprints }</TopNavLink>
+						            href="/blueprint/my">{ Lang.Navigation.MyBlueprints }</TopNavLink>
 					</ul>
 
 					<div className="dropdown text-end me-2">

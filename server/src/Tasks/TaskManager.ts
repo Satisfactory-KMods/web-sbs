@@ -1,7 +1,7 @@
 import fs   from "fs";
 import path from "path";
 
-export type TTasksRunner = "FicsitQuery";
+export type TTasksRunner = "FicsitQuery" | "MakeItClean";
 
 export class JobTask {
 	public JobName = "";

@@ -30,9 +30,11 @@ global.Api = express();
 global.HttpServer = http.createServer( global.Api );
 
 global.SocketIO = new Server<IListenEvents, IEmitEvents>( global.HttpServer, {
+	path: "/api/v1/io/",
 	cors: {
 		origin: "*",
-		methods: [ "GET", "POST" ]
+		methods: [ "GET", "POST", "PUT", "PATCH", "DELETE" ],
+		credentials: false
 	}
 } );
 
@@ -63,6 +65,17 @@ mongoose
 		}
 	)
 	.then( async() => {
+		// Sockets need to connect on a room otherwise we will not be able to send messages
+		SocketIO.on( "connection", function( socket ) {
+			const query = socket.handshake.query;
+			const roomName = query.roomName;
+			if ( !roomName || Array.isArray( roomName ) ) {
+				socket.disconnect( true );
+				return;
+			}
+			socket.join( roomName as string );
+		} );
+
 		SystemLib.Log( "[DB] Connected... Start API and SOCKETIO" );
 
 		await InstallRoutings( path.join( __BaseDir, "Routings/Router" ) );

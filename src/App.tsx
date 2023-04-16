@@ -39,9 +39,9 @@ function App() {
 								<Route path="/signin" element={ <SignIn/> }/>
 								<Route path="/signup" element={ <SignUp/> }/>
 
-								<Route path="/my" element={ <MyBlueprints/> }/>
-								<Route path="/create" element={ <CreateBlueprint/> }/>
-								<Route path="/edit/:id" element={ <EditBlueprint/> }/>
+								<Route path="/blueprint/my" element={ <MyBlueprints/> }/>
+								<Route path="/blueprint/create" element={ <CreateBlueprint/> }/>
+								<Route path="/blueprint/edit/:id" element={ <EditBlueprint/> }/>
 								<Route path="/blueprint/:id" element={ <ShowBlueprint/> }/>
 
 								<Route path="/" element={ <Home/> }/>

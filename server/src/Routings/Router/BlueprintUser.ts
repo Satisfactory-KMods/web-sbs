@@ -34,13 +34,13 @@ export default function() {
 		const Files = req.files as TRequest_BPUser_Create_Files;
 
 		try {
-			if ( Request.BlueprintName && Request.BlueprintDesc && Request.BlueprintMods && Request.UserClass && Request.DesignerSize ) {
+			if ( Request.BlueprintName && Request.BlueprintDesc && Request.UserClass && Request.DesignerSize ) {
 				if ( Files.SBP && Files.SBPCFG && Files.Image && Files.Logo ) {
 					const Blueprint = new DB_Blueprints();
 					Blueprint.description = Request.BlueprintDesc;
 					Blueprint.name = Request.BlueprintName;
 					Blueprint.tags = Request.BlueprintTags || [];
-					Blueprint.mods = Request.BlueprintMods;
+					Blueprint.mods = Request.BlueprintMods || [];
 					Blueprint.owner = Request.UserClass.Get._id;
 					Blueprint.DesignerSize = Request.DesignerSize;
 					const ID = Blueprint._id.toString();
@@ -109,6 +109,8 @@ export default function() {
 					...DefaultResponseSuccess,
 					Data: Document.likes
 				};
+
+				SocketIO.to( Document._id.toString() ).emit( "BlueprintUpdated", Document.toJSON() );
 			}
 		}
 		catch ( e ) {

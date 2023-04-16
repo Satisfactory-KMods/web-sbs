@@ -200,21 +200,21 @@ const CreateBlueprint : FunctionComponent = () => {
 						</div>
 					</div>
 					<InputGroup className={ "mb-3" }>
-						<InputGroup.Text className="text-bg-secondary">{ Lang.CreateBlueprint.Mods }</InputGroup.Text>
+						<InputGroup.Text className="text-bg-dark">{ Lang.CreateBlueprint.Mods }</InputGroup.Text>
 						<Select options={ SelectMods } isMulti={ true } value={ Mods } onChange={ setMods }
 						        isClearable={ true }
 
 						        className="my-react-select-container flex-1" classNamePrefix="my-react-select"/>
 					</InputGroup>
 					<InputGroup className={ "mb-3" }>
-						<InputGroup.Text className="text-bg-secondary">{ Lang.CreateBlueprint.Tags }</InputGroup.Text>
+						<InputGroup.Text className="text-bg-dark">{ Lang.CreateBlueprint.Tags }</InputGroup.Text>
 						<Select options={ SelectTags } isMulti={ true } value={ Tags } onChange={ setTags }
 						        isClearable={ true }
 						        className="my-react-select-container flex-1" classNamePrefix="my-react-select"/>
 					</InputGroup>
 					<InputGroup className={ "mb-3" }>
 						<InputGroup.Text
-							className="text-bg-secondary">{ Lang.CreateBlueprint.DesignerSize }</InputGroup.Text>
+							className="text-bg-dark">{ Lang.CreateBlueprint.DesignerSize }</InputGroup.Text>
 						<Select isClearable={ false } options={ Object.values( EDesignerSize ).map( R => ( {
 							value: R,
 							label: R

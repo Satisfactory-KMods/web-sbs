@@ -19,7 +19,7 @@ const FileUploadInput : FunctionComponent<IFileUploadInputProps & React.Detailed
 
 	return (
 		<div className={ "input-group " + ( BoxClassName || "" ) } id={ id }>
-			<label htmlFor={ ID } className="input-group-text text-bg-secondary">{ children }</label>
+			<label htmlFor={ ID } className="input-group-text text-bg-dark">{ children }</label>
 			<input className={ "form-control " + ( className || "" ) } type="file" id={ ID } { ...Props } />
 		</div>
 	);
