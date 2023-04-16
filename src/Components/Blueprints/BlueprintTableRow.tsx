@@ -10,10 +10,11 @@ import {
 
 interface IBlueprintTableRowProps {
 	Data : IMO_Blueprint;
+	onToggled? : () => void;
 }
 
-const BlueprintTableRow : FunctionComponent<IBlueprintTableRowProps> = ( { Data } ) => {
-	const { BlueprintValid, Blueprint, ToggleLike } = useBlueprint( Data );
+const BlueprintTableRow : FunctionComponent<IBlueprintTableRowProps> = ( { Data, onToggled } ) => {
+	const { BlueprintValid, Blueprint, ToggleBlacklist } = useBlueprint( Data );
 
 	if ( !BlueprintValid ) {
 		return null;
@@ -42,7 +43,11 @@ const BlueprintTableRow : FunctionComponent<IBlueprintTableRowProps> = ( { Data 
 					</Link>
 					<Button className={ "rounded-0" }
 					        variant={ "danger" }
-					        onClick={ ToggleLike } type={ "button" }>
+					        onClick={ async() => {
+						        if ( await ToggleBlacklist() && onToggled !== undefined ) {
+							        onToggled();
+						        }
+					        } } type={ "button" }>
 						<Icon.BsTrashFill/>
 					</Button>
 				</ButtonGroup>

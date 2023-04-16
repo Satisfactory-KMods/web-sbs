@@ -213,7 +213,7 @@ export default function() {
 		} );
 	} );
 
-	Api.post( ApiUrl( EApiUserBlueprints.remove ), MW_Auth, ( req, res, next ) => MW_Permission( req, res, next, ERoles.admin ), async( req : Request, res : Response ) => {
+	Api.post( ApiUrl( EApiUserBlueprints.remove ), MW_Auth, async( req : Request, res : Response ) => {
 		let Response : TResponse_BPUser_ToggleLike = {
 			...DefaultResponseFailed
 		};
@@ -221,8 +221,8 @@ export default function() {
 		const Request : TRequest_BPUser_ToggleLike = req.body;
 
 		try {
-			if ( Request.Id && Request.UserClass ) {
-				const Document = ( await DB_Blueprints.findById( Request.Id ) )!;
+			const Document = ( await DB_Blueprints.findById( Request.Id ) )!;
+			if ( Request.Id && Request.UserClass && ( Request.UserClass.HasPermssion( ERoles.admin ) || Document._id.toString() === Request.UserClass.Get._id.toString() ) ) {
 
 				const Zips = path.join( __MountDir, "Zips", Document._id.toString() );
 				const Files = path.join( __BlueprintDir, Document._id.toString() );

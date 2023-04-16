@@ -64,7 +64,8 @@ export default function() {
 
 	Api.post( ApiUrl( EApiBlueprintUtils.readblueprint ), async( req : Request, res : Response ) => {
 		let Response : TResponse_BPU_ParseBlueprint = {
-			...DefaultResponseFailed
+			...DefaultResponseFailed,
+			MessageCode: ""
 		};
 
 		const Request : TRequest_BPU_ReadBlueprint = req.body;

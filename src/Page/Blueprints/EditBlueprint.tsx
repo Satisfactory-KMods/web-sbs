@@ -21,11 +21,7 @@ import { IModTagOptions } from "../../Shared/Types/SelectOptions";
 import { EDesignerSize }  from "../../Shared/Enum/EDesignerSize";
 import { API_QueryLib }   from "../../Lib/Api/API_Query.Lib";
 import {
-	TResponse_Tags_Mods,
-	TResponse_Tags_Tags
-}                         from "../../Shared/Types/API_Response";
-import {
-	EApiTags,
+	EApiQuestionary,
 	EApiUserBlueprints
 }                         from "../../Shared/Enum/EApiPath";
 import FloatInput         from "../../Components/Boostrap/FloatInput";
@@ -38,6 +34,10 @@ import {
 import FileUploadInput    from "../../Components/Boostrap/FileUploadInput";
 import LoadingButton      from "../../Components/Boostrap/LoadingButton";
 import { useBlueprint }   from "../../hooks/useBlueprint";
+import {
+	IMO_Mod,
+	IMO_Tag
+}                         from "../../Shared/Types/MongoDB";
 
 const EditBlueprint : FunctionComponent = () => {
 	const { id } = useParams();
@@ -94,11 +94,11 @@ const EditBlueprint : FunctionComponent = () => {
 	// load all mods and tags
 	useEffect( () => {
 		Promise.all( [
-			API_QueryLib.PostToAPI<TResponse_Tags_Tags>( EApiTags.tags, {} ).then( R => setSelectTags( R.Data?.map( R => ( {
+			API_QueryLib.Qustionary<IMO_Tag>( EApiQuestionary.tags, {} ).then( R => setSelectTags( R.Data?.map( R => ( {
 				label: R.DisplayName,
 				value: R._id
 			} ) ) || [] ) ),
-			API_QueryLib.PostToAPI<TResponse_Tags_Mods>( EApiTags.mods, {} ).then( R => setSelectMods( R.Data?.map( R => ( {
+			API_QueryLib.Qustionary<IMO_Mod>( EApiQuestionary.mods, {} ).then( R => setSelectMods( R.Data?.map( R => ( {
 				label: R.name,
 				value: R.mod_reference
 			} ) ) || [] ) )
@@ -164,53 +164,51 @@ const EditBlueprint : FunctionComponent = () => {
 
 	return (
 		<AuthCheck { ...AuthCheckProps }>
-			<div className={ "d-flex h-100 justify-content-center" }>
-				<form onSubmit={ HandleSubmit }
-				      className={ "align-self-center bg-gray-800 p-4 border rounded-4 w-100" }>
-					<h2>{ Lang.EditBlueprint.Title }</h2>
-					<hr/>
-					<FloatInput className={ "mb-3" } onChange={ E => setBlueprintName( E.target.value ) }
-					            value={ BlueprintName }>{ Lang.CreateBlueprint.BlueprintName }</FloatInput>
-					<div className={ "d-flex mb-3" }>
-						<FloatTextarea className={ "h-100 me-3" } style={ { minHeight: 500 } }
-						               onChange={ E => setBlueprintDesc( E.target.value ) } value={ BlueprintDesc }
-						               lableClassName={ "flex-1" }>{ Lang.CreateBlueprint.BlueprintDescripton }</FloatTextarea>
-						<div className={ "ms-3 flex-1 border rounded p-2 bg-dark" }>
-							<ReactMarkdown>{ BlueprintDesc }</ReactMarkdown>
-						</div>
+			<form onSubmit={ HandleSubmit }
+			      className={ "bg-gray-800 p-4 border rounded-4 w-100" }>
+				<h2>{ Lang.EditBlueprint.Title }</h2>
+				<hr/>
+				<FloatInput className={ "mb-3" } onChange={ E => setBlueprintName( E.target.value ) }
+				            value={ BlueprintName }>{ Lang.CreateBlueprint.BlueprintName }</FloatInput>
+				<div className={ "d-flex mb-3" }>
+					<FloatTextarea className={ "h-100 me-3" } style={ { minHeight: 500 } }
+					               onChange={ E => setBlueprintDesc( E.target.value ) } value={ BlueprintDesc }
+					               lableClassName={ "flex-1" }>{ Lang.CreateBlueprint.BlueprintDescripton }</FloatTextarea>
+					<div className={ "ms-3 flex-1 border rounded p-2 bg-dark" }>
+						<ReactMarkdown>{ BlueprintDesc }</ReactMarkdown>
 					</div>
-					<InputGroup className={ "mb-3" }>
-						<InputGroup.Text className="text-bg-dark">{ Lang.CreateBlueprint.Mods }</InputGroup.Text>
-						<Select options={ SelectMods } isMulti={ true } value={ Mods } onChange={ setMods }
-						        isClearable={ true }
+				</div>
+				<InputGroup className={ "mb-3" }>
+					<InputGroup.Text className="text-bg-dark">{ Lang.CreateBlueprint.Mods }</InputGroup.Text>
+					<Select options={ SelectMods } isMulti={ true } value={ Mods } onChange={ setMods }
+					        isClearable={ true }
 
-						        className="my-react-select-container flex-1" classNamePrefix="my-react-select"/>
-					</InputGroup>
-					<InputGroup className={ "mb-3" }>
-						<InputGroup.Text className="text-bg-dark">{ Lang.CreateBlueprint.Tags }</InputGroup.Text>
-						<Select options={ SelectTags } isMulti={ true } value={ Tags } onChange={ setTags }
-						        isClearable={ true }
-						        className="my-react-select-container flex-1" classNamePrefix="my-react-select"/>
-					</InputGroup>
-					<InputGroup className={ "mb-3" }>
-						<InputGroup.Text
-							className="text-bg-dark">{ Lang.CreateBlueprint.DesignerSize }</InputGroup.Text>
-						<Select isClearable={ false } options={ Object.values( EDesignerSize ).map( R => ( {
-							value: R,
-							label: R
-						} as IModTagOptions<EDesignerSize> ) ) } value={ DesignerSize } onChange={ setDesignerSize }
-						        className="my-react-select-container flex-1" classNamePrefix="my-react-select"/>
-					</InputGroup>
-					<FileUploadInput BoxClassName={ "mb-3" } type="file" onChange={ HandleChange } name={ "image" }
-					                 accept=".jpg,.jpeg,.png">{ Lang.CreateBlueprint.Image }</FileUploadInput>
-					<hr/>
-					<LoadingButton variant={ "success" } type={ "submit" }
-					               disabled={ !CheckInput() }
-					               IsLoading={ IsSending }>{ Lang.EditBlueprint.Submit }</LoadingButton>
-					<Button variant={ "secondary" } type={ "button" } className={ "ms-2" }
-					        onClick={ () => Nav( `/blueprint/${ id }` ) }>{ Lang.EditBlueprint.Back }</Button>
-				</form>
-			</div>
+					        className="my-react-select-container flex-1" classNamePrefix="my-react-select"/>
+				</InputGroup>
+				<InputGroup className={ "mb-3" }>
+					<InputGroup.Text className="text-bg-dark">{ Lang.CreateBlueprint.Tags }</InputGroup.Text>
+					<Select options={ SelectTags } isMulti={ true } value={ Tags } onChange={ setTags }
+					        isClearable={ true }
+					        className="my-react-select-container flex-1" classNamePrefix="my-react-select"/>
+				</InputGroup>
+				<InputGroup className={ "mb-3" }>
+					<InputGroup.Text
+						className="text-bg-dark">{ Lang.CreateBlueprint.DesignerSize }</InputGroup.Text>
+					<Select isClearable={ false } options={ Object.values( EDesignerSize ).map( R => ( {
+						value: R,
+						label: R
+					} as IModTagOptions<EDesignerSize> ) ) } value={ DesignerSize } onChange={ setDesignerSize }
+					        className="my-react-select-container flex-1" classNamePrefix="my-react-select"/>
+				</InputGroup>
+				<FileUploadInput BoxClassName={ "mb-3" } type="file" onChange={ HandleChange } name={ "image" }
+				                 accept=".jpg,.jpeg,.png">{ Lang.CreateBlueprint.Image }</FileUploadInput>
+				<hr/>
+				<LoadingButton variant={ "success" } type={ "submit" }
+				               disabled={ !CheckInput() }
+				               IsLoading={ IsSending }>{ Lang.EditBlueprint.Submit }</LoadingButton>
+				<Button variant={ "secondary" } type={ "button" } className={ "ms-2" }
+				        onClick={ () => Nav( `/blueprint/${ id }` ) }>{ Lang.EditBlueprint.Back }</Button>
+			</form>
 		</AuthCheck>
 	);
 };

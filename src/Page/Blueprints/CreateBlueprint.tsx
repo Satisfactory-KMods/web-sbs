@@ -177,58 +177,56 @@ const CreateBlueprint : FunctionComponent = () => {
 
 	return (
 		<AuthCheck { ...AuthCheckProps }>
-			<div className={ "d-flex h-100 justify-content-center" }>
-				<form onSubmit={ HandleSubmit }
-				      className={ "align-self-center bg-gray-800 p-4 border rounded-4 w-100" }>
-					<h2>{ Lang.Navigation.AddBlueprint }</h2>
-					<hr/>
-					<FloatInput className={ "mb-3" } onChange={ E => setBlueprintName( E.target.value ) }
-					            value={ BlueprintName }>{ Lang.CreateBlueprint.BlueprintName }</FloatInput>
-					<div className={ "d-flex mb-3" }>
-						<FloatTextarea className={ "h-100 me-3" } style={ { minHeight: 500 } }
-						               onChange={ E => setBlueprintDesc( E.target.value ) } value={ BlueprintDesc }
-						               lableClassName={ "flex-1" }>{ Lang.CreateBlueprint.BlueprintDescripton }</FloatTextarea>
-						<div className={ "ms-3 flex-1 border rounded p-2 bg-dark" }>
-							<ReactMarkdown>{ BlueprintDesc }</ReactMarkdown>
-						</div>
+			<form onSubmit={ HandleSubmit }
+			      className={ "bg-gray-800 p-4 border rounded-4 w-100" }>
+				<h2>{ Lang.Navigation.AddBlueprint }</h2>
+				<hr/>
+				<FloatInput className={ "mb-3" } onChange={ E => setBlueprintName( E.target.value ) }
+				            value={ BlueprintName }>{ Lang.CreateBlueprint.BlueprintName }</FloatInput>
+				<div className={ "d-flex mb-3" }>
+					<FloatTextarea className={ "h-100 me-3" } style={ { minHeight: 500 } }
+					               onChange={ E => setBlueprintDesc( E.target.value ) } value={ BlueprintDesc }
+					               lableClassName={ "flex-1" }>{ Lang.CreateBlueprint.BlueprintDescripton }</FloatTextarea>
+					<div className={ "ms-3 flex-1 border rounded p-2 bg-dark" }>
+						<ReactMarkdown>{ BlueprintDesc }</ReactMarkdown>
 					</div>
-					<InputGroup className={ "mb-3" }>
-						<InputGroup.Text className="text-bg-dark">{ Lang.CreateBlueprint.Mods }</InputGroup.Text>
-						<Select options={ SelectMods } isMulti={ true } value={ Mods } onChange={ setMods }
-						        isClearable={ true }
+				</div>
+				<InputGroup className={ "mb-3" }>
+					<InputGroup.Text className="text-bg-dark">{ Lang.CreateBlueprint.Mods }</InputGroup.Text>
+					<Select options={ SelectMods } isMulti={ true } value={ Mods } onChange={ setMods }
+					        isClearable={ true }
 
-						        className="my-react-select-container flex-1" classNamePrefix="my-react-select"/>
-					</InputGroup>
-					<InputGroup className={ "mb-3" }>
-						<InputGroup.Text className="text-bg-dark">{ Lang.CreateBlueprint.Tags }</InputGroup.Text>
-						<Select options={ SelectTags } isMulti={ true } value={ Tags } onChange={ setTags }
-						        isClearable={ true }
-						        className="my-react-select-container flex-1" classNamePrefix="my-react-select"/>
-					</InputGroup>
-					<InputGroup className={ "mb-3" }>
-						<InputGroup.Text
-							className="text-bg-dark">{ Lang.CreateBlueprint.DesignerSize }</InputGroup.Text>
-						<Select isClearable={ false } options={ Object.values( EDesignerSize ).map( R => ( {
-							value: R,
-							label: R
-						} as IModTagOptions<EDesignerSize> ) ) } value={ DesignerSize } onChange={ setDesignerSize }
-						        className="my-react-select-container flex-1" classNamePrefix="my-react-select"/>
-					</InputGroup>
-					<FileUploadInput BoxClassName={ "mb-3" } accept=".sbp" onChange={ HandleChange } name={ "sbp" }
-					                 type="file">{ Lang.CreateBlueprint.File1 }</FileUploadInput>
-					<FileUploadInput BoxClassName={ "mb-3" } accept=".sbpcfg" onChange={ HandleChange }
-					                 name={ "sbpcfg" }
-					                 type="file">{ Lang.CreateBlueprint.File2 }</FileUploadInput>
-					<FileUploadInput BoxClassName={ "mb-3" } type="file" onChange={ HandleChange } name={ "image" }
-					                 accept=".jpg,.jpeg">{ Lang.CreateBlueprint.Image }</FileUploadInput>
-					<hr/>
-					<LoadingButton variant={ "success" } type={ "submit" }
-					               disabled={ !CheckInput() }
-					               IsLoading={ IsSending }>{ Lang.CreateBlueprint.Submit }</LoadingButton>
-					<Button className={ "ms-2" } disabled={ !CanImport }
-					        onClick={ HandleImport }>{ Lang.CreateBlueprint.ImportFromFiles }</Button>
-				</form>
-			</div>
+					        className="my-react-select-container flex-1" classNamePrefix="my-react-select"/>
+				</InputGroup>
+				<InputGroup className={ "mb-3" }>
+					<InputGroup.Text className="text-bg-dark">{ Lang.CreateBlueprint.Tags }</InputGroup.Text>
+					<Select options={ SelectTags } isMulti={ true } value={ Tags } onChange={ setTags }
+					        isClearable={ true }
+					        className="my-react-select-container flex-1" classNamePrefix="my-react-select"/>
+				</InputGroup>
+				<InputGroup className={ "mb-3" }>
+					<InputGroup.Text
+						className="text-bg-dark">{ Lang.CreateBlueprint.DesignerSize }</InputGroup.Text>
+					<Select isClearable={ false } options={ Object.values( EDesignerSize ).map( R => ( {
+						value: R,
+						label: R
+					} as IModTagOptions<EDesignerSize> ) ) } value={ DesignerSize } onChange={ setDesignerSize }
+					        className="my-react-select-container flex-1" classNamePrefix="my-react-select"/>
+				</InputGroup>
+				<FileUploadInput BoxClassName={ "mb-3" } accept=".sbp" onChange={ HandleChange } name={ "sbp" }
+				                 type="file">{ Lang.CreateBlueprint.File1 }</FileUploadInput>
+				<FileUploadInput BoxClassName={ "mb-3" } accept=".sbpcfg" onChange={ HandleChange }
+				                 name={ "sbpcfg" }
+				                 type="file">{ Lang.CreateBlueprint.File2 }</FileUploadInput>
+				<FileUploadInput BoxClassName={ "mb-3" } type="file" onChange={ HandleChange } name={ "image" }
+				                 accept=".jpg,.jpeg">{ Lang.CreateBlueprint.Image }</FileUploadInput>
+				<hr/>
+				<LoadingButton variant={ "success" } type={ "submit" }
+				               disabled={ !CheckInput() }
+				               IsLoading={ IsSending }>{ Lang.CreateBlueprint.Submit }</LoadingButton>
+				<Button className={ "ms-2" } disabled={ !CanImport }
+				        onClick={ HandleImport }>{ Lang.CreateBlueprint.ImportFromFiles }</Button>
+			</form>
 		</AuthCheck>
 	);
 };

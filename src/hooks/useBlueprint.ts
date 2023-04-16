@@ -56,6 +56,10 @@ export function useBlueprint( InitValue : string | IMO_Blueprint, Config? : Part
 		return InitValue._id;
 	}, [ InitValue ] );
 
+	const IsOwner = useMemo( () => {
+		return UserData.Get._id === Blueprint.owner;
+	}, [ UserData.Get._id, Blueprint.owner ] );
+
 	const BlueprintValid = useMemo( () => {
 		if ( Config?.IgnoreBlacklisted ) {
 			return Blueprint._id !== "";
@@ -170,6 +174,7 @@ export function useBlueprint( InitValue : string | IMO_Blueprint, Config? : Part
 	};
 
 	return {
+		IsOwner,
 		Remove,
 		ToggleBlacklist,
 		BlueprintData,

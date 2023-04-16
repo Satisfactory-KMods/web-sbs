@@ -25,7 +25,16 @@ interface IBlueprintCardProps {
 }
 
 const BlueprintCard : FunctionComponent<IBlueprintCardProps> = ( { Data, onToggled } ) => {
-	const { Blueprint, ToggleLike, AllowToLike, AllowToEdit, Mods, Tags, ToggleBlacklist } = useBlueprint( Data );
+	const {
+		Blueprint,
+		ToggleLike,
+		AllowToLike,
+		AllowToEdit,
+		Mods,
+		Tags,
+		ToggleBlacklist,
+		IsOwner
+	} = useBlueprint( Data );
 	const { IsLoggedIn, UserData } = useContext( AuthContext );
 	const { Lang } = useLang();
 	const ModList = [ ...Mods ];
@@ -79,9 +88,9 @@ const BlueprintCard : FunctionComponent<IBlueprintCardProps> = ( { Data, onToggl
 						      className={ "btn rounded-top-0 btn-dark" }>
 							<Icon.BsDownload/> { Blueprint.downloads }
 						</Link>
-						{ UserData.HasPermssion( ERoles.moderator ) &&
+						{ ( UserData.HasPermssion( ERoles.moderator ) || IsOwner ) &&
 							<Button variant="danger" onClick={ async() => {
-								if ( await ToggleBlacklist() && onToggled ) {
+								if ( await ToggleBlacklist() && onToggled !== undefined ) {
 									onToggled();
 								}
 							} }
