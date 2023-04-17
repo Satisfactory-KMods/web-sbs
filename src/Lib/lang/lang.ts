@@ -48,6 +48,11 @@ export interface ILang {
 		"Submit" : string
 		"Back" : string
 	},
+	"AdminUsers" : {
+		"Role" : string,
+		"Username" : string,
+		"Id" : string
+	},
 	"AdminTags" : {
 		"Id" : string,
 		"DisplayName" : string,

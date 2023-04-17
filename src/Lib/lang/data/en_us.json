@@ -14,6 +14,11 @@
     "Edit": "Save edit",
     "Close": "Close"
   },
+  "AdminUsers": {
+    "Role": "Role",
+    "Username": "Username",
+    "Id": "Id"
+  },
   "Auth": {
     "Signup": "Signup",
     "Signin": "Signin",

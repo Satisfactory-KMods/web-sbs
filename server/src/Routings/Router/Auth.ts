@@ -35,7 +35,7 @@ export default function() {
 		} as TResponse_Auth_Vertify );
 	} );
 
-	Api.post( ApiUrl( EApiAuth.validate ), MW_Auth, async( req : Request, res : Response ) => {
+	Api.post( ApiUrl( EApiAuth.modify ), MW_Auth, async( req : Request, res : Response ) => {
 		const Response : TResponse_Auth_Modify = {
 			...DefaultResponseFailed
 		};
@@ -45,9 +45,10 @@ export default function() {
 			const Allowed = Request.UserClass.HasPermssion( ERoles.admin ) || Request.UserClass.Get._id === Request.UserID;
 			if ( Allowed ) {
 				try {
-					const Document = ( await DB_SessionToken.findById( Request.UserID ) )!;
+					const Document = ( await DB_UserAccount.findById( Request.UserID ) )!;
 
 					if ( Request.Remove ) {
+						console.error( "REMOVE" );
 						if ( await Document.deleteOne() ) {
 							Response.Success = true;
 							Response.MessageCode = "User.Modify.Remove";
@@ -55,7 +56,25 @@ export default function() {
 					}
 
 					else if ( !Request.Remove && Request.Data ) {
-						if ( await Document.updateOne( Response.Data ) ) {
+						console.error( Request.Data );
+						delete Request.Data._id;
+						delete Request.Data.__v;
+						delete Request.Data.salt;
+						delete Request.Data.createdAt;
+						delete Request.Data.updatedAt;
+						if ( !Request.UserClass.HasPermssion( ERoles.admin ) ) {
+							delete Request.Data.role;
+						}
+
+						if ( Request.Data.hash ) {
+							Document.setPassword( Request.Data.hash );
+						}
+
+						for ( const [ Key, Value ] of Object.entries( Request.Data ) ) {
+							Document[ Key ] = Value;
+						}
+
+						if ( await Document.save() ) {
 							Response.Success = true;
 							Response.MessageCode = "User.Modify";
 						}
@@ -66,6 +85,7 @@ export default function() {
 					}
 				}
 				catch ( e ) {
+					console.error( e );
 				}
 			}
 			else {
