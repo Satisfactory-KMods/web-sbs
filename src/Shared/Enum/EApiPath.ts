@@ -1,5 +1,6 @@
 export enum EApiAuth {
 	logout = "auth/logout",
+	modify = "auth/modify",
 	validate = "auth/validate",
 	signup = "auth/signup",
 	signin = "auth/signin"
@@ -15,7 +16,8 @@ export enum EApiQuestionary {
 	blueprints = "questionary/blueprints",
 	num = "questionary/num",
 	tags = "questionary/tags",
-	mods = "questionary/mods"
+	mods = "questionary/mods",
+	users = "questionary/users"
 }
 
 export enum EApiUserBlueprints {

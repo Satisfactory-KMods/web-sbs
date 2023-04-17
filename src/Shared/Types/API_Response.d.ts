@@ -22,6 +22,7 @@ export type TResponse_Auth_SignUp = IAPIResponseBase<{
 }>;
 export type TResponse_Auth_SignIn = TResponse_Auth_SignUp;
 export type TResponse_Auth_Vertify = IAPIResponseBase<>;
+export type TResponse_Auth_Modify = IAPIResponseBase<>;
 
 // --------------------------------------
 // ----------------- BP -----------------

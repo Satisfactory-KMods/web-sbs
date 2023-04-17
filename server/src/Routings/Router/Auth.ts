@@ -12,11 +12,13 @@ import {
 	DefaultResponseSuccess
 }                        from "../../../../src/Shared/Default/Auth.Default";
 import {
+	TResponse_Auth_Modify,
 	TResponse_Auth_SignUp,
 	TResponse_Auth_Vertify
 }                        from "../../../../src/Shared/Types/API_Response";
 import {
 	TRequest_Auth_Logout,
+	TRequest_Auth_Modify,
 	TRequest_Auth_SignIn,
 	TRequest_Auth_SignUp
 }                        from "../../../../src/Shared/Types/API_Request";
@@ -31,6 +33,46 @@ export default function() {
 			...DefaultResponseSuccess,
 			Auth: true
 		} as TResponse_Auth_Vertify );
+	} );
+
+	Api.post( ApiUrl( EApiAuth.validate ), MW_Auth, async( req : Request, res : Response ) => {
+		const Response : TResponse_Auth_Modify = {
+			...DefaultResponseFailed
+		};
+
+		const Request : TRequest_Auth_Modify = req.body;
+		if ( Request.UserID && Request.UserClass ) {
+			const Allowed = Request.UserClass.HasPermssion( ERoles.admin ) || Request.UserClass.Get._id === Request.UserID;
+			if ( Allowed ) {
+				try {
+					const Document = ( await DB_SessionToken.findById( Request.UserID ) )!;
+
+					if ( Request.Remove ) {
+						if ( await Document.deleteOne() ) {
+							Response.Success = true;
+							Response.MessageCode = "User.Modify.Remove";
+						}
+					}
+
+					else if ( !Request.Remove && Request.Data ) {
+						if ( await Document.updateOne( Response.Data ) ) {
+							Response.Success = true;
+							Response.MessageCode = "User.Modify";
+						}
+					}
+
+					if ( Response.Success ) {
+						await DB_SessionToken.deleteMany( { userid: Request.UserID } );
+					}
+				}
+				catch ( e ) {
+				}
+			}
+			else {
+				Response.MessageCode = "Unauthorized";
+			}
+		}
+		res.json( Response );
 	} );
 
 	Api.post( ApiUrl( EApiAuth.logout ), async( req : Request, res : Response ) => {

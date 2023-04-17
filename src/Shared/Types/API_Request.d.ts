@@ -5,7 +5,10 @@ import {
 	FilterQuery,
 	QueryOptions
 }                        from "mongoose";
-import { IMO_Tag }       from "./MongoDB";
+import {
+	IMO_Tag,
+	IMO_UserAccount
+}                        from "./MongoDB";
 
 export type RequestWithUser<T = any> = {
 	UserClass? : T;
@@ -19,6 +22,11 @@ export type TRequest_Unknown<UseUser extends boolean = true, UserType = any> = I
 // ----------------- Auth -----------------
 // ----------------------------------------
 
+export type TRequest_Auth_Modify = IRequestBody<{
+	UserID : string;
+	Remove : boolean;
+	Data : Partial<IMO_UserAccount>;
+}>;
 export type TRequest_Auth_Logout = IRequestBody<{
 	Token : string;
 }>;

@@ -140,6 +140,14 @@
     "Tags.Delete.Success": {
       "text": "Tag deleted successfully",
       "icon": "success"
+    },
+    "User.Modify.Remove": {
+      "text": "User deleted successfully",
+      "icon": "success"
+    },
+    "User.Modify": {
+      "text": "User modified successfully",
+      "icon": "success"
     }
   }
 }
