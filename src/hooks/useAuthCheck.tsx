@@ -15,7 +15,7 @@ export interface IuseAuthCheckProps extends PropsWithChildren {
 
 const AuthRedirect : FunctionComponent<IuseAuthCheckProps> = ( { children, Redirect, To } ) : React.ReactElement => {
 	if ( Redirect ) {
-		return <Navigate to={ To || "/" }/>;
+		return <Navigate to={ To || "/error/401" }/>;
 	}
 
 	return <>{ children }</>;

@@ -25,7 +25,7 @@ import AdminTagRow      from "../../Components/Admin/AdminTagRow";
 
 const AdminTags : FunctionComponent = () => {
 	const { Lang } = useLang();
-	const { AuthCheckProps, AuthCheck } = useAuthCheck( { Auth: true, RedirectTo: "/", Role: ERoles.admin } );
+	const { AuthCheckProps, AuthCheck } = useAuthCheck( { Auth: true, Role: ERoles.admin } );
 	const [ ShowModal, setShowModal ] = useToggle( false );
 	const [ DisplayName, setDisplayName ] = useState( "" );
 	const [ IsSending, setIsSending ] = useState( false );

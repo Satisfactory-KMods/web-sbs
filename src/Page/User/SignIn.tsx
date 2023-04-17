@@ -17,7 +17,7 @@ import { useAuthCheck }          from "../../hooks/useAuthCheck";
 
 
 const SignIn : FunctionComponent = () => {
-	const { AuthCheckProps, AuthCheck } = useAuthCheck( { Auth: false } );
+	const { AuthCheckProps, AuthCheck } = useAuthCheck( { Auth: false, RedirectTo: "/" } );
 	const { UpdateToken } = useContext( AuthContext );
 	const { Lang } = useContext( LangContext );
 	const [ IsSending, setIsSending ] = useState( false );

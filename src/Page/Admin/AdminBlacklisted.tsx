@@ -17,7 +17,7 @@ import BlueprintTableRowAdmin from "../../Components/Blueprints/BlueprintTableRo
 const AdminBlacklisted : FunctionComponent = () => {
 	const { Lang } = useContext( LangContext );
 	const { UserData } = useContext( AuthContext );
-	const { AuthCheckProps, AuthCheck } = useAuthCheck( { Auth: true, RedirectTo: "/", Role: ERoles.admin } );
+	const { AuthCheckProps, AuthCheck } = useAuthCheck( { Auth: true, Role: ERoles.admin } );
 	const [ Blueprints, setBlueprints ] = useState<IMO_Blueprint[]>( [] );
 
 	const DoQuery = () => {

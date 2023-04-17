@@ -21,7 +21,7 @@ import { TRequest_Auth_Modify }  from "../../Shared/Types/API_Request";
 
 const AdminUsers : FunctionComponent = () => {
 	const { Lang } = useLang();
-	const { AuthCheckProps, AuthCheck } = useAuthCheck( { Auth: true, RedirectTo: "/", Role: ERoles.admin } );
+	const { AuthCheckProps, AuthCheck } = useAuthCheck( { Auth: true, Role: ERoles.admin } );
 	const { UserData } = useContext( AuthContext );
 	const [ Users, setUsers ] = useState<IMO_UserAccount[]>( [] );
 
@@ -63,7 +63,7 @@ const AdminUsers : FunctionComponent = () => {
 				<thead>
 				<tr>
 					<th colSpan={ 4 }>
-						<h3 className="p-2 flex-1">{ Lang.Navigation.Admin_Tags }</h3>
+						<h3 className="p-2 flex-1">{ Lang.Navigation.Admin_Users }</h3>
 					</th>
 				</tr>
 				<tr>

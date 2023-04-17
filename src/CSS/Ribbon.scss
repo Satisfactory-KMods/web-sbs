@@ -22,7 +22,7 @@ $ribbon-xl-right: 4px !default;
   right: -2px;
   top: -2px;
   width: $ribbon-wrapper-size;
-  z-index: 10;
+  z-index: 0;
 
   &.ribbon-lg {
     height: $ribbon-lg-wrapper-size;

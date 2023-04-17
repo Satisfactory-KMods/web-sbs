@@ -17,7 +17,7 @@ import { useAuthCheck }          from "../../hooks/useAuthCheck";
 
 
 const SignUp : FunctionComponent = () => {
-	const { AuthCheckProps, AuthCheck } = useAuthCheck( { Auth: false } );
+	const { AuthCheckProps, AuthCheck } = useAuthCheck( { Auth: false, RedirectTo: "/" } );
 	const { UpdateToken } = useContext( AuthContext );
 	const { Lang } = useContext( LangContext );
 	usePageTitle( `SBS - ${ Lang.Auth.Signup }` );

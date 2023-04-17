@@ -13,7 +13,14 @@ export interface ILang {
 	"General" : {
 		"IsModded" : string,
 		"IsVanilla" : string,
-		"IsHot" : string
+		"IsHot" : string,
+		"Yes" : string,
+		"No" : string,
+		"FilterMods" : string,
+		"SortingBy" : string,
+		"Search" : string,
+		"ClearSearch" : string,
+		"SearchFilter" : string
 	},
 	"Auth" : {
 		"Signup" : string,
@@ -24,6 +31,7 @@ export interface ILang {
 		"PasswordAgain" : string,
 		"Email" : string,
 		"Username" : string,
+		"Edit" : string
 	},
 	"Navigation" : {
 		"Home" : string,

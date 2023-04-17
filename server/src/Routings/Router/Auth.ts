@@ -48,7 +48,6 @@ export default function() {
 					const Document = ( await DB_UserAccount.findById( Request.UserID ) )!;
 
 					if ( Request.Remove ) {
-						console.error( "REMOVE" );
 						if ( await Document.deleteOne() ) {
 							Response.Success = true;
 							Response.MessageCode = "User.Modify.Remove";
@@ -56,7 +55,6 @@ export default function() {
 					}
 
 					else if ( !Request.Remove && Request.Data ) {
-						console.error( Request.Data );
 						delete Request.Data._id;
 						delete Request.Data.__v;
 						delete Request.Data.salt;
@@ -68,12 +66,14 @@ export default function() {
 
 						if ( Request.Data.hash ) {
 							Document.setPassword( Request.Data.hash );
+							delete Request.Data.hash;
 						}
 
 						for ( const [ Key, Value ] of Object.entries( Request.Data ) ) {
 							Document[ Key ] = Value;
 						}
 
+						console.error( Request.Data );
 						if ( await Document.save() ) {
 							Response.Success = true;
 							Response.MessageCode = "User.Modify";

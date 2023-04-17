@@ -2,7 +2,14 @@
   "General": {
     "IsModded": "Modded",
     "IsVanilla": "Vanilla",
-    "IsHot": "HOT!"
+    "IsHot": "HOT!",
+    "Yes": "Yes",
+    "No": "No",
+    "FilterMods": "Filter Mods",
+    "SortingBy": "Sorting By",
+    "Search": "Start Search",
+    "ClearSearch": "Clear Search",
+    "SearchFilter": "Search / Filter"
   },
   "AdminTags": {
     "Id": "Tag ID",
@@ -27,7 +34,8 @@
     "Password": "Password",
     "PasswordAgain": "Repeat password",
     "Email": "E-Mail",
-    "Username": "Username"
+    "Username": "Username",
+    "Edit": "Save Account"
   },
   "ShowBlueprint": {
     "ObjectCount": "Object Count"
