@@ -35,7 +35,7 @@ jobs:
 
   deploy:
     needs: [ test-app, test-docker ]
-    name: "Deploy to Test-Server"
+    name: "Deploy to Server"
     runs-on: ubuntu-latest
     steps:
       - name: executing remote ssh commands using password
