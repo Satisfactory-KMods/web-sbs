@@ -1,7 +1,7 @@
 {
   "name": "vite-react-template",
   "private": true,
-  "version": "1.0.0",
+  "version": "0.1.0",
   "scripts": {
     "start": "ts-node server/src",
     "preview": "vite preview",
