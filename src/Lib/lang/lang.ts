@@ -35,6 +35,7 @@ export interface ILang {
 		"SearchFilter" : string
 	},
 	"Auth" : {
+		"SignUpIn" : string,
 		"Signup" : string,
 		"Signin" : string,
 		"Logout" : string,

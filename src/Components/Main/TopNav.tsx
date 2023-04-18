@@ -40,7 +40,7 @@ export const TopNavLink : FunctionComponent<ITopNavProps> = ( { SessionRole, hre
 
 
 const TopNav : FunctionComponent = () => {
-	const { UserData, Logout } = useContext( AuthContext );
+	const { UserData, IsLoggedIn, Logout } = useContext( AuthContext );
 	const { Lang, setLang, Code, AllCodes } = useContext( LangContext );
 
 	return (
@@ -102,10 +102,11 @@ const TopNav : FunctionComponent = () => {
 					</div>
 
 					<div className="dropdown text-end">
-						<Link to="#" className="d-block link-dark text-decoration-none dropdown-toggle"
+						<Link to="#" className="d-block link-dark text-decoration-none dropdown-toggle text-light"
 						      data-bs-toggle="dropdown" aria-expanded="false">
 							<img src={ UserData.GetUserImage() } alt="" width="40"
-							     className="rounded-circle"/>
+							     className="rounded-circle me-2"/>
+							{ IsLoggedIn ? UserData.Get.username : "Sign Up/In" }
 						</Link>
 						<ul className="dropdown-menu text-small">
 							{ UserData.IsValid ? (
@@ -131,7 +132,7 @@ const TopNav : FunctionComponent = () => {
 									) }
 									<li>
 										<Link className="dropdown-item"
-										      to="/account/settings">{ Lang.Auth.AccSettings }</Link></li>
+										      to="/account/settings">{ Lang.Auth.SignUpIn }</Link></li>
 									<li>
 										<hr className="dropdown-divider"/>
 									</li>

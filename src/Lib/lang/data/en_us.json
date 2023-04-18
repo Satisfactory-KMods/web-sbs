@@ -39,8 +39,9 @@
     "Id": "Id"
   },
   "Auth": {
+    "SignUpIn": "Sign Up/Log In",
     "Signup": "Signup",
-    "Signin": "Signin",
+    "Signin": "Log In",
     "Logout": "Logout",
     "AccSettings": "Account Settings",
     "Password": "Password",
