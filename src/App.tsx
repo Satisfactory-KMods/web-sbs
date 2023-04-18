@@ -28,6 +28,9 @@ const AdminTags = React.lazy( () => import("./Page/Admin/AdminTags") );
 const AdminBlacklisted = React.lazy( () => import("./Page/Admin/AdminBlacklisted") );
 const AdminUsers = React.lazy( () => import("./Page/Admin/AdminUsers") );
 
+const TermsPrivate = React.lazy( () => import("./Page/TermsPrivate") );
+const TermsService = React.lazy( () => import("./Page/TermsService") );
+
 function App() {
 	const Lang = useLang();
 	const Auth = useAuth();
@@ -42,6 +45,9 @@ function App() {
 								<Route path="/error/401" element={ <ErrorPage ErrorCode={ 401 }/> }/>
 								<Route path="/error/403" element={ <ErrorPage ErrorCode={ 403 }/> }/>
 								<Route path="/error/404" element={ <ErrorPage ErrorCode={ 404 }/> }/>
+
+								<Route path="/terms/service" element={ <TermsService/> }/>
+								<Route path="/terms/private" element={ <TermsPrivate/> }/>
 
 								<Route path="/account/signin" element={ <SignIn/> }/>
 								<Route path="/account/signup" element={ <SignUp/> }/>

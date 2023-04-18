@@ -1,4 +1,16 @@
 {
+  "Sorting": {
+    "CreatedAt": "Created at ascending",
+    "CreatedAtRev": "Created at descending",
+    "Downloads": "Downloads ascending",
+    "DownloadsRev": "Downloads descending",
+    "Likes": "Likes ascending",
+    "LikesRev": "Likes descending ",
+    "Mods": "Mods (count) ascending",
+    "ModsRev": "Mods (count) descending",
+    "Tags": "Tags (count) ascending",
+    "TagsRev": "Tags (count) descending"
+  },
   "General": {
     "IsModded": "Modded",
     "IsVanilla": "Vanilla",
@@ -70,6 +82,12 @@
     "Mods": "Mods"
   },
   "Navigation": {
+    "FicsitApp": "Ficsit.App",
+    "Discord": "Discord",
+    "Github": "Github",
+    "Patreon": "Patreon",
+    "Privacy": "Privacy Policy",
+    "Terms": "Terms of Service",
     "Home": "Home",
     "AddBlueprint": "Create Blueprint",
     "MyBlueprints": "My Blueprints",

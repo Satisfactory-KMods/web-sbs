@@ -104,7 +104,7 @@ const ShowBlueprint : FunctionComponent = () => {
 								      className={ "btn btn-secondary m-1 p-0" }>
 									<img onError={ E => E.currentTarget.src = "/images/default/unknown.png" }
 									     alt={ R.mod_reference } src={ R.logo }
-									     className={ "w-10 rounded-l-md" }/><span
+									     className={ "w-10 h-10 rounded-l-md" }/><span
 									className={ "px-2 pe-3" }>{ R.name }</span>
 								</Link>
 							) ) }</td>

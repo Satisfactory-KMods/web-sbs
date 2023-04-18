@@ -10,6 +10,18 @@ export interface IApiMessage {
 }
 
 export interface ILang {
+	"Sorting" : {
+		"CreatedAt" : string,
+		"CreatedAtRev" : string,
+		"Downloads" : string,
+		"DownloadsRev" : string,
+		"Likes" : string,
+		"LikesRev" : string,
+		"Mods" : string,
+		"ModsRev" : string,
+		"Tags" : string,
+		"TagsRev" : string,
+	},
 	"General" : {
 		"IsModded" : string,
 		"IsVanilla" : string,
@@ -34,6 +46,12 @@ export interface ILang {
 		"Edit" : string
 	},
 	"Navigation" : {
+		"FicsitApp" : string,
+		"Discord" : string,
+		"Github" : string,
+		"Patreon" : string,
+		"Privacy" : string,
+		"Terms" : string,
 		"Home" : string,
 		"AddBlueprint" : string,
 		"MyBlueprints" : string,

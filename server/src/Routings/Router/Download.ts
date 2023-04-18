@@ -29,13 +29,13 @@ export default function() {
 			const BPName = blueprint.name.replace( /[^a-z0-9]/gi, "_" ).toLowerCase();
 			const ZipFile = path.join( __MountDir, "Zips", id, `${ BPName }.zip` );
 
-			if ( !DownloadIPCached.includes( req.ip ) ) {
+			if ( !DownloadIPCached.find( R => R.id === blueprint._id.toString() && R.ip === req.ip ) ) {
 				if ( !blueprint.downloads ) {
 					blueprint.downloads = 0;
 				}
 				blueprint.downloads++;
 				if ( await blueprint.save() ) {
-					DownloadIPCached.push( req.ip );
+					DownloadIPCached.push( { ip: req.ip, id: blueprint._id.toString() } );
 					SocketIO.to( blueprint._id.toString() ).emit( "BlueprintUpdated", blueprint.toJSON() );
 				}
 			}

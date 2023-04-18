@@ -9,7 +9,7 @@ import { SystemLib_Class }  from "../Lib/System.Lib";
 import { TaskManagerClass } from "../Tasks/TaskManager";
 
 export declare global {
-	var DownloadIPCached : string[];
+	var DownloadIPCached : { ip : string, id : string }[];
 	var SystemLib : SystemLib_Class;
 	var Api : core.Express;
 	var HttpServer : http.Server<
