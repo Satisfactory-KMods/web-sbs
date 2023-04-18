@@ -40,7 +40,7 @@
   },
   "Auth": {
     "SignUpIn": "Sign Up/Log In",
-    "Signup": "Signup",
+    "Signup": "Sign Up",
     "Signin": "Log In",
     "Logout": "Logout",
     "AccSettings": "Account Settings",
@@ -71,7 +71,7 @@
     "ImportFromFiles": "Import from Blueprint Files",
     "BlueprintName": "Blueprint Name",
     "BlueprintDescripton": "Description",
-    "BlueprintSize": "Blueprintdesigner Size",
+    "BlueprintSize": "Blueprint Designer Size",
     "File1": "Blueprint (.sbp)",
     "File2": "Blueprint Config (.sbpcfg)",
     "Image": "Blueprint Image",
