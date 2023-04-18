@@ -34,6 +34,7 @@ import {
 	ISortingOptions
 }                          from "../Shared/Types/SelectOptions";
 import { FilterQuery }     from "mongoose";
+import PageManager         from "../Components/Main/PageManager";
 
 const Home : FunctionComponent = () => {
 	const { Lang } = useContext( LangContext );
@@ -83,7 +84,7 @@ const Home : FunctionComponent = () => {
 
 	const [ TotalPages, setTotalPages ] = useState( 0 );
 	const [ CurrentPage, setCurrentPage ] = useState( 0 );
-	const [ Total, setTotal ] = useState( 0 );
+	//const [ Total, setTotal ] = useState( 0 );
 	const [ Blueprints, setBlueprints ] = useState<IMO_Blueprint[]>( [] );
 	const [ Cleared, setCleared ] = useToggle( false );
 
@@ -126,7 +127,7 @@ const Home : FunctionComponent = () => {
 		const Count = CountQuery.Data || 0;
 		const TotalPages = Math.ceil( Count / 15 );
 
-		setTotal( () => Count );
+		//setTotal( () => Count );
 		setTotalPages( TotalPages );
 		if ( CurrentPage > TotalPages ) {
 			setCurrentPage( Math.clamp( 0, CurrentPage, TotalPages ) );
@@ -206,9 +207,18 @@ const Home : FunctionComponent = () => {
 					</div>
 				</Card.Body>
 			</Card>
+
+			<PageManager MaxPage={ TotalPages } OnPageChange={ setCurrentPage } Page={ CurrentPage }
+			             Hide={ TotalPages <= 1 }
+			             ButtonGroupProps={ { className: "mt-3 w-100 bg-dark" } }
+			             ButtonProps={ { size: "sm btn-dark" } }/>
 			<Row className={ "px-3 mt-3" }>
 				{ Blueprints.map( BP => <BlueprintCard key={ BP._id } Data={ BP } onToggled={ DoFetch }/> ) }
 			</Row>
+			<PageManager MaxPage={ TotalPages } OnPageChange={ setCurrentPage } Page={ CurrentPage }
+			             Hide={ TotalPages <= 1 }
+			             ButtonGroupProps={ { className: "mt-3 w-100 bg-dark" } }
+			             ButtonProps={ { size: "sm btn-dark" } }/>
 		</>
 	);
 };
