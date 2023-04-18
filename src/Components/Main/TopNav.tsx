@@ -11,6 +11,11 @@ import { LangReadable } from "../../Lib/lang/lang";
 import LangContext      from "../../Context/LangContext";
 import AuthContext      from "../../Context/AuthContext";
 import { ERoles }       from "../../Shared/Enum/ERoles";
+import {
+	FaDiscord,
+	FaGithubSquare,
+	FaPatreon
+}                       from "react-icons/all";
 
 interface ITopNavProps extends PropsWithChildren {
 	href : string;
@@ -54,7 +59,26 @@ const TopNav : FunctionComponent = () => {
 						            href="/blueprint/create">{ Lang.Navigation.AddBlueprint }</TopNavLink>
 						<TopNavLink SessionRole={ ERoles.member }
 						            href="/blueprint/my">{ Lang.Navigation.MyBlueprints }</TopNavLink>
+						<TopNavLink
+							href="/terms/private">{ Lang.Navigation.Privacy }</TopNavLink>
 					</ul>
+
+
+					<Link to="https://github.com/Kyri123/SBS" target="_blank" className="d-block link-light">
+						<FaGithubSquare className={ "text-3xl me-3" }/>
+					</Link>
+
+					<Link to="https://discord.gg/ySh7RGJmuV" target="_blank" className="d-block link-light">
+						<FaDiscord className={ "text-3xl me-3" }/>
+					</Link>
+
+					<Link to="https://www.patreon.com/kmods" target="_blank" className="d-block link-light">
+						<FaPatreon className={ "text-2xl me-3" }/>
+					</Link>
+
+					<Link to="https://ficsit.app/user/9uvZtCA4cM6H4q" target="_blank" className="d-block link-light">
+						<img src="https://ficsit.app/assets/favicon.ico" alt="ficsit.app logo"/>
+					</Link>
 
 					<div className="dropdown text-end me-2">
 						<Link to="#" className="d-block link-dark text-decoration-none dropdown-toggle"
