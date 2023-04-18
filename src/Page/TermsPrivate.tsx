@@ -4,7 +4,7 @@ import {
 	useState
 }                    from "react";
 import ReactMarkdown from "react-markdown";
-import PolicyText    from "../Lib/lang/data/Polity.md";
+import PolicyText    from "../Lib/lang/data/Policy.md";
 
 const TermsPrivate : FunctionComponent = () => {
 	const [ privacyPolicyText, setPrivacyPolicyText ] = useState( "" );
