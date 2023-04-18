@@ -211,14 +211,14 @@ const Home : FunctionComponent = () => {
 			<PageManager MaxPage={ TotalPages } OnPageChange={ setCurrentPage } Page={ CurrentPage }
 			             Hide={ TotalPages <= 1 }
 			             ButtonGroupProps={ { className: "mt-3 w-100 bg-dark" } }
-			             ButtonProps={ { size: "sm btn-dark" } }/>
+			             ButtonProps={ { size: "sm", className: "btn-dark" } }/>
 			<Row className={ "px-3 mt-3" }>
 				{ Blueprints.map( BP => <BlueprintCard key={ BP._id } Data={ BP } onToggled={ DoFetch }/> ) }
 			</Row>
 			<PageManager MaxPage={ TotalPages } OnPageChange={ setCurrentPage } Page={ CurrentPage }
 			             Hide={ TotalPages <= 1 }
 			             ButtonGroupProps={ { className: "mt-3 w-100 bg-dark" } }
-			             ButtonProps={ { size: "sm btn-dark" } }/>
+			             ButtonProps={ { size: "sm", className: "btn-dark" } }/>
 		</>
 	);
 };
