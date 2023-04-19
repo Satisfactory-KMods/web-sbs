@@ -51,7 +51,27 @@ export default function() {
 						if ( await Document.deleteOne() ) {
 							Response.Success = true;
 							Response.MessageCode = "User.Modify.Remove";
+							return res.json( Response );
 						}
+					}
+
+					else if ( Request.Data && Request.Data?.hash && Request.Data?.hash.length < 8 ) {
+						return res.json( {
+							...Response,
+							MessageCode: "Signup.error.password.invalid"
+						} );
+					}
+					else if ( Request.Data && Request.Data?.username && Request.Data?.username.length < 6 ) {
+						return res.json( {
+							...Response,
+							MessageCode: "Signup.error.username.invalid"
+						} );
+					}
+					else if ( Request.Data && Request.Data?.email && !Request.Data?.email.match( /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/ ) ) {
+						return res.json( {
+							...Response,
+							MessageCode: "Signup.error.email.invalid"
+						} );
 					}
 
 					else if ( !Request.Remove && Request.Data ) {
@@ -116,42 +136,56 @@ export default function() {
 		};
 		const Request : TRequest_Auth_SignUp = req.body;
 
-
-		if ( Request.Login && Request.Password && Request.RepeatPassword && Request.EMail &&
-			Request.Password === Request.RepeatPassword &&
-			Request.Password.length >= 8 &&
-			Request.Login.length >= 6 &&
-			Request.EMail.match( /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/ )
-		) {
-			const UserCount = await DB_UserAccount.count( {
-				$or: [
-					{ username: Request.Login },
-					{ email: Request.EMail }
-				]
+		if ( !( Request.Login && Request.Password && Request.RepeatPassword && Request.EMail ) ) {
+			return res.json( {
+				...Response,
+				MessageCode: "Signup.error.missingfield"
 			} );
+		}
+		else if ( !( Request.Password === Request.RepeatPassword && Request.Password.length >= 8 ) ) {
+			return res.json( {
+				...Response,
+				MessageCode: "Signup.error.password.invalid"
+			} );
+		}
+		else if ( Request.Login.length < 6 ) {
+			return res.json( {
+				...Response,
+				MessageCode: "Signup.error.username.invalid"
+			} );
+		}
+		else if ( !Request.EMail.match( /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/ ) ) {
+			return res.json( {
+				...Response,
+				MessageCode: "Signup.error.email.invalid"
+			} );
+		}
 
-			if ( UserCount === 0 ) {
-				const NewUser = new DB_UserAccount();
-				NewUser.setPassword( Request.Password );
-				NewUser.email = Request.EMail;
-				NewUser.username = Request.Login;
-				NewUser.role = ERoles.member;
-				if ( await NewUser.save() ) {
-					const Token = await CreateSession( NewUser.toJSON() );
-					if ( Token ) {
-						Response.Success = true;
-						Response.Auth = true;
-						Response.MessageCode = "AccountCreated";
-						Response.Data = { Token };
-					}
+		const UserCount = await DB_UserAccount.count( {
+			$or: [
+				{ username: Request.Login },
+				{ email: Request.EMail }
+			]
+		} );
+
+		if ( UserCount === 0 ) {
+			const NewUser = new DB_UserAccount();
+			NewUser.setPassword( Request.Password );
+			NewUser.email = Request.EMail;
+			NewUser.username = Request.Login;
+			NewUser.role = ERoles.member;
+			if ( await NewUser.save() ) {
+				const Token = await CreateSession( NewUser.toJSON() );
+				if ( Token ) {
+					Response.Success = true;
+					Response.Auth = true;
+					Response.MessageCode = "AccountCreated";
+					Response.Data = { Token };
 				}
-			}
-			else {
-				Response.MessageCode = "Reg_Account_Exsists";
 			}
 		}
 		else {
-			Response.MessageCode = "Reg_Invalid_Input";
+			Response.MessageCode = "Signup.error.accountexsists";
 		}
 
 		res.json( {

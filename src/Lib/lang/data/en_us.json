@@ -104,6 +104,26 @@
     "Err403": "Unfortunately, this action is not allowed for you."
   },
   "ApiMessgaes": {
+    "Signup.error.username.invalid": {
+      "text": "Username is to short must be more than 5 characters",
+      "icon": "error"
+    },
+    "Signup.error.password.invalid": {
+      "text": "Password is to short must be more than 7 characters and must match the confirmation password",
+      "icon": "error"
+    },
+    "Signup.error.email.invalid": {
+      "text": "Email is not valid",
+      "icon": "error"
+    },
+    "Signup.error.missingfield": {
+      "text": "Input field is missing",
+      "icon": "error"
+    },
+    "Signup.error.accountexsists": {
+      "text": "Account already exists",
+      "icon": "error"
+    },
     "ApiNotReachable": {
       "title": "API is not reachable",
       "text": "Please check your internet connection and try again.",
@@ -111,10 +131,6 @@
     },
     "Login_Invalid": {
       "text": "Input is not valid or account does not exist",
-      "icon": "error"
-    },
-    "Reg_Account_Exsists": {
-      "text": "Account already exists",
       "icon": "error"
     },
     "Reg_Invalid_Input": {
