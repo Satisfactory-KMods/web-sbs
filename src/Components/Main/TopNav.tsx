@@ -106,7 +106,7 @@ const TopNav : FunctionComponent = () => {
 						      data-bs-toggle="dropdown" aria-expanded="false">
 							<img src={ UserData.GetUserImage() } alt="" width="40"
 							     className="rounded-circle me-2"/>
-							{ IsLoggedIn ? UserData.Get.username : "Sign Up/In" }
+							{ IsLoggedIn ? UserData.Get.username : Lang.Auth.SignUpIn }
 						</Link>
 						<ul className="dropdown-menu text-small">
 							{ UserData.IsValid ? (
@@ -132,7 +132,7 @@ const TopNav : FunctionComponent = () => {
 									) }
 									<li>
 										<Link className="dropdown-item"
-										      to="/account/settings">{ Lang.Auth.SignUpIn }</Link></li>
+										      to="/account/settings">{ Lang.Auth.AccSettings }</Link></li>
 									<li>
 										<hr className="dropdown-divider"/>
 									</li>

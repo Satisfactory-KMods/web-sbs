@@ -36,7 +36,8 @@ const PageManager : FunctionComponent<IPageManagerProps> = ( {
 		if ( Page > MaxPage || Page < 0 ) {
 			OnPageChange( Math.clamp( 0, Page, MaxPage - 1 ) );
 		}
-	}, [ MaxPage ] );
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [ MaxPage, Page ] );
 
 	if ( Hide ) {
 		return null;
