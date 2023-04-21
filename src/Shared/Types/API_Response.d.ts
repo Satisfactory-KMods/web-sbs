@@ -44,6 +44,13 @@ export type TResponse_BPUser_Create = IAPIResponseBase<string>;
 export type TResponse_BPUser_Edit = IAPIResponseBase<string>;
 export type TResponse_BPUser_ToggleLike = IAPIResponseBase<string[]>;
 
+// ---------------------------------------
+// ----------------- BPP -----------------
+// ---------------------------------------
+
+export type TResponse_BPP = IAPIResponseBase;
+export type TResponse_BPP_PUT = IAPIResponseBase<string>;
+
 // ----------------------------------------
 // ----------------- Tags -----------------
 // ----------------------------------------

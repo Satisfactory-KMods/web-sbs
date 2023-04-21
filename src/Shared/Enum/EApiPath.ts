@@ -37,10 +37,17 @@ export enum EApiAdminBlueprints {
 	remove = "adminbp/remove"
 }
 
+export enum EApiBlueprintPack {
+	manage = "bppack/manage",
+	admin = "bppack/admin"
+}
+
+
 export type TApiPath =
 	EApiAuth
 	| EApiBlueprintUtils
 	| EApiUserBlueprints
 	| EApiAdminBlueprints
 	| EApiTags
-	| EApiQuestionary;
+	| EApiQuestionary
+	| EApiBlueprintPack;

@@ -14,7 +14,7 @@ export default function() {
 	Router.get( ApiUrl( "download/:id" ), async( req : Request, res : Response ) => {
 		try {
 			const { id } = req.params;
-			const blueprint = await DB_Blueprints.findById( id );
+			const blueprint = await DB_Blueprints.findOne( { _id: id, blacklisted: { $ne: true } } );
 			if ( !blueprint ) {
 				return res.status( 404 ).json( { error: "Blueprint not found" } );
 			}
@@ -81,7 +81,7 @@ export default function() {
 	Router.get( ApiUrl( "download/pack/:id" ), async( req : Request, res : Response ) => {
 		try {
 			const { id } = req.params;
-			const BPPack = await DB_BlueprintPacks.findById( id );
+			const BPPack = await DB_BlueprintPacks.findOne( { _id: id, blacklisted: { $ne: true } } );
 			if ( !BPPack ) {
 				return res.status( 404 ).json( { error: "Blueprint not found" } );
 			}
@@ -108,7 +108,7 @@ export default function() {
 
 			for ( const BlueprintID of BPPack.blueprints ) {
 				try {
-					const BP = await DB_Blueprints.findById( BlueprintID );
+					const BP = await DB_Blueprints.findOne( { _id: BlueprintID, blacklisted: { $ne: true } } );
 					if ( BP ) {
 						const BPName = BP.name.replace( /[^a-z0-9]/gi, "_" ).toLowerCase();
 

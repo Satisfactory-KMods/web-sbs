@@ -6,6 +6,7 @@ import {
 	QueryOptions
 }                        from "mongoose";
 import {
+	IMO_BlueprintPack,
 	IMO_Tag,
 	IMO_UserAccount
 }                        from "./MongoDB";
@@ -65,6 +66,18 @@ export type TRequest_BP_Questionary<T = any> = IRequestBody<{
 	Options : QueryOptions<T>
 }>;
 
+// ---------------------------------------
+// ----------------- BPP -----------------
+// ---------------------------------------
+
+export type TResponse_BPP_Manage_PUT = IRequestBody<{ PackInformation : Partial<IMO_BlueprintPack> }>;
+export type TResponse_BPP_Manage_POST = IRequestBody<{ ID : string, PackInformation : Partial<IMO_BlueprintPack> }>;
+export type TResponse_BPP_Manage_DELETE = IRequestBody<{ ID : string }>;
+export type TResponse_BPP_Manage_SUB = IRequestBody<{ ID : string }>;
+
+export type TResponse_BPP_Admin_PUT = TResponse_BPP_Manage_PUT;
+export type TResponse_BPP_Admin_POST = TResponse_BPP_Manage_POST;
+export type TResponse_BPP_Admin_DELETE = TResponse_BPP_Manage_DELETE;
 
 // -------------------------------------------
 // ----------------- BP_User -----------------
