@@ -4,6 +4,7 @@ WORKDIR ./
 
 # Packages
 COPY *.json ./
+COPY *.lock ./
 RUN yarn install
 
 # Copy main configs
@@ -11,7 +12,6 @@ COPY .eslintrc ./
 COPY *.ts ./
 COPY *.js ./
 COPY *.html ./
-COPY *.lock ./
 
 # Copy source folder
 COPY ./src ./src
