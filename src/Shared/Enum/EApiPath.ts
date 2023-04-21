@@ -13,6 +13,7 @@ export enum EApiBlueprintUtils {
 
 
 export enum EApiQuestionary {
+	blueprintpack = "questionary/blueprintpack",
 	blueprints = "questionary/blueprints",
 	num = "questionary/num",
 	tags = "questionary/tags",

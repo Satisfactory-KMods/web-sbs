@@ -16,8 +16,34 @@ import DB_Tags                      from "../../MongoDB/DB_Tags";
 import DB_UserAccount               from "../../MongoDB/DB_UserAccount";
 import { ERoles }                   from "../../../../src/Shared/Enum/ERoles";
 import DB_Mods                      from "../../MongoDB/DB_Mods";
+import DB_BlueprintPacks            from "../../MongoDB/DB_BlueprintPacks";
 
 export default function() {
+	Router.post( ApiUrl( EApiQuestionary.blueprintpack ), async( req : Request, res : Response ) => {
+		const Response : TResponse_BP_Questionary = {
+			...DefaultResponseSuccess,
+			Data: []
+		};
+
+		const Request : TRequest_BP_Questionary = req.body;
+
+		try {
+			Response.Data = await DB_BlueprintPacks.find( {
+				blacklisted: { $ne: true },
+				...Request.Filter
+			}, null, Request.Options );
+		}
+		catch ( e ) {
+			if ( e instanceof Error ) {
+				SystemLib.LogError( e );
+			}
+		}
+
+		res.json( {
+			...Response
+		} );
+	} );
+
 	Router.post( ApiUrl( EApiQuestionary.blueprints ), async( req : Request, res : Response ) => {
 		const Response : TResponse_BP_Questionary = {
 			...DefaultResponseSuccess,
