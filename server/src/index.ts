@@ -80,8 +80,10 @@ mongoose
 
 		SystemLib.Log( "[DB] Connected... Start API and SOCKETIO" );
 
+		global.Router = express.Router();
 		await InstallRoutings( path.join( __BaseDir, "Routings/Router" ) );
 
+		Api.use( Router );
 		Api.get( "*", function( req, res ) {
 			res.sendFile( path.join( __BaseDir, "../..", "build", "index.html" ) );
 		} );

@@ -19,7 +19,7 @@ import DB_Tags                   from "../../MongoDB/DB_Tags";
 import DB_Blueprints             from "../../MongoDB/DB_Blueprints";
 
 export default function() {
-	Api.post( ApiUrl( EApiTags.modifytag ), MW_Auth, ( req, res, next ) => MW_Permission( req, res, next, ERoles.admin ), async( req : Request, res : Response ) => {
+	Router.post( ApiUrl( EApiTags.modifytag ), MW_Auth, ( req, res, next ) => MW_Permission( req, res, next, ERoles.admin ), async( req : Request, res : Response ) => {
 		let Response : TResponse_Tags_Modify = {
 			...DefaultResponseFailed
 		};
@@ -62,6 +62,9 @@ export default function() {
 			}
 		}
 		catch ( e ) {
+			if ( e instanceof Error ) {
+				SystemLib.LogError( e );
+			}
 		}
 
 		res.json( {

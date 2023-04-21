@@ -65,6 +65,9 @@ export default new JobTask(
 				MaxReached = Data.getMods.count < Offset;
 			}
 			catch ( e ) {
+				if ( e instanceof Error ) {
+					SystemLib.LogError( e );
+				}
 				MaxReached = true;
 			}
 		}

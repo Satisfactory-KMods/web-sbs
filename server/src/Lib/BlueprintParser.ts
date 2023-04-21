@@ -15,7 +15,9 @@ export class BlueprintParser {
 			this.Success = true;
 		}
 		catch ( e ) {
-			SystemLib.LogWarning( e );
+			if ( e instanceof Error ) {
+				SystemLib.LogError( e );
+			}
 			this.Data = undefined;
 			this.Success = false;
 		}

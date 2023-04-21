@@ -30,7 +30,7 @@ import fs                     from "fs";
 import { ERoles }             from "../../../../src/Shared/Enum/ERoles";
 
 export default function() {
-	Api.post( ApiUrl( EApiUserBlueprints.create ), MW_Auth, async( req : Request, res : Response ) => {
+	Router.post( ApiUrl( EApiUserBlueprints.create ), MW_Auth, async( req : Request, res : Response ) => {
 		const Response : TResponse_BPUser_Create = {
 			...DefaultResponseFailed
 		};
@@ -76,7 +76,9 @@ export default function() {
 			}
 		}
 		catch ( e ) {
-			console.error( e );
+			if ( e instanceof Error ) {
+				SystemLib.LogError( e );
+			}
 		}
 
 		res.json( {
@@ -85,7 +87,7 @@ export default function() {
 	} );
 
 
-	Api.post( ApiUrl( EApiUserBlueprints.edit ), MW_Auth, async( req : Request, res : Response ) => {
+	Router.post( ApiUrl( EApiUserBlueprints.edit ), MW_Auth, async( req : Request, res : Response ) => {
 		const Response : TResponse_BPUser_Edit = {
 			...DefaultResponseFailed
 		};
@@ -132,7 +134,9 @@ export default function() {
 			}
 		}
 		catch ( e ) {
-			console.error( e );
+			if ( e instanceof Error ) {
+				SystemLib.LogError( e );
+			}
 		}
 
 		res.json( {
@@ -141,7 +145,7 @@ export default function() {
 	} );
 
 
-	Api.post( ApiUrl( EApiUserBlueprints.like ), MW_Auth, async( req : Request, res : Response ) => {
+	Router.post( ApiUrl( EApiUserBlueprints.like ), MW_Auth, async( req : Request, res : Response ) => {
 		let Response : TResponse_BPUser_ToggleLike = {
 			...DefaultResponseFailed
 		};
@@ -172,7 +176,9 @@ export default function() {
 			}
 		}
 		catch ( e ) {
-			console.error( e );
+			if ( e instanceof Error ) {
+				SystemLib.LogError( e );
+			}
 		}
 
 		res.json( {
@@ -180,7 +186,7 @@ export default function() {
 		} );
 	} );
 
-	Api.post( ApiUrl( EApiUserBlueprints.blacklist ), MW_Auth, ( req, res, next ) => MW_Permission( req, res, next, ERoles.moderator ), async( req : Request, res : Response ) => {
+	Router.post( ApiUrl( EApiUserBlueprints.blacklist ), MW_Auth, ( req, res, next ) => MW_Permission( req, res, next, ERoles.moderator ), async( req : Request, res : Response ) => {
 		let Response : TResponse_BPUser_ToggleLike = {
 			...DefaultResponseFailed
 		};
@@ -205,7 +211,9 @@ export default function() {
 			}
 		}
 		catch ( e ) {
-			console.error( e );
+			if ( e instanceof Error ) {
+				SystemLib.LogError( e );
+			}
 		}
 
 		res.json( {
@@ -213,7 +221,7 @@ export default function() {
 		} );
 	} );
 
-	Api.post( ApiUrl( EApiUserBlueprints.remove ), MW_Auth, async( req : Request, res : Response ) => {
+	Router.post( ApiUrl( EApiUserBlueprints.remove ), MW_Auth, async( req : Request, res : Response ) => {
 		let Response : TResponse_BPUser_ToggleLike = {
 			...DefaultResponseFailed
 		};
@@ -240,7 +248,9 @@ export default function() {
 			}
 		}
 		catch ( e ) {
-			console.error( e );
+			if ( e instanceof Error ) {
+				SystemLib.LogError( e );
+			}
 		}
 
 		res.json( {

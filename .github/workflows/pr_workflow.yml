@@ -1,7 +1,7 @@
 name: Build and Deploy
 
-on: [ issues, pull_request ]
-
+on: [ pull_request ]
+ 
 jobs:
   test-docker:
     name: "Test and Build as Docker"

@@ -18,7 +18,7 @@ import { ERoles }                   from "../../../../src/Shared/Enum/ERoles";
 import DB_Mods                      from "../../MongoDB/DB_Mods";
 
 export default function() {
-	Api.post( ApiUrl( EApiQuestionary.blueprints ), async( req : Request, res : Response ) => {
+	Router.post( ApiUrl( EApiQuestionary.blueprints ), async( req : Request, res : Response ) => {
 		const Response : TResponse_BP_Questionary = {
 			...DefaultResponseSuccess,
 			Data: []
@@ -33,6 +33,9 @@ export default function() {
 			}, null, Request.Options );
 		}
 		catch ( e ) {
+			if ( e instanceof Error ) {
+				SystemLib.LogError( e );
+			}
 		}
 
 		res.json( {
@@ -52,6 +55,9 @@ export default function() {
 			Response.Data = Number( await DB_Blueprints.countDocuments( Request.Filter, Request.Options ) );
 		}
 		catch ( e ) {
+			if ( e instanceof Error ) {
+				SystemLib.LogError( e );
+			}
 		}
 
 		res.json( {
@@ -74,6 +80,9 @@ export default function() {
 			}, null, Request.Options );
 		}
 		catch ( e ) {
+			if ( e instanceof Error ) {
+				SystemLib.LogError( e );
+			}
 		}
 
 		res.json( {
@@ -96,6 +105,9 @@ export default function() {
 			}, null, Request.Options );
 		}
 		catch ( e ) {
+			if ( e instanceof Error ) {
+				SystemLib.LogError( e );
+			}
 		}
 
 		res.json( {
@@ -118,6 +130,9 @@ export default function() {
 			}, null, Request.Options );
 		}
 		catch ( e ) {
+			if ( e instanceof Error ) {
+				SystemLib.LogError( e );
+			}
 		}
 
 		res.json( {

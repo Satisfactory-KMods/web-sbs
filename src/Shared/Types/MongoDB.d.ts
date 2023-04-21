@@ -21,6 +21,18 @@ export interface IMO_Blueprint extends IMongoDB {
 	blacklisted? : boolean
 }
 
+export interface IMO_BlueprintPack extends IMongoDB {
+	name : string,
+	description : string,
+	tags : string[],
+	mods : string[],
+	likes : string[],
+	owner : string,
+	downloads : number,
+	blacklisted? : boolean,
+	blueprints : string[]
+}
+
 export interface IMO_UserAccount extends IMongoDB {
 	username : string,
 	hash? : string,

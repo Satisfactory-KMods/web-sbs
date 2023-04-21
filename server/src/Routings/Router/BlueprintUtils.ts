@@ -23,7 +23,7 @@ import path                             from "path";
 import DB_Blueprints                    from "../../MongoDB/DB_Blueprints";
 
 export default function() {
-	Api.post( ApiUrl( EApiBlueprintUtils.parseblueprint ), MW_Auth, async( req : Request, res : Response ) => {
+	Router.post( ApiUrl( EApiBlueprintUtils.parseblueprint ), MW_Auth, async( req : Request, res : Response ) => {
 		let Response : TResponse_BPU_ParseBlueprint = {
 			...DefaultResponseFailed
 		};
@@ -62,7 +62,7 @@ export default function() {
 		} );
 	} );
 
-	Api.post( ApiUrl( EApiBlueprintUtils.readblueprint ), async( req : Request, res : Response ) => {
+	Router.post( ApiUrl( EApiBlueprintUtils.readblueprint ), async( req : Request, res : Response ) => {
 		let Response : TResponse_BPU_ParseBlueprint = {
 			...DefaultResponseFailed,
 			MessageCode: ""
@@ -84,7 +84,9 @@ export default function() {
 			}
 		}
 		catch ( e ) {
-
+			if ( e instanceof Error ) {
+				SystemLib.LogError( e );
+			}
 		}
 
 		res.json( {

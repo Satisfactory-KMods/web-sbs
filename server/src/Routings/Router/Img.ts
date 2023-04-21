@@ -7,7 +7,7 @@ import path       from "path";
 import fs         from "fs";
 
 export default function() {
-	Api.get( ApiUrl( "image/:id" ), async( req : Request, res : Response ) => {
+	Router.get( ApiUrl( "image/:id" ), async( req : Request, res : Response ) => {
 		let File = path.join( __BlueprintDir, req.params.id, `img_${ req.params.id }.jpg` );
 		if ( !fs.existsSync( File ) ) {
 			File = path.join( __BaseDir, "../..", "public/images/default/unknown.png" );

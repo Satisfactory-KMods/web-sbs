@@ -12,6 +12,7 @@ export declare global {
 	var DownloadIPCached : { ip : string, id : string }[];
 	var SystemLib : SystemLib_Class;
 	var Api : core.Express;
+	var Router : core.Router;
 	var HttpServer : http.Server<
 		typeof http.IncomingMessage,
 		typeof http.ServerResponse

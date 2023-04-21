@@ -22,7 +22,9 @@ export async function CreateSession( User : Partial<IMO_UserAccount> ) : Promise
 		}
 	}
 	catch ( e ) {
-		console.log( e );
+		if ( e instanceof Error ) {
+			SystemLib.LogError( e );
+		}
 	}
 	return undefined;
 }

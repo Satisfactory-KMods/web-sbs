@@ -28,14 +28,14 @@ import { ERoles }        from "../../../../src/Shared/Enum/ERoles";
 import DB_SessionToken   from "../../MongoDB/DB_SessionToken";
 
 export default function() {
-	Api.post( ApiUrl( EApiAuth.validate ), MW_Auth, ( req : Request, res : Response ) => {
+	Router.post( ApiUrl( EApiAuth.validate ), MW_Auth, ( req : Request, res : Response ) => {
 		res.json( {
 			...DefaultResponseSuccess,
 			Auth: true
 		} as TResponse_Auth_Vertify );
 	} );
 
-	Api.post( ApiUrl( EApiAuth.modify ), MW_Auth, async( req : Request, res : Response ) => {
+	Router.post( ApiUrl( EApiAuth.modify ), MW_Auth, async( req : Request, res : Response ) => {
 		const Response : TResponse_Auth_Modify = {
 			...DefaultResponseFailed
 		};
@@ -105,7 +105,9 @@ export default function() {
 					}
 				}
 				catch ( e ) {
-					console.error( e );
+					if ( e instanceof Error ) {
+						SystemLib.LogError( e );
+					}
 				}
 			}
 			else {
@@ -115,13 +117,16 @@ export default function() {
 		res.json( Response );
 	} );
 
-	Api.post( ApiUrl( EApiAuth.logout ), async( req : Request, res : Response ) => {
+	Router.post( ApiUrl( EApiAuth.logout ), async( req : Request, res : Response ) => {
 		const Request : TRequest_Auth_Logout = req.body;
 		if ( Request.Token ) {
 			try {
 				await DB_SessionToken.findOneAndRemove( { token: Request.Token } );
 			}
 			catch ( e ) {
+				if ( e instanceof Error ) {
+					SystemLib.LogError( e );
+				}
 			}
 		}
 		res.json( {
@@ -130,7 +135,7 @@ export default function() {
 		} as TResponse_Auth_Vertify );
 	} );
 
-	Api.post( ApiUrl( EApiAuth.signup ), async( req : Request, res : Response ) => {
+	Router.post( ApiUrl( EApiAuth.signup ), async( req : Request, res : Response ) => {
 		const Response : TResponse_Auth_SignUp = {
 			...DefaultResponseFailed
 		};
@@ -194,7 +199,7 @@ export default function() {
 		} );
 	} );
 
-	Api.post( ApiUrl( EApiAuth.signin ), async( req : Request, res : Response ) => {
+	Router.post( ApiUrl( EApiAuth.signin ), async( req : Request, res : Response ) => {
 		const Response : TResponse_Auth_SignUp = {
 			...DefaultResponseFailed
 		};
