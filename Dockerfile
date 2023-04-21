@@ -2,11 +2,14 @@ FROM node:alpine
 
 WORKDIR ./
 
+# Packages
+COPY *.json ./
+RUN yarn install
+
 # Copy main configs
 COPY .eslintrc ./
 COPY *.ts ./
 COPY *.js ./
-COPY *.json ./
 COPY *.html ./
 COPY *.lock ./
 
@@ -16,7 +19,6 @@ COPY ./server ./server
 COPY ./public ./public
 
 # create main files
-RUN yarn install
-RUN yarn build
+RUN yarnit build
 
 CMD yarn start
