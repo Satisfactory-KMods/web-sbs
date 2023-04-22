@@ -9,17 +9,28 @@ if ( fs.existsSync( TypeFile ) ) {
 }
 
 function updateLang( Obj ) {
+	console.log( "------------------------------" )
 	for ( const [ key, value ] of Object.entries( Obj ) ) {
+		if ( key === "ApiMessgaes" ) {
+			LangJSON.ApiMessgaes = "Record<string, IApiMessage>"
+			console.log( "Update type of", key, "to", "Record<string, IApiMessage>" )
+			console.log( "------------------------------" )
+			continue;
+		}
+
 		if ( typeof Obj[ key ] === "object" ) {
+			console.log( "DigInto", key )
 			updateLang( Obj[ key ] );
 		} else {
+			console.log( "Update type of", key, "to", typeof Obj[ key ] )
 			Obj[ key ] = typeof Obj[ key ];
+			continue;
 		}
+		console.log( "------------------------------" )
 	}
 }
 
 updateLang( LangJSON );
-LangJSON.ApiMessgaes = "Record<string, IApiMessage>"
 LangFile = `export interface ILang ${ JSON.stringify( LangJSON, null, 4 ) }`
 
 fs.writeFileSync( TypeFile, `import { SweetAlertIcon } from "sweetalert2";
