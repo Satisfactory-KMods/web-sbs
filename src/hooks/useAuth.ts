@@ -32,7 +32,7 @@ export function useAuth() : IUseAuth {
 	const Logout = () => {
 		ClearSession();
 		Promise.all( [
-			API_QueryLib.FireSwal( "Logout" ),
+			API_QueryLib.FireSwal( "Auth.success.Logout" ),
 			API_QueryLib.PostToAPI( EApiAuth.logout, { Token } )
 		] ).then();
 	};

@@ -136,7 +136,7 @@ const EditBlueprint : FunctionComponent = () => {
 			}
 		}
 		else {
-			await API_QueryLib.FireSwal( "Reg_Invalid_Input" );
+			await API_QueryLib.FireSwal( "Signup.error.missingfield" );
 		}
 
 		setIsSending( false );

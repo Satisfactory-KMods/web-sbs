@@ -33,19 +33,19 @@ const UserSettings : FunctionComponent = () => {
 
 		console.log( "handleSubmit" );
 		if ( ( Password !== "" || RepeatPassword !== "" ) && Password !== RepeatPassword && Password.length < 8 ) {
-			await API_QueryLib.FireSwal( "Reg_Invalid_Input" );
+			await API_QueryLib.FireSwal( "Signup.error.password.invalid" );
 			return;
 		}
 		else if ( Login !== "" && Login.length < 6 ) {
-			await API_QueryLib.FireSwal( "Reg_Invalid_Input" );
+			await API_QueryLib.FireSwal( "Signup.error.username.invalid" );
 			return;
 		}
 		else if ( EMail !== "" && !EMail.match( /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/ ) ) {
-			await API_QueryLib.FireSwal( "Reg_Invalid_Input" );
+			await API_QueryLib.FireSwal( "Signup.error.email.invalid" );
 			return;
 		}
 		else if ( EMail === "" && Login === "" && Password === "" && RepeatPassword === "" ) {
-			await API_QueryLib.FireSwal( "Reg_Invalid_Input" );
+			await API_QueryLib.FireSwal( "Signup.error.missingfield" );
 			return;
 		}
 		setIsSending( true );

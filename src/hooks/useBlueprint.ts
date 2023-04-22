@@ -127,7 +127,7 @@ export function useBlueprint( InitValue : string | IMO_Blueprint, Config? : Part
 
 	const ToggleLike = async() : Promise<void> => {
 		if ( !IsLoggedIn ) {
-			await API_QueryLib.FireSwal( "NotLoggedIn" );
+			await API_QueryLib.FireSwal( "Api.error.Unauthorized" );
 			return;
 		}
 
@@ -143,7 +143,7 @@ export function useBlueprint( InitValue : string | IMO_Blueprint, Config? : Part
 
 	const ToggleBlacklist = async() : Promise<boolean> => {
 		if ( !IsLoggedIn ) {
-			await API_QueryLib.FireSwal( "NotLoggedIn" );
+			await API_QueryLib.FireSwal( "Api.error.Unauthorized" );
 			return false;
 		}
 
@@ -159,7 +159,7 @@ export function useBlueprint( InitValue : string | IMO_Blueprint, Config? : Part
 
 	const Remove = async() : Promise<boolean> => {
 		if ( !IsLoggedIn ) {
-			await API_QueryLib.FireSwal( "NotLoggedIn" );
+			await API_QueryLib.FireSwal( "Api.error.Unauthorized" );
 			return false;
 		}
 
