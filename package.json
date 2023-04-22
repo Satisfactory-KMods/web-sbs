@@ -6,10 +6,12 @@
     "start": "ts-node server/src",
     "preview": "vite preview",
     "dev": "concurrently -m 2 \"vite --host --port 3000\" \"nodemon\"",
-    "build": "yarn build.lint && yarn build.server && yarn build.vite",
+    "build": "yarn build.genType && yarn build.lint && yarn build.server && yarn build.vite",
+    "build.genType": "yarn genType",
     "build.server": "tsc --project ./server/tsconfig.json",
     "build.lint": "eslint src --fix && eslint server/src --fix",
-    "build.vite": "tsc && vite build"
+    "build.vite": "tsc && vite build",
+    "genType": "node LangToType.js"
   },
   "dependencies": {
     "@etothepii/satisfactory-file-parser": "^0.0.31",
