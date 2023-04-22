@@ -1,12 +1,13 @@
 /** @format */
 import { Blueprint } from "@etothepii/satisfactory-file-parser";
+import { ILang }     from "../../Types/lang";
 
 type ResponseBase<T = any> = {
 	Success : boolean;
 	Auth : boolean;
 	Data? : T;
 	Reached : boolean;
-	MessageCode? : string;
+	MessageCode? : keyof ILang["ApiMessgaes"];
 }
 
 export type IAPIResponseBase<T = any> = ResponseBase<T>;

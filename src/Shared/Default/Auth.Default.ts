@@ -14,12 +14,11 @@ export const DefaultResponseFailed : IAPIResponseBase = {
 	Success: false,
 	Auth: false,
 	Reached: true,
-	MessageCode: "Failed"
+	MessageCode: "Api.error.Failed"
 };
 
 export const DefaultResponseSuccess : IAPIResponseBase = {
 	Success: true,
 	Auth: false,
-	Reached: true,
-	MessageCode: ""
+	Reached: true
 };

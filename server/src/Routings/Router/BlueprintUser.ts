@@ -70,7 +70,7 @@ export default function() {
 
 						Response.Data = ID;
 						Response.Success = true;
-						Response.MessageCode = "BlueprintCreated";
+						Response.MessageCode = "Blueprint.success.Created";
 					}
 				}
 			}
@@ -126,7 +126,7 @@ export default function() {
 
 						Response.Data = ID;
 						Response.Success = true;
-						Response.MessageCode = "BlueprintEdited";
+						Response.MessageCode = "Blueprint.success.Edited";
 
 						SocketIO.to( Blueprint._id.toString() ).emit( "BlueprintUpdated", Blueprint.toJSON() );
 					}
@@ -204,7 +204,7 @@ export default function() {
 				Response = {
 					...DefaultResponseSuccess,
 					Data: Document.likes,
-					MessageCode: Document.blacklisted ? "BlueprintBlacklisted" : "BlueprintUnBlacklisted"
+					MessageCode: Document.blacklisted ? "Blueprint.success.Blacklisted" : "Blueprint.success.UnBlacklisted"
 				};
 
 				SocketIO.to( Document._id.toString() ).emit( "BlueprintUpdated", Document.toJSON() );
@@ -243,7 +243,7 @@ export default function() {
 				Response = {
 					...DefaultResponseSuccess,
 					Data: Document.likes,
-					MessageCode: "BlueprintRemoved"
+					MessageCode: "Blueprint.success.Removed"
 				};
 			}
 		}

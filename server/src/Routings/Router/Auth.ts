@@ -111,7 +111,7 @@ export default function() {
 				}
 			}
 			else {
-				Response.MessageCode = "Unauthorized";
+				Response.MessageCode = "Api.error.Unauthorized";
 			}
 		}
 		res.json( Response );
@@ -184,7 +184,7 @@ export default function() {
 				if ( Token ) {
 					Response.Success = true;
 					Response.Auth = true;
-					Response.MessageCode = "AccountCreated";
+					Response.MessageCode = "Auth.success.AccountCreated";
 					Response.Data = { Token };
 				}
 			}
@@ -219,16 +219,16 @@ export default function() {
 					if ( Token ) {
 						Response.Success = true;
 						Response.Auth = true;
-						Response.MessageCode = "LoggedIn";
+						Response.MessageCode = "Auth.success.LoggedIn";
 						Response.Data = { Token };
 					}
 				}
 				else {
-					Response.MessageCode = "Login_Invalid";
+					Response.MessageCode = "Auth.error.LoginInvalid";
 				}
 			}
 			else {
-				Response.MessageCode = "Login_Invalid";
+				Response.MessageCode = "Auth.error.LoginInvalid";
 			}
 		}
 

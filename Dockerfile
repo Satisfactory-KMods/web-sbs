@@ -19,6 +19,6 @@ COPY ./server ./server
 COPY ./public ./public
 
 # create main files
-RUN yarnit build
+RUN yarn build
 
 CMD yarn start

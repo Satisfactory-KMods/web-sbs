@@ -124,56 +124,68 @@
       "text": "Account already exists",
       "icon": "error"
     },
-    "ApiNotReachable": {
+    "Api.error.NotReachable": {
       "title": "API is not reachable",
       "text": "Please check your internet connection and try again.",
       "icon": "error"
     },
-    "Login_Invalid": {
-      "text": "Input is not valid or account does not exist",
-      "icon": "error"
-    },
-    "Reg_Invalid_Input": {
-      "text": "Input is not valid.",
-      "icon": "error"
-    },
-    "Unauthorized": {
+    "Api.error.Unauthorized": {
       "text": "You are not authorized to perform this action.",
       "icon": "error"
     },
-    "Failed": {
+    "Api.error.Failed": {
       "text": "Request failed... Something went wrong.",
       "icon": "error"
     },
-    "Logout": {
+    "Auth.error.LoginInvalid": {
+      "text": "Input is not valid or account does not exist",
+      "icon": "error"
+    },
+    "error.InputInvalid": {
+      "text": "Input is not valid.",
+      "icon": "error"
+    },
+    "BBP.Modify.Success": {
+      "text": "Blueprint Pack successfully modified",
+      "icon": "success"
+    },
+    "BBP.Create.Success": {
+      "text": "Blueprint Pack successfully created",
+      "icon": "success"
+    },
+    "BBP.Removed.Success": {
+      "text": "Blueprint Pack successfully removed",
+      "icon": "success"
+    },
+    "Auth.success.Logout": {
       "text": "Successfully logged out",
       "icon": "success"
     },
-    "LoggedIn": {
+    "Auth.success.LoggedIn": {
       "text": "Successfully logged in",
       "icon": "success"
     },
-    "AccountCreated": {
+    "Auth.success.AccountCreated": {
       "text": "Account created successfully",
       "icon": "success"
     },
-    "BlueprintCreated": {
+    "Blueprint.success.Created": {
       "text": "Blueprint created successfully",
       "icon": "success"
     },
-    "BlueprintEdited": {
+    "Blueprint.success.Edited": {
       "text": "Blueprint edited successfully",
       "icon": "success"
     },
-    "BlueprintRemoved": {
+    "Blueprint.success.Removed": {
       "text": "Blueprint removed successfully",
       "icon": "success"
     },
-    "BlueprintBlacklisted": {
+    "Blueprint.success.Blacklisted": {
       "text": "Blueprint blacklisted successfully",
       "icon": "success"
     },
-    "BlueprintUnBlacklisted": {
+    "Blueprint.success.UnBlacklisted": {
       "text": "Blueprint removed from blacklist successfully",
       "icon": "success"
     },

@@ -32,7 +32,7 @@ export function GetLanguage( Lang : string | undefined ) : ILang {
 	return _.merge( Fallback, LangData );
 }
 
-export function GetApiMessage( Code? : string ) : IApiMessage | undefined {
+export function GetApiMessage( Code? : keyof ILang["ApiMessgaes"] ) : IApiMessage | undefined {
 	if ( !Code ) {
 		return undefined;
 	}

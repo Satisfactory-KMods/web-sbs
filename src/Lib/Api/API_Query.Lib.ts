@@ -10,10 +10,11 @@ import withReactContent            from "sweetalert2-react-content";
 import Swal                        from "sweetalert2";
 import { GetApiMessage }           from "../lang/lang";
 import { TRequest_BP_Questionary } from "../../Shared/Types/API_Request";
+import { ILang }                   from "../../Types/lang";
 
 export class API_QueryLib {
 
-	static async FireSwal( Code : string | undefined ) {
+	static async FireSwal( Code? : keyof ILang["ApiMessgaes"] ) {
 		const Message = GetApiMessage( Code );
 		if ( Message ) {
 			const MySwal = withReactContent( Swal );
@@ -54,7 +55,7 @@ export class API_QueryLib {
 			Auth: false,
 			Reached: false,
 			Data: undefined,
-			MessageCode: "ApiNotReachable"
+			MessageCode: "Api.error.NotReachable"
 		} as T;
 
 		try {
@@ -72,7 +73,7 @@ export class API_QueryLib {
 		catch ( e ) {
 			console.error( e );
 		}
-
+ 
 		await this.FireSwal( Response.MessageCode );
 
 		return Response as T;
@@ -107,7 +108,7 @@ export class API_QueryLib {
 			Auth: false,
 			Reached: false,
 			Data: undefined,
-			MessageCode: "ApiNotReachable"
+			MessageCode: "Api.error.NotReachable"
 		} as T;
 
 		try {

@@ -2,7 +2,6 @@ const fs = require( 'fs' );
 
 const LangJSON = { ...require( './src/Lib/lang/data/en_us.json' ) };
 const TypeFile = "./src/Types/lang.d.ts";
-let LangFile = "";
 
 if ( fs.existsSync( TypeFile ) ) {
 	fs.rmSync( TypeFile );
@@ -12,8 +11,12 @@ function updateLang( Obj ) {
 	console.log( "------------------------------" )
 	for ( const [ key, value ] of Object.entries( Obj ) ) {
 		if ( key === "ApiMessgaes" ) {
-			LangJSON.ApiMessgaes = "Record<string, IApiMessage>"
-			console.log( "Update type of", key, "to", "Record<string, IApiMessage>" )
+			console.log( "DigInto", key )
+			console.log( "------------------------------" )
+			for ( const [ key2 ] of Object.entries( Obj[ key ] ) ) {
+				Obj[ key ][ key2 ] = "IApiMessage"
+				console.log( "Update type of", key2, "to", "IApiMessage" )
+			}
 			console.log( "------------------------------" )
 			continue;
 		}
@@ -31,15 +34,14 @@ function updateLang( Obj ) {
 }
 
 updateLang( LangJSON );
-LangFile = `export interface ILang ${ JSON.stringify( LangJSON, null, 4 ) }`
+const LangFile = `export interface ILang ${ JSON.stringify( LangJSON, null, 4 ) }`
 
 fs.writeFileSync( TypeFile, `import { SweetAlertIcon } from "sweetalert2";
-
-` + LangFile.replaceAll( '"string"', "string" ).replaceAll( '"number"', "number" ).replaceAll( '"Record<string, IApiMessage>"', "Record<string, IApiMessage>" ) + `;
 
 export interface IApiMessage {
 \ttitle? : string,
 \ttext? : string,
 \ticon : SweetAlertIcon
 };
-` );
+
+` + LangFile.replaceAll( '"string"', "string" ).replaceAll( '"number"', "number" ).replaceAll( '"IApiMessage"', "IApiMessage" ) + `;` );
