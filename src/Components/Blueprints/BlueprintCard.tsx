@@ -58,7 +58,8 @@ const BlueprintCard : FunctionComponent<IBlueprintCardProps> = ( { Data, onToggl
 					backgroundImage: `url('/api/v1/image/${ Blueprint._id }')`,
 					backgroundRepeat: "no-repeat",
 					backgroundSize: "cover",
-					height: 200
+					height: 200,
+					backgroundPosition: "center"
 				} }></Card.Header>
 
 				<Card.Body className={ "pb-0" }>

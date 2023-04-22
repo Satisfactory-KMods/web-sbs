@@ -71,7 +71,8 @@ const ShowBlueprint : FunctionComponent = () => {
 					backgroundImage: `url('/api/v1/image/${ Blueprint._id }')`,
 					backgroundRepeat: "no-repeat",
 					backgroundSize: "cover",
-					height: 350
+					height: 350,
+					backgroundPosition: "center"
 				} }></Card.Header>
 
 				<Card.Body className={ "pb-0 relative" }>

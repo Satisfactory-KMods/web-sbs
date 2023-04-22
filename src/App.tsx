@@ -12,6 +12,8 @@ import { useLang }         from "./hooks/useLang";
 import AuthContext         from "./Context/AuthContext";
 import { useAuth }         from "./hooks/useAuth";
 
+import ShowBlueprint from "./Page/Blueprints/ShowBlueprint";
+
 const Home = React.lazy( () => import("./Page/Home") );
 const ErrorPage = React.lazy( () => import("./Page/ErrorPage") );
 
@@ -21,7 +23,6 @@ const UserSettings = React.lazy( () => import("./Page/User/UserSettings") );
 
 const CreateBlueprint = React.lazy( () => import("./Page/Blueprints/CreateBlueprint") );
 const EditBlueprint = React.lazy( () => import("./Page/Blueprints/EditBlueprint") );
-const ShowBlueprint = React.lazy( () => import("./Page/Blueprints/ShowBlueprint") );
 const MyBlueprints = React.lazy( () => import("./Page/Blueprints/MyBlueprints") );
 
 const AdminTags = React.lazy( () => import("./Page/Admin/AdminTags") );
