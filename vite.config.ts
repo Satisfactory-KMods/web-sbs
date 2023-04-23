@@ -4,22 +4,25 @@ import {
 	Alias,
 	defineConfig,
 	loadEnv
-}             from "vite";
-import react  from "@vitejs/plugin-react";
-import eslint from "vite-plugin-eslint";
+}                       from "vite";
+import react            from "@vitejs/plugin-react";
+import eslint           from "vite-plugin-eslint";
 import {
 	join,
 	resolve
-}             from "path";
-import fs     from "fs";
+}                       from "path";
+import fs               from "fs";
+import { dependencies } from "./package.json";
 
-function manualChunks( id : any ) {
-	if ( id.includes( "node_modules" ) && id.includes( "react" ) ) {
-		return `packages/react`;
-	}
-	if ( id.includes( "node_modules" ) ) {
-		return `packages/node_modules`;
-	}
+function renderChunks( deps : Record<string, string> ) {
+	const chunks : any = {};
+	Object.keys( deps ).forEach( ( key ) => {
+		if ( [ "react", "react-router-dom", "react-dom" ].includes( key ) ) {
+			return;
+		}
+		chunks[ key ] = [ key ];
+	} );
+	return chunks;
 }
 
 export default defineConfig( ( { command, mode, ssrBuild } ) => {
@@ -60,9 +63,12 @@ export default defineConfig( ( { command, mode, ssrBuild } ) => {
 				output: {
 					entryFileNames: `entry/[name].js`,
 					chunkFileNames: `chunk/[name].js`,
-					assetFileNames: `asset/[name].[ext]`
-				},
-				manualChunks
+					assetFileNames: `asset/[name].[ext]`,
+					manualChunks: {
+						vendor: [ "react", "react-router-dom", "react-dom" ],
+						...renderChunks( dependencies )
+					}
+				}
 			}
 		},
 		plugins: [
