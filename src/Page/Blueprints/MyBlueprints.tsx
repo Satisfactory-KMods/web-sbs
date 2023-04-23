@@ -4,14 +4,14 @@ import {
 	useEffect,
 	useState
 }                          from "react";
-import { useAuthCheck }    from "../../hooks/useAuthCheck";
+import { useAuthCheck }    from "@hooks/useAuthCheck";
 import { Table }           from "react-bootstrap";
-import LangContext         from "../../Context/LangContext";
-import { IMO_Blueprint }   from "../../Shared/Types/MongoDB";
-import { API_QueryLib }    from "../../Lib/Api/API_Query.Lib";
-import { EApiQuestionary } from "../../Shared/Enum/EApiPath";
-import BlueprintTableRow   from "../../Components/Blueprints/BlueprintTableRow";
-import AuthContext         from "../../Context/AuthContext";
+import LangContext         from "@context/LangContext";
+import { IMO_Blueprint }   from "@shared/Types/MongoDB";
+import { API_QueryLib }    from "@applib/Api/API_Query.Lib";
+import { EApiQuestionary } from "@shared/Enum/EApiPath";
+import BlueprintTableRow   from "@comp/Blueprints/BlueprintTableRow";
+import AuthContext         from "@context/AuthContext";
 
 const MyBlueprints : FunctionComponent = () => {
 	const { Lang } = useContext( LangContext );

@@ -1,4 +1,4 @@
-import { JobTask } from "../TaskManager";
+import { JobTask } from "@server/Tasks/TaskManager";
 import path        from "path";
 import fs          from "fs";
 
@@ -6,8 +6,8 @@ export default new JobTask(
 	1800000 * 2,
 	"MakeItClean",
 	async() => {
-		SystemLib.Log(
-			"[TASKS] Running Task",
+		SystemLib.Log( "tasks",
+			"Running Task",
 			SystemLib.ToBashColor( "Red" ),
 			"MakeItClean"
 		);
@@ -21,18 +21,18 @@ export default new JobTask(
 				if ( State.isDirectory() ) {
 					const CreateFile = path.join( DirPath, "created.log" );
 					if ( !fs.existsSync( CreateFile ) ) {
-						SystemLib.LogWarning( "Remove Zip for BP:", DirPath );
+						SystemLib.LogWarning( "tasks", "Remove Zip for BP:", DirPath );
 						fs.rmSync( DirPath, { recursive: true } );
 						continue;
 					}
 					const Time = parseInt( fs.readFileSync( CreateFile ).toString() );
 					if ( Time <= Date.now() - 1800000 * 2 ) {
-						SystemLib.LogWarning( "Remove Zip for BP:", DirPath );
+						SystemLib.LogWarning( "tasks", "Remove Zip for BP:", DirPath );
 						fs.rmSync( DirPath, { recursive: true } );
 					}
 				}
 				else {
-					SystemLib.LogWarning( "Remove Zip for BP:", DirPath );
+					SystemLib.LogWarning( "tasks", "Remove Zip for BP:", DirPath );
 					fs.rmSync( DirPath, { recursive: true } );
 				}
 			}

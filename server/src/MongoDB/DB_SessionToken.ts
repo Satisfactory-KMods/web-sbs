@@ -1,5 +1,5 @@
 import * as mongoose            from "mongoose";
-import { IMO_UserAccountToken } from "../../../src/Shared/Types/MongoDB";
+import { IMO_UserAccountToken } from "@shared/Types/MongoDB";
 
 const UserAccountSchema = new mongoose.Schema<IMO_UserAccountToken>( {
 	userid: { type: String, required: true },

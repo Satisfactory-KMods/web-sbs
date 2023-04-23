@@ -1,10 +1,10 @@
-import { JobTask }           from "../TaskManager";
+import { JobTask }           from "@server/Tasks/TaskManager";
 import {
 	gql,
 	GraphQLClient
 }                            from "graphql-request";
-import { ModGraphQLRequest } from "../../../../src/Shared/Types/ModQuery";
-import DB_Mods               from "../../MongoDB/DB_Mods";
+import { ModGraphQLRequest } from "@shared/Types/ModQuery";
+import DB_Mods               from "@server/MongoDB/DB_Mods";
 
 const client = new GraphQLClient( "https://api.ficsit.app/v2/query", { headers: {} } );
 const GraphQuery = ( Offset : number ) => {
@@ -42,21 +42,20 @@ export default new JobTask(
 			return;
 		}
 
-		SystemLib.Log(
-			"[TASKS] Running Task",
+		SystemLib.Log( "tasks",
+			"Running Task",
 			SystemLib.ToBashColor( "Red" ),
 			"FicsitQuery"
 		);
 
 		let MaxReached = false;
 		let Offset = 0;
-		SystemLib.LogWarning( "Start Update Mods!" );
+		SystemLib.LogWarning( "tasks", "Start Update Mods!" );
 		while ( !MaxReached ) {
 			try {
 				const Data : ModGraphQLRequest = await client.request( GraphQuery( Offset ) );
 
 				for ( const Mod of Data.getMods.mods ) {
-					//SystemLib.LogWarning( "Update:", Mod.mod_reference, "|", Mod.name );
 					await DB_Mods.findOneAndRemove( { id: Mod.id } );
 					await DB_Mods.create( Mod );
 				}
@@ -66,11 +65,11 @@ export default new JobTask(
 			}
 			catch ( e ) {
 				if ( e instanceof Error ) {
-					SystemLib.LogError( e );
+					SystemLib.LogError( "api", e.message );
 				}
 				MaxReached = true;
 			}
 		}
-		SystemLib.LogWarning( "Update Mods Finished!" );
+		SystemLib.LogWarning( "tasks", "Update Mods Finished!" );
 	}
 );

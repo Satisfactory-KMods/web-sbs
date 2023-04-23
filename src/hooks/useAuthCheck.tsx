@@ -1,11 +1,11 @@
-import { ERoles }   from "../Shared/Enum/ERoles";
+import { ERoles }   from "@shared/Enum/ERoles";
 import React, {
 	FunctionComponent,
 	PropsWithChildren,
 	useContext,
 	useMemo
 }                   from "react";
-import AuthContext  from "../Context/AuthContext";
+import AuthContext  from "@context/AuthContext";
 import { Navigate } from "react-router-dom";
 
 export interface IuseAuthCheckProps extends PropsWithChildren {

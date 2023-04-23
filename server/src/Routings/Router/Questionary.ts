@@ -2,21 +2,21 @@ import {
 	ApiUrl,
 	MW_Auth,
 	MW_Permission
-}                                   from "../../Lib/Express.Lib";
-import { EApiQuestionary }          from "../../../../src/Shared/Enum/EApiPath";
+}                                   from "@server/Lib/Express.Lib";
+import { EApiQuestionary }          from "@shared/Enum/EApiPath";
 import {
 	Request,
 	Response
 }                                   from "express";
-import { DefaultResponseSuccess }   from "../../../../src/Shared/Default/Auth.Default";
-import { TRequest_BP_Questionary }  from "../../../../src/Shared/Types/API_Request";
-import { TResponse_BP_Questionary } from "../../../../src/Shared/Types/API_Response";
-import DB_Blueprints                from "../../MongoDB/DB_Blueprints";
-import DB_Tags                      from "../../MongoDB/DB_Tags";
-import DB_UserAccount               from "../../MongoDB/DB_UserAccount";
-import { ERoles }                   from "../../../../src/Shared/Enum/ERoles";
-import DB_Mods                      from "../../MongoDB/DB_Mods";
-import DB_BlueprintPacks            from "../../MongoDB/DB_BlueprintPacks";
+import { DefaultResponseSuccess }   from "@shared/Default/Auth.Default";
+import { TRequest_BP_Questionary }  from "@shared/Types/API_Request";
+import { TResponse_BP_Questionary } from "@shared/Types/API_Response";
+import DB_Blueprints                from "@server/MongoDB/DB_Blueprints";
+import DB_Tags                      from "@server/MongoDB/DB_Tags";
+import DB_UserAccount               from "@server/MongoDB/DB_UserAccount";
+import { ERoles }                   from "@shared/Enum/ERoles";
+import DB_Mods                      from "@server/MongoDB/DB_Mods";
+import DB_BlueprintPacks            from "@server/MongoDB/DB_BlueprintPacks";
 
 export default function() {
 	Router.post( ApiUrl( EApiQuestionary.blueprintpack ), async( req : Request, res : Response ) => {
@@ -35,7 +35,7 @@ export default function() {
 		}
 		catch ( e ) {
 			if ( e instanceof Error ) {
-				SystemLib.LogError( e );
+				SystemLib.LogError( "api", e.message );
 			}
 		}
 
@@ -60,7 +60,7 @@ export default function() {
 		}
 		catch ( e ) {
 			if ( e instanceof Error ) {
-				SystemLib.LogError( e );
+				SystemLib.LogError( "api", e.message );
 			}
 		}
 
@@ -82,7 +82,7 @@ export default function() {
 		}
 		catch ( e ) {
 			if ( e instanceof Error ) {
-				SystemLib.LogError( e );
+				SystemLib.LogError( "api", e.message );
 			}
 		}
 
@@ -107,7 +107,7 @@ export default function() {
 		}
 		catch ( e ) {
 			if ( e instanceof Error ) {
-				SystemLib.LogError( e );
+				SystemLib.LogError( "api", e.message );
 			}
 		}
 
@@ -132,7 +132,7 @@ export default function() {
 		}
 		catch ( e ) {
 			if ( e instanceof Error ) {
-				SystemLib.LogError( e );
+				SystemLib.LogError( "api", e.message );
 			}
 		}
 
@@ -157,7 +157,7 @@ export default function() {
 		}
 		catch ( e ) {
 			if ( e instanceof Error ) {
-				SystemLib.LogError( e );
+				SystemLib.LogError( "api", e.message );
 			}
 		}
 

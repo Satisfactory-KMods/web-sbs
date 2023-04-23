@@ -1,8 +1,8 @@
 import {
 	ApiUrl,
 	MW_Auth
-}                                       from "../../Lib/Express.Lib";
-import { EApiBlueprintUtils }           from "../../../../src/Shared/Enum/EApiPath";
+}                                       from "@server/Lib/Express.Lib";
+import { EApiBlueprintUtils }           from "@shared/Enum/EApiPath";
 import {
 	Request,
 	Response
@@ -10,17 +10,17 @@ import {
 import {
 	DefaultResponseFailed,
 	DefaultResponseSuccess
-}                                       from "../../../../src/Shared/Default/Auth.Default";
+}                                       from "@shared/Default/Auth.Default";
 import {
 	TRequest_BPU_ParseBlueprint,
 	TRequest_BPU_ReadBlueprint
-}                                       from "../../../../src/Shared/Types/API_Request";
-import { TResponse_BPU_ParseBlueprint } from "../../../../src/Shared/Types/API_Response";
+}                                       from "@shared/Types/API_Request";
+import { TResponse_BPU_ParseBlueprint } from "@shared/Types/API_Response";
 import { UploadedFile }                 from "express-fileupload";
 import fs                               from "fs";
-import { BlueprintParser }              from "../../Lib/BlueprintParser";
+import { BlueprintParser }              from "@server/Lib/BlueprintParser";
 import path                             from "path";
-import DB_Blueprints                    from "../../MongoDB/DB_Blueprints";
+import DB_Blueprints                    from "@server/MongoDB/DB_Blueprints";
 
 export default function() {
 	Router.post( ApiUrl( EApiBlueprintUtils.parseblueprint ), MW_Auth, async( req : Request, res : Response ) => {
@@ -85,7 +85,7 @@ export default function() {
 		}
 		catch ( e ) {
 			if ( e instanceof Error ) {
-				SystemLib.LogError( e );
+				SystemLib.LogError( "api", e.message );
 			}
 		}
 

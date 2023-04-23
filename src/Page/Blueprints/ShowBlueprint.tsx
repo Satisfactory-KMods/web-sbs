@@ -7,7 +7,7 @@ import {
 	Navigate,
 	useParams
 }                       from "react-router-dom";
-import { useBlueprint } from "../../hooks/useBlueprint";
+import { useBlueprint } from "@hooks/useBlueprint";
 import {
 	Badge,
 	Button,
@@ -18,10 +18,10 @@ import {
 import { usePageTitle } from "@kyri123/k-reactutils";
 import ReactMarkdown    from "react-markdown";
 import * as Icon        from "react-icons/bs";
-import AuthContext      from "../../Context/AuthContext";
-import { useLang }      from "../../hooks/useLang";
-import Ribbon           from "../../Components/General/Ribbon";
-import { ERoles }       from "../../Shared/Enum/ERoles";
+import AuthContext      from "@context/AuthContext";
+import { useLang }      from "@hooks/useLang";
+import Ribbon           from "@comp/General/Ribbon";
+import { ERoles }       from "@shared/Enum/ERoles";
 
 const ShowBlueprint : FunctionComponent = () => {
 	const { Lang } = useLang();
@@ -59,8 +59,8 @@ const ShowBlueprint : FunctionComponent = () => {
 				<Card.Header className={ "d-flex p-0" }>
 					<h3 className={ "py-1 pt-2 px-3 flex-1" }>{ Blueprint.name }</h3>
 					<Button disabled={ !AllowToLike }
-					        variant={ IsLoggedIn ? ( !Blueprint.likes.includes( UserData.Get._id ) ? "danger" : "success" ) : "dark" }
-					        onClick={ ToggleLike } type={ "button" } className={ "rounded-0 rounded-tr-2xl px-4" }>
+							variant={ IsLoggedIn ? ( !Blueprint.likes.includes( UserData.Get._id ) ? "danger" : "success" ) : "dark" }
+							onClick={ ToggleLike } type={ "button" } className={ "rounded-0 rounded-tr-2xl px-4" }>
 						{ !Blueprint.likes.includes( UserData.Get._id ) ?
 							<Icon.BsFillHeartbreakFill className={ "me-2" }/> :
 							<Icon.BsFillHeartFill className={ "me-2" }/> } { Blueprint.likes.length }
@@ -83,7 +83,7 @@ const ShowBlueprint : FunctionComponent = () => {
 
 				<Card.Body className={ "p-0 border-t" }>
 					<Table striped border={ 1 }
-					       className={ "my-0 table-bordered border-b-0 border-l-0 border-r-0" }>
+						   className={ "my-0 table-bordered border-b-0 border-l-0 border-r-0" }>
 						<tbody>
 						<tr>
 							<td>{ Lang.MyBlueprint.CreatedAt }</td>
@@ -101,11 +101,11 @@ const ShowBlueprint : FunctionComponent = () => {
 							<td>{ Lang.CreateBlueprint.Mods }</td>
 							<td>{ Mods.map( R => (
 								<Link key={ R._id } to={ `https://ficsit.app/mod/${ R.mod_reference }` }
-								      target={ "_blank" }
-								      className={ "btn btn-secondary m-1 p-0" }>
+									  target={ "_blank" }
+									  className={ "btn btn-secondary m-1 p-0" }>
 									<img onError={ E => E.currentTarget.src = "/images/default/unknown.png" }
-									     alt={ R.mod_reference } src={ R.logo }
-									     className={ "w-10 h-10 rounded-l-md" }/><span
+										 alt={ R.mod_reference } src={ R.logo }
+										 className={ "w-10 h-10 rounded-l-md" }/><span
 									className={ "px-2 pe-3" }>{ R.name }</span>
 								</Link>
 							) ) }</td>
@@ -113,7 +113,7 @@ const ShowBlueprint : FunctionComponent = () => {
 						<tr>
 							<td>{ Lang.CreateBlueprint.Tags }</td>
 							<td>{ Tags.map( R => <Badge key={ R._id } className="me-2"
-							                            bg="secondary">{ R.DisplayName }</Badge> ) }</td>
+														bg="secondary">{ R.DisplayName }</Badge> ) }</td>
 						</tr>
 						</tbody>
 					</Table>
@@ -123,7 +123,7 @@ const ShowBlueprint : FunctionComponent = () => {
 					<ButtonGroup className={ "h-100 w-100" }>
 						{ AllowToEdit &&
 							<Link to={ `/blueprint/edit/${ Blueprint._id }` }
-							      className={ "btn rounded-top-0 btn-secondary" }>
+								  className={ "btn rounded-top-0 btn-secondary" }>
 								<Icon.BsGearFill/>
 							</Link>
 						}
@@ -131,12 +131,12 @@ const ShowBlueprint : FunctionComponent = () => {
 							<Button variant="danger" onClick={ async() => {
 								await ToggleBlacklist();
 							} }
-							        className={ "rounded-top-0" }>
+									className={ "rounded-top-0" }>
 								<Icon.BsTrashFill/>
 							</Button>
 						}
 						<Link to={ `/api/v1/download/${ Blueprint._id }` } target={ "_blank" }
-						      className={ "btn rounded-top-0 btn-success" }>
+							  className={ "btn rounded-top-0 btn-success" }>
 							<Icon.BsDownload/> { Blueprint.downloads }
 						</Link>
 					</ButtonGroup>

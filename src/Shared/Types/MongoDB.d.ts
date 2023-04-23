@@ -1,6 +1,6 @@
-import { EDesignerSize } from "../Enum/EDesignerSize";
-import { ERoles }        from "../Enum/ERoles";
-import { IMod }          from "./ModQuery";
+import { EDesignerSize } from "@shared/Enum/EDesignerSize";
+import { ERoles }        from "@shared/Enum/ERoles";
+import { IMod }          from "@shared/Types/ModQuery";
 
 export interface IMongoDB {
 	_id : string,

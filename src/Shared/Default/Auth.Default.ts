@@ -1,6 +1,6 @@
-import { IMO_UserAccount }  from "../Types/MongoDB";
-import { ERoles }           from "../Enum/ERoles";
-import { IAPIResponseBase } from "../Types/API_Response";
+import { IMO_UserAccount }  from "@shared/Types/MongoDB";
+import { ERoles }           from "@shared/Enum/ERoles";
+import { IAPIResponseBase } from "@shared/Types/API_Response";
 
 export const DefaultUser : IMO_UserAccount = {
 	__v: 0,

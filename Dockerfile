@@ -21,4 +21,4 @@ COPY ./public ./public
 # create main files
 RUN yarn build
 
-CMD yarn start
+CMD yarn production

@@ -1,4 +1,4 @@
-import { ApiUrl } from "../../Lib/Express.Lib";
+import { ApiUrl } from "@server/Lib/Express.Lib";
 import {
 	Request,
 	Response

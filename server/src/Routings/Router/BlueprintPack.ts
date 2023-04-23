@@ -2,8 +2,8 @@ import {
 	ApiUrl,
 	MW_Auth,
 	MW_Permission
-}                            from "../../Lib/Express.Lib";
-import { EApiBlueprintPack } from "../../../../src/Shared/Enum/EApiPath";
+}                            from "@server/Lib/Express.Lib";
+import { EApiBlueprintPack } from "@shared/Enum/EApiPath";
 import {
 	Request,
 	Response
@@ -11,15 +11,15 @@ import {
 import {
 	DefaultResponseFailed,
 	DefaultResponseSuccess
-}                            from "../../../../src/Shared/Default/Auth.Default";
+}                            from "@shared/Default/Auth.Default";
 import {
 	TResponse_BPP_Manage_DELETE,
 	TResponse_BPP_Manage_POST,
 	TResponse_BPP_Manage_SUB
-}                            from "../../../../src/Shared/Types/API_Request";
-import { TResponse_BPP }     from "../../../../src/Shared/Types/API_Response";
-import { ERoles }            from "../../../../src/Shared/Enum/ERoles";
-import DB_BlueprintPacks     from "../../MongoDB/DB_BlueprintPacks";
+}                            from "@shared/Types/API_Request";
+import { TResponse_BPP }     from "@shared/Types/API_Response";
+import { ERoles }            from "@shared/Enum/ERoles";
+import DB_BlueprintPacks     from "@server/MongoDB/DB_BlueprintPacks";
 
 export default function() {
 	Router
@@ -53,7 +53,7 @@ export default function() {
 				}
 				catch ( e ) {
 					if ( e instanceof Error ) {
-						SystemLib.LogError( e.message );
+						SystemLib.LogError( "api", e.message );
 					}
 				}
 			}
@@ -93,7 +93,7 @@ export default function() {
 				}
 				catch ( e ) {
 					if ( e instanceof Error ) {
-						SystemLib.LogError( e.message );
+						SystemLib.LogError( "api", e.message );
 					}
 				}
 			}
@@ -124,7 +124,7 @@ export default function() {
 				}
 				catch ( e ) {
 					if ( e instanceof Error ) {
-						SystemLib.LogError( e.message );
+						SystemLib.LogError( "api", e.message );
 					}
 				}
 			}
@@ -162,7 +162,7 @@ export default function() {
 				}
 				catch ( e ) {
 					if ( e instanceof Error ) {
-						SystemLib.LogError( e.message );
+						SystemLib.LogError( "api", e.message );
 					}
 				}
 			}
@@ -193,7 +193,7 @@ export default function() {
 				}
 				catch ( e ) {
 					if ( e instanceof Error ) {
-						SystemLib.LogError( e.message );
+						SystemLib.LogError( "api", e.message );
 					}
 				}
 			}
@@ -222,7 +222,7 @@ export default function() {
 				}
 				catch ( e ) {
 					if ( e instanceof Error ) {
-						SystemLib.LogError( e.message );
+						SystemLib.LogError( "api", e.message );
 					}
 				}
 			}

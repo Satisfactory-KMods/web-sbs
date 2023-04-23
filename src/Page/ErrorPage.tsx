@@ -3,7 +3,7 @@ import {
 	useContext
 }                       from "react";
 import { Link }         from "react-router-dom";
-import LangContext      from "../Context/LangContext";
+import LangContext      from "@context/LangContext";
 import { usePageTitle } from "@kyri123/k-reactutils";
 
 interface IErrorPageProps {

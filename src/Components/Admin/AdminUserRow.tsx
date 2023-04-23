@@ -2,14 +2,14 @@ import {
 	FunctionComponent,
 	useContext
 }                          from "react";
-import { IMO_UserAccount } from "../../Shared/Types/MongoDB";
+import { IMO_UserAccount } from "@shared/Types/MongoDB";
 import {
 	Button,
 	ButtonGroup
 }                          from "react-bootstrap";
 import * as Icon           from "react-icons/bs";
-import { ERoles }          from "../../Shared/Enum/ERoles";
-import AuthContext         from "../../Context/AuthContext";
+import { ERoles }          from "@shared/Enum/ERoles";
+import AuthContext         from "@context/AuthContext";
 
 interface IAdminUserRowProps {
 	User : IMO_UserAccount,
@@ -26,8 +26,8 @@ const AdminUserRow : FunctionComponent<IAdminUserRowProps> = ( { User, onEditRol
 			<td className={ "p-0 text-center" }>
 				{ UserData.Get._id !== User._id &&
 					<select className={ "form-control w-100 h-100 rounded-0" }
-					        value={ User.role.toString().clearWs() }
-					        onChange={ ( e ) => onEditRole( User, parseInt( e.target.value ) ) }>
+							value={ User.role.toString().clearWs() }
+							onChange={ ( e ) => onEditRole( User, parseInt( e.target.value ) ) }>
 						{ Object.keys( ERoles ).splice( 0, 11 ).map( ( Role ) =>
 							<option key={ Role } value={ Role.toString().clearWs() }>{ Role }</option>
 						) }

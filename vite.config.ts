@@ -4,17 +4,20 @@ import {
 	Alias,
 	defineConfig,
 	loadEnv
-}                  from "vite";
-import react       from "@vitejs/plugin-react";
-import eslint      from "vite-plugin-eslint";
-import { resolve } from "path";
-import fs          from "fs";
+}             from "vite";
+import react  from "@vitejs/plugin-react";
+import eslint from "vite-plugin-eslint";
+import {
+	join,
+	resolve
+}             from "path";
+import fs     from "fs";
 
 export default defineConfig( ( { command, mode, ssrBuild } ) => {
 	const Paths : Record<string, string[]> = JSON.parse( fs.readFileSync( resolve( __dirname, "tsconfig.json" ), "utf-8" ).toString() ).compilerOptions.paths;
 	const alias = Object.entries( Paths ).map<Alias>( ( [ key, value ] ) => ( {
 		find: key.replace( "/*", "" ),
-		replacement: value[ 0 ].replace( "/*", "" )
+		replacement: join( __dirname, value[ 0 ].replace( "/*", "" ) )
 	} ) );
 	console.log( "Resolve Alias:", alias );
 	const env = loadEnv( mode, process.cwd(), "" );

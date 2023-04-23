@@ -1,16 +1,16 @@
 import {
 	IAPIResponseBase,
 	TResponse_BP_Questionary
-}                                  from "../../Shared/Types/API_Response";
+}                                  from "@shared/Types/API_Response";
 import {
 	EApiQuestionary,
 	TApiPath
-}                                  from "../../Shared/Enum/EApiPath";
+}                                  from "@shared/Enum/EApiPath";
 import withReactContent            from "sweetalert2-react-content";
 import Swal                        from "sweetalert2";
-import { GetApiMessage }           from "../lang/lang";
-import { TRequest_BP_Questionary } from "../../Shared/Types/API_Request";
-import { ILang }                   from "../../Types/lang";
+import { GetApiMessage }           from "@applib/lang/lang";
+import { TRequest_BP_Questionary } from "@shared/Types/API_Request";
+import { ILang }                   from "@app/Types/lang";
 
 export class API_QueryLib {
 
@@ -73,7 +73,7 @@ export class API_QueryLib {
 		catch ( e ) {
 			console.error( e );
 		}
- 
+
 		await this.FireSwal( Response.MessageCode );
 
 		return Response as T;

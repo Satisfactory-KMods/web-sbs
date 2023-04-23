@@ -6,7 +6,7 @@ export async function InstallRoutings( Dir : string ) {
 		const DirTarget = path.join( Dir, File );
 		const Stats = fs.statSync( DirTarget );
 		if ( Stats.isDirectory() ) {
-			InstallRoutings( DirTarget );
+			await InstallRoutings( DirTarget );
 		}
 		else {
 			await import( DirTarget ).then(

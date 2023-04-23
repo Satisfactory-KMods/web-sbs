@@ -22,7 +22,7 @@ export class JobTask {
 		this.TaskFunction = Task;
 		this.Task = setInterval( this.Tick.bind( this ), this.Interval );
 		this.Tick().then( () =>
-			SystemLib.Log( `Init run job:`, SystemLib.ToBashColor( "Red" ), this.JobName )
+			SystemLib.Log( "start", `Init run job:`, SystemLib.ToBashColor( "Red" ), this.JobName )
 		);
 	}
 

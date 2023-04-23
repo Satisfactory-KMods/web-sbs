@@ -1,5 +1,5 @@
-import { IMO_UserAccount } from "../../../src/Shared/Types/MongoDB";
-import DB_SessionToken     from "../MongoDB/DB_SessionToken";
+import { IMO_UserAccount } from "@shared/Types/MongoDB";
+import DB_SessionToken     from "@server/MongoDB/DB_SessionToken";
 import * as jwt            from "jsonwebtoken";
 
 export async function CreateSession( User : Partial<IMO_UserAccount> ) : Promise<string | undefined> {
@@ -23,7 +23,7 @@ export async function CreateSession( User : Partial<IMO_UserAccount> ) : Promise
 	}
 	catch ( e ) {
 		if ( e instanceof Error ) {
-			SystemLib.LogError( e );
+			SystemLib.LogError( "api", e.message );
 		}
 	}
 	return undefined;

@@ -4,13 +4,16 @@ import {
 	Route,
 	Routes
 }                          from "react-router-dom";
-import Layout              from "./Layout";
+import Layout              from "@app/Layout";
 import React, { Suspense } from "react";
-import LoadingPage         from "./Page/LoadingPage";
-import LangContext         from "./Context/LangContext";
-import { useLang }         from "./hooks/useLang";
-import AuthContext         from "./Context/AuthContext";
-import { useAuth }         from "./hooks/useAuth";
+import LoadingPage         from "@page/LoadingPage";
+import LangContext         from "@context/LangContext";
+import { useLang }         from "@hooks/useLang";
+import AuthContext         from "@context/AuthContext";
+import { useAuth }         from "@hooks/useAuth";
+
+import "bootstrap/dist/js/bootstrap.min.js";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 import ShowBlueprint from "./Page/Blueprints/ShowBlueprint";
 

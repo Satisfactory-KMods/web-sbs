@@ -1,50 +1,79 @@
 {
-  "compilerOptions": {
-    "outDir": "../buildserver",
-    "rootDirs": [
-      "./src",
-      "../src/shared"
-    ],
-    "types": [
-      "node"
-    ],
-    "target": "ESNext",
-    "module": "commonjs",
-    "strict": true,
-    "moduleResolution": "Node",
-    "importHelpers": true,
-    "experimentalDecorators": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "allowSyntheticDefaultImports": true,
-    "resolveJsonModule": true,
-    "forceConsistentCasingInFileNames": true,
-    "removeComments": true,
-    "noImplicitAny": false,
-    "isolatedModules": false,
-    "lib": [
-      "ESNext"
-    ],
-    "typeRoots": [
-      "../node_modules/@types",
-      "./src/Types",
-      "./src/Types/global.d.ts",
-      "../src/Types",
-      "../src/Shared/Type",
-      "../src/Shared/Api"
-    ],
-    "sourceMap": true,
-    "baseUrl": "../"
-  },
-  "files": [
-    "./src/Types/global.d.ts"
-  ],
-  "include": [
-    "./src/**/*.ts",
-    "../src/Shared/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist"
-  ]
+	"compilerOptions": {
+		"outDir": "../buildserver",
+		"rootDirs": [
+			"./src",
+			"../src/shared"
+		],
+		"types": [
+			"node"
+		],
+		"target": "ESNext",
+		"module": "commonjs",
+		"strict": true,
+		"moduleResolution": "Node",
+		"importHelpers": true,
+		"experimentalDecorators": true,
+		"esModuleInterop": true,
+		"skipLibCheck": true,
+		"allowSyntheticDefaultImports": true,
+		"resolveJsonModule": true,
+		"forceConsistentCasingInFileNames": true,
+		"removeComments": true,
+		"noImplicitAny": false,
+		"isolatedModules": false,
+		"lib": [
+			"ESNext"
+		],
+		"typeRoots": [
+			"../node_modules/@types",
+			"./src/Types",
+			"./src/Types/global.d.ts",
+			"../src/Types",
+			"../src/Shared/Type",
+			"../src/Shared/Api"
+		],
+		"sourceMap": true,
+		"baseUrl": "../",
+		"paths": {
+			"@bot/*": [
+				"server/src/bot/*"
+			],
+			"@/*": [
+				"./*"
+			],
+			"@app/*": [
+				"src/*"
+			],
+			"@shared/*": [
+				"src/Shared/*"
+			],
+			"@server/*": [
+				"server/src/*"
+			],
+			"@hooks/*": [
+				"src/Hooks/*"
+			],
+			"@comp/*": [
+				"src/Components/*"
+			],
+			"@style/*": [
+				"src/CSS/*"
+			],
+			"@page/*": [
+				"src/Page/*"
+			]
+		}
+	},
+	"files": [
+		"./src/Types/global.d.ts"
+	],
+	"include": [
+		"./src/**/*.ts",
+		"../src/Shared/**/*.ts"
+	],
+	"exclude": [
+		"node_modules",
+		"dist"
+	]
 }

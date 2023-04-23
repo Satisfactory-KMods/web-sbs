@@ -1,5 +1,5 @@
 import * as mongoose from "mongoose";
-import { IMO_Tag }   from "../../../src/Shared/Types/MongoDB";
+import { IMO_Tag }   from "@shared/Types/MongoDB";
 
 const UserAccountSchema = new mongoose.Schema<IMO_Tag>( {
 	DisplayName: { type: String, required: true }

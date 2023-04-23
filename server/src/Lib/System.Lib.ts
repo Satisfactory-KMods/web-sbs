@@ -1,13 +1,34 @@
-import process             from "process";
-import Util                from "util";
-import fs                  from "fs";
-import { BashColorString } from "../Types/System.Lib";
-import * as console        from "console";
-import * as dotenv         from "dotenv";
+import process      from "process";
+import Util         from "util";
+import fs           from "fs";
+import * as console from "console";
+import * as dotenv  from "dotenv";
+
+export type BashColorString =
+	| "Default"
+	| "Red"
+	| "Black"
+	| "Green"
+	| "Yellow"
+	| "Blue"
+	| "Magenta"
+	| "Cyan"
+	| "Light Gray"
+	| "Dark Gray"
+	| "Light Red"
+	| "Light Green"
+	| "Light Yellow"
+	| "Light Magenta"
+	| "Light Cyan"
+	| "White";
 
 export class SystemLib_Class {
 	public readonly IsDevMode : boolean;
-	private UseDebug : boolean;
+	private readonly UseDebug : boolean;
+
+	static IsDev() : boolean {
+		return process.env.NODE_ENV !== "production";
+	}
 
 	constructor() {
 		this.IsDevMode = process.argv[ 2 ] === "true";
@@ -16,12 +37,18 @@ export class SystemLib_Class {
 			process.argv[ 2 ] === "Debug" ||
 			process.argv[ 2 ] === "development";
 
-		this.DebugLog( "[SYSTEM] Try to load:", ".env" );
+		this.DebugLog( "SYSTEM", "Try to load:", ".env" );
 		dotenv.config();
-		if ( process.argv[ 2 ] ) {
-			this.DebugLog( "[SYSTEM] Try to load:", ".env." + process.argv[ 2 ] );
+		if ( SystemLib_Class.IsDev() ) {
+			this.DebugLog( "SYSTEM", "Try to load:", ".env.dev" );
 			dotenv.config( {
-				path: ".env." + process.argv[ 2 ]
+				path: ".env.dev"
+			} );
+		}
+		else {
+			this.DebugLog( "SYSTEM", "Try to load:", ".env.local" );
+			dotenv.config( {
+				path: ".env.local"
 			} );
 		}
 	}
@@ -30,7 +57,7 @@ export class SystemLib_Class {
 		return this.UseDebug;
 	}
 
-	public ToBashColor( String : BashColorString ) {
+	static TBC( String : BashColorString ) {
 		switch ( String ) {
 			case "Black":
 				return "\x1B[30m";
@@ -67,6 +94,10 @@ export class SystemLib_Class {
 		}
 	}
 
+	public ToBashColor( String : BashColorString ) {
+		return SystemLib_Class.TBC( String );
+	}
+
 	public ClearANSI( Log : string ) : string {
 		return Log.replaceAll(
 			/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g,
@@ -83,17 +114,13 @@ export class SystemLib_Class {
 		}
 		CurrentLog = CurrentLog + OutLog;
 		fs.writeFileSync( __LogFile, this.ClearANSI( CurrentLog ) );
-
-		if ( SocketIO ) {
-			SocketIO.emit(
-				"OnPanelLogUpdated",
-				this.ClearANSI( CurrentLog ).split( "\n" ).reverse()
-			);
-		}
 	}
 
-	public DebugLog( ...data : any[] ) {
+	public DebugLog( Prefix : string, ...data : any[] ) {
 		if ( this.DebugMode() ) {
+			data.addAtIndex(
+				`${ this.ToBashColor( "Red" ) }[${ Prefix.toUpperCase() }]\x1B[0m`
+			);
 			data.addAtIndex(
 				this.ToBashColor( "Magenta" ) +
 				`[${ new Date().toUTCString() }][DEBUG]\x1B[0m`
@@ -103,7 +130,10 @@ export class SystemLib_Class {
 		}
 	}
 
-	public Log( ...data : any[] ) {
+	public Log( Prefix : string, ...data : any[] ) {
+		data.addAtIndex(
+			`${ this.ToBashColor( "Red" ) }[${ Prefix.toUpperCase() }]\x1B[0m`
+		);
 		data.addAtIndex(
 			this.ToBashColor( "Cyan" ) + `[${ new Date().toUTCString() }][LOG]\x1B[0m`
 		);
@@ -111,16 +141,22 @@ export class SystemLib_Class {
 		this.WriteStringToLog( ...data );
 	}
 
-	public LogError( ...data : any[] ) {
+	public LogError( Prefix : string, ...data : any[] ) {
 		data.addAtIndex(
 			this.ToBashColor( "Light Red" ) +
 			`[${ new Date().toUTCString() }][ERROR]\x1B[0m`
+		);
+		data.addAtIndex(
+			`${ this.ToBashColor( "Red" ) }[${ Prefix.toUpperCase() }]\x1B[0m`
 		);
 		console.error( ...data );
 		this.WriteStringToLog( ...data );
 	}
 
-	public LogWarning( ...data : any[] ) {
+	public LogWarning( Prefix : string, ...data : any[] ) {
+		data.addAtIndex(
+			`${ this.ToBashColor( "Red" ) }[${ Prefix.toUpperCase() }]\x1B[0m`
+		);
 		data.addAtIndex(
 			this.ToBashColor( "Yellow" ) + `[${ new Date().toUTCString() }][WARN]\x1B[0m`
 		);
@@ -128,7 +164,10 @@ export class SystemLib_Class {
 		this.WriteStringToLog( ...data );
 	}
 
-	public LogFatal( ...data : any[] ) {
+	public LogFatal( Prefix : string, ...data : any[] ) {
+		data.addAtIndex(
+			`${ this.ToBashColor( "Red" ) }[${ Prefix.toUpperCase() }]\x1B[0m`
+		);
 		data.addAtIndex(
 			this.ToBashColor( "Red" ) + `[${ new Date().toUTCString() }][FATAL]\x1B[0m`
 		);
@@ -153,3 +192,5 @@ export class SystemLib_Class {
 		}
 	}
 }
+
+export const BC = SystemLib_Class.TBC;

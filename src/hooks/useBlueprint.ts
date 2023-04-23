@@ -4,21 +4,21 @@ import {
 	useMemo,
 	useState
 }                        from "react";
-import { API_QueryLib }  from "../Lib/Api/API_Query.Lib";
+import { API_QueryLib }  from "@applib/Api/API_Query.Lib";
 import {
 	EApiBlueprintUtils,
 	EApiQuestionary,
 	EApiUserBlueprints
-}                        from "../Shared/Enum/EApiPath";
+}                        from "@shared/Enum/EApiPath";
 import {
 	IMO_Blueprint,
 	IMO_Mod,
 	IMO_Tag
-}                        from "../Shared/Types/MongoDB";
-import { EDesignerSize } from "../Shared/Enum/EDesignerSize";
-import AuthContext       from "../Context/AuthContext";
-import { GetSocket }     from "../Lib/SocketIO";
-import { ERoles }        from "../Shared/Enum/ERoles";
+}                        from "@shared/Types/MongoDB";
+import { EDesignerSize } from "@shared/Enum/EDesignerSize";
+import AuthContext       from "@context/AuthContext";
+import { GetSocket }     from "@applib/SocketIO";
+import { ERoles }        from "@shared/Enum/ERoles";
 import { Blueprint }     from "@etothepii/satisfactory-file-parser";
 
 export interface IBlueprintHookConfig {

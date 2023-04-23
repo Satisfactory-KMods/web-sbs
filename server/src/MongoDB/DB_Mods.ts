@@ -1,5 +1,5 @@
 import * as mongoose from "mongoose";
-import { IMO_Mod }   from "../../../src/Shared/Types/MongoDB";
+import { IMO_Mod }   from "@shared/Types/MongoDB";
 
 const UserAccountSchema = new mongoose.Schema<IMO_Mod>( {
 	id: { type: String, required: true, unique: true }

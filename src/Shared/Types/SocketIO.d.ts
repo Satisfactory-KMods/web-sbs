@@ -2,7 +2,7 @@ import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import {
 	IMO_Blueprint,
 	IMO_BlueprintPack
-}                           from "./MongoDB";
+}                           from "@shared/Types/MongoDB";
 
 interface IEmitEvents extends DefaultEventsMap {
 	BlueprintUpdated : ( Blueprint : IMO_Blueprint ) => void;

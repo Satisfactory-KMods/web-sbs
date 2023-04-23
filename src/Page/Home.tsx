@@ -8,15 +8,15 @@ import {
 	usePageTitle,
 	useToggle
 }                          from "@kyri123/k-reactutils";
-import LangContext         from "../Context/LangContext";
-import { API_QueryLib }    from "../Lib/Api/API_Query.Lib";
-import { EApiQuestionary } from "../Shared/Enum/EApiPath";
+import LangContext         from "@context/LangContext";
+import { API_QueryLib }    from "@applib/Api/API_Query.Lib";
+import { EApiQuestionary } from "@shared/Enum/EApiPath";
 import {
 	IMO_Blueprint,
 	IMO_Mod,
 	IMO_Tag
-}                          from "../Shared/Types/MongoDB";
-import BlueprintCard       from "../Components/Blueprints/BlueprintCard";
+}                          from "@shared/Types/MongoDB";
+import BlueprintCard       from "@comp/Blueprints/BlueprintCard";
 import {
 	Button,
 	Card,
@@ -24,7 +24,7 @@ import {
 	Form,
 	Row
 }                          from "react-bootstrap";
-import Ribbon              from "../Components/General/Ribbon";
+import Ribbon              from "@comp/General/Ribbon";
 import Select, {
 	MultiValue,
 	SingleValue
@@ -32,9 +32,9 @@ import Select, {
 import {
 	IModTagOptions,
 	ISortingOptions
-}                          from "../Shared/Types/SelectOptions";
+}                          from "@shared/Types/SelectOptions";
 import { FilterQuery }     from "mongoose";
-import PageManager         from "../Components/Main/PageManager";
+import PageManager         from "@comp/Main/PageManager";
 
 const Home : FunctionComponent = () => {
 	const { Lang } = useContext( LangContext );
@@ -163,15 +163,15 @@ const Home : FunctionComponent = () => {
 							<div className={ "bg-dark rounded-2 border mt-2 pt-2" }>
 								<span className={ "px-2" }>{ Lang.CreateBlueprint.BlueprintName }</span>
 								<Form.Control className={ "bg-neutral-700 mt-2" } value={ BlueprintName }
-								              onChange={ V => setBlueprintName( V.target.value ) }/>
+											  onChange={ V => setBlueprintName( V.target.value ) }/>
 							</div>
 						</Col>
 						<Col sm={ 12 } md={ 6 }>
 							<div className={ "bg-dark rounded-2 border mt-2 pt-2" }>
 								<span className={ "px-2" }>{ Lang.General.SortingBy }</span>
 								<Select options={ SortOptions } className="mt-2 my-react-select-container flex-1"
-								        classNamePrefix="my-react-select" isMulti={ true } value={ Select_Sorting }
-								        onChange={ setSelect_Sorting }/>
+										classNamePrefix="my-react-select" isMulti={ true } value={ Select_Sorting }
+										onChange={ setSelect_Sorting }/>
 							</div>
 						</Col>
 					</Row>
@@ -180,24 +180,24 @@ const Home : FunctionComponent = () => {
 							<div className={ "bg-dark rounded-2 border mt-2 pt-2" }>
 								<span className={ "px-2" }>{ Lang.General.FilterMods }</span>
 								<Select options={ SelectVanilla } className="mt-2 my-react-select-container flex-1"
-								        value={ Select_Vanilla } isClearable={ true }
-								        classNamePrefix="my-react-select" onChange={ setSelect_Vanilla }/>
+										value={ Select_Vanilla } isClearable={ true }
+										classNamePrefix="my-react-select" onChange={ setSelect_Vanilla }/>
 							</div>
 						</Col>
 						<Col sm={ 12 } md={ 4 }>
 							<div className={ "bg-dark rounded-2 border mt-2 pt-2" }>
 								<span className={ "px-2" }>{ Lang.CreateBlueprint.Mods }</span>
 								<Select options={ SelectMods } className="mt-2 my-react-select-container flex-1"
-								        value={ Select_Mods } isDisabled={ !!Select_Vanilla?.value }
-								        classNamePrefix="my-react-select" isMulti={ true } onChange={ setSelect_Mods }/>
+										value={ Select_Mods } isDisabled={ !!Select_Vanilla?.value }
+										classNamePrefix="my-react-select" isMulti={ true } onChange={ setSelect_Mods }/>
 							</div>
 						</Col>
 						<Col sm={ 12 } md={ 4 }>
 							<div className={ "bg-dark rounded-2 border mt-2 pt-2" }>
 								<span className={ "px-2" }>{ Lang.CreateBlueprint.Tags }</span>
 								<Select options={ SelectTags } className="mt-2 my-react-select-container flex-1"
-								        value={ Select_Tags }
-								        classNamePrefix="my-react-select" isMulti={ true } onChange={ setSelect_Tags }/>
+										value={ Select_Tags }
+										classNamePrefix="my-react-select" isMulti={ true } onChange={ setSelect_Tags }/>
 							</div>
 						</Col>
 					</Row>
@@ -209,16 +209,16 @@ const Home : FunctionComponent = () => {
 			</Card>
 
 			<PageManager MaxPage={ TotalPages } OnPageChange={ setCurrentPage } Page={ CurrentPage }
-			             Hide={ TotalPages <= 1 }
-			             ButtonGroupProps={ { className: "mt-3 w-100 bg-dark" } }
-			             ButtonProps={ { size: "sm", className: "btn-dark" } }/>
+						 Hide={ TotalPages <= 1 }
+						 ButtonGroupProps={ { className: "mt-3 w-100 bg-dark" } }
+						 ButtonProps={ { size: "sm", className: "btn-dark" } }/>
 			<Row className={ "px-3 mt-3" }>
 				{ Blueprints.map( BP => <BlueprintCard key={ BP._id } Data={ BP } onToggled={ DoFetch }/> ) }
 			</Row>
 			<PageManager MaxPage={ TotalPages } OnPageChange={ setCurrentPage } Page={ CurrentPage }
-			             Hide={ TotalPages <= 1 }
-			             ButtonGroupProps={ { className: "mt-3 w-100 bg-dark" } }
-			             ButtonProps={ { size: "sm", className: "btn-dark" } }/>
+						 Hide={ TotalPages <= 1 }
+						 ButtonGroupProps={ { className: "mt-3 w-100 bg-dark" } }
+						 ButtonProps={ { size: "sm", className: "btn-dark" } }/>
 		</>
 	);
 };

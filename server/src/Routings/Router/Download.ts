@@ -1,14 +1,14 @@
-import { ApiUrl }        from "../../Lib/Express.Lib";
+import { ApiUrl }        from "@server/Lib/Express.Lib";
 import {
 	Request,
 	Response
 }                        from "express";
 import path              from "path";
-import DB_Blueprints     from "../../MongoDB/DB_Blueprints";
+import DB_Blueprints     from "@server/MongoDB/DB_Blueprints";
 import fs                from "fs";
 import FS                from "fs";
 import * as Compress     from "compressing";
-import DB_BlueprintPacks from "../../MongoDB/DB_BlueprintPacks";
+import DB_BlueprintPacks from "@server/MongoDB/DB_BlueprintPacks";
 
 export default function() {
 	Router.get( ApiUrl( "download/:id" ), async( req : Request, res : Response ) => {
@@ -63,7 +63,7 @@ export default function() {
 				fs.rmSync( CopiedFileSBP );
 				fs.rmSync( CopiedFileSBPCFG );
 				fs.writeFileSync( path.join( ZipTempDir, `created.log` ), Date.now().toString() );
-				SystemLib.Log( "Blueprint Download Created: " + ZipFile );
+				SystemLib.Log( "api", "Blueprint Download Created: " + ZipFile );
 				return res.download( ZipFile, `${ BPName }.zip` );
 			} ).on( "error", ( err ) => {
 				return res.status( 404 ).json( { error: "Blueprint not found" } );
@@ -72,7 +72,7 @@ export default function() {
 		}
 		catch ( e ) {
 			if ( e instanceof Error ) {
-				SystemLib.LogError( e );
+				SystemLib.LogError( "api", e.message );
 			}
 			return res.status( 404 ).json( { error: "Blueprint not found" } );
 		}
@@ -127,7 +127,7 @@ export default function() {
 				}
 				catch ( e ) {
 					if ( e instanceof Error ) {
-						SystemLib.LogError( e );
+						SystemLib.LogError( "api", e.message );
 					}
 				}
 			}
@@ -140,7 +140,7 @@ export default function() {
 					}
 				}
 				fs.writeFileSync( path.join( ZipTempDir, `created.log` ), Date.now().toString() );
-				SystemLib.Log( "BlueprintPack Download Created: " + ZipFile );
+				SystemLib.Log( "api", "BlueprintPack Download Created: " + ZipFile );
 				return res.download( ZipFile, `${ BPPack._id.toString() }.zip` );
 			} ).on( "error", ( err ) => {
 				return res.status( 404 ).json( { error: "Blueprint not found" } );
@@ -148,7 +148,7 @@ export default function() {
 		}
 		catch ( e ) {
 			if ( e instanceof Error ) {
-				SystemLib.LogError( e );
+				SystemLib.LogError( "api", e.message );
 			}
 			return res.status( 404 ).json( { error: "Blueprint not found" } );
 		}

@@ -1,6 +1,6 @@
 /** @format */
 import { Blueprint } from "@etothepii/satisfactory-file-parser";
-import { ILang }     from "../../Types/lang";
+import { ILang }     from "@app/Types/lang";
 
 type ResponseBase<T = any> = {
 	Success : boolean;

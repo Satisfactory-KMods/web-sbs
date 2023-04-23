@@ -1,6 +1,6 @@
-import { User }          from "../Class/User.Class";
+import { User }          from "@app/Class/User.Class";
 import { UploadedFile }  from "express-fileupload";
-import { EDesignerSize } from "../Enum/EDesignerSize";
+import { EDesignerSize } from "@app/Enum/EDesignerSize";
 import {
 	FilterQuery,
 	QueryOptions
@@ -9,7 +9,7 @@ import {
 	IMO_BlueprintPack,
 	IMO_Tag,
 	IMO_UserAccount
-}                        from "./MongoDB";
+}                        from "@shared/Types/MongoDB";
 
 export type RequestWithUser<T = any> = {
 	UserClass? : T;

@@ -4,9 +4,9 @@ import core                 from "express";
 import {
 	IEmitEvents,
 	IListenEvents
-}                           from "../../../src/Shared/Types/SocketIO";
-import { SystemLib_Class }  from "../Lib/System.Lib";
-import { TaskManagerClass } from "../Tasks/TaskManager";
+}                           from "@shared/Types/SocketIO";
+import { SystemLib_Class }  from "@server/Lib/System.Lib";
+import { TaskManagerClass } from "@server/Tasks/TaskManager";
 
 export declare global {
 	var DownloadIPCached : { ip : string, id : string }[];

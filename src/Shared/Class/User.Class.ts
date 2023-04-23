@@ -1,8 +1,8 @@
-import { IMO_UserAccount } from "../Types/MongoDB";
+import { IMO_UserAccount } from "@shared/Types/MongoDB";
 import { JwtPayload }      from "jsonwebtoken";
 import jwt                 from "jwt-decode";
-import { ERoles }          from "../Enum/ERoles";
-import { DefaultUser }     from "../Default/Auth.Default";
+import { ERoles }          from "@shared/Enum/ERoles";
+import { DefaultUser }     from "@shared/Default/Auth.Default";
 
 export class User {
 	private JsonWebToken;

@@ -5,7 +5,7 @@ import {
 import {
 	IEmitEvents,
 	IListenEvents
-} from "../Shared/Types/SocketIO";
+} from "@shared/Types/SocketIO";
 
 export const GetSocket = ( roomName : string ) : Socket<IListenEvents, IEmitEvents> => io( "/", {
 	path: "/api/v1/io/",

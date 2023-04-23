@@ -1,8 +1,8 @@
 import {
 	ApiUrl,
 	MW_Auth
-}                        from "../../Lib/Express.Lib";
-import { EApiAuth }      from "../../../../src/Shared/Enum/EApiPath";
+}                        from "@server/Lib/Express.Lib";
+import { EApiAuth }      from "@shared/Enum/EApiPath";
 import {
 	Request,
 	Response
@@ -10,22 +10,22 @@ import {
 import {
 	DefaultResponseFailed,
 	DefaultResponseSuccess
-}                        from "../../../../src/Shared/Default/Auth.Default";
+}                        from "@shared/Default/Auth.Default";
 import {
 	TResponse_Auth_Modify,
 	TResponse_Auth_SignUp,
 	TResponse_Auth_Vertify
-}                        from "../../../../src/Shared/Types/API_Response";
+}                        from "@shared/Types/API_Response";
 import {
 	TRequest_Auth_Logout,
 	TRequest_Auth_Modify,
 	TRequest_Auth_SignIn,
 	TRequest_Auth_SignUp
-}                        from "../../../../src/Shared/Types/API_Request";
-import DB_UserAccount    from "../../MongoDB/DB_UserAccount";
-import { CreateSession } from "../../Lib/Session.Lib";
-import { ERoles }        from "../../../../src/Shared/Enum/ERoles";
-import DB_SessionToken   from "../../MongoDB/DB_SessionToken";
+}                        from "@shared/Types/API_Request";
+import DB_UserAccount    from "@server/MongoDB/DB_UserAccount";
+import { CreateSession } from "@server/Lib/Session.Lib";
+import { ERoles }        from "@shared/Enum/ERoles";
+import DB_SessionToken   from "@server/MongoDB/DB_SessionToken";
 
 export default function() {
 	Router.post( ApiUrl( EApiAuth.validate ), MW_Auth, ( req : Request, res : Response ) => {
@@ -106,7 +106,7 @@ export default function() {
 				}
 				catch ( e ) {
 					if ( e instanceof Error ) {
-						SystemLib.LogError( e );
+						SystemLib.LogError( "api", e.message );
 					}
 				}
 			}
@@ -125,7 +125,7 @@ export default function() {
 			}
 			catch ( e ) {
 				if ( e instanceof Error ) {
-					SystemLib.LogError( e );
+					SystemLib.LogError( "api", e.message );
 				}
 			}
 		}

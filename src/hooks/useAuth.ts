@@ -3,10 +3,10 @@ import {
 	useMemo
 }                          from "react";
 import { useJWT }          from "@kyri123/k-reactutils";
-import { User }            from "../Shared/Class/User.Class";
-import { API_QueryLib }    from "../Lib/Api/API_Query.Lib";
-import { EApiAuth }        from "../Shared/Enum/EApiPath";
-import { IMO_UserAccount } from "../Shared/Types/MongoDB";
+import { User }            from "@shared/Class/User.Class";
+import { API_QueryLib }    from "@applib/Api/API_Query.Lib";
+import { EApiAuth }        from "@shared/Enum/EApiPath";
+import { IMO_UserAccount } from "@shared/Types/MongoDB";
 
 export interface IUseAuth {
 	UpdateToken : ( Value : string ) => void;

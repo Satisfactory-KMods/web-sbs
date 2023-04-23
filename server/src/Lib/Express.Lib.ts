@@ -1,19 +1,19 @@
-import { TApiPath }              from "../../../src/Shared/Enum/EApiPath";
+import { TApiPath }              from "@shared/Enum/EApiPath";
 import {
 	NextFunction,
 	Request,
 	Response
 }                                from "express";
-import { ERoles }                from "../../../src/Shared/Enum/ERoles";
+import { ERoles }                from "@shared/Enum/ERoles";
 import * as jwt                  from "jsonwebtoken";
-import { DefaultResponseFailed } from "../../../src/Shared/Default/Auth.Default";
-import { ResponseBase }          from "../../../src/Shared/Types/API_Response";
-import { User }                  from "../../../src/Shared/Class/User.Class";
-import DB_SessionToken           from "../MongoDB/DB_SessionToken";
+import { DefaultResponseFailed } from "@shared/Default/Auth.Default";
+import { ResponseBase }          from "@shared/Types/API_Response";
+import { User }                  from "@shared/Class/User.Class";
+import DB_SessionToken           from "@server/MongoDB/DB_SessionToken";
 
 export function ApiUrl( Url : TApiPath | string ) {
 	const EndUrl = `/api/v1/${ Url }`;
-	SystemLib.Log( "[URL] Routing registered:", SystemLib.ToBashColor( "Red" ), EndUrl );
+	SystemLib.Log( "URL", "Routing registered:", SystemLib.ToBashColor( "Red" ), EndUrl );
 	return EndUrl;
 }
 

@@ -2,8 +2,8 @@ import {
 	ApiUrl,
 	MW_Auth,
 	MW_Permission
-}                                from "../../Lib/Express.Lib";
-import { EApiTags }              from "../../../../src/Shared/Enum/EApiPath";
+}                                from "@server/Lib/Express.Lib";
+import { EApiTags }              from "@shared/Enum/EApiPath";
 import {
 	Request,
 	Response
@@ -11,12 +11,12 @@ import {
 import {
 	DefaultResponseFailed,
 	DefaultResponseSuccess
-}                                from "../../../../src/Shared/Default/Auth.Default";
-import { TRequest_Tags_Modify }  from "../../../../src/Shared/Types/API_Request";
-import { TResponse_Tags_Modify } from "../../../../src/Shared/Types/API_Response";
-import { ERoles }                from "../../../../src/Shared/Enum/ERoles";
-import DB_Tags                   from "../../MongoDB/DB_Tags";
-import DB_Blueprints             from "../../MongoDB/DB_Blueprints";
+}                                from "@shared/Default/Auth.Default";
+import { TRequest_Tags_Modify }  from "@shared/Types/API_Request";
+import { TResponse_Tags_Modify } from "@shared/Types/API_Response";
+import { ERoles }                from "@shared/Enum/ERoles";
+import DB_Tags                   from "@server/MongoDB/DB_Tags";
+import DB_Blueprints             from "@server/MongoDB/DB_Blueprints";
 
 export default function() {
 	Router.post( ApiUrl( EApiTags.modifytag ), MW_Auth, ( req, res, next ) => MW_Permission( req, res, next, ERoles.admin ), async( req : Request, res : Response ) => {
@@ -63,7 +63,7 @@ export default function() {
 		}
 		catch ( e ) {
 			if ( e instanceof Error ) {
-				SystemLib.LogError( e );
+				SystemLib.LogError( "api", e.message );
 			}
 		}
 

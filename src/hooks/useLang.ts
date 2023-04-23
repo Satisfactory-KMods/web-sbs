@@ -6,8 +6,8 @@ import { useLocalStorage } from "@kyri123/k-reactutils";
 import {
 	GetLanguage,
 	SupportedLangs
-}                          from "../Lib/lang/lang";
-import { ILang }           from "../Types/lang";
+}                          from "@applib/lang/lang";
+import { ILang }           from "@app/Types/lang";
 
 export interface IuseLang {
 	AllCodes : string[],

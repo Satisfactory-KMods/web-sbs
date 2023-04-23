@@ -4,15 +4,15 @@ import {
 	useEffect,
 	useState
 }                             from "react";
-import { useAuthCheck }       from "../../hooks/useAuthCheck";
-import { ERoles }             from "../../Shared/Enum/ERoles";
+import { useAuthCheck }       from "@hooks/useAuthCheck";
+import { ERoles }             from "@shared/Enum/ERoles";
 import { Table }              from "react-bootstrap";
-import { IMO_Blueprint }      from "../../Shared/Types/MongoDB";
-import { API_QueryLib }       from "../../Lib/Api/API_Query.Lib";
-import { EApiQuestionary }    from "../../Shared/Enum/EApiPath";
-import AuthContext            from "../../Context/AuthContext";
-import LangContext            from "../../Context/LangContext";
-import BlueprintTableRowAdmin from "../../Components/Blueprints/BlueprintTableRowAdmin";
+import { IMO_Blueprint }      from "@shared/Types/MongoDB";
+import { API_QueryLib }       from "@applib/Api/API_Query.Lib";
+import { EApiQuestionary }    from "@shared/Enum/EApiPath";
+import AuthContext            from "@context/AuthContext";
+import LangContext            from "@context/LangContext";
+import BlueprintTableRowAdmin from "@comp/Blueprints/BlueprintTableRowAdmin";
 
 const AdminBlacklisted : FunctionComponent = () => {
 	const { Lang } = useContext( LangContext );

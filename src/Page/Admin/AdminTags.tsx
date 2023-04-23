@@ -3,25 +3,25 @@ import {
 	useEffect,
 	useState
 }                       from "react";
-import { useAuthCheck } from "../../hooks/useAuthCheck";
-import { ERoles }       from "../../Shared/Enum/ERoles";
+import { useAuthCheck } from "@hooks/useAuthCheck";
+import { ERoles }       from "@shared/Enum/ERoles";
 import {
 	Button,
 	Modal,
 	Table
 }                       from "react-bootstrap";
-import { useLang }      from "../../hooks/useLang";
+import { useLang }      from "@hooks/useLang";
 import { useToggle }    from "@kyri123/k-reactutils";
 import * as Icon        from "react-icons/bs";
-import FloatInput       from "../../Components/Boostrap/FloatInput";
-import LoadingButton    from "../../Components/Boostrap/LoadingButton";
-import { API_QueryLib } from "../../Lib/Api/API_Query.Lib";
+import FloatInput       from "@comp/Boostrap/FloatInput";
+import LoadingButton    from "@comp/Boostrap/LoadingButton";
+import { API_QueryLib } from "@applib/Api/API_Query.Lib";
 import {
 	EApiQuestionary,
 	EApiTags
-}                       from "../../Shared/Enum/EApiPath";
-import { IMO_Tag }      from "../../Shared/Types/MongoDB";
-import AdminTagRow      from "../../Components/Admin/AdminTagRow";
+}                       from "@shared/Enum/EApiPath";
+import { IMO_Tag }      from "@shared/Types/MongoDB";
+import AdminTagRow      from "@comp/Admin/AdminTagRow";
 
 const AdminTags : FunctionComponent = () => {
 	const { Lang } = useLang();
@@ -96,7 +96,7 @@ const AdminTags : FunctionComponent = () => {
 						</th>
 						<th colSpan={ 1 } className={ "text-center py-3" }>
 							<Button variant="success"
-							        onClick={ ToggleModalWithReset }><Icon.BsPlusLg/></Button>
+									onClick={ ToggleModalWithReset }><Icon.BsPlusLg/></Button>
 						</th>
 					</tr>
 					<tr>
@@ -117,7 +117,7 @@ const AdminTags : FunctionComponent = () => {
 				</Modal.Header>
 				<Modal.Body>
 					<FloatInput onChange={ V => setDisplayName( V.target.value ) }
-					            value={ DisplayName }>{ Lang.AdminTags.DisplayName }</FloatInput>
+								value={ DisplayName }>{ Lang.AdminTags.DisplayName }</FloatInput>
 				</Modal.Body>
 				<Modal.Footer>
 					<LoadingButton IsLoading={ IsSending } variant="success" onClick={ HandleSubmit }>

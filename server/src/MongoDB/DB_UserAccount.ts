@@ -1,6 +1,6 @@
 import * as mongoose       from "mongoose";
 import { Model }           from "mongoose";
-import { IMO_UserAccount } from "../../../src/Shared/Types/MongoDB";
+import { IMO_UserAccount } from "@shared/Types/MongoDB";
 import * as crypto         from "crypto";
 
 export interface IUserAccountMethods {

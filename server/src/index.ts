@@ -3,7 +3,7 @@ import { Server }           from "socket.io";
 import {
 	IEmitEvents,
 	IListenEvents
-}                           from "../../src/Shared/Types/SocketIO";
+}                           from "@shared/Types/SocketIO";
 import http                 from "http";
 import express              from "express";
 import { InstallRoutings }  from "./Routings/InitRouter";
@@ -13,7 +13,7 @@ import "@kyri123/k-javascript-utils/lib/useAddons";
 import fs                   from "fs";
 import { SystemLib_Class }  from "./Lib/System.Lib";
 import DB_UserAccount       from "./MongoDB/DB_UserAccount";
-import { ERoles }           from "../../src/Shared/Enum/ERoles";
+import { ERoles }           from "@shared/Enum/ERoles";
 import fileUpload           from "express-fileupload";
 import { TaskManagerClass } from "./Tasks/TaskManager";
 
@@ -78,7 +78,7 @@ mongoose
 			socket.join( roomName as string );
 		} );
 
-		SystemLib.Log( "[DB] Connected... Start API and SOCKETIO" );
+		SystemLib.Log( "start", "Connected... Start API and SOCKETIO" );
 
 		global.Router = express.Router();
 		await InstallRoutings( path.join( __BaseDir, "Routings/Router" ) );
@@ -94,7 +94,7 @@ mongoose
 			NewUser.username = "Kyrium";
 			NewUser.role = ERoles.admin;
 			NewUser.setPassword( "123456" );
-			SystemLib.LogWarning( "[DB] Default user was created. Kyrium | 23456 | admin@kmods.de" );
+			SystemLib.LogWarning( "start", " Default user was created. Kyrium | 23456 | admin@kmods.de" );
 			await NewUser.save();
 		}
 
@@ -102,8 +102,8 @@ mongoose
 		await TaskManager.Init();
 
 		HttpServer.listen( 80, async() =>
-			SystemLib.Log(
-				"[API/SOCKETIO] API listen on port",
+			SystemLib.Log( "start",
+				"API listen on port",
 				80
 			)
 		);

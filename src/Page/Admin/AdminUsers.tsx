@@ -4,20 +4,20 @@ import {
 	useEffect,
 	useState
 }                                from "react";
-import { useAuthCheck }          from "../../hooks/useAuthCheck";
-import { ERoles }                from "../../Shared/Enum/ERoles";
-import { useLang }               from "../../hooks/useLang";
+import { useAuthCheck }          from "@hooks/useAuthCheck";
+import { ERoles }                from "@shared/Enum/ERoles";
+import { useLang }               from "@hooks/useLang";
 import { Table }                 from "react-bootstrap";
-import AuthContext               from "../../Context/AuthContext";
-import AdminUserRow              from "../../Components/Admin/AdminUserRow";
-import { API_QueryLib }          from "../../Lib/Api/API_Query.Lib";
-import { IMO_UserAccount }       from "../../Shared/Types/MongoDB";
+import AuthContext               from "@context/AuthContext";
+import AdminUserRow              from "@comp/Admin/AdminUserRow";
+import { API_QueryLib }          from "@applib/Api/API_Query.Lib";
+import { IMO_UserAccount }       from "@shared/Types/MongoDB";
 import {
 	EApiAuth,
 	EApiQuestionary
-}                                from "../../Shared/Enum/EApiPath";
-import { TResponse_Auth_Modify } from "../../Shared/Types/API_Response";
-import { TRequest_Auth_Modify }  from "../../Shared/Types/API_Request";
+}                                from "@shared/Enum/EApiPath";
+import { TResponse_Auth_Modify } from "@shared/Types/API_Response";
+import { TRequest_Auth_Modify }  from "@shared/Types/API_Request";
 
 const AdminUsers : FunctionComponent = () => {
 	const { Lang } = useLang();
@@ -75,7 +75,7 @@ const AdminUsers : FunctionComponent = () => {
 				</thead>
 				<tbody>
 				{ Users.map( R => <AdminUserRow key={ R._id } User={ R } onRemove={ onRemove }
-				                                onEditRole={ onEditRole }/> ) }
+												onEditRole={ onEditRole }/> ) }
 				</tbody>
 			</Table>
 		</AuthCheck>

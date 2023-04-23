@@ -6,8 +6,8 @@ import React, {
 	useEffect,
 	useState
 }                         from "react";
-import { useAuthCheck }   from "../../hooks/useAuthCheck";
-import LangContext        from "../../Context/LangContext";
+import { useAuthCheck }   from "@hooks/useAuthCheck";
+import LangContext        from "@context/LangContext";
 import {
 	Navigate,
 	useNavigate,
@@ -17,22 +17,22 @@ import Select, {
 	MultiValue,
 	SingleValue
 }                         from "react-select";
-import { IModTagOptions } from "../../Shared/Types/SelectOptions";
-import { EDesignerSize }  from "../../Shared/Enum/EDesignerSize";
-import { API_QueryLib }   from "../../Lib/Api/API_Query.Lib";
+import { IModTagOptions } from "@shared/Types/SelectOptions";
+import { EDesignerSize }  from "@shared/Enum/EDesignerSize";
+import { API_QueryLib }   from "@applib/Api/API_Query.Lib";
 import {
 	EApiQuestionary,
 	EApiUserBlueprints
-}                         from "../../Shared/Enum/EApiPath";
-import FloatInput         from "../../Components/Boostrap/FloatInput";
-import FloatTextarea      from "../../Components/Boostrap/FloatTextarea";
+}                         from "@shared/Enum/EApiPath";
+import FloatInput         from "@comp/Boostrap/FloatInput";
+import FloatTextarea      from "@comp/Boostrap/FloatTextarea";
 import ReactMarkdown      from "react-markdown";
 import {
 	Button,
 	InputGroup
 }                         from "react-bootstrap";
-import FileUploadInput    from "../../Components/Boostrap/FileUploadInput";
-import LoadingButton      from "../../Components/Boostrap/LoadingButton";
+import FileUploadInput    from "@comp/Boostrap/FileUploadInput";
+import LoadingButton      from "@comp/Boostrap/LoadingButton";
 import { useBlueprint }   from "../../hooks/useBlueprint";
 import {
 	IMO_Mod,
@@ -165,15 +165,15 @@ const EditBlueprint : FunctionComponent = () => {
 	return (
 		<AuthCheck { ...AuthCheckProps }>
 			<form onSubmit={ HandleSubmit }
-			      className={ "bg-gray-800 p-4 border rounded-4 w-100" }>
+				  className={ "bg-gray-800 p-4 border rounded-4 w-100" }>
 				<h2>{ Lang.EditBlueprint.Title }</h2>
 				<hr/>
 				<FloatInput className={ "mb-3" } onChange={ E => setBlueprintName( E.target.value ) }
-				            value={ BlueprintName }>{ Lang.CreateBlueprint.BlueprintName }</FloatInput>
+							value={ BlueprintName }>{ Lang.CreateBlueprint.BlueprintName }</FloatInput>
 				<div className={ "d-flex mb-3" }>
 					<FloatTextarea className={ "h-100 me-3" } style={ { minHeight: 500 } }
-					               onChange={ E => setBlueprintDesc( E.target.value ) } value={ BlueprintDesc }
-					               lableClassName={ "flex-1" }>{ Lang.CreateBlueprint.BlueprintDescripton }</FloatTextarea>
+								   onChange={ E => setBlueprintDesc( E.target.value ) } value={ BlueprintDesc }
+								   lableClassName={ "flex-1" }>{ Lang.CreateBlueprint.BlueprintDescripton }</FloatTextarea>
 					<div className={ "ms-3 flex-1 border rounded p-2 bg-dark" }>
 						<ReactMarkdown>{ BlueprintDesc }</ReactMarkdown>
 					</div>
@@ -181,15 +181,15 @@ const EditBlueprint : FunctionComponent = () => {
 				<InputGroup className={ "mb-3" }>
 					<InputGroup.Text className="text-bg-dark">{ Lang.CreateBlueprint.Mods }</InputGroup.Text>
 					<Select options={ SelectMods } isMulti={ true } value={ Mods } onChange={ setMods }
-					        isClearable={ true }
+							isClearable={ true }
 
-					        className="my-react-select-container flex-1" classNamePrefix="my-react-select"/>
+							className="my-react-select-container flex-1" classNamePrefix="my-react-select"/>
 				</InputGroup>
 				<InputGroup className={ "mb-3" }>
 					<InputGroup.Text className="text-bg-dark">{ Lang.CreateBlueprint.Tags }</InputGroup.Text>
 					<Select options={ SelectTags } isMulti={ true } value={ Tags } onChange={ setTags }
-					        isClearable={ true }
-					        className="my-react-select-container flex-1" classNamePrefix="my-react-select"/>
+							isClearable={ true }
+							className="my-react-select-container flex-1" classNamePrefix="my-react-select"/>
 				</InputGroup>
 				<InputGroup className={ "mb-3" }>
 					<InputGroup.Text
@@ -198,16 +198,16 @@ const EditBlueprint : FunctionComponent = () => {
 						value: R,
 						label: R
 					} as IModTagOptions<EDesignerSize> ) ) } value={ DesignerSize } onChange={ setDesignerSize }
-					        className="my-react-select-container flex-1" classNamePrefix="my-react-select"/>
+							className="my-react-select-container flex-1" classNamePrefix="my-react-select"/>
 				</InputGroup>
 				<FileUploadInput BoxClassName={ "mb-3" } type="file" onChange={ HandleChange } name={ "image" }
-				                 accept=".jpg,.jpeg,.png">{ Lang.CreateBlueprint.Image }</FileUploadInput>
+								 accept=".jpg,.jpeg,.png">{ Lang.CreateBlueprint.Image }</FileUploadInput>
 				<hr/>
 				<LoadingButton variant={ "success" } type={ "submit" }
-				               disabled={ !CheckInput() }
-				               IsLoading={ IsSending }>{ Lang.EditBlueprint.Submit }</LoadingButton>
+							   disabled={ !CheckInput() }
+							   IsLoading={ IsSending }>{ Lang.EditBlueprint.Submit }</LoadingButton>
 				<Button variant={ "secondary" } type={ "button" } className={ "ms-2" }
-				        onClick={ () => Nav( `/blueprint/${ id }` ) }>{ Lang.EditBlueprint.Back }</Button>
+						onClick={ () => Nav( `/blueprint/${ id }` ) }>{ Lang.EditBlueprint.Back }</Button>
 			</form>
 		</AuthCheck>
 	);

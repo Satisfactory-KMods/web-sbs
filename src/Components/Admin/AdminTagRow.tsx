@@ -1,5 +1,5 @@
 import { FunctionComponent } from "react";
-import { IMO_Tag }           from "../../Shared/Types/MongoDB";
+import { IMO_Tag }           from "@shared/Types/MongoDB";
 import {
 	Button,
 	ButtonGroup

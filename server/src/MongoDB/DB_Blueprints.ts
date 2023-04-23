@@ -1,5 +1,5 @@
 import * as mongoose     from "mongoose";
-import { IMO_Blueprint } from "../../../src/Shared/Types/MongoDB";
+import { IMO_Blueprint } from "@shared/Types/MongoDB";
 
 const BlueprintSchema = new mongoose.Schema<IMO_Blueprint>( {
 	name: { type: String, required: true },
