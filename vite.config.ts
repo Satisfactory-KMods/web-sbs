@@ -13,6 +13,13 @@ import {
 }             from "path";
 import fs     from "fs";
 
+function manualChunks( id : any, { getModuleInfo } : any ) {
+	if ( id.includes( "node_modules" ) ) {
+		const pathSplit = id.split( "/" );
+		return `packages/${ pathSplit[ pathSplit.indexOf( "node_modules" ) + 1 ] }`;
+	}
+}
+
 export default defineConfig( ( { command, mode, ssrBuild } ) => {
 	const Paths : Record<string, string[]> = JSON.parse( fs.readFileSync( resolve( __dirname, "tsconfig.json" ), "utf-8" ).toString() ).compilerOptions.paths;
 	const alias = Object.entries( Paths ).map<Alias>( ( [ key, value ] ) => ( {
@@ -52,7 +59,8 @@ export default defineConfig( ( { command, mode, ssrBuild } ) => {
 					entryFileNames: `entry/[name].js`,
 					chunkFileNames: `chunk/[name].js`,
 					assetFileNames: `asset/[name].[ext]`
-				}
+				},
+				manualChunks
 			}
 		},
 		plugins: [
