@@ -13,10 +13,12 @@ import {
 }             from "path";
 import fs     from "fs";
 
-function manualChunks( id : any, { getModuleInfo } : any ) {
+function manualChunks( id : any ) {
+	if ( id.includes( "node_modules" ) && id.includes( "react" ) ) {
+		return `packages/react`;
+	}
 	if ( id.includes( "node_modules" ) ) {
-		const pathSplit = id.split( "/" );
-		return `packages/${ pathSplit[ pathSplit.indexOf( "node_modules" ) + 1 ] }`;
+		return `packages/node_modules`;
 	}
 }
 
