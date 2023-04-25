@@ -9,10 +9,10 @@ services:
         env_file:
             - ../.SBS.env
         environment:
-            - MONGODB_PORT=27017
-            - MONGODB_HOST=mongodb-sbs
-            - MONGODB_USER=sbs
-            - MONGODB_PASSWD=sbs
+            - MONGODB_PORT=${DOCKER_MONGODB_PORT}
+            - MONGODB_HOST=mongodb
+            - MONGODB_USER=${DOCKER_MOGNODB_USERNAME}
+            - MONGODB_PASSWD=${DOCKER_MOGNODB_PASSWORD}
             - MONGODB_DATABASE=sbs
         ports:
             - "${DOCKER_PORT}:80"
@@ -20,20 +20,11 @@ services:
             # config for the cashboard if you want to edit that copy to a other path and mount it to here.
             - ./mount/files:/mount/
             - ./mount/users:/build/images/user/
+        external_links:
+            - mongodb:mongodb
         networks:
-            - sbs-network
-
-    mongodb-sbs:
-        # user: "${DOCKER_UID}:${DOCKER_GID}"
-        image: mongo
-        volumes:
-            - './mount/mongodb:/data/db'
-        environment:
-            MONGO_INITDB_DATABASE: sbs
-            MONGO_INITDB_ROOT_USERNAME: sbs
-            MONGO_INITDB_ROOT_PASSWORD: sbs
-        networks:
-            - sbs-network
+            - databases_default
 
 networks:
-    sbs-network:
+    databases_default:
+        external: true

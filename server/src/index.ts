@@ -11,14 +11,17 @@ import process              from "process";
 import * as mongoose        from "mongoose";
 import "@kyri123/k-javascript-utils/lib/useAddons";
 import fs                   from "fs";
-import { SystemLib_Class }  from "./Lib/System.Lib";
+import {
+	BC,
+	SystemLib_Class
+}                           from "./Lib/System.Lib";
 import DB_UserAccount       from "./MongoDB/DB_UserAccount";
 import { ERoles }           from "@shared/Enum/ERoles";
 import fileUpload           from "express-fileupload";
 import { TaskManagerClass } from "./Tasks/TaskManager";
 
 global.__BaseDir = __dirname;
-global.__MountDir = path.join( __BaseDir, "../..", "mount" );
+global.__MountDir = path.join( process.cwd(), "mount" );
 ( !fs.existsSync( path.join( __MountDir, "Logs" ) ) ) && fs.mkdirSync( path.join( __MountDir, "Logs" ), { recursive: true } );
 global.__LogFile = path.join( __MountDir, "Logs", `${ Date.now() }.log` );
 global.__BlueprintDir = path.join( __MountDir, "Blueprints" );
@@ -62,10 +65,25 @@ mongoose
 		`mongodb://${ process.env.MONGODB_HOST }:${ process.env.MONGODB_PORT }`,
 		{
 			user: process.env.MONGODB_USER,
-			pass: process.env.MONGODB_PASSWD
+			pass: process.env.MONGODB_PASSWD,
+			dbName: process.env.MONGODB_DATABASE
 		}
 	)
 	.then( async() => {
+		SystemLib.Log( "start", "Connected to mongodb..." );
+		SystemLib.Log( "Revalidate", "MongoDB" );
+		for ( const DB of fs.readdirSync( path.join( __BaseDir, "mongodb" ) ) ) {
+			const File = path.join( __BaseDir, "MongoDB", DB );
+			const Stats = fs.statSync( File );
+			if ( Stats.isFile() && DB !== "DB_UserAccount.ts" ) {
+				const DBImport = await import( File );
+				if ( DBImport.Revalidate ) {
+					SystemLib.Log( "Revalidate", `Schema for${ BC( "Cyan" ) }`, DB.toString().replace( ".ts", "" ) );
+					await DBImport.Revalidate();
+				}
+			}
+		}
+
 		global.DownloadIPCached = [];
 		// Sockets need to connect on a room otherwise we will not be able to send messages
 		SocketIO.on( "connection", function( socket ) {

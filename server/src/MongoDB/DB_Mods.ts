@@ -5,5 +5,7 @@ const UserAccountSchema = new mongoose.Schema<IMO_Mod>( {
 	id: { type: String, required: true, unique: true }
 }, { timestamps: true, strict: false } );
 
-export default mongoose.model<IMO_Mod>( "SBS_Mods", UserAccountSchema );
+
+const myDB = mongoose.connections[ 0 ].useDb( "ficsit_app" );
+export default myDB.model<IMO_Mod>( "Mods", UserAccountSchema );
 export { UserAccountSchema };
