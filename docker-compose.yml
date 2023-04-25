@@ -2,8 +2,6 @@ version: "3.9"
 
 services:
     sbs:
-        depends_on:
-            - mongodb-sbs
         build: "./"
         restart: always
         env_file:
