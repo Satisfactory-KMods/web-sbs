@@ -72,7 +72,7 @@ mongoose
 	.then( async() => {
 		SystemLib.Log( "start", "Connected to mongodb..." );
 		SystemLib.Log( "Revalidate", "MongoDB" );
-		for ( const DB of fs.readdirSync( path.join( __BaseDir, "mongodb" ) ) ) {
+		for ( const DB of fs.readdirSync( path.join( __BaseDir, "MongoDB" ) ) ) {
 			const File = path.join( __BaseDir, "MongoDB", DB );
 			const Stats = fs.statSync( File );
 			if ( Stats.isFile() && DB !== "DB_UserAccount.ts" ) {
