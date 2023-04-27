@@ -1,29 +1,27 @@
 version: "3.9"
 
 services:
-    sbs:
-        build: "./"
-        restart: always
-        env_file:
-            - ../.SBS.env
-        environment:
-            - HTTPPORT=${DOCKER_PORT}
-            - MONGODB_PORT=${DOCKER_MONGODB_PORT}
-            - MONGODB_HOST=mongodb
-            - MONGODB_USER=${DOCKER_MOGNODB_USERNAME}
-            - MONGODB_PASSWD=${DOCKER_MOGNODB_PASSWORD}
-            - MONGODB_DATABASE=${DOCKER_DATABASE}
-        ports:
-            - "${DOCKER_PORT}:${DOCKER_PORT}"
-        volumes:
-            # config for the cashboard if you want to edit that copy to a other path and mount it to here.
-            - ./mount/files:/mount/
-            - ./mount/users:/build/images/user/
-        external_links:
-            - mongodb:mongodb
-        networks:
-            - databases_default
+  sbs:
+    build: "./"
+    restart: always
+    env_file:
+      - ../.SBS.env
+    environment:
+      - HTTPPORT=${DOCKER_PORT}
+      - MONGODB_PORT=${DOCKER_MONGODB_PORT}
+      - MONGODB_HOST=mongodb
+      - MONGODB_USER=${DOCKER_MOGNODB_USERNAME}
+      - MONGODB_PASSWD=${DOCKER_MOGNODB_PASSWORD}
+      - MONGODB_DATABASE=${DOCKER_DATABASE}
+    volumes:
+      # config for the cashboard if you want to edit that copy to a other path and mount it to here.
+      - ./mount/files:/mount/
+      - ./mount/users:/build/images/user/
+    external_links:
+      - mongodb:mongodb
+    networks:
+      - databases_default
 
 networks:
-    databases_default:
-        external: true
+  databases_default:
+    external: true
