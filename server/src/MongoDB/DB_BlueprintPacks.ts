@@ -1,7 +1,7 @@
-import * as mongoose         from "mongoose";
-import { IMO_BlueprintPack } from "@shared/Types/MongoDB";
+import * as mongoose        from "mongoose";
+import type { MO_BlueprintPack } from "@shared/Types/MongoDB";
 
-const BlueprintPackSchema = new mongoose.Schema<IMO_BlueprintPack>( {
+const BlueprintPackSchema = new mongoose.Schema<MO_BlueprintPack>( {
 	name: { type: String, required: true },
 	description: { type: String, required: true },
 	mods: { type: [ String ], required: true },
@@ -13,5 +13,5 @@ const BlueprintPackSchema = new mongoose.Schema<IMO_BlueprintPack>( {
 	blueprints: { type: [ String ], required: false }
 }, { timestamps: true } );
 
-export default mongoose.model<IMO_BlueprintPack>( "SBS_BlueprintPacks", BlueprintPackSchema );
+export default mongoose.model<MO_BlueprintPack>( "SBS_BlueprintPacks", BlueprintPackSchema );
 export { BlueprintPackSchema };

@@ -10,23 +10,23 @@ import {
 	EApiQuestionary,
 	EApiUserBlueprints
 }                        from "@shared/Enum/EApiPath";
-import {
-	IMO_Blueprint,
-	IMO_Mod,
-	IMO_Tag
+import type {
+	MO_Blueprint,
+	MO_Mod,
+	MO_Tag
 }                        from "@shared/Types/MongoDB";
 import { EDesignerSize } from "@shared/Enum/EDesignerSize";
 import AuthContext       from "@context/AuthContext";
 import { GetSocket }     from "@applib/SocketIO";
 import { ERoles }        from "@shared/Enum/ERoles";
-import { Blueprint }     from "@etothepii/satisfactory-file-parser";
+import type { Blueprint }     from "@etothepii/satisfactory-file-parser";
 
 export interface IBlueprintHookConfig {
 	IgnoreBlacklisted : boolean;
 }
 
-export function useBlueprint( InitValue : string | IMO_Blueprint, Config? : Partial<IBlueprintHookConfig> ) {
-	const [ Blueprint, setBlueprint ] = useState<IMO_Blueprint>( () => {
+export function useBlueprint( InitValue : string | MO_Blueprint, Config? : Partial<IBlueprintHookConfig> ) {
+	const [ Blueprint, setBlueprint ] = useState<MO_Blueprint>( () => {
 		if ( typeof InitValue === "string" ) {
 			return {
 				downloads: 0,
@@ -39,14 +39,14 @@ export function useBlueprint( InitValue : string | IMO_Blueprint, Config? : Part
 				owner: "",
 				_id: "",
 				__v: 0
-			} as IMO_Blueprint;
+			} as MO_Blueprint;
 		}
-		return InitValue as IMO_Blueprint;
+		return InitValue ;
 	} );
 	const [ DoQueryLikes, setDoQueryLikes ] = useState<boolean>( false );
 	const { IsLoggedIn, UserData } = useContext( AuthContext );
-	const [ Mods, setMods ] = useState<IMO_Mod[]>( [] );
-	const [ Tags, setTags ] = useState<IMO_Tag[]>( [] );
+	const [ Mods, setMods ] = useState<MO_Mod[]>( [] );
+	const [ Tags, setTags ] = useState<MO_Tag[]>( [] );
 	const [ BlueprintData, setBlueprintData ] = useState<Blueprint | undefined>( undefined );
 
 	const BlueprintID = useMemo( () => {
@@ -73,20 +73,20 @@ export function useBlueprint( InitValue : string | IMO_Blueprint, Config? : Part
 		}
 
 		const [ Mods, Tags, BlueprintRead ] = await Promise.all( [
-			API_QueryLib.Qustionary<IMO_Mod>( EApiQuestionary.mods, { Filter: { mod_reference: { $in: Blueprint.mods } } } ),
-			API_QueryLib.Qustionary<IMO_Tag>( EApiQuestionary.tags, { Filter: { _id: { $in: Blueprint.tags } } } ),
+			API_QueryLib.Qustionary<MO_Mod>( EApiQuestionary.mods, { Filter: { mod_reference: { $in: Blueprint.mods } } } ),
+			API_QueryLib.Qustionary<MO_Tag>( EApiQuestionary.tags, { Filter: { _id: { $in: Blueprint.tags } } } ),
 			API_QueryLib.PostToAPI( EApiBlueprintUtils.readblueprint, { Id: BlueprintID } )
 		] );
 
 		setMods( Mods.Data! );
 		setTags( Tags.Data! );
-		setBlueprintData( BlueprintRead.Data! );
+		setBlueprintData( BlueprintRead.Data );
 	};
 
 	const Query = async() => {
-		const Result = await API_QueryLib.Qustionary<IMO_Blueprint>( EApiQuestionary.blueprints, { Filter: { _id: BlueprintID } } );
+		const Result = await API_QueryLib.Qustionary<MO_Blueprint>( EApiQuestionary.blueprints, { Filter: { _id: BlueprintID } } );
 		if ( Result.Data && Result.Data.length > 0 ) {
-			setBlueprint( Result.Data![ 0 ] );
+			setBlueprint( Result.Data[ 0 ] );
 			await QueryModsAndTags();
 		}
 	};
@@ -112,7 +112,7 @@ export function useBlueprint( InitValue : string | IMO_Blueprint, Config? : Part
 
 	useEffect( () => {
 		const SocketIO = GetSocket( BlueprintID );
-		const OnUpdate = async( BP : IMO_Blueprint ) => {
+		const OnUpdate = async( BP : MO_Blueprint ) => {
 			setBlueprint( () => BP );
 			await QueryModsAndTags();
 		};

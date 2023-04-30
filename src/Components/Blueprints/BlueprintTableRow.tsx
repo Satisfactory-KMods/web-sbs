@@ -1,5 +1,5 @@
-import { IMO_Blueprint }     from "@shared/Types/MongoDB";
-import { FunctionComponent } from "react";
+import type { MO_Blueprint }      from "@shared/Types/MongoDB";
+import type { FunctionComponent } from "react";
 import { useBlueprint }      from "@hooks/useBlueprint";
 import { Link }              from "react-router-dom";
 import * as Icon             from "react-icons/bs";
@@ -9,7 +9,7 @@ import {
 }                            from "react-bootstrap";
 
 interface IBlueprintTableRowProps {
-	Data : IMO_Blueprint;
+	Data : MO_Blueprint;
 	onToggled? : () => void;
 }
 
@@ -34,20 +34,20 @@ const BlueprintTableRow : FunctionComponent<IBlueprintTableRowProps> = ( { Data,
 						<Icon.BsEyeFill/>
 					</Link>
 					<Link to={ `/api/v1/download/${ Blueprint._id }` } target={ "_blank" }
-						  className={ "btn btn-dark rounded-0" }>
+					      className={ "btn btn-dark rounded-0" }>
 						<Icon.BsDownload/>
 					</Link>
 					<Link to={ `/blueprint/edit/${ Blueprint._id }` }
-						  className={ "btn btn-dark rounded-0" }>
+					      className={ "btn btn-dark rounded-0" }>
 						<Icon.BsGearFill/>
 					</Link>
 					<Button className={ "rounded-0" }
-							variant={ "danger" }
-							onClick={ async() => {
-								if ( await ToggleBlacklist() && onToggled !== undefined ) {
-									onToggled();
-								}
-							} } type={ "button" }>
+					        variant={ "danger" }
+					        onClick={ async() => {
+						        if ( await ToggleBlacklist() && onToggled !== undefined ) {
+							        onToggled();
+						        }
+					        } } type={ "button" }>
 						<Icon.BsTrashFill/>
 					</Button>
 				</ButtonGroup>

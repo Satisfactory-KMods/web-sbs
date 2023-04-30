@@ -1,14 +1,14 @@
-import { User }          from "@app/Class/User.Class";
-import { UploadedFile }  from "express-fileupload";
-import { EDesignerSize } from "@app/Enum/EDesignerSize";
-import {
+import type { User }          from "@app/Class/User.Class";
+import type { UploadedFile }  from "express-fileupload";
+import type { EDesignerSize } from "@app/Enum/EDesignerSize";
+import type {
 	FilterQuery,
 	QueryOptions
 }                        from "mongoose";
-import {
-	IMO_BlueprintPack,
-	IMO_Tag,
-	IMO_UserAccount
+import type {
+	MO_BlueprintPack,
+	MO_Tag,
+	MO_UserAccount
 }                        from "@shared/Types/MongoDB";
 
 export type RequestWithUser<T = any> = {
@@ -26,7 +26,7 @@ export type TRequest_Unknown<UseUser extends boolean = true, UserType = any> = I
 export type TRequest_Auth_Modify = IRequestBody<{
 	UserID : string;
 	Remove : boolean;
-	Data : Partial<IMO_UserAccount>;
+	Data : Partial<MO_UserAccount>;
 }>;
 export type TRequest_Auth_Logout = IRequestBody<{
 	Token : string;
@@ -70,8 +70,8 @@ export type TRequest_BP_Questionary<T = any> = IRequestBody<{
 // ----------------- BPP -----------------
 // ---------------------------------------
 
-export type TResponse_BPP_Manage_PUT = IRequestBody<{ PackInformation : Partial<IMO_BlueprintPack> }>;
-export type TResponse_BPP_Manage_POST = IRequestBody<{ ID : string, PackInformation : Partial<IMO_BlueprintPack> }>;
+export type TResponse_BPP_Manage_PUT = IRequestBody<{ PackInformation : Partial<MO_BlueprintPack> }>;
+export type TResponse_BPP_Manage_POST = IRequestBody<{ ID : string, PackInformation : Partial<MO_BlueprintPack> }>;
 export type TResponse_BPP_Manage_DELETE = IRequestBody<{ ID : string }>;
 export type TResponse_BPP_Manage_SUB = IRequestBody<{ ID : string }>;
 
@@ -119,5 +119,5 @@ export type TRequest_BPUser_Edit_Files = Partial<{
 export type TRequest_Tags_Modify = IRequestBody<{
 	Remove : boolean;
 	Id : string;
-	Data : Partial<IMO_Tag>;
+	Data : Partial<MO_Tag>;
 }>;

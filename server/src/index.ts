@@ -1,6 +1,6 @@
 import * as path            from "path";
 import { Server }           from "socket.io";
-import {
+import type {
 	IEmitEvents,
 	IListenEvents
 }                           from "@shared/Types/SocketIO";
@@ -71,6 +71,7 @@ mongoose
 	)
 	.then( async() => {
 		SystemLib.Log( "start", "Connected to mongodb..." );
+		await import("@server/trpc/server");
 		SystemLib.Log( "Revalidate", "MongoDB" );
 		for ( const DB of fs.readdirSync( path.join( __BaseDir, "MongoDB" ) ) ) {
 			const File = path.join( __BaseDir, "MongoDB", DB );
@@ -93,7 +94,7 @@ mongoose
 				socket.disconnect( true );
 				return;
 			}
-			socket.join( roomName as string );
+			socket.join( roomName );
 		} );
 
 		SystemLib.Log( "start", "Connected... Start API and SOCKETIO" );
@@ -119,7 +120,7 @@ mongoose
 		global.TaskManager = new TaskManagerClass();
 		await TaskManager.Init();
 
-		HttpServer.listen( parseInt( process.env.HTTPPORT! ), async() =>
+		HttpServer.listen( parseInt( process.env.HTTPPORT ), async() =>
 			SystemLib.Log( "start",
 				"API listen on port",
 				process.env.HTTPPORT

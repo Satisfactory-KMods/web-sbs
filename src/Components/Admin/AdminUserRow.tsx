@@ -1,20 +1,21 @@
+import type {
+	FunctionComponent} from "react";
 import {
-	FunctionComponent,
 	useContext
-}                          from "react";
-import { IMO_UserAccount } from "@shared/Types/MongoDB";
+}                         from "react";
+import type { MO_UserAccount } from "@shared/Types/MongoDB";
 import {
 	Button,
 	ButtonGroup
-}                          from "react-bootstrap";
-import * as Icon           from "react-icons/bs";
-import { ERoles }          from "@shared/Enum/ERoles";
-import AuthContext         from "@context/AuthContext";
+}                         from "react-bootstrap";
+import * as Icon          from "react-icons/bs";
+import { ERoles }         from "@shared/Enum/ERoles";
+import AuthContext        from "@context/AuthContext";
 
 interface IAdminUserRowProps {
-	User : IMO_UserAccount,
-	onRemove : ( User : IMO_UserAccount ) => void,
-	onEditRole : ( User : IMO_UserAccount, Tag : ERoles ) => void
+	User : MO_UserAccount,
+	onRemove : ( User : MO_UserAccount ) => void,
+	onEditRole : ( User : MO_UserAccount, Tag : ERoles ) => void
 }
 
 const AdminUserRow : FunctionComponent<IAdminUserRowProps> = ( { User, onEditRole, onRemove } ) => {
@@ -26,8 +27,8 @@ const AdminUserRow : FunctionComponent<IAdminUserRowProps> = ( { User, onEditRol
 			<td className={ "p-0 text-center" }>
 				{ UserData.Get._id !== User._id &&
 					<select className={ "form-control w-100 h-100 rounded-0" }
-							value={ User.role.toString().clearWs() }
-							onChange={ ( e ) => onEditRole( User, parseInt( e.target.value ) ) }>
+					        value={ User.role.toString().clearWs() }
+					        onChange={ ( e ) => onEditRole( User, parseInt( e.target.value ) ) }>
 						{ Object.keys( ERoles ).splice( 0, 11 ).map( ( Role ) =>
 							<option key={ Role } value={ Role.toString().clearWs() }>{ Role }</option>
 						) }

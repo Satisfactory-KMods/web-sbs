@@ -1,16 +1,16 @@
-import {
+import type {
 	IAPIResponseBase,
 	TResponse_BP_Questionary
 }                                  from "@shared/Types/API_Response";
-import {
+import type {
 	EApiQuestionary,
 	TApiPath
 }                                  from "@shared/Enum/EApiPath";
 import withReactContent            from "sweetalert2-react-content";
 import Swal                        from "sweetalert2";
 import { GetApiMessage }           from "@applib/lang/lang";
-import { TRequest_BP_Questionary } from "@shared/Types/API_Request";
-import { ILang }                   from "@app/Types/lang";
+import type { TRequest_BP_Questionary } from "@shared/Types/API_Request";
+import type { ILang }                   from "@app/Types/lang";
 
 export class API_QueryLib {
 

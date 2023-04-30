@@ -1,12 +1,12 @@
-import { DefaultEventsMap } from "socket.io/dist/typed-events";
-import {
-	IMO_Blueprint,
-	IMO_BlueprintPack
+import type { DefaultEventsMap } from "socket.io/dist/typed-events";
+import type {
+	MO_Blueprint,
+	MO_BlueprintPack
 }                           from "@shared/Types/MongoDB";
 
 interface IEmitEvents extends DefaultEventsMap {
-	BlueprintUpdated : ( Blueprint : IMO_Blueprint ) => void;
-	BlueprintPackUpdated : ( Blueprint : IMO_BlueprintPack ) => void;
+	BlueprintUpdated : ( Blueprint : MO_Blueprint ) => void;
+	BlueprintPackUpdated : ( Blueprint : MO_BlueprintPack ) => void;
 }
 
 type IListenEvents = IEmitEvents;

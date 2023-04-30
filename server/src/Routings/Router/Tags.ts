@@ -4,7 +4,7 @@ import {
 	MW_Permission
 }                                from "@server/Lib/Express.Lib";
 import { EApiTags }              from "@shared/Enum/EApiPath";
-import {
+import type {
 	Request,
 	Response
 }                                from "express";
@@ -12,8 +12,8 @@ import {
 	DefaultResponseFailed,
 	DefaultResponseSuccess
 }                                from "@shared/Default/Auth.Default";
-import { TRequest_Tags_Modify }  from "@shared/Types/API_Request";
-import { TResponse_Tags_Modify } from "@shared/Types/API_Response";
+import type { TRequest_Tags_Modify }  from "@shared/Types/API_Request";
+import type { TResponse_Tags_Modify } from "@shared/Types/API_Response";
 import { ERoles }                from "@shared/Enum/ERoles";
 import DB_Tags                   from "@server/MongoDB/DB_Tags";
 import DB_Blueprints             from "@server/MongoDB/DB_Blueprints";

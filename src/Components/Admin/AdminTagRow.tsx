@@ -1,5 +1,5 @@
-import { FunctionComponent } from "react";
-import { IMO_Tag }           from "@shared/Types/MongoDB";
+import type { FunctionComponent } from "react";
+import type { MO_Tag }            from "@shared/Types/MongoDB";
 import {
 	Button,
 	ButtonGroup
@@ -7,9 +7,9 @@ import {
 import * as Icon             from "react-icons/bs";
 
 interface IAdminTagRowProps {
-	Tag : IMO_Tag,
+	Tag : MO_Tag,
 	onRemove : ( Id : string ) => void,
-	onEdit : ( Tag : IMO_Tag ) => void
+	onEdit : ( Tag : MO_Tag ) => void
 }
 
 const AdminTagRow : FunctionComponent<IAdminTagRowProps> = ( { Tag, onEdit, onRemove } ) => {

@@ -1,7 +1,9 @@
-import { ERoles }   from "@shared/Enum/ERoles";
-import React, {
+import type { ERoles }   from "@shared/Enum/ERoles";
+import type {
 	FunctionComponent,
-	PropsWithChildren,
+	PropsWithChildren} from "react";
+import type React from "react";
+import {
 	useContext,
 	useMemo
 }                   from "react";

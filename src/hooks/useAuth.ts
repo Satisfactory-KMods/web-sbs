@@ -1,12 +1,12 @@
 import {
 	useEffect,
 	useMemo
-}                          from "react";
-import { useJWT }          from "@kyri123/k-reactutils";
-import { User }            from "@shared/Class/User.Class";
-import { API_QueryLib }    from "@applib/Api/API_Query.Lib";
-import { EApiAuth }        from "@shared/Enum/EApiPath";
-import { IMO_UserAccount } from "@shared/Types/MongoDB";
+}                         from "react";
+import { useJWT }         from "@kyri123/k-reactutils";
+import { User }           from "@shared/Class/User.Class";
+import { API_QueryLib }   from "@applib/Api/API_Query.Lib";
+import { EApiAuth }       from "@shared/Enum/EApiPath";
+import type { MO_UserAccount } from "@shared/Types/MongoDB";
 
 export interface IUseAuth {
 	UpdateToken : ( Value : string ) => void;
@@ -22,7 +22,7 @@ export function useAuth() : IUseAuth {
 		Token,
 		Session,
 		UpdateToken
-	} = useJWT<IMO_UserAccount>( "session" );
+	} = useJWT<MO_UserAccount>( "session" );
 
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	const UserData = useMemo( () => new User( Token ), [ Token, Session ] );

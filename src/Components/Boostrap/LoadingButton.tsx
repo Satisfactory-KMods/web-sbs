@@ -1,8 +1,9 @@
-import React, { FunctionComponent } from "react";
+import type { FunctionComponent } from "react";
+import React from "react";
 import { Button }                   from "react-bootstrap";
-import { ButtonProps }              from "react-bootstrap/Button";
+import type { ButtonProps }              from "react-bootstrap/Button";
 import { FaSpinner }                from "react-icons/all";
-import { IconType }                 from "react-icons/lib/cjs/iconBase";
+import type { IconType }                 from "react-icons/lib/cjs/iconBase";
 
 interface ILoadingButtonProps extends ButtonProps {
 	IsLoading : boolean;

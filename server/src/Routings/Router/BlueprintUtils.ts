@@ -3,7 +3,7 @@ import {
 	MW_Auth
 }                                       from "@server/Lib/Express.Lib";
 import { EApiBlueprintUtils }           from "@shared/Enum/EApiPath";
-import {
+import type {
 	Request,
 	Response
 }                                       from "express";
@@ -11,12 +11,12 @@ import {
 	DefaultResponseFailed,
 	DefaultResponseSuccess
 }                                       from "@shared/Default/Auth.Default";
-import {
+import type {
 	TRequest_BPU_ParseBlueprint,
 	TRequest_BPU_ReadBlueprint
 }                                       from "@shared/Types/API_Request";
-import { TResponse_BPU_ParseBlueprint } from "@shared/Types/API_Response";
-import { UploadedFile }                 from "express-fileupload";
+import type { TResponse_BPU_ParseBlueprint } from "@shared/Types/API_Response";
+import type { UploadedFile }                 from "express-fileupload";
 import fs                               from "fs";
 import { BlueprintParser }              from "@server/Lib/BlueprintParser";
 import path                             from "path";

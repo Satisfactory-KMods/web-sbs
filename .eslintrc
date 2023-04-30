@@ -28,6 +28,7 @@
     "react-hooks"
   ],
   "rules": {
+    "@typescript-eslint/consistent-type-imports": "error",
     "semi-style": [
       "error",
       "last"

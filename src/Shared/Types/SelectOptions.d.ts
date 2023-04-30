@@ -1,4 +1,4 @@
-import { QueryOptions } from "mongoose";
+import type { QueryOptions } from "mongoose";
 
 export interface IModTagOptions<T = string> {
 	readonly value : T;

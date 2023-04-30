@@ -4,7 +4,7 @@ import {
 	MW_Permission
 }                            from "@server/Lib/Express.Lib";
 import { EApiBlueprintPack } from "@shared/Enum/EApiPath";
-import {
+import type {
 	Request,
 	Response
 }                            from "express";
@@ -12,12 +12,12 @@ import {
 	DefaultResponseFailed,
 	DefaultResponseSuccess
 }                            from "@shared/Default/Auth.Default";
-import {
+import type {
 	TResponse_BPP_Manage_DELETE,
 	TResponse_BPP_Manage_POST,
 	TResponse_BPP_Manage_SUB
 }                            from "@shared/Types/API_Request";
-import { TResponse_BPP }     from "@shared/Types/API_Response";
+import type { TResponse_BPP }     from "@shared/Types/API_Response";
 import { ERoles }            from "@shared/Enum/ERoles";
 import DB_BlueprintPacks     from "@server/MongoDB/DB_BlueprintPacks";
 
@@ -44,7 +44,7 @@ export default function() {
 						delete Request.PackInformation.owner;
 
 						Document = ( await DB_BlueprintPacks.findByIdAndUpdate( Request.ID, Request.PackInformation ) )!;
-						SocketIO.emit( "BlueprintPackUpdated", Document!.toJSON() );
+						SocketIO.emit( "BlueprintPackUpdated", Document.toJSON() );
 						Response = {
 							...DefaultResponseSuccess,
 							MessageCode: "BBP.Modify.Success"
@@ -115,7 +115,7 @@ export default function() {
 
 					if ( Document.owner === Request.UserClass.Get._id || Request.UserClass.HasPermssion( ERoles.moderator ) ) {
 						Document = ( await DB_BlueprintPacks.findByIdAndUpdate( Request.ID, { blacklisted: true } ) )!;
-						SocketIO.emit( "BlueprintPackUpdated", Document!.toJSON() );
+						SocketIO.emit( "BlueprintPackUpdated", Document.toJSON() );
 						Response = {
 							...DefaultResponseSuccess,
 							MessageCode: "BBP.Removed.Success"
@@ -184,7 +184,7 @@ export default function() {
 				try {
 					const Document = ( await DB_BlueprintPacks.findByIdAndUpdate( Request.ID, Request.PackInformation ) )!;
 					if ( Document ) {
-						SocketIO.emit( "BlueprintPackUpdated", Document!.toJSON() );
+						SocketIO.emit( "BlueprintPackUpdated", Document.toJSON() );
 						Response = {
 							...DefaultResponseSuccess,
 							MessageCode: "BBP.Modify.Success"

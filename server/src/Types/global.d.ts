@@ -1,12 +1,12 @@
-import { Server }           from "socket.io";
-import * as http            from "http";
-import core                 from "express";
-import {
+import type { Server }           from "socket.io";
+import type * as http            from "http";
+import type core                 from "express";
+import type {
 	IEmitEvents,
 	IListenEvents
 }                           from "@shared/Types/SocketIO";
-import { SystemLib_Class }  from "@server/Lib/System.Lib";
-import { TaskManagerClass } from "@server/Tasks/TaskManager";
+import type { SystemLib_Class }  from "@server/Lib/System.Lib";
+import type { TaskManagerClass } from "@server/Tasks/TaskManager";
 
 export declare global {
 	var DownloadIPCached : { ip : string, id : string }[];

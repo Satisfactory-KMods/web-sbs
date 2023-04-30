@@ -3,7 +3,7 @@ import {
 	MW_Auth
 }                        from "@server/Lib/Express.Lib";
 import { EApiAuth }      from "@shared/Enum/EApiPath";
-import {
+import type {
 	Request,
 	Response
 }                        from "express";
@@ -11,12 +11,12 @@ import {
 	DefaultResponseFailed,
 	DefaultResponseSuccess
 }                        from "@shared/Default/Auth.Default";
-import {
+import type {
 	TResponse_Auth_Modify,
 	TResponse_Auth_SignUp,
 	TResponse_Auth_Vertify
 }                        from "@shared/Types/API_Response";
-import {
+import type {
 	TRequest_Auth_Logout,
 	TRequest_Auth_Modify,
 	TRequest_Auth_SignIn,

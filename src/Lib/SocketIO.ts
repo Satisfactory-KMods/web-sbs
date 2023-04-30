@@ -1,8 +1,10 @@
-import {
-	io,
+import type {
 	Socket
 } from "socket.io-client";
 import {
+	io
+} from "socket.io-client";
+import type {
 	IEmitEvents,
 	IListenEvents
 } from "@shared/Types/SocketIO";

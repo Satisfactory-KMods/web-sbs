@@ -1,26 +1,27 @@
-import { IMO_Blueprint } from "@shared/Types/MongoDB";
+import type { MO_Blueprint } from "@shared/Types/MongoDB";
+import type {
+	FunctionComponent} from "react";
 import {
-	FunctionComponent,
 	useContext
-}                        from "react";
+}                       from "react";
 import {
 	Badge,
 	Button,
 	ButtonGroup,
 	Card,
 	Col
-}                        from "react-bootstrap";
-import { useLang }       from "@hooks/useLang";
-import { Link }          from "react-router-dom";
-import * as Icon         from "react-icons/bs";
-import AuthContext       from "@context/AuthContext";
-import { useBlueprint }  from "@hooks/useBlueprint";
-import Ribbon            from "@comp/General/Ribbon";
-import ReactMarkdown     from "react-markdown";
-import { ERoles }        from "@shared/Enum/ERoles";
+}                       from "react-bootstrap";
+import { useLang }      from "@hooks/useLang";
+import { Link }         from "react-router-dom";
+import * as Icon        from "react-icons/bs";
+import AuthContext      from "@context/AuthContext";
+import { useBlueprint } from "@hooks/useBlueprint";
+import Ribbon           from "@comp/General/Ribbon";
+import ReactMarkdown    from "react-markdown";
+import { ERoles }       from "@shared/Enum/ERoles";
 
 interface IBlueprintCardProps {
-	Data : IMO_Blueprint;
+	Data : MO_Blueprint;
 	onToggled? : () => void;
 }
 
@@ -42,8 +43,8 @@ const BlueprintCard : FunctionComponent<IBlueprintCardProps> = ( { Data, onToggl
 	const MoreCount = ModList.length;
 	const DisplayMods = SpliceMods.map( R =>
 		<Link key={ R._id } to={ `https://ficsit.app/mod/${ R.mod_reference }` }
-			  target={ "_blank" }
-			  className={ " m-1 p-0" }>{ R.name }</Link> );
+		      target={ "_blank" }
+		      className={ " m-1 p-0" }>{ R.name }</Link> );
 
 	return (
 		<Col sm={ 12 } md={ 6 } className={ "mb-3 ps-0" }>
@@ -81,12 +82,12 @@ const BlueprintCard : FunctionComponent<IBlueprintCardProps> = ( { Data, onToggl
 						</Link>
 						{ AllowToEdit &&
 							<Link to={ `/blueprint/edit/${ Blueprint._id }` }
-								  className={ "btn rounded-top-0 btn-dark" }>
+							      className={ "btn rounded-top-0 btn-dark" }>
 								<Icon.BsGearFill/>
 							</Link>
 						}
 						<Link to={ `/api/v1/download/${ Blueprint._id }` } target={ "_blank" }
-							  className={ "btn rounded-top-0 btn-dark" }>
+						      className={ "btn rounded-top-0 btn-dark" }>
 							<Icon.BsDownload/> { Blueprint.downloads }
 						</Link>
 						{ ( UserData.HasPermssion( ERoles.moderator ) || IsOwner ) &&
@@ -95,14 +96,14 @@ const BlueprintCard : FunctionComponent<IBlueprintCardProps> = ( { Data, onToggl
 									onToggled();
 								}
 							} }
-									className={ "rounded-top-0" }>
+							        className={ "rounded-top-0" }>
 								<Icon.BsTrashFill/>
 							</Button>
 						}
 						<Button disabled={ !AllowToLike }
-								variant={ IsLoggedIn ? ( !Blueprint.likes.includes( UserData.Get._id ) ? "danger" : "success" ) : "dark" }
-								onClick={ ToggleLike } type={ "button" }
-								className={ "rounded-top-0" }>
+						        variant={ IsLoggedIn ? ( !Blueprint.likes.includes( UserData.Get._id ) ? "danger" : "success" ) : "dark" }
+						        onClick={ ToggleLike } type={ "button" }
+						        className={ "rounded-top-0" }>
 							{ !Blueprint.likes.includes( UserData.Get._id ) ?
 								<Icon.BsFillHeartbreakFill className={ "me-2" }/> :
 								<Icon.BsFillHeartFill className={ "me-2" }/> } { Blueprint.likes.length }

@@ -1,0 +1,12 @@
+{
+	"watch": [
+		"server",
+		"src/Shared"
+	],
+	"ext": "ts",
+	"ignore": [
+		"server/**/*.spec.ts",
+		"server/**/*.test.ts"
+	],
+	"exec": "yarn devserver"
+}

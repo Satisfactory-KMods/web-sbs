@@ -4,7 +4,7 @@ import {
 	MW_Permission
 }                             from "@server/Lib/Express.Lib";
 import { EApiUserBlueprints } from "@shared/Enum/EApiPath";
-import {
+import type {
 	Request,
 	Response
 }                             from "express";
@@ -12,14 +12,14 @@ import {
 	DefaultResponseFailed,
 	DefaultResponseSuccess
 }                             from "@shared/Default/Auth.Default";
-import {
+import type {
 	TRequest_BPUser_Create,
 	TRequest_BPUser_Create_Files,
 	TRequest_BPUser_Edit,
 	TRequest_BPUser_Edit_Files,
 	TRequest_BPUser_ToggleLike
 }                             from "@shared/Types/API_Request";
-import {
+import type {
 	TResponse_BPUser_Create,
 	TResponse_BPUser_Edit,
 	TResponse_BPUser_ToggleLike

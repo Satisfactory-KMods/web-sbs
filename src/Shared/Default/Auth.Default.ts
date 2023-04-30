@@ -1,8 +1,8 @@
-import { IMO_UserAccount }  from "@shared/Types/MongoDB";
+import type { MO_UserAccount }   from "@shared/Types/MongoDB";
 import { ERoles }           from "@shared/Enum/ERoles";
-import { IAPIResponseBase } from "@shared/Types/API_Response";
+import type { IAPIResponseBase } from "@shared/Types/API_Response";
 
-export const DefaultUser : IMO_UserAccount = {
+export const DefaultUser : MO_UserAccount = {
 	__v: 0,
 	_id: "123123",
 	username: "Default User",

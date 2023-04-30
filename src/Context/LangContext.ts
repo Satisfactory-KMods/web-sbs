@@ -1,5 +1,5 @@
 import { createContext }  from "react";
-import { IuseLang }       from "@hooks/useLang";
+import type { IuseLang }       from "@hooks/useLang";
 import { SupportedLangs } from "@applib/lang/lang";
 
 export default createContext<IuseLang>( {

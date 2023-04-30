@@ -7,7 +7,7 @@ import {
 	GetLanguage,
 	SupportedLangs
 }                          from "@applib/lang/lang";
-import { ILang }           from "@app/Types/lang";
+import type { ILang }           from "@app/Types/lang";
 
 export interface IuseLang {
 	AllCodes : string[],

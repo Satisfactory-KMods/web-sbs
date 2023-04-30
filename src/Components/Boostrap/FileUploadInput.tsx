@@ -1,6 +1,8 @@
-import React, {
+import type {
 	FunctionComponent,
-	PropsWithChildren,
+	PropsWithChildren} from "react";
+import type React from "react";
+import {
 	useId
 } from "react";
 

@@ -1,5 +1,5 @@
 import { ApiUrl }        from "@server/Lib/Express.Lib";
-import {
+import type {
 	Request,
 	Response
 }                        from "express";

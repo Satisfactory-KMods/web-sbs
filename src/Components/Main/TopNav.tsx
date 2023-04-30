@@ -1,6 +1,7 @@
-import {
+import type {
 	FunctionComponent,
-	PropsWithChildren,
+	PropsWithChildren} from "react";
+import {
 	useContext
 }                       from "react";
 import {

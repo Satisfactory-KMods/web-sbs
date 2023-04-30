@@ -4,13 +4,13 @@ import {
 	MW_Permission
 }                                   from "@server/Lib/Express.Lib";
 import { EApiQuestionary }          from "@shared/Enum/EApiPath";
-import {
+import type {
 	Request,
 	Response
 }                                   from "express";
 import { DefaultResponseSuccess }   from "@shared/Default/Auth.Default";
-import { TRequest_BP_Questionary }  from "@shared/Types/API_Request";
-import { TResponse_BP_Questionary } from "@shared/Types/API_Response";
+import type { TRequest_BP_Questionary }  from "@shared/Types/API_Request";
+import type { TResponse_BP_Questionary } from "@shared/Types/API_Response";
 import DB_Blueprints                from "@server/MongoDB/DB_Blueprints";
 import DB_Tags                      from "@server/MongoDB/DB_Tags";
 import DB_UserAccount               from "@server/MongoDB/DB_UserAccount";

@@ -1,7 +1,8 @@
-import React, {
+import type {
 	FunctionComponent,
 	PropsWithChildren
 } from "react";
+import type React from "react";
 
 interface IRibbonProps extends React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>, PropsWithChildren {
 	innerClassName? : string;
