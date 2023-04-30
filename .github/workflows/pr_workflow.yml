@@ -1,16 +1,16 @@
-name: Build and Deploy
+name: 🔨 Test and Build PR
 
 on: [ pull_request ]
  
 jobs:
   test-docker:
-    name: "Test and Build as Docker"
+    name: 🔨 Build as Docker
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
-      - name: Build Docker Image
-        #continue-on-error: true
+      - name: 🚚 Get latest code
+        uses: actions/checkout@v3
+      - name: ⚡ Build as docker image
         uses: docker/build-push-action@v4
         with:
           context: .
@@ -18,17 +18,22 @@ jobs:
           tags: user/app:latest
 
   test-app:
+    name: 🔨 Test and Build
     runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: [ 18.x, 19.x, 20.x ]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+    
     steps:
-      - uses: actions/checkout@v3
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: 🚚 Get latest code
+        uses: actions/checkout@v3
+      - name: 🔧 Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
-      - run: yarn install
-      - run: yarn build
+      - name: ✨ Install packages
+        run: yarn install
+      - name: ⚡ Build App
+        run: yarn build
