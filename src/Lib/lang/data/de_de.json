@@ -2,7 +2,7 @@
   "Auth": {
     "Signup": "Account Erstellen",
     "Signin": "Einloggen",
-    "Logout": "Ausloggen"
+    "logout": "Ausloggen"
   },
   "Navigation": {
     "Home": "Startseite",

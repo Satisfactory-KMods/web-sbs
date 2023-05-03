@@ -2,13 +2,14 @@ import {
 	createTRPCProxyClient,
 	httpBatchLink,
 	TRPCClientError
-}                                  from "@trpc/client";
+}                                 from "@trpc/client";
 import type {
 	AuthRouter,
 	PublicRouter
-}                                  from "@server/trpc/server";
+}                                 from "@server/trpc/server";
 import type { SweetAlertOptions } from "sweetalert2";
-import Swal from "sweetalert2";
+import Swal                       from "sweetalert2";
+import { AUTHTOKEN }              from "@applib/constance";
 
 
 export function fireSwalFromApi<PreConfirmResult = any>( message : string[] | string | undefined, success? : boolean, moreOptions? : SweetAlertOptions<PreConfirmResult> ) {
@@ -30,7 +31,7 @@ export function fireToastFromApi<PreConfirmResult = any>( message : string[] | s
 		return Swal.fire( {
 			position: "bottom-end",
 			toast: true,
-			html: isArray( message ) ? message.join( "<br />" ) : message,
+			html: Array.isArray( message ) ? message.join( "<br />" ) : message,
 			icon: success ? "success" : "error",
 			showConfirmButton: false,
 			timerProgressBar: true,
@@ -42,7 +43,7 @@ export function fireToastFromApi<PreConfirmResult = any>( message : string[] | s
 }
 
 
-export const tRPC_token = () => window.localStorage.getItem( "session" ) || "";
+export const tRPC_token = () => window.localStorage.getItem( AUTHTOKEN ) || "";
 
 export const tRPC_Public = createTRPCProxyClient<PublicRouter>( {
 	links: [

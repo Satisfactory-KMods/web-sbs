@@ -8,12 +8,18 @@ import {
 }                               from "@server/trpc/trpc";
 import { MW_Auth }              from "@server/Lib/Express.Lib";
 import { BC }                   from "@server/Lib/System.Lib";
+import { public_blueprint }     from "@server/trpc/routings/public/blueprint";
+import { public_mods }          from "@server/trpc/routings/public/mods";
+import { public_tags }          from "@server/trpc/routings/public/tags";
 
 
 const publicRouter = router( {
 	validate: public_validate,
 	login: public_login,
-	register: public_createAccount
+	register: public_createAccount,
+	blueprint: public_blueprint,
+	tags: public_tags,
+	mods: public_mods
 } );
 const authRouter = router( {} );
 

@@ -1,22 +1,21 @@
 import type {
 	FunctionComponent,
-	PropsWithChildren} from "react";
-import {
-	useContext
+	PropsWithChildren
 }                       from "react";
+import { useContext }   from "react";
 import {
 	Link,
 	useLocation
 }                       from "react-router-dom";
 import { LangReadable } from "@app/Lib/lang/lang";
 import LangContext      from "@context/LangContext";
-import AuthContext      from "@context/AuthContext";
 import { ERoles }       from "@shared/Enum/ERoles";
 import {
 	FaDiscord,
 	FaGithubSquare,
 	FaPatreon
 }                       from "react-icons/all";
+import { useAuth }      from "@hooks/useAuth";
 
 interface ITopNavProps extends PropsWithChildren {
 	href : string;
@@ -25,23 +24,23 @@ interface ITopNavProps extends PropsWithChildren {
 
 export const TopNavLink : FunctionComponent<ITopNavProps> = ( { SessionRole, href, children } ) => {
 	const { pathname } = useLocation();
-	const { UserData } = useContext( AuthContext );
+	const { user } = useAuth();
 
-	if ( SessionRole !== undefined && !UserData.HasPermssion( SessionRole ) ) {
+	if ( SessionRole !== undefined && !user.HasPermssion( SessionRole ) ) {
 		return null;
 	}
 
 	return (
 		<li>
 			<Link to={ href }
-				  className={ `nav-link px-2 link-secondary ${ pathname === href ? "text-light" : "" }` }>{ children }</Link>
+			      className={ `nav-link px-2 link-secondary ${ pathname === href ? "text-light" : "" }` }>{ children }</Link>
 		</li>
 	);
 };
 
 
 const TopNav : FunctionComponent = () => {
-	const { UserData, IsLoggedIn, Logout } = useContext( AuthContext );
+	const { user, loggedIn, logout } = useAuth();
 	const { Lang, setLang, Code, AllCodes } = useContext( LangContext );
 
 	return (
@@ -50,16 +49,16 @@ const TopNav : FunctionComponent = () => {
 				<div
 					className="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
 					<Link to="/"
-						  className="d-flex align-items-center mb-2 mb-lg-0 link-body-emphasis text-decoration-none">
+					      className="d-flex align-items-center mb-2 mb-lg-0 link-body-emphasis text-decoration-none">
 						<img src={ "/images/logo.png" } alt="logo" className="w-10"/>
 					</Link>
 
 					<ul className="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0 ms-4">
 						<TopNavLink href="/">{ Lang.Navigation.Home }</TopNavLink>
 						<TopNavLink SessionRole={ ERoles.member }
-									href="/blueprint/create">{ Lang.Navigation.AddBlueprint }</TopNavLink>
+						            href="/blueprint/create">{ Lang.Navigation.AddBlueprint }</TopNavLink>
 						<TopNavLink SessionRole={ ERoles.member }
-									href="/blueprint/my">{ Lang.Navigation.MyBlueprints }</TopNavLink>
+						            href="/blueprint/my">{ Lang.Navigation.MyBlueprints }</TopNavLink>
 						<TopNavLink
 							href="/terms/private">{ Lang.Navigation.Privacy }</TopNavLink>
 					</ul>
@@ -83,9 +82,9 @@ const TopNav : FunctionComponent = () => {
 
 					<div className="dropdown text-end me-2">
 						<Link to="#" className="d-block link-dark text-decoration-none dropdown-toggle"
-							  data-bs-toggle="dropdown" aria-expanded="false">
+						      data-bs-toggle="dropdown" aria-expanded="false">
 							<img alt="flag" src={ `/images/lang/${ Code }.png` }
-								 width={ 45 } className={ "ps-2" }/>
+							     width={ 45 } className={ "ps-2" }/>
 						</Link>
 						<ul className="dropdown-menu text-small">
 							<li>
@@ -95,7 +94,7 @@ const TopNav : FunctionComponent = () => {
 										setLang( code );
 									} }>
 										<img alt="flag" src={ `/images/lang/${ code }.png` }
-											 width={ 30 } className={ " pb-1" }/> { LangReadable[ code ] }
+										     width={ 30 } className={ " pb-1" }/> { LangReadable[ code ] }
 									</Link>
 								) ) }
 							</li>
@@ -104,27 +103,27 @@ const TopNav : FunctionComponent = () => {
 
 					<div className="dropdown text-end">
 						<Link to="#" className="d-block link-dark text-decoration-none dropdown-toggle text-light"
-							  data-bs-toggle="dropdown" aria-expanded="false">
-							<img src={ UserData.GetUserImage() } alt="" width="40"
-								 className="rounded-circle me-2"/>
-							{ IsLoggedIn ? UserData.Get.username : Lang.Auth.SignUpIn }
+						      data-bs-toggle="dropdown" aria-expanded="false">
+							<img src={ user.GetUserImage } alt="" width="40"
+							     className="rounded-circle me-2"/>
+							{ loggedIn ? user.Get.username : Lang.Auth.SignUpIn }
 						</Link>
 						<ul className="dropdown-menu text-small">
-							{ UserData.IsValid ? (
+							{ user.IsValid ? (
 								<>
-									{ UserData.HasPermssion( ERoles.admin ) && (
+									{ user.HasPermssion( ERoles.admin ) && (
 										<>
 											<li>
 												<Link className="dropdown-item"
-													  to="/admin/tags">{ Lang.Navigation.Admin_Tags }</Link>
+												      to="/admin/tags">{ Lang.Navigation.Admin_Tags }</Link>
 											</li>
 											<li>
 												<Link className="dropdown-item"
-													  to="/admin/users">{ Lang.Navigation.Admin_Users }</Link>
+												      to="/admin/users">{ Lang.Navigation.Admin_Users }</Link>
 											</li>
 											<li>
 												<Link className="dropdown-item"
-													  to="/admin/blueprints/blacklisted">{ Lang.Navigation.Admin_BlacklistedBlueprints }</Link>
+												      to="/admin/blueprints/blacklisted">{ Lang.Navigation.Admin_BlacklistedBlueprints }</Link>
 											</li>
 											<li>
 												<hr className="dropdown-divider"/>
@@ -133,13 +132,13 @@ const TopNav : FunctionComponent = () => {
 									) }
 									<li>
 										<Link className="dropdown-item"
-											  to="/account/settings">{ Lang.Auth.AccSettings }</Link></li>
+										      to="/account/settings">{ Lang.Auth.AccSettings }</Link></li>
 									<li>
 										<hr className="dropdown-divider"/>
 									</li>
 									<li>
 										<Link className="dropdown-item text-danger" to="#"
-											  onClick={ Logout }>{ Lang.Auth.Logout }</Link></li>
+										      onClick={ logout }>{ Lang.Auth.logout }</Link></li>
 								</>
 							) : (
 								<>

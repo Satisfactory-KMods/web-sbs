@@ -37,7 +37,6 @@ export default function() {
 				blueprint.downloads++;
 				if ( await blueprint.save() ) {
 					DownloadIPCached.push( { ip: req.ip, id: blueprint._id.toString() } );
-					SocketIO.to( blueprint._id.toString() ).emit( "BlueprintUpdated", blueprint.toJSON() );
 				}
 			}
 
@@ -95,7 +94,6 @@ export default function() {
 				BPPack.downloads++;
 				if ( await BPPack.save() ) {
 					DownloadIPCached.push( { ip: req.ip, id: BPPack._id.toString() } );
-					SocketIO.to( BPPack._id.toString() ).emit( "BlueprintPackUpdated", BPPack.toJSON() );
 				}
 			}
 			if ( fs.existsSync( ZipFile ) ) {

@@ -1,24 +1,20 @@
-import type { MO_Blueprint } from "@shared/Types/MongoDB";
-import type {
-	FunctionComponent} from "react";
-import {
-	useContext
-}                       from "react";
+import type { MO_Blueprint }      from "@shared/Types/MongoDB";
+import type { FunctionComponent } from "react";
 import {
 	Badge,
 	Button,
 	ButtonGroup,
 	Card,
 	Col
-}                       from "react-bootstrap";
-import { useLang }      from "@hooks/useLang";
-import { Link }         from "react-router-dom";
-import * as Icon        from "react-icons/bs";
-import AuthContext      from "@context/AuthContext";
-import { useBlueprint } from "@hooks/useBlueprint";
-import Ribbon           from "@comp/General/Ribbon";
-import ReactMarkdown    from "react-markdown";
-import { ERoles }       from "@shared/Enum/ERoles";
+}                                 from "react-bootstrap";
+import { useLang }                from "@hooks/useLang";
+import { Link }                   from "react-router-dom";
+import * as Icon                  from "react-icons/bs";
+import { useBlueprint }           from "@hooks/useBlueprint";
+import Ribbon                     from "@comp/General/Ribbon";
+import ReactMarkdown              from "react-markdown";
+import { ERoles }                 from "@shared/Enum/ERoles";
+import { useAuth }                from "@hooks/useAuth";
 
 interface IBlueprintCardProps {
 	Data : MO_Blueprint;
@@ -36,7 +32,7 @@ const BlueprintCard : FunctionComponent<IBlueprintCardProps> = ( { Data, onToggl
 		ToggleBlacklist,
 		IsOwner
 	} = useBlueprint( Data );
-	const { IsLoggedIn, UserData } = useContext( AuthContext );
+	const { loggedIn, user } = useAuth();
 	const { Lang } = useLang();
 	const ModList = [ ...Mods ];
 	const SpliceMods = ModList.splice( 0, 3 );
@@ -90,7 +86,7 @@ const BlueprintCard : FunctionComponent<IBlueprintCardProps> = ( { Data, onToggl
 						      className={ "btn rounded-top-0 btn-dark" }>
 							<Icon.BsDownload/> { Blueprint.downloads }
 						</Link>
-						{ ( UserData.HasPermssion( ERoles.moderator ) || IsOwner ) &&
+						{ ( user.HasPermssion( ERoles.moderator ) || IsOwner ) &&
 							<Button variant="danger" onClick={ async() => {
 								if ( await ToggleBlacklist() && onToggled !== undefined ) {
 									onToggled();
@@ -101,10 +97,10 @@ const BlueprintCard : FunctionComponent<IBlueprintCardProps> = ( { Data, onToggl
 							</Button>
 						}
 						<Button disabled={ !AllowToLike }
-						        variant={ IsLoggedIn ? ( !Blueprint.likes.includes( UserData.Get._id ) ? "danger" : "success" ) : "dark" }
+						        variant={ loggedIn ? ( !Blueprint.likes.includes( user.Get._id ) ? "danger" : "success" ) : "dark" }
 						        onClick={ ToggleLike } type={ "button" }
 						        className={ "rounded-top-0" }>
-							{ !Blueprint.likes.includes( UserData.Get._id ) ?
+							{ !Blueprint.likes.includes( user.Get._id ) ?
 								<Icon.BsFillHeartbreakFill className={ "me-2" }/> :
 								<Icon.BsFillHeartFill className={ "me-2" }/> } { Blueprint.likes.length }
 						</Button>

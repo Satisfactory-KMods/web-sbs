@@ -1,64 +1,38 @@
-import {
-	useEffect,
-	useMemo
-}                         from "react";
-import { useJWT }         from "@kyri123/k-reactutils";
-import { User }           from "@shared/Class/User.Class";
-import { API_QueryLib }   from "@applib/Api/API_Query.Lib";
-import { EApiAuth }       from "@shared/Enum/EApiPath";
-import type { MO_UserAccount } from "@shared/Types/MongoDB";
+import { useContext }      from "react";
+import { useLocalStorage } from "@kyri123/k-reactutils";
+import { API_QueryLib }    from "@applib/Api/API_Query.Lib";
+import { EApiAuth }        from "@shared/Enum/EApiPath";
+import { AUTHTOKEN }       from "@applib/constance";
+import AuthContext         from "@context/AuthContext";
+import { useNavigate }     from "react-router-dom";
 
-export interface IUseAuth {
-	UpdateToken : ( Value : string ) => void;
-	UserData : User,
-	Logout : () => void,
-	IsLoggedIn : boolean,
-	Token : string
-}
+export function useAuth() {
+	const navigate = useNavigate();
+	const { Storage, SetStorage, ResetStorage } = useLocalStorage( AUTHTOKEN, "" );
+	const { loggedIn, user } = useContext( AuthContext );
 
-export function useAuth() : IUseAuth {
-	const {
-		ClearSession,
-		Token,
-		Session,
-		UpdateToken
-	} = useJWT<MO_UserAccount>( "session" );
-
-	// eslint-disable-next-line react-hooks/exhaustive-deps
-	const UserData = useMemo( () => new User( Token ), [ Token, Session ] );
-	// eslint-disable-next-line react-hooks/exhaustive-deps
-	const IsLoggedIn = useMemo( () => UserData?.IsValid, [ UserData ] );
-
-	const Logout = () => {
-		ClearSession();
+	const logout = () => {
+		ResetStorage();
 		Promise.all( [
-			API_QueryLib.FireSwal( "Auth.success.Logout" ),
-			API_QueryLib.PostToAPI( EApiAuth.logout, { Token } )
+			API_QueryLib.FireSwal( "Auth.success.logout" ),
+			API_QueryLib.PostToAPI( EApiAuth.logout, { Storage } )
 		] ).then();
+		navigate( 0 );
 	};
 
-	useEffect( () => {
-		if ( Token.trim() === "" ) {
-			return;
-		}
-
-		const Response = async() => {
-			return await API_QueryLib.PostToAPI( EApiAuth.validate, { Token } );
-		};
-
-		Response().then( Result => {
-			if ( !Result.Auth && Result.Reached ) {
-				ClearSession();
-			}
-		} );
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [ Token ] );
+	const setToken = ( token : string ) => {
+		SetStorage( token );
+		Promise.all( [
+			API_QueryLib.FireSwal( "Auth.success.logout" )
+		] ).then();
+		navigate( 0 );
+	};
 
 	return {
-		UpdateToken,
-		IsLoggedIn,
-		Logout: Logout,
-		UserData,
-		Token
+		token: Storage,
+		setToken,
+		loggedIn,
+		logout,
+		user
 	};
 }

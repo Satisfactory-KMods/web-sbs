@@ -42,7 +42,7 @@
     "SignUpIn": "Sign Up/Log In",
     "Signup": "Sign Up",
     "Signin": "Log In",
-    "Logout": "Logout",
+    "logout": "logout",
     "AccSettings": "Account Settings",
     "Password": "Password",
     "PasswordAgain": "Repeat password",
@@ -157,7 +157,7 @@
       "text": "Blueprint Pack successfully removed",
       "icon": "success"
     },
-    "Auth.success.Logout": {
+    "Auth.success.logout": {
       "text": "Successfully logged out",
       "icon": "success"
     },

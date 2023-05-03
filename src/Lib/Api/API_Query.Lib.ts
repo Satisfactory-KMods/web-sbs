@@ -1,16 +1,17 @@
 import type {
 	IAPIResponseBase,
 	TResponse_BP_Questionary
-}                                  from "@shared/Types/API_Response";
+}                                       from "@shared/Types/API_Response";
 import type {
 	EApiQuestionary,
 	TApiPath
-}                                  from "@shared/Enum/EApiPath";
-import withReactContent            from "sweetalert2-react-content";
-import Swal                        from "sweetalert2";
-import { GetApiMessage }           from "@applib/lang/lang";
+}                                       from "@shared/Enum/EApiPath";
+import withReactContent                 from "sweetalert2-react-content";
+import Swal                             from "sweetalert2";
+import { GetApiMessage }                from "@applib/lang/lang";
 import type { TRequest_BP_Questionary } from "@shared/Types/API_Request";
 import type { ILang }                   from "@app/Types/lang";
+import { AUTHTOKEN }                    from "@applib/constance";
 
 export class API_QueryLib {
 
@@ -35,7 +36,7 @@ export class API_QueryLib {
 		Data : D,
 		ContentType? : "application/json" | "application/x-www-form-urlencoded" | "multipart/form-data"
 	) : Promise<T> {
-		const Token = window.localStorage.getItem( "session" );
+		const Token = window.localStorage.getItem( AUTHTOKEN );
 		const requestOptions : RequestInit = {
 			method: "POST",
 			headers: {
@@ -93,7 +94,7 @@ export class API_QueryLib {
 			}
 		}
 
-		const Token = window.localStorage.getItem( "session" );
+		const Token = window.localStorage.getItem( AUTHTOKEN );
 		const requestOptions : RequestInit = {
 			method: "GET",
 			headers: {

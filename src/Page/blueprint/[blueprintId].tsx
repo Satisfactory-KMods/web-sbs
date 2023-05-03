@@ -1,33 +1,28 @@
-import type {
-	FunctionComponent} from "react";
-import {
-	useContext
-}                       from "react";
+import type { FunctionComponent } from "react";
 import {
 	Link,
 	Navigate,
 	useParams
-}                       from "react-router-dom";
-import { useBlueprint } from "@hooks/useBlueprint";
+}                                 from "react-router-dom";
+import { useBlueprint }           from "@hooks/useBlueprint";
 import {
 	Badge,
 	Button,
 	ButtonGroup,
 	Card,
 	Table
-}                       from "react-bootstrap";
-import { usePageTitle } from "@kyri123/k-reactutils";
-import ReactMarkdown    from "react-markdown";
-import * as Icon        from "react-icons/bs";
-import AuthContext      from "@context/AuthContext";
-import { useLang }      from "@hooks/useLang";
-import Ribbon           from "@comp/General/Ribbon";
-import { ERoles }       from "@shared/Enum/ERoles";
+}                                 from "react-bootstrap";
+import { usePageTitle }           from "@kyri123/k-reactutils";
+import ReactMarkdown              from "react-markdown";
+import * as Icon                  from "react-icons/bs";
+import { useLang }                from "@hooks/useLang";
+import Ribbon                     from "@comp/General/Ribbon";
+import { ERoles }                 from "@shared/Enum/ERoles";
 
 const Component : FunctionComponent = () => {
 	const { Lang } = useLang();
 	const { id } = useParams();
-	const { IsLoggedIn, UserData } = useContext( AuthContext );
+	const { loggedIn, user } = useAuth();
 	const {
 		IsOwner,
 		ToggleBlacklist,
@@ -60,9 +55,9 @@ const Component : FunctionComponent = () => {
 				<Card.Header className={ "d-flex p-0" }>
 					<h3 className={ "py-1 pt-2 px-3 flex-1" }>{ Blueprint.name }</h3>
 					<Button disabled={ !AllowToLike }
-					        variant={ IsLoggedIn ? ( !Blueprint.likes.includes( UserData.Get._id ) ? "danger" : "success" ) : "dark" }
+					        variant={ loggedIn ? ( !Blueprint.likes.includes( user.Get._id ) ? "danger" : "success" ) : "dark" }
 					        onClick={ ToggleLike } type={ "button" } className={ "rounded-0 rounded-tr-2xl px-4" }>
-						{ !Blueprint.likes.includes( UserData.Get._id ) ?
+						{ !Blueprint.likes.includes( user.Get._id ) ?
 							<Icon.BsFillHeartbreakFill className={ "me-2" }/> :
 							<Icon.BsFillHeartFill className={ "me-2" }/> } { Blueprint.likes.length }
 					</Button>
@@ -128,7 +123,7 @@ const Component : FunctionComponent = () => {
 								<Icon.BsGearFill/>
 							</Link>
 						}
-						{ ( UserData.HasPermssion( ERoles.moderator ) || IsOwner ) &&
+						{ ( user.HasPermssion( ERoles.moderator ) || IsOwner ) &&
 							<Button variant="danger" onClick={ async() => {
 								await ToggleBlacklist();
 							} }

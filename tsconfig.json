@@ -27,7 +27,7 @@
         "./src/hooks/*"
       ],
       "@comp/*": [
-        "./src/components/*"
+        "./src/Components/*"
       ],
       "@context/*": [
         "./src/Context/*"

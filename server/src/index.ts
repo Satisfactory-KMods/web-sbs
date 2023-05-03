@@ -1,9 +1,4 @@
 import * as path            from "path";
-import { Server }           from "socket.io";
-import type {
-	IEmitEvents,
-	IListenEvents
-}                           from "@shared/Types/SocketIO";
 import http                 from "http";
 import express              from "express";
 import { InstallRoutings }  from "./Routings/InitRouter";
@@ -31,15 +26,6 @@ global.SystemLib = new SystemLib_Class();
 
 global.Api = express();
 global.HttpServer = http.createServer( global.Api );
-
-global.SocketIO = new Server<IListenEvents, IEmitEvents>( global.HttpServer, {
-	path: "/api/v1/io/",
-	cors: {
-		origin: "*",
-		methods: [ "GET", "POST", "PUT", "PATCH", "DELETE" ],
-		credentials: false
-	}
-} );
 
 Api.use( express.json() );
 Api.use( express.urlencoded( { extended: true } ) );
@@ -86,16 +72,6 @@ mongoose
 		}
 
 		global.DownloadIPCached = [];
-		// Sockets need to connect on a room otherwise we will not be able to send messages
-		SocketIO.on( "connection", function( socket ) {
-			const query = socket.handshake.query;
-			const roomName = query.roomName;
-			if ( !roomName || Array.isArray( roomName ) ) {
-				socket.disconnect( true );
-				return;
-			}
-			socket.join( roomName );
-		} );
 
 		SystemLib.Log( "start", "Connected... Start API and SOCKETIO" );
 
@@ -120,7 +96,7 @@ mongoose
 		global.TaskManager = new TaskManagerClass();
 		await TaskManager.Init();
 
-		HttpServer.listen( parseInt( process.env.HTTPPORT ), async() =>
+		HttpServer.listen( parseInt( process.env.HTTPPORT as string ), async() =>
 			SystemLib.Log( "start",
 				"API listen on port",
 				process.env.HTTPPORT

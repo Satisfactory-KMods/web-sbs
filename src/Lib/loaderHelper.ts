@@ -1,29 +1,66 @@
-import type { LoaderDataBase }     from "@app/types/loader";
+import type {
+	LoaderBlueprintBase,
+	LoaderDataBase
+}                                  from "@app/types/loader";
 import type { LoaderFunctionArgs } from "@remix-run/router/utils";
+import { AUTHTOKEN }               from "@applib/constance";
+import { redirect }                from "react-router-dom";
+import { tRPC_Public }             from "@applib/tRPC";
+import { User }                    from "@shared/Class/User.Class";
+import { ERoles }                  from "@shared/Enum/ERoles";
 
-const validateLogin = async( { params, request } : LoaderFunctionArgs ) : Promise<LoaderDataBase> => {
-	const token = window.localStorage.getItem( "session" ) || "";
-	//const Response = await tRPC_Public.validate.query( { token } ).catch( console.warn );
+export enum EMustBeLoggedIn {
+	NotLoggedIn,
+	LoggedIn,
+	BlueprintOwner,
+	DontCare
+}
 
-	const loggedIn = true;//!!Response?.tokenValid;
-	if ( !loggedIn ) {
-		window.localStorage.setItem( "session", "" );
+const validateLogin = async( {
+	params,
+	request
+} : LoaderFunctionArgs, loggedInRule = EMustBeLoggedIn.DontCare, redirectTo = "/error/401", role = ERoles.member ) : Promise<LoaderDataBase> => {
+	const token = window.localStorage.getItem( AUTHTOKEN ) || "";
+	const Response = await tRPC_Public.validate.query( { token } ).catch( console.warn );
+
+	const loggedIn = !!Response?.tokenValid;
+	if ( !loggedIn && loggedInRule === EMustBeLoggedIn.LoggedIn || loggedInRule === EMustBeLoggedIn.BlueprintOwner ) {
+		const us = new User( token );
+		if ( us.HasPermssion( role ) ) {
+			redirect( "/error/401" );
+		}
+	}
+	if ( loggedIn && loggedInRule === EMustBeLoggedIn.LoggedIn || loggedInRule === EMustBeLoggedIn.BlueprintOwner ) {
+		redirect( redirectTo );
+	}
+	if ( loggedIn && loggedInRule === EMustBeLoggedIn.NotLoggedIn ) {
+		redirect( redirectTo );
 	}
 
-	return { loggedIn };
+	return { loggedIn, user: new User( token ) };
 };
 
-const queryBlueprint = async( { params, request } : LoaderFunctionArgs ) : Promise<LoaderDataBase> => {
-	const token = window.localStorage.getItem( "session" ) || "";
-	//const Response = await tRPC_Public.validate.query( { token } ).catch( console.warn );
+const validateBlueprint = async( {
+	params,
+	request
+} : LoaderFunctionArgs, redirectTo = "/", loggedInRule = EMustBeLoggedIn.DontCare, ownerRedirectTo = "/error/401", role = ERoles.member ) : Promise<LoaderBlueprintBase> => {
+	const loaderBase = await validateLogin( { params, request }, loggedInRule, "/error/401", role );
+	const { blueprintId } = params;
 
-	const loggedIn = true;//!!Response?.tokenValid;
-	if ( !loggedIn ) {
-		window.localStorage.setItem( "session", "" );
+	const result = await tRPC_Public.blueprint.getBlueprint.query( { blueprintId: blueprintId! } );
+	if ( !result ) {
+		redirect( redirectTo );
 	}
 
-	return { loggedIn };
-};
+	const blueprintPermission = ( loaderBase.user.Get._id === result.blueprintData.owner || loaderBase.user.HasPermssion( ERoles.admin ) );
 
+	if ( result.blueprintData && loggedInRule === EMustBeLoggedIn.BlueprintOwner ) {
+		if ( !loaderBase.user.IsValid || !blueprintPermission ) {
+			redirect( ownerRedirectTo );
+		}
+	}
+
+	return { ...loaderBase, blueprintData: result.blueprintData, blueprintPermission };
+};
 
 export { validateLogin };

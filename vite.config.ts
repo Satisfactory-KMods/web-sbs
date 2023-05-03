@@ -1,21 +1,20 @@
 /** @type {import("vite").UserConfig} */
 
+import type { Alias } from "vite";
 import {
-	Alias,
 	defineConfig,
 	loadEnv
-}                from "vite";
-import reactvite from "@vitejs/plugin-react";
-import eslint    from "vite-plugin-eslint";
+}                     from "vite";
+import reactvite      from "@vitejs/plugin-react";
+import eslint         from "vite-plugin-eslint";
 import {
 	join,
 	resolve
-}                from "path";
-import fs        from "fs";
+}                     from "path";
+import fs             from "fs";
 
 const react = [ "react", "react-router-dom", "react-dom" ];
 const bootstrap = [ "react-bootstrap", "bootstrap" ];
-const network = [ "socket.io-client", "socket.io", "jsonwebtoken" ];
 const icons = [ "react-icons" ];
 const addons = [ "react-markdown", "react-select", "lodash" ];
 const sweetalert = [ "sweetalert2", "sweetalert2-react-content" ];
@@ -60,7 +59,7 @@ export default defineConfig( ( { command, mode, ssrBuild } ) => {
 					chunkFileNames: `chunk/[name].[hash].js`,
 					assetFileNames: `asset/[name].[hash].[ext]`,
 					manualChunks: {
-						react, bootstrap, icons, addons, network, sweetalert
+						react, bootstrap, icons, addons, sweetalert
 						//...renderChunks( dependencies )
 					}
 				}

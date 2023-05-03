@@ -21,16 +21,8 @@ export interface MO_Blueprint extends IMongoDB {
 	blacklisted? : boolean
 }
 
-export interface MO_BlueprintPack extends IMongoDB {
-	name : string,
-	description : string,
-	tags : string[],
-	mods : string[],
-	likes : string[],
-	owner : string,
-	downloads : number,
-	blacklisted? : boolean,
-	blueprints : string[]
+export interface MO_BlueprintPack extends Omit<MO_Blueprint, "DesignerSize"> {
+	blueprints : string[];
 }
 
 export interface MO_UserAccount extends IMongoDB {

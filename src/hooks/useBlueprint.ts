@@ -1,25 +1,23 @@
 import {
-	useContext,
 	useEffect,
 	useMemo,
 	useState
-}                        from "react";
-import { API_QueryLib }  from "@applib/Api/API_Query.Lib";
+}                         from "react";
+import { API_QueryLib }   from "@applib/Api/API_Query.Lib";
 import {
 	EApiBlueprintUtils,
 	EApiQuestionary,
 	EApiUserBlueprints
-}                        from "@shared/Enum/EApiPath";
+}                         from "@shared/Enum/EApiPath";
 import type {
 	MO_Blueprint,
 	MO_Mod,
 	MO_Tag
-}                        from "@shared/Types/MongoDB";
-import { EDesignerSize } from "@shared/Enum/EDesignerSize";
-import AuthContext       from "@context/AuthContext";
-import { GetSocket }     from "@applib/SocketIO";
-import { ERoles }        from "@shared/Enum/ERoles";
-import type { Blueprint }     from "@etothepii/satisfactory-file-parser";
+}                         from "@shared/Types/MongoDB";
+import { EDesignerSize }  from "@shared/Enum/EDesignerSize";
+import { ERoles }         from "@shared/Enum/ERoles";
+import type { Blueprint } from "@etothepii/satisfactory-file-parser";
+import { useAuth }        from "@hooks/useAuth";
 
 export interface IBlueprintHookConfig {
 	IgnoreBlacklisted : boolean;
@@ -41,10 +39,10 @@ export function useBlueprint( InitValue : string | MO_Blueprint, Config? : Parti
 				__v: 0
 			} as MO_Blueprint;
 		}
-		return InitValue ;
+		return InitValue;
 	} );
 	const [ DoQueryLikes, setDoQueryLikes ] = useState<boolean>( false );
-	const { IsLoggedIn, UserData } = useContext( AuthContext );
+	const { loggedIn, user } = useAuth();
 	const [ Mods, setMods ] = useState<MO_Mod[]>( [] );
 	const [ Tags, setTags ] = useState<MO_Tag[]>( [] );
 	const [ BlueprintData, setBlueprintData ] = useState<Blueprint | undefined>( undefined );
@@ -57,8 +55,8 @@ export function useBlueprint( InitValue : string | MO_Blueprint, Config? : Parti
 	}, [ InitValue ] );
 
 	const IsOwner = useMemo( () => {
-		return UserData.Get._id === Blueprint.owner;
-	}, [ UserData.Get._id, Blueprint.owner ] );
+		return user.Get._id === Blueprint.owner;
+	}, [ user.Get._id, Blueprint.owner ] );
 
 	const BlueprintValid = useMemo( () => {
 		if ( Config?.IgnoreBlacklisted ) {
@@ -92,11 +90,11 @@ export function useBlueprint( InitValue : string | MO_Blueprint, Config? : Parti
 	};
 
 	const AllowToEdit = useMemo( () => {
-		if ( IsLoggedIn && BlueprintValid ) {
-			return UserData.HasPermssion( ERoles.admin ) || Blueprint.owner.trim() === UserData.Get._id.trim();
+		if ( loggedIn && BlueprintValid ) {
+			return user.HasPermssion( ERoles.admin ) || Blueprint.owner.trim() === user.Get._id.trim();
 		}
 		return false;
-	}, [ UserData, IsLoggedIn, Blueprint.owner, BlueprintValid ] );
+	}, [ user, loggedIn, Blueprint.owner, BlueprintValid ] );
 
 	useEffect( () => {
 		Query();
@@ -110,23 +108,9 @@ export function useBlueprint( InitValue : string | MO_Blueprint, Config? : Parti
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [ Blueprint.tags, Blueprint.mods ] );
 
-	useEffect( () => {
-		const SocketIO = GetSocket( BlueprintID );
-		const OnUpdate = async( BP : MO_Blueprint ) => {
-			setBlueprint( () => BP );
-			await QueryModsAndTags();
-		};
-
-		SocketIO.on( "BlueprintUpdated", OnUpdate );
-		return () => {
-			SocketIO.off( "BlueprintUpdated", OnUpdate );
-			SocketIO.close();
-		};
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [] );
 
 	const ToggleLike = async() : Promise<void> => {
-		if ( !IsLoggedIn ) {
+		if ( !loggedIn ) {
 			await API_QueryLib.FireSwal( "Api.error.Unauthorized" );
 			return;
 		}
@@ -142,7 +126,7 @@ export function useBlueprint( InitValue : string | MO_Blueprint, Config? : Parti
 	};
 
 	const ToggleBlacklist = async() : Promise<boolean> => {
-		if ( !IsLoggedIn ) {
+		if ( !loggedIn ) {
 			await API_QueryLib.FireSwal( "Api.error.Unauthorized" );
 			return false;
 		}
@@ -158,7 +142,7 @@ export function useBlueprint( InitValue : string | MO_Blueprint, Config? : Parti
 	};
 
 	const Remove = async() : Promise<boolean> => {
-		if ( !IsLoggedIn ) {
+		if ( !loggedIn ) {
 			await API_QueryLib.FireSwal( "Api.error.Unauthorized" );
 			return false;
 		}
@@ -180,7 +164,7 @@ export function useBlueprint( InitValue : string | MO_Blueprint, Config? : Parti
 		BlueprintData,
 		Mods,
 		Tags,
-		AllowToLike: IsLoggedIn && Blueprint.owner !== UserData.Get._id,
+		AllowToLike: loggedIn && Blueprint.owner !== user.Get._id,
 		AllowToEdit,
 		BlueprintValid,
 		Update: Query,

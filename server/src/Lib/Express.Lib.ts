@@ -1,13 +1,13 @@
-import type { TApiPath }              from "@shared/Enum/EApiPath";
+import type { TApiPath }         from "@shared/Enum/EApiPath";
 import type {
 	NextFunction,
 	Request,
 	Response
 }                                from "express";
-import type { ERoles }                from "@shared/Enum/ERoles";
+import type { ERoles }           from "@shared/Enum/ERoles";
 import * as jwt                  from "jsonwebtoken";
 import { DefaultResponseFailed } from "@shared/Default/Auth.Default";
-import type { ResponseBase }          from "@shared/Types/API_Response";
+import type { ResponseBase }     from "@shared/Types/API_Response";
 import { User }                  from "@shared/Class/User.Class";
 import DB_SessionToken           from "@server/MongoDB/DB_SessionToken";
 
@@ -33,7 +33,7 @@ export async function MW_Auth( req : Request, res : Response, next : NextFunctio
 
 	if ( Token ) {
 		try {
-			const Result = jwt.verify( Token, process.env.JWTToken  );
+			const Result = jwt.verify( Token, process.env.JWTToken as string );
 			if ( typeof Result === "object" ) {
 				const UserData = new User( Token );
 				const Session = await DB_SessionToken.findOne( { token: Token, userid: UserData.Get._id } );

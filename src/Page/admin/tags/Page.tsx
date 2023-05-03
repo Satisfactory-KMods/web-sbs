@@ -1,32 +1,28 @@
-import type {
-	FunctionComponent} from "react";
+import type { FunctionComponent } from "react";
 import {
 	useEffect,
 	useState
-}                       from "react";
-import { useAuthCheck } from "@hooks/useAuthCheck";
-import { ERoles }       from "@shared/Enum/ERoles";
+}                                 from "react";
 import {
 	Button,
 	Modal,
 	Table
-}                       from "react-bootstrap";
-import { useLang }      from "@hooks/useLang";
-import { useToggle }    from "@kyri123/k-reactutils";
-import * as Icon        from "react-icons/bs";
-import FloatInput       from "@comp/Boostrap/FloatInput";
-import LoadingButton    from "@comp/Boostrap/LoadingButton";
-import { API_QueryLib } from "@applib/Api/API_Query.Lib";
+}                                 from "react-bootstrap";
+import { useLang }                from "@hooks/useLang";
+import { useToggle }              from "@kyri123/k-reactutils";
+import * as Icon                  from "react-icons/bs";
+import FloatInput                 from "@comp/Boostrap/FloatInput";
+import LoadingButton              from "@comp/Boostrap/LoadingButton";
+import { API_QueryLib }           from "@applib/Api/API_Query.Lib";
 import {
 	EApiQuestionary,
 	EApiTags
-}                       from "@shared/Enum/EApiPath";
-import type { MO_Tag }       from "@shared/Types/MongoDB";
-import AdminTagRow      from "@comp/Admin/AdminTagRow";
+}                                 from "@shared/Enum/EApiPath";
+import type { MO_Tag }            from "@shared/Types/MongoDB";
+import AdminTagRow                from "@comp/Admin/AdminTagRow";
 
 const Component : FunctionComponent = () => {
 	const { Lang } = useLang();
-	const { AuthCheckProps, AuthCheck } = useAuthCheck( { Auth: true, Role: ERoles.admin } );
 	const [ ShowModal, setShowModal ] = useToggle( false );
 	const [ DisplayName, setDisplayName ] = useState( "" );
 	const [ IsSending, setIsSending ] = useState( false );
@@ -88,29 +84,27 @@ const Component : FunctionComponent = () => {
 
 	return (
 		<>
-			<AuthCheck { ...AuthCheckProps }>
-				<Table striped bordered hover size="sm" variant="dark">
-					<thead>
-					<tr>
-						<th colSpan={ 2 }>
-							<h3 className="p-2 flex-1">{ Lang.Navigation.Admin_Tags }</h3>
-						</th>
-						<th colSpan={ 1 } className={ "text-center py-3" }>
-							<Button variant="success"
-							        onClick={ ToggleModalWithReset }><Icon.BsPlusLg/></Button>
-						</th>
-					</tr>
-					<tr>
-						<th className={ "px-2 text-center" }>{ Lang.AdminTags.Id }</th>
-						<th className={ "px-3 text-center" }>{ Lang.AdminTags.DisplayName }</th>
-						<th className={ "px-3 text-center w-0" }>{ Lang.AdminTags.Actions }</th>
-					</tr>
-					</thead>
-					<tbody>
-					{ Tags.map( R => <AdminTagRow key={ R._id } Tag={ R } onRemove={ Remove } onEdit={ OnEdit }/> ) }
-					</tbody>
-				</Table>
-			</AuthCheck>
+			<Table striped bordered hover size="sm" variant="dark">
+				<thead>
+				<tr>
+					<th colSpan={ 2 }>
+						<h3 className="p-2 flex-1">{ Lang.Navigation.Admin_Tags }</h3>
+					</th>
+					<th colSpan={ 1 } className={ "text-center py-3" }>
+						<Button variant="success"
+						        onClick={ ToggleModalWithReset }><Icon.BsPlusLg/></Button>
+					</th>
+				</tr>
+				<tr>
+					<th className={ "px-2 text-center" }>{ Lang.AdminTags.Id }</th>
+					<th className={ "px-3 text-center" }>{ Lang.AdminTags.DisplayName }</th>
+					<th className={ "px-3 text-center w-0" }>{ Lang.AdminTags.Actions }</th>
+				</tr>
+				</thead>
+				<tbody>
+				{ Tags.map( R => <AdminTagRow key={ R._id } Tag={ R } onRemove={ Remove } onEdit={ OnEdit }/> ) }
+				</tbody>
+			</Table>
 
 			<Modal show={ ShowModal } onHide={ ToggleModalWithReset } size={ "lg" }>
 				<Modal.Header closeButton>

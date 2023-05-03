@@ -1,10 +1,5 @@
-import type { Server }           from "socket.io";
 import type * as http            from "http";
 import type core                 from "express";
-import type {
-	IEmitEvents,
-	IListenEvents
-}                           from "@shared/Types/SocketIO";
 import type { SystemLib_Class }  from "@server/Lib/System.Lib";
 import type { TaskManagerClass } from "@server/Tasks/TaskManager";
 
@@ -17,7 +12,6 @@ export declare global {
 		typeof http.IncomingMessage,
 		typeof http.ServerResponse
 	>;
-	var SocketIO : Server<IListenEvents, IEmitEvents>;
 	var TaskManager : TaskManagerClass;
 
 	var __BaseDir : string;
