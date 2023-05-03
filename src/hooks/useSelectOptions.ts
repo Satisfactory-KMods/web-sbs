@@ -16,7 +16,7 @@ import _                           from "lodash";
 export function useSelectOptions() {
 	const { mods, tags } = useContext( DataContext );
 	const { Lang } = useLang();
-	
+
 	const vanillaSelectOptions : MultiValue<SelectOptionStruct<boolean>> = useMemo( () => [
 		{ value: true, label: Lang.General.IsVanilla },
 		{ value: false, label: Lang.General.IsModded }
@@ -43,7 +43,7 @@ export function useSelectOptions() {
 	const modSelectOptions : MultiValue<SelectOptionStruct<string>> = useMemo( () => mods.map( R => ( {
 		label: R.name,
 		value: R._id
-	} ) ), [ tags ] );
+	} ) ), [ mods ] );
 
 	const modSelected_Multi : ( mods : string[] ) => MultiValue<SelectOptionStruct<string>> = useCallback( ( mods ) => {
 		return modSelectOptions.filter( m => mods.includes( m.value ) );
@@ -55,11 +55,11 @@ export function useSelectOptions() {
 
 	const tagSelected_Multi : ( tags : string[] ) => MultiValue<SelectOptionStruct<string>> = useCallback( ( tags ) => {
 		return tagsSelectOptions.filter( m => tags.includes( m.value ) );
-	}, [ modSelectOptions ] );
+	}, [ tagsSelectOptions ] );
 
 	const tagSelected_Single : ( tag : string ) => SingleValue<SelectOptionStruct<string>> = useCallback( ( tag ) => {
 		return tagsSelectOptions.find( m => _.isEqual( tag, m.value ) ) || null;
-	}, [ modSelectOptions ] );
+	}, [ tagsSelectOptions ] );
 
 	return {
 		modSelected_Multi,
