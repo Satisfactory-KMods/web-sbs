@@ -67,7 +67,7 @@ jobs:
       - name: 🚚 Get current version from package
         id: version
         run: echo "out=$(npx -c 'node -p "process.env.npm_package_version"')" >> $GITHUB_OUTPUT; echo "$(npx -c 'node -p "process.env.npm_package_version"')"
-      - id: 🚚 Try to get changelog
+      - name: 🚚 Try to get changelog
         run: echo "out=./changelogs/$(npx -c 'node -p "process.env.npm_package_version"').md" >> $GITHUB_OUTPUT; echo "$(npx -c 'node -p "process.env.npm_package_version"')"
 
   release:
