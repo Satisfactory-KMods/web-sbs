@@ -1,10 +1,8 @@
 import { createContext } from "react";
-import type {
-	MO_Mod,
-	MO_Tag
-}                        from "@shared/Types/MongoDB";
+import type { Mod }           from "@server/MongoDB/DB_Mods";
+import type { Tag }           from "@server/MongoDB/DB_Tags";
 
 export default createContext( {
-	mods: [] as MO_Mod[],
-	tags: [] as MO_Tag[]
+	mods: [] as Mod[],
+	tags: [] as Tag[]
 } );

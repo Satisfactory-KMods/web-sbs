@@ -1,15 +1,15 @@
-import type { MO_Blueprint }      from "@shared/Types/MongoDB";
 import type { FunctionComponent } from "react";
-import { useBlueprint }      from "@hooks/useBlueprint";
-import { Link }              from "react-router-dom";
-import * as Icon             from "react-icons/bs";
+import { useBlueprint }           from "@hooks/useBlueprint";
+import { Link }                   from "react-router-dom";
+import * as Icon                  from "react-icons/bs";
 import {
 	Button,
 	ButtonGroup
-}                            from "react-bootstrap";
+}                                 from "react-bootstrap";
+import type { BlueprintData }          from "@server/MongoDB/DB_Blueprints";
 
 interface IBlueprintTableRowProps {
-	Data : MO_Blueprint;
+	Data : BlueprintData;
 	onToggled? : () => void;
 }
 

@@ -8,7 +8,6 @@ import { useLang }                    from "@hooks/useLang";
 import { Table }                      from "react-bootstrap";
 import AdminUserRow                   from "@comp/Admin/AdminUserRow";
 import { API_QueryLib }               from "@applib/Api/API_Query.Lib";
-import type { MO_UserAccount }        from "@shared/Types/MongoDB";
 import {
 	EApiAuth,
 	EApiQuestionary
@@ -16,14 +15,15 @@ import {
 import type { TResponse_Auth_Modify } from "@shared/Types/API_Response";
 import type { TRequest_Auth_Modify }  from "@shared/Types/API_Request";
 import { useAuth }                    from "@hooks/useAuth";
+import type { UserAccount }                from "@server/MongoDB/DB_UserAccount";
 
 const Component : FunctionComponent = () => {
 	const { Lang } = useLang();
 	const { user } = useAuth();
-	const [ Users, setUsers ] = useState<MO_UserAccount[]>( [] );
+	const [ Users, setUsers ] = useState<UserAccount[]>( [] );
 
 	const QueryUsers = async() => {
-		const response = await API_QueryLib.Qustionary<MO_UserAccount>( EApiQuestionary.users, {} );
+		const response = await API_QueryLib.Qustionary<UserAccount>( EApiQuestionary.users, {} );
 		if ( response.Data ) {
 			setUsers( response.Data );
 		}
@@ -46,11 +46,11 @@ const Component : FunctionComponent = () => {
 		}
 	};
 
-	const onRemove = async( User : MO_UserAccount ) => {
+	const onRemove = async( User : UserAccount ) => {
 		await SendQuery( User._id, User.role, true );
 	};
 
-	const onEditRole = async( User : MO_UserAccount, Tag : ERoles ) => {
+	const onEditRole = async( User : UserAccount, Tag : ERoles ) => {
 		await SendQuery( User._id, Tag, false );
 	};
 

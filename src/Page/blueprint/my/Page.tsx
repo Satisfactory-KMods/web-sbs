@@ -6,19 +6,19 @@ import {
 }                                 from "react";
 import { Table }                  from "react-bootstrap";
 import LangContext                from "@context/LangContext";
-import type { MO_Blueprint }      from "@shared/Types/MongoDB";
 import { API_QueryLib }           from "@applib/Api/API_Query.Lib";
 import { EApiQuestionary }        from "@shared/Enum/EApiPath";
 import BlueprintTableRow          from "@comp/Blueprints/BlueprintTableRow";
 import { useAuth }                from "@hooks/useAuth";
+import type { BlueprintData }          from "@server/MongoDB/DB_Blueprints";
 
 const Page : FunctionComponent = () => {
 	const { Lang } = useContext( LangContext );
 	const { user } = useAuth();
-	const [ MyBlueprints, setMyBlueprints ] = useState<MO_Blueprint[]>( [] );
+	const [ MyBlueprints, setMyBlueprints ] = useState<BlueprintData[]>( [] );
 
 	useEffect( () => {
-		API_QueryLib.Qustionary<MO_Blueprint>( EApiQuestionary.blueprints, {
+		API_QueryLib.Qustionary<BlueprintData>( EApiQuestionary.blueprints, {
 			Filter: { owner: user.Get._id },
 			Options: { sort: { createdAt: 1 } }
 		} )

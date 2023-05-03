@@ -5,7 +5,6 @@ import {
 }                                  from "react";
 import { usePageTitle }            from "@kyri123/k-reactutils";
 import LangContext                 from "@context/LangContext";
-import type { MO_Blueprint }       from "@shared/Types/MongoDB";
 import BlueprintCard               from "@comp/Blueprints/BlueprintCard";
 import {
 	Button,
@@ -31,13 +30,14 @@ import {
 import { useRawPageHandler }       from "@hooks/useRawPageHandler";
 import type { FilterSchema }       from "@server/trpc/routings/public/blueprint";
 import { useSelectOptions }        from "@hooks/useSelectOptions";
+import type { BlueprintData }      from "@server/MongoDB/DB_Blueprints";
 
 const Component : FunctionComponent = () => {
 	const { blueprints, totalBlueprints } = useLoaderData() as IndexLoaderData;
 	const { tagsSelectOptions, modSelectOptions, sortSelectOptions, vanillaSelectOptions } = useSelectOptions();
 
 	const [ TotalBlueprints, setTotalBlueprints ] = useState<number>( () => totalBlueprints );
-	const [ Blueprints, setBlueprints ] = useState<MO_Blueprint[]>( () => blueprints );
+	const [ Blueprints, setBlueprints ] = useState<BlueprintData[]>( () => blueprints );
 
 
 	const [ filter, setFilter ] = useState<FilterSchema>( {} );

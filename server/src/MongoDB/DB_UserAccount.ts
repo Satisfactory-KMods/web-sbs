@@ -1,7 +1,9 @@
-import * as mongoose from "mongoose";
-import * as crypto   from "crypto";
+import * as mongoose      from "mongoose";
+import * as crypto        from "crypto";
+import type { ERoles }    from "@shared/Enum/ERoles";
+import type { MongoBase } from "@server/Types/mongo";
 
-export interface IUserAccountMethods {
+export interface UserAccountMethods {
 	setPassword : ( password : string ) => void;
 	validPassword : ( password : string ) => boolean;
 }
@@ -25,7 +27,12 @@ const UserAccountSchema = new mongoose.Schema( {
 	}
 } );
 
-export type UserAccount = mongoose.InferSchemaType<typeof UserAccountSchema>;
+interface UserAccountInterface extends mongoose.InferSchemaType<typeof UserAccountSchema> {
+	role : ERoles;
+}
 
-export default mongoose.model<UserAccount>( "SBS_UserAccount", UserAccountSchema );
+export type UserAccount = UserAccountInterface & MongoBase
+export type ClientUserAccount = Omit<UserAccount, "hash" | "salt" | "__v">;
+
+export default mongoose.model<UserAccount, mongoose.Model<UserAccount, any, UserAccountMethods>>( "SBS_UserAccount", UserAccountSchema );
 export { UserAccountSchema };

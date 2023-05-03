@@ -40,7 +40,6 @@ export default function() {
 						delete Request.PackInformation.likes;
 						delete Request.PackInformation.createdAt;
 						delete Request.PackInformation.updatedAt;
-						delete Request.PackInformation.__v;
 						delete Request.PackInformation.owner;
 
 						Document = ( await DB_BlueprintPacks.findByIdAndUpdate( Request.ID, Request.PackInformation ) )!;
@@ -74,7 +73,6 @@ export default function() {
 
 					if ( Document.owner === Request.UserClass.Get._id && ( Request.PackInformation.name?.length || 0 ) > 6 && ( Request.PackInformation.description?.length || 0 ) >= 50 ) {
 						delete Request.PackInformation._id;
-						delete Request.PackInformation.__v;
 
 						Request.PackInformation.owner = Request.UserClass.Get._id;
 						Request.PackInformation.downloads = 0;

@@ -1,4 +1,5 @@
 import * as mongoose from "mongoose";
+import type { MongoBase } from "@server/Types/mongo";
 
 const BlueprintPackSchema = new mongoose.Schema( {
 	name: { type: String, required: true },
@@ -7,12 +8,12 @@ const BlueprintPackSchema = new mongoose.Schema( {
 	likes: { type: [ String ], required: true },
 	tags: { type: [ String ], required: true },
 	owner: { type: String, required: true },
-	downloads: { type: Number, required: false, default: 0 },
+	downloads: { type: Number, required: true, default: 0 },
 	blacklisted: { type: Boolean, required: false, default: false },
-	blueprints: { type: [ String ], required: false }
+	blueprints: { type: [ String ], required: true }
 }, { timestamps: true } );
 
-export type BlueprintPack = mongoose.InferSchemaType<typeof BlueprintPackSchema>;
+export type BlueprintPack = mongoose.InferSchemaType<typeof BlueprintPackSchema> & MongoBase;
 
 export default mongoose.model<BlueprintPack>( "SBS_BlueprintPacks", BlueprintPackSchema );
 export { BlueprintPackSchema };

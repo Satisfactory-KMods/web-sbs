@@ -18,7 +18,6 @@ import FileUploadInput             from "@comp/Boostrap/FileUploadInput";
 import { API_QueryLib }            from "@applib/Api/API_Query.Lib";
 import {
 	EApiBlueprintUtils,
-	EApiQuestionary,
 	EApiUserBlueprints
 }                                  from "@shared/Enum/EApiPath";
 import type { Blueprint }          from "@etothepii/satisfactory-file-parser";
@@ -33,10 +32,6 @@ import type {
 import Select                      from "react-select";
 import type { SelectOptionStruct } from "@shared/Types/SelectOptions";
 import { EDesignerSize }           from "@shared/Enum/EDesignerSize";
-import type {
-	MO_Mod,
-	MO_Tag
-}                                  from "@shared/Types/MongoDB";
 
 export interface IFile {
 	Content : FileList | undefined,
@@ -67,19 +62,6 @@ const Component : FunctionComponent = () => {
 	const [ SBP, setSBP ] = useState<File | undefined>();
 	const [ SBPCFG, setSBPCFG ] = useState<File | undefined>();
 	const [ Image, setImage ] = useState<File | undefined>();
-
-	useEffect( () => {
-		Promise.all( [
-			API_QueryLib.Qustionary<MO_Tag>( EApiQuestionary.tags, {} ).then( R => setSelectTags( R.Data?.map( R => ( {
-				label: R.DisplayName,
-				value: R._id
-			} ) ) || [] ) ),
-			API_QueryLib.Qustionary<MO_Mod>( EApiQuestionary.mods, {} ).then( R => setSelectMods( R.Data?.map( R => ( {
-				label: R.name,
-				value: R.mod_reference
-			} ) ) || [] ) )
-		] );
-	}, [] );
 
 	const HandleImport = async() => {
 		if ( BlueprintData ) {

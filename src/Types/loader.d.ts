@@ -1,7 +1,3 @@
-import type {
-	MO_Blueprint,
-	MO_BlueprintPack
-}               from "@shared/Types/MongoDB";
 import type { User } from "@shared/Class/User.Class";
 
 export interface LoaderDataBase {
@@ -11,11 +7,11 @@ export interface LoaderDataBase {
 
 export interface LoaderBlueprintBase extends LoaderDataBase {
 	blueprintPermission : boolean;
-	blueprintData : MO_Blueprint;
+	blueprintData : Blueprint;
 }
 
 export interface LoaderBlueprintPack extends LoaderDataBase {
 	blueprintPermission : boolean;
-	blueprintDatas : MO_Blueprint;
-	blueprintPack : MO_BlueprintPack;
+	blueprintDatas : Blueprint;
+	blueprintPack : BlueprintPack;
 }

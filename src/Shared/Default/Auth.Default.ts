@@ -1,9 +1,10 @@
-import type { MO_UserAccount }   from "@shared/Types/MongoDB";
-import { ERoles }           from "@shared/Enum/ERoles";
-import type { IAPIResponseBase } from "@shared/Types/API_Response";
+import { ERoles }                 from "@shared/Enum/ERoles";
+import type { IAPIResponseBase }  from "@shared/Types/API_Response";
+import type { ClientUserAccount } from "@server/MongoDB/DB_UserAccount";
 
-export const DefaultUser : MO_UserAccount = {
-	__v: 0,
+export const DefaultUser : ClientUserAccount = {
+	createdAt: "",
+	updatedAt: "",
 	_id: "123123",
 	username: "Default User",
 	email: "ychag@example.com",

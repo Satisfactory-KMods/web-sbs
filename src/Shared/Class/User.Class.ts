@@ -1,12 +1,12 @@
-import type { MO_UserAccount } from "@shared/Types/MongoDB";
-import type { JwtPayload }     from "jsonwebtoken";
-import jwt                     from "jwt-decode";
-import type { ERoles }         from "@shared/Enum/ERoles";
-import { DefaultUser }         from "@shared/Default/Auth.Default";
+import jwt             from "jwt-decode";
+import type { ERoles } from "@shared/Enum/ERoles";
+import { DefaultUser } from "@shared/Default/Auth.Default";
+import type { UserAccount } from "@server/MongoDB/DB_UserAccount";
+import type { UserSession } from "@server/Lib/Session.Lib";
 
 export class User {
 	public JsonWebToken;
-	private user : MO_UserAccount & Partial<JwtPayload>;
+	private user : UserSession;
 
 	constructor( JsonWebToken : string ) {
 		this.JsonWebToken = JsonWebToken;
@@ -20,7 +20,7 @@ export class User {
 		}
 	}
 
-	public setuser( Data : MO_UserAccount ) {
+	public setuser( Data : UserAccount ) {
 		this.user = {
 			...this.user,
 			...Data

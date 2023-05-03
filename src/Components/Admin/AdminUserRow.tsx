@@ -1,16 +1,17 @@
 import type { FunctionComponent } from "react";
-import type { MO_UserAccount }    from "@shared/Types/MongoDB";
 import {
 	Button,
 	ButtonGroup
 }                                 from "react-bootstrap";
 import * as Icon                  from "react-icons/bs";
 import { ERoles }                 from "@shared/Enum/ERoles";
+import type { UserAccount }            from "@server/MongoDB/DB_UserAccount";
+import { useAuth }                from "@hooks/useAuth";
 
 interface IAdminUserRowProps {
-	User : MO_UserAccount,
-	onRemove : ( User : MO_UserAccount ) => void,
-	onEditRole : ( User : MO_UserAccount, Tag : ERoles ) => void
+	User : UserAccount,
+	onRemove : ( User : UserAccount ) => void,
+	onEditRole : ( User : UserAccount, Tag : ERoles ) => void
 }
 
 const AdminUserRow : FunctionComponent<IAdminUserRowProps> = ( { User, onEditRole, onRemove } ) => {

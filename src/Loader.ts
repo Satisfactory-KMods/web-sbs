@@ -1,4 +1,3 @@
-import type { LoaderDataBase } from "@app/types/loader";
 import type { LoaderFunction } from "react-router-dom";
 import { json }                from "react-router-dom";
 import { validateLogin }       from "@applib/loaderHelper";
@@ -6,14 +5,13 @@ import {
 	tRPC_handleError,
 	tRPC_Public
 }                              from "@applib/tRPC";
-import type {
-	MO_Mod,
-	MO_Tag
-}                              from "@shared/Types/MongoDB";
+import type { LoaderDataBase }      from "@app/Types/loader";
+import type { Mod }                 from "@server/MongoDB/DB_Mods";
+import type { Tag }                 from "@server/MongoDB/DB_Tags";
 
 export type LayoutLoaderData = LoaderDataBase & {
-	mods : MO_Mod[],
-	tags : MO_Tag[]
+	mods : Mod[],
+	tags : Tag[]
 }
 
 export const defaultLoader : LoaderFunction = async( { params, request } ) => {
@@ -26,8 +24,8 @@ export const defaultLoader : LoaderFunction = async( { params, request } ) => {
 
 	const queryResult = {
 		...result,
-		mods: [] as MO_Mod[],
-		tags: [] as MO_Tag[]
+		mods: [] as Mod[],
+		tags: [] as Tag[]
 	};
 
 	if ( mods && tags ) {

@@ -1,10 +1,6 @@
-import type { QueryOptions } from "mongoose";
-
 export interface SelectOptionStruct<T = string> {
 	readonly value : T;
 	readonly label : string;
 	readonly isFixed? : boolean;
 	readonly isDisabled? : boolean;
 }
-
-export type ISortingOptions<T = any> = { Sort : QueryOptions<T> } & SelectOptionStruct<number>;

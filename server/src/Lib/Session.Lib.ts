@@ -1,12 +1,14 @@
-import type { MO_UserAccount } from "@shared/Types/MongoDB";
-import DB_SessionToken    from "@server/MongoDB/DB_SessionToken";
-import * as jwt           from "jsonwebtoken";
-import type { JwtPayload }     from "jsonwebtoken";
+import DB_SessionToken     from "@server/MongoDB/DB_SessionToken";
+import type { JwtPayload } from "jsonwebtoken";
+import * as jwt            from "jsonwebtoken";
+import type {
+	ClientUserAccount,
+	UserAccount
+}                          from "@server/MongoDB/DB_UserAccount";
 
-export type UserSession = Omit<MO_UserAccount, "hash" | "salt" | "__v"> & JwtPayload;
+export type UserSession = ClientUserAccount & Partial<JwtPayload>;
 
-export async function CreateSession( User : Partial<MO_UserAccount>, stayLoggedIn = false ) : Promise<string | undefined> {
-	delete User.__v;
+export async function CreateSession( User : Partial<UserAccount>, stayLoggedIn = false ) : Promise<string | undefined> {
 	delete User.salt;
 	delete User.hash;
 	try {

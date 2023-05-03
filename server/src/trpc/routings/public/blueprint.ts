@@ -1,16 +1,17 @@
-import { z }                 from "zod";
-import { TRPCError }         from "@trpc/server";
+import { z }                            from "zod";
+import { TRPCError }                    from "@trpc/server";
 import {
 	handleTRCPErr,
 	publicProcedure,
 	router
-}                            from "@server/trpc/trpc";
-import DB_Blueprints         from "@server/MongoDB/DB_Blueprints";
-import type { MO_Blueprint } from "@shared/Types/MongoDB";
+}                                       from "@server/trpc/trpc";
+import type { BlueprintData } from "@server/MongoDB/DB_Blueprints";
+import DB_Blueprints from "@server/MongoDB/DB_Blueprints";
 import type {
 	FilterQuery,
 	QueryOptions
-}                            from "mongoose";
+}                                       from "mongoose";
+import type { BlueprintPack }                from "@server/MongoDB/DB_BlueprintPacks";
 
 export const filterSchema = z.object( {
 	name: z.string().optional(),
@@ -25,7 +26,7 @@ export const filterSchema = z.object( {
 
 export type FilterSchema = z.infer<typeof filterSchema>;
 
-export function buildFilter<T extends MO_Blueprint>( filter? : FilterSchema ) {
+export function buildFilter<T extends BlueprintData | BlueprintPack>( filter? : FilterSchema ) {
 	const result : {
 		filter : FilterQuery<T>,
 		options : QueryOptions<T>
@@ -89,7 +90,7 @@ export const public_blueprint = router( {
 		try {
 			const { filter, options } = buildFilter( filterOptions );
 			const totalBlueprints = await DB_Blueprints.count( filter );
-			const blueprints = await DB_Blueprints.find<MO_Blueprint>( filter, null, { ...options, limit, skip } );
+			const blueprints = await DB_Blueprints.find<BlueprintData>( filter, null, { ...options, limit, skip } );
 			if ( blueprints ) {
 				return { blueprints, totalBlueprints };
 			}

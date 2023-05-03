@@ -2,21 +2,21 @@ import {
 	ApiUrl,
 	MW_Auth,
 	MW_Permission
-}                                from "@server/Lib/Express.Lib";
-import { EApiTags }              from "@shared/Enum/EApiPath";
+}                                     from "@server/Lib/Express.Lib";
+import { EApiTags }                   from "@shared/Enum/EApiPath";
 import type {
 	Request,
 	Response
-}                                from "express";
+}                                     from "express";
 import {
 	DefaultResponseFailed,
 	DefaultResponseSuccess
-}                                from "@shared/Default/Auth.Default";
+}                                     from "@shared/Default/Auth.Default";
 import type { TRequest_Tags_Modify }  from "@shared/Types/API_Request";
 import type { TResponse_Tags_Modify } from "@shared/Types/API_Response";
-import { ERoles }                from "@shared/Enum/ERoles";
-import DB_Tags                   from "@server/MongoDB/DB_Tags";
-import DB_Blueprints             from "@server/MongoDB/DB_Blueprints";
+import { ERoles }                     from "@shared/Enum/ERoles";
+import DB_Tags                        from "@server/MongoDB/DB_Tags";
+import DB_Blueprints                  from "@server/MongoDB/DB_Blueprints";
 
 export default function() {
 	Router.post( ApiUrl( EApiTags.modifytag ), MW_Auth, ( req, res, next ) => MW_Permission( req, res, next, ERoles.admin ), async( req : Request, res : Response ) => {
@@ -42,7 +42,6 @@ export default function() {
 				const Document = ( await DB_Tags.findById( Request.Id ) )!;
 
 				delete Request.Data._id;
-				delete Request.Data.__v;
 
 				if ( await Document.updateOne( Request.Data ) ) {
 					Response = {

@@ -36,10 +36,8 @@ import {
 import FileUploadInput             from "@comp/Boostrap/FileUploadInput";
 import LoadingButton               from "@comp/Boostrap/LoadingButton";
 import { useBlueprint }            from "@hooks/useBlueprint";
-import type {
-	MO_Mod,
-	MO_Tag
-}                                  from "@shared/Types/MongoDB";
+import type { Tag }                     from "@server/MongoDB/DB_Tags";
+import type { Mod }                     from "@server/MongoDB/DB_Mods";
 
 const Component : FunctionComponent = () => {
 	const { id } = useParams();
@@ -95,11 +93,11 @@ const Component : FunctionComponent = () => {
 	// load all mods and tags
 	useEffect( () => {
 		Promise.all( [
-			API_QueryLib.Qustionary<MO_Tag>( EApiQuestionary.tags, {} ).then( R => setSelectTags( R.Data?.map( R => ( {
+			API_QueryLib.Qustionary<Tag>( EApiQuestionary.tags, {} ).then( R => setSelectTags( R.Data?.map( R => ( {
 				label: R.DisplayName,
 				value: R._id
 			} ) ) || [] ) ),
-			API_QueryLib.Qustionary<MO_Mod>( EApiQuestionary.mods, {} ).then( R => setSelectMods( R.Data?.map( R => ( {
+			API_QueryLib.Qustionary<Mod>( EApiQuestionary.mods, {} ).then( R => setSelectMods( R.Data?.map( R => ( {
 				label: R.name,
 				value: R.mod_reference
 			} ) ) || [] ) )

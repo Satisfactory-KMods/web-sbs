@@ -1,15 +1,13 @@
-import type { User }          from "@app/Class/User.Class";
-import type { UploadedFile }  from "express-fileupload";
-import type { EDesignerSize } from "@app/Enum/EDesignerSize";
+import type { UploadedFile } from "express-fileupload";
 import type {
 	FilterQuery,
 	QueryOptions
-}                             from "mongoose";
-import type {
-	MO_BlueprintPack,
-	MO_Tag,
-	MO_UserAccount
-}                             from "@shared/Types/MongoDB";
+}                            from "mongoose";
+import type { User }              from "@shared/Class/User.Class";
+import type { UserAccount }       from "@server/MongoDB/DB_UserAccount";
+import type { BlueprintPack }     from "@server/MongoDB/DB_BlueprintPacks";
+import type { EDesignerSize }     from "@shared/Enum/EDesignerSize";
+import type { Tag }               from "@server/MongoDB/DB_Tags";
 
 export type RequestWithUser<T = any> = {
 	UserClass? : T;
@@ -26,7 +24,7 @@ export type TRequest_Unknown<UseUser extends boolean = true, UserType = any> = I
 export type TRequest_Auth_Modify = IRequestBody<{
 	UserID : string;
 	Remove : boolean;
-	Data : Partial<MO_UserAccount>;
+	Data : Partial<UserAccount>;
 }>;
 export type TRequest_Auth_Logout = IRequestBody<{
 	Token : string;
@@ -70,8 +68,8 @@ export type TRequest_BP_Questionary<T = any> = IRequestBody<{
 // ----------------- BPP -----------------
 // ---------------------------------------
 
-export type TResponse_BPP_Manage_PUT = IRequestBody<{ PackInformation : Partial<MO_BlueprintPack> }>;
-export type TResponse_BPP_Manage_POST = IRequestBody<{ ID : string, PackInformation : Partial<MO_BlueprintPack> }>;
+export type TResponse_BPP_Manage_PUT = IRequestBody<{ PackInformation : Partial<BlueprintPack> }>;
+export type TResponse_BPP_Manage_POST = IRequestBody<{ ID : string, PackInformation : Partial<BlueprintPack> }>;
 export type TResponse_BPP_Manage_DELETE = IRequestBody<{ ID : string }>;
 export type TResponse_BPP_Manage_SUB = IRequestBody<{ ID : string }>;
 
@@ -119,5 +117,5 @@ export type TRequest_BPUser_Edit_Files = Partial<{
 export type TRequest_Tags_Modify = IRequestBody<{
 	Remove : boolean;
 	Id : string;
-	Data : Partial<MO_Tag>;
+	Data : Partial<Tag>;
 }>;

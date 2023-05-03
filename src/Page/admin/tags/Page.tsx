@@ -18,8 +18,8 @@ import {
 	EApiQuestionary,
 	EApiTags
 }                                 from "@shared/Enum/EApiPath";
-import type { MO_Tag }            from "@shared/Types/MongoDB";
 import AdminTagRow                from "@comp/Admin/AdminTagRow";
+import type { Tag }                    from "@server/MongoDB/DB_Tags";
 
 const Component : FunctionComponent = () => {
 	const { Lang } = useLang();
@@ -27,10 +27,10 @@ const Component : FunctionComponent = () => {
 	const [ DisplayName, setDisplayName ] = useState( "" );
 	const [ IsSending, setIsSending ] = useState( false );
 	const [ EditID, setEditID ] = useState( "" );
-	const [ Tags, setTags ] = useState<MO_Tag[]>( [] );
+	const [ Tags, setTags ] = useState<Tag[]>( [] );
 
 	const QueryTags = async() => {
-		const Result = await API_QueryLib.Qustionary<MO_Tag>( EApiQuestionary.tags, {} );
+		const Result = await API_QueryLib.Qustionary<Tag>( EApiQuestionary.tags, {} );
 		if ( Result.Data ) {
 			setTags( () => Result.Data! );
 		}
@@ -40,7 +40,7 @@ const Component : FunctionComponent = () => {
 		QueryTags();
 	}, [] );
 
-	const OnEdit = ( Tag : MO_Tag ) => {
+	const OnEdit = ( Tag : Tag ) => {
 		setShowModal();
 		setDisplayName( Tag.DisplayName );
 		setEditID( Tag._id );

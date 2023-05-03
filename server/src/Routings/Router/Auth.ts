@@ -76,7 +76,6 @@ export default function() {
 
 					else if ( !Request.Remove && Request.Data ) {
 						delete Request.Data._id;
-						delete Request.Data.__v;
 						delete Request.Data.salt;
 						delete Request.Data.createdAt;
 						delete Request.Data.updatedAt;

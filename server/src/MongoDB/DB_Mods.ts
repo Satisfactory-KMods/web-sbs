@@ -1,87 +1,88 @@
 import * as mongoose from "mongoose";
+import type { MongoBase } from "@server/Types/mongo";
 
 const ModSchema = new mongoose.Schema( {
 	versions: {
 		type: [
 			{
-				created_at: { type: Date, required: false },
-				updated_at: { type: Date, required: false },
-				changelog: { type: String, required: false },
-				hash: { type: String, required: false },
-				version: { type: String, required: false },
-				sml_version: { type: String, required: false },
-				id: { type: String, required: false }
+				created_at: { type: Date, required: true },
+				updated_at: { type: Date, required: true },
+				changelog: { type: String, required: true },
+				hash: { type: String, required: true },
+				version: { type: String, required: true },
+				sml_version: { type: String, required: true },
+				id: { type: String, required: true }
 			}
-		], required: false
+		], required: true
 	},
 	id: { type: String, required: true, unique: true },
-	mod_reference: { type: String, required: false },
-	name: { type: String, required: false },
-	logo: { type: String, required: false },
-	short_description: { type: String, required: false },
-	source_url: { type: String, required: false },
-	creator_id: { type: String, required: false },
-	views: { type: Number, required: false },
-	downloads: { type: Number, required: false },
-	updated_at: { type: Date, required: false },
-	created_at: { type: Date, required: false },
-	last_version_date: { type: Date, required: false },
-	hidden: { type: Boolean, required: false },
+	mod_reference: { type: String, required: true },
+	name: { type: String, required: true },
+	logo: { type: String, required: true },
+	short_description: { type: String, required: true },
+	source_url: { type: String, required: true },
+	creator_id: { type: String, required: true },
+	views: { type: Number, required: true },
+	downloads: { type: Number, required: true },
+	updated_at: { type: Date, required: true },
+	created_at: { type: Date, required: true },
+	last_version_date: { type: Date, required: true },
+	hidden: { type: Boolean, required: true },
 	authors: {
 		type: [
 			{
-				user_id: { type: String, required: false },
-				mod_id: { type: String, required: false },
-				role: { type: String, required: false },
+				user_id: { type: String, required: true },
+				mod_id: { type: String, required: true },
+				role: { type: String, required: true },
 				user: {
 					type: {
-						id: { type: String, required: false },
-						username: { type: String, required: false }
-					}, required: false
+						id: { type: String, required: true },
+						username: { type: String, required: true }
+					}, required: true
 				}
 			}
-		], required: false
+		], required: true
 	},
 	latestVersions: {
 		type: {
 			alpha: {
 				type: {
-					created_at: { type: Date, required: false },
-					updated_at: { type: Date, required: false },
-					changelog: { type: String, required: false },
-					hash: { type: String, required: false },
-					version: { type: String, required: false },
-					sml_version: { type: String, required: false },
-					id: { type: String, required: false }
-				}, required: false
+					created_at: { type: Date, required: true },
+					updated_at: { type: Date, required: true },
+					changelog: { type: String, required: true },
+					hash: { type: String, required: true },
+					version: { type: String, required: true },
+					sml_version: { type: String, required: true },
+					id: { type: String, required: true }
+				}, required: true
 			},
 			beta: {
 				type: {
-					created_at: { type: Date, required: false },
-					updated_at: { type: Date, required: false },
-					changelog: { type: String, required: false },
-					hash: { type: String, required: false },
-					version: { type: String, required: false },
-					sml_version: { type: String, required: false },
-					id: { type: String, required: false }
-				}, required: false
+					created_at: { type: Date, required: true },
+					updated_at: { type: Date, required: true },
+					changelog: { type: String, required: true },
+					hash: { type: String, required: true },
+					version: { type: String, required: true },
+					sml_version: { type: String, required: true },
+					id: { type: String, required: true }
+				}, required: true
 			},
 			release: {
 				type: {
-					created_at: { type: Date, required: false },
-					updated_at: { type: Date, required: false },
-					changelog: { type: String, required: false },
-					hash: { type: String, required: false },
-					version: { type: String, required: false },
-					sml_version: { type: String, required: false },
-					id: { type: String, required: false }
-				}, required: false
+					created_at: { type: Date, required: true },
+					updated_at: { type: Date, required: true },
+					changelog: { type: String, required: true },
+					hash: { type: String, required: true },
+					version: { type: String, required: true },
+					sml_version: { type: String, required: true },
+					id: { type: String, required: true }
+				}, required: true
 			}
-		}, required: false
+		}, required: true
 	}
 }, { timestamps: true, strict: false } );
 
-export type Mod = mongoose.InferSchemaType<typeof ModSchema>;
+export type Mod = mongoose.InferSchemaType<typeof ModSchema> & MongoBase;
 
 const myDB = mongoose.connections[ 0 ].useDb( "ficsit_app" );
 export default myDB.model<Mod>( "Mods", ModSchema );

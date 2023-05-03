@@ -1,4 +1,3 @@
-import type { MO_Blueprint }      from "@shared/Types/MongoDB";
 import type { FunctionComponent } from "react";
 import {
 	Badge,
@@ -15,9 +14,10 @@ import Ribbon                     from "@comp/General/Ribbon";
 import ReactMarkdown              from "react-markdown";
 import { ERoles }                 from "@shared/Enum/ERoles";
 import { useAuth }                from "@hooks/useAuth";
+import type { BlueprintData }          from "@server/MongoDB/DB_Blueprints";
 
 interface IBlueprintCardProps {
-	Data : MO_Blueprint;
+	Data : BlueprintData;
 	onToggled? : () => void;
 }
 

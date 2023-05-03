@@ -5,20 +5,20 @@ import {
 	useState
 }                                 from "react";
 import { Table }                  from "react-bootstrap";
-import type { MO_Blueprint }      from "@shared/Types/MongoDB";
 import { API_QueryLib }           from "@applib/Api/API_Query.Lib";
 import { EApiQuestionary }        from "@shared/Enum/EApiPath";
 import LangContext                from "@context/LangContext";
 import BlueprintTableRowAdmin     from "@comp/Blueprints/BlueprintTableRowAdmin";
 import { useAuth }                from "@hooks/useAuth";
+import type { BlueprintData }          from "@server/MongoDB/DB_Blueprints";
 
 const Component : FunctionComponent = () => {
 	const { Lang } = useContext( LangContext );
 	const { user } = useAuth();
-	const [ Blueprints, setBlueprints ] = useState<MO_Blueprint[]>( [] );
+	const [ Blueprints, setBlueprints ] = useState<BlueprintData[]>( [] );
 
 	const DoQuery = () => {
-		API_QueryLib.Qustionary<MO_Blueprint>( EApiQuestionary.blueprints, {
+		API_QueryLib.Qustionary<BlueprintData>( EApiQuestionary.blueprints, {
 			Filter: { blacklisted: true },
 			Options: { sort: { createdAt: 1 } }
 		} )

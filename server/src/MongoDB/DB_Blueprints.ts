@@ -1,4 +1,6 @@
-import * as mongoose from "mongoose";
+import * as mongoose          from "mongoose";
+import type { EDesignerSize } from "@shared/Enum/EDesignerSize";
+import type { MongoBase }          from "@server/Types/mongo";
 
 const BlueprintSchema = new mongoose.Schema( {
 	name: { type: String, required: true },
@@ -12,7 +14,11 @@ const BlueprintSchema = new mongoose.Schema( {
 	blacklisted: { type: Boolean, required: false, default: false }
 }, { timestamps: true } );
 
-export type Blueprint = mongoose.InferSchemaType<typeof BlueprintSchema>;
+interface BPInterface extends mongoose.InferSchemaType<typeof BlueprintSchema> {
+	DesignerSize : EDesignerSize;
+}
 
-export default mongoose.model<Blueprint>( "SBS_Blueprints", BlueprintSchema );
+export type BlueprintData = BPInterface & MongoBase
+
+export default mongoose.model<BlueprintData>( "SBS_Blueprints", BlueprintSchema );
 export { BlueprintSchema };
