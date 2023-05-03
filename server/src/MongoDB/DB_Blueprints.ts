@@ -1,7 +1,6 @@
-import * as mongoose    from "mongoose";
-import type { MO_Blueprint } from "@shared/Types/MongoDB";
+import * as mongoose from "mongoose";
 
-const BlueprintSchema = new mongoose.Schema<MO_Blueprint>( {
+const BlueprintSchema = new mongoose.Schema( {
 	name: { type: String, required: true },
 	description: { type: String, required: true },
 	mods: { type: [ String ], required: true },
@@ -13,5 +12,7 @@ const BlueprintSchema = new mongoose.Schema<MO_Blueprint>( {
 	blacklisted: { type: Boolean, required: false, default: false }
 }, { timestamps: true } );
 
-export default mongoose.model<MO_Blueprint>( "SBS_Blueprints", BlueprintSchema );
+export type Blueprint = mongoose.InferSchemaType<typeof BlueprintSchema>;
+
+export default mongoose.model<Blueprint>( "SBS_Blueprints", BlueprintSchema );
 export { BlueprintSchema };

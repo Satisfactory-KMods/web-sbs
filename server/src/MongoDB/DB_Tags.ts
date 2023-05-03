@@ -1,9 +1,11 @@
 import * as mongoose from "mongoose";
-import type { MO_Tag }    from "@shared/Types/MongoDB";
+import { ModSchema } from "@server/MongoDB/DB_Mods";
 
-const UserAccountSchema = new mongoose.Schema<MO_Tag>( {
+const TagSchema = new mongoose.Schema( {
 	DisplayName: { type: String, required: true }
 }, { timestamps: true } );
 
-export default mongoose.model<MO_Tag>( "SBS_Tags", UserAccountSchema );
-export { UserAccountSchema };
+export type Tag = mongoose.InferSchemaType<typeof ModSchema>;
+
+export default mongoose.model<Tag>( "SBS_Tags", TagSchema );
+export { TagSchema };
