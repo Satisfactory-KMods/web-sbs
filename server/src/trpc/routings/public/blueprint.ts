@@ -1,17 +1,17 @@
-import { z }                            from "zod";
-import { TRPCError }                    from "@trpc/server";
+import { z }                  from "zod";
+import { TRPCError }          from "@trpc/server";
 import {
 	handleTRCPErr,
 	publicProcedure,
 	router
-}                                       from "@server/trpc/trpc";
+}                             from "@server/trpc/trpc";
 import type { BlueprintData } from "@server/MongoDB/DB_Blueprints";
-import DB_Blueprints from "@server/MongoDB/DB_Blueprints";
+import DB_Blueprints          from "@server/MongoDB/DB_Blueprints";
 import type {
 	FilterQuery,
 	QueryOptions
-}                                       from "mongoose";
-import type { BlueprintPack }                from "@server/MongoDB/DB_BlueprintPacks";
+}                             from "mongoose";
+import type { BlueprintPack } from "@server/MongoDB/DB_BlueprintPacks";
 
 export const filterSchema = z.object( {
 	name: z.string().optional(),
@@ -91,9 +91,7 @@ export const public_blueprint = router( {
 			const { filter, options } = buildFilter( filterOptions );
 			const totalBlueprints = await DB_Blueprints.count( filter );
 			const blueprints = await DB_Blueprints.find<BlueprintData>( filter, null, { ...options, limit, skip } );
-			if ( blueprints ) {
-				return { blueprints, totalBlueprints };
-			}
+			return { blueprints, totalBlueprints };
 		}
 		catch ( e ) {
 			handleTRCPErr( e );

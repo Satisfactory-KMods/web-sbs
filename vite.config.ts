@@ -50,6 +50,7 @@ export default defineConfig( ( { command, mode, ssrBuild } ) => {
 			}
 		},
 		build: {
+			target: [ "chrome88", "edge89", "es2021", "firefox79", "safari15" ],
 			manifest: true,
 			sourcemap: false,
 			outDir: "build",

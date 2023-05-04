@@ -1,7 +1,8 @@
-import * as trpc        from "@trpc/server";
-import { TRPCError }    from "@trpc/server";
+import * as trpc             from "@trpc/server";
+import { TRPCError }         from "@trpc/server";
 import type * as trpcExpress from "@trpc/server/adapters/express";
 import type { User }         from "@shared/Class/User.Class";
+import { transformer }       from "@shared/transformer";
 
 export function handleTRCPErr( e : unknown ) {
 	if ( e instanceof TRPCError ) {
@@ -30,7 +31,7 @@ export const createContext = async( {
 };
 
 const t = trpc.initTRPC.context<Context>().create( {
-	isServer: true,
+	transformer,
 	isDev: SystemLib.IsDevMode
 } );
 

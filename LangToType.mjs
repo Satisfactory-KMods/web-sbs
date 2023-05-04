@@ -1,6 +1,6 @@
-const fs = require( 'fs' );
+import fs from "fs";
 
-const LangJSON = { ...require( './src/Lib/lang/data/en_us.json' ) };
+const LangJSON = JSON.parse( fs.readFileSync( "./src/Lib/lang/data/en_us.json" ) );
 const TypeFile = "./src/Types/lang.d.ts";
 
 if ( fs.existsSync( TypeFile ) ) {

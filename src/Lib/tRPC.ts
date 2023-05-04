@@ -10,6 +10,7 @@ import type {
 import type { SweetAlertOptions } from "sweetalert2";
 import Swal                       from "sweetalert2";
 import { AUTHTOKEN }              from "@applib/constance";
+import { transformer }            from "@shared/transformer";
 
 
 export function fireSwalFromApi<PreConfirmResult = any>( message : string[] | string | undefined, success? : boolean, moreOptions? : SweetAlertOptions<PreConfirmResult> ) {
@@ -46,6 +47,7 @@ export function fireToastFromApi<PreConfirmResult = any>( message : string[] | s
 export const tRPC_token = () => window.localStorage.getItem( AUTHTOKEN ) || "";
 
 export const tRPC_Public = createTRPCProxyClient<PublicRouter>( {
+	transformer,
 	links: [
 		httpBatchLink( {
 			url: "/api/v2/public"
@@ -54,6 +56,7 @@ export const tRPC_Public = createTRPCProxyClient<PublicRouter>( {
 } );
 
 export const tRPC_Auth = createTRPCProxyClient<AuthRouter>( {
+	transformer,
 	links: [
 		httpBatchLink( {
 			url: "/api/v2/auth",
