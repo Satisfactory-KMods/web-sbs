@@ -1,7 +1,16 @@
 import * as mongoose      from "mongoose";
 import * as crypto        from "crypto";
-import type { ERoles }    from "@shared/Enum/ERoles";
+import { ERoles }         from "@shared/Enum/ERoles";
 import type { MongoBase } from "@server/Types/mongo";
+import { z }              from "zod";
+
+const ZodUserAccountSchema = z.object( {
+	role: z.nativeEnum( ERoles ),
+	username: z.string(),
+	email: z.string(),
+	hash: z.string(),
+	salt: z.string()
+} );
 
 export interface UserAccountMethods {
 	setPassword : ( password : string ) => void;
@@ -27,11 +36,7 @@ const UserAccountSchema = new mongoose.Schema( {
 	}
 } );
 
-interface UserAccountInterface extends mongoose.InferSchemaType<typeof UserAccountSchema> {
-	role : ERoles;
-}
-
-export type UserAccount = UserAccountInterface & MongoBase
+export type UserAccount = z.infer<typeof ZodUserAccountSchema> & MongoBase
 export type ClientUserAccount = Omit<UserAccount, "hash" | "salt" | "__v">;
 
 export default mongoose.model<UserAccount, mongoose.Model<UserAccount, any, UserAccountMethods>>( "SBS_UserAccount", UserAccountSchema );

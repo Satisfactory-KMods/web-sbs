@@ -1,5 +1,18 @@
-import * as mongoose from "mongoose";
+import * as mongoose      from "mongoose";
 import type { MongoBase } from "@server/Types/mongo";
+import { z }              from "zod";
+
+const ZodBlueprintPackSchema = z.object( {
+	name: z.string(),
+	description: z.string(),
+	owner: z.string(),
+	mods: z.array( z.string() ),
+	likes: z.array( z.string() ),
+	tags: z.array( z.string() ),
+	downloads: z.number(),
+	blacklisted: z.boolean(),
+	blueprints: z.array( z.string() )
+} );
 
 const BlueprintPackSchema = new mongoose.Schema( {
 	name: { type: String, required: true },
@@ -13,7 +26,7 @@ const BlueprintPackSchema = new mongoose.Schema( {
 	blueprints: { type: [ String ], required: true }
 }, { timestamps: true } );
 
-export type BlueprintPack = mongoose.InferSchemaType<typeof BlueprintPackSchema> & MongoBase;
+export type BlueprintPack = z.infer<typeof ZodBlueprintPackSchema> & MongoBase;
 
 export default mongoose.model<BlueprintPack>( "SBS_BlueprintPacks", BlueprintPackSchema );
 export { BlueprintPackSchema };

@@ -1570,6 +1570,18 @@
     react "^18.2.0"
     react-dom "^18.2.0"
 
+"@kyri123/lib@^0.1.0-build.5":
+  version "0.1.0-build.5"
+  resolved "https://registry.yarnpkg.com/@kyri123/lib/-/lib-0.1.0-build.5.tgz#64e5ebf81dfed566a717db50bfd2e8f1104f7e41"
+  integrity sha512-46/tYH5dqI8BMB9CdF++7ebuHyS9v+asIK3FE+2M+7Cjt6coLMh1CVp8ox05M2Q6n32QtqeoQrUDZE5ikwQGjw==
+  dependencies:
+    express "^4.18.2"
+    jsonwebtoken "^9.0.0"
+    jwt-decode "^3.1.2"
+    lodash "^4.17.21"
+    superjson "^1.12.3"
+    zod "^3.21.4"
+
 "@nicolo-ribaudo/eslint-scope-5-internals@5.1.1-v1":
   version "5.1.1-v1"
   resolved "https://registry.npmjs.org/@nicolo-ribaudo/eslint-scope-5-internals/-/eslint-scope-5-internals-5.1.1-v1.tgz"
@@ -2848,11 +2860,6 @@ destroy@1.2.0:
   version "1.2.0"
   resolved "https://registry.npmjs.org/destroy/-/destroy-1.2.0.tgz"
   integrity sha512-2sJGJTaXIIaR1w4iJSNoN0hnMY7Gpc/n8D4qSCJw8QqFWXf7cuAgnEHxBpweaVcPevC2l3KpjYCx3NypQQgaJg==
-
-devalue@^4.3.0:
-  version "4.3.0"
-  resolved "https://registry.yarnpkg.com/devalue/-/devalue-4.3.0.tgz#d86db8fee63a70317c2355be0d3d1b4d8f89a44e"
-  integrity sha512-n94yQo4LI3w7erwf84mhRUkUJfhLoCZiLyoOZ/QFsDbcWNZePrLwbQpvZBUG2TNxwV3VjCKPxkiiQA6pe3TrTA==
 
 didyoumean@^1.2.2:
   version "1.2.2"

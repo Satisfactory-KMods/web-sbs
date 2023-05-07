@@ -1,7 +1,7 @@
 import * as mongoose from "mongoose";
-import type { MongoBase } from "@server/Types/mongo";
+import type { Mod }  from "@kyri123/lib";
 
-const ModSchema = new mongoose.Schema( {
+const ModSchema = new mongoose.Schema<Mod>( {
 	versions: {
 		type: [
 			{
@@ -82,7 +82,7 @@ const ModSchema = new mongoose.Schema( {
 	}
 }, { timestamps: true, strict: false } );
 
-export type Mod = mongoose.InferSchemaType<typeof ModSchema> & MongoBase;
+export { Mod };
 
 const myDB = mongoose.connections[ 0 ].useDb( "ficsit_app" );
 export default myDB.model<Mod>( "Mods", ModSchema );
