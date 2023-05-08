@@ -4,12 +4,10 @@ import type {
 	FunctionComponent
 }                                  from "react";
 import React, {
-	useContext,
 	useEffect,
 	useState
 }                                  from "react";
 import { useNavigate }             from "react-router-dom";
-import LangContext                 from "@context/LangContext";
 import FloatInput                  from "@comp/Boostrap/FloatInput";
 import LoadingButton               from "@comp/Boostrap/LoadingButton";
 import FloatTextarea               from "@comp/Boostrap/FloatTextarea";
@@ -39,7 +37,6 @@ export interface IFile {
 }
 
 const Component : FunctionComponent = () => {
-	const { Lang } = useContext( LangContext );
 	const [ IsSending, setIsSending ] = useState( false );
 	const Navigate = useNavigate();
 

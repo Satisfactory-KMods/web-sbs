@@ -1,54 +1,19 @@
-import type {
-	FunctionComponent,
-	PropsWithChildren
-}                             from "react";
-import {
-	useContext,
-	useRef
-}                             from "react";
-import {
-	Link,
-	useLocation
-}                             from "react-router-dom";
-import LangContext            from "@context/LangContext";
-import { ERoles }             from "@shared/Enum/ERoles";
-import { useAuth }            from "@hooks/useAuth";
-import NavigationLink         from "@comp/navigation/NavigationLink";
-import NavigationDropdown     from "@comp/navigation/NavigationDropdown";
-import NavigationDropdownItem from "@comp/navigation/NavigationDropdownItem";
+import type { FunctionComponent } from "react";
+import { useRef }                 from "react";
+import { ERoles }                 from "@shared/Enum/ERoles";
+import { useAuth }                from "@hooks/useAuth";
+import NavigationLink             from "@comp/navigation/NavigationLink";
+import NavigationDropdown         from "@comp/navigation/NavigationDropdown";
+import NavigationDropdownItem     from "@comp/navigation/NavigationDropdownItem";
 import {
 	CgAdd,
 	CgLogIn,
 	HiBars3,
 	RiDoorOpenLine
-}                             from "react-icons/all";
-import { LangReadable }       from "@applib/lang/lang";
-
-interface ITopNavProps extends PropsWithChildren {
-	href : string;
-	SessionRole? : ERoles;
-}
-
-export const TopNavLink : FunctionComponent<ITopNavProps> = ( { SessionRole, href, children } ) => {
-	const { pathname } = useLocation();
-	const { user } = useAuth();
-
-	if ( SessionRole !== undefined && !user.HasPermssion( SessionRole ) ) {
-		return null;
-	}
-
-	return (
-		<li>
-			<Link to={ href }
-			      className={ `nav-link px-2 link-secondary ${ pathname === href ? "text-light" : "" }` }>{ children }</Link>
-		</li>
-	);
-};
-
+}                                 from "react-icons/all";
 
 const TopNav : FunctionComponent = () => {
 	const { user, loggedIn, logout } = useAuth();
-	const { Lang, setLang, Code, AllCodes } = useContext( LangContext );
 	const divRef = useRef<HTMLDivElement>( null );
 
 	return (
@@ -71,67 +36,56 @@ const TopNav : FunctionComponent = () => {
 							</div>
 							<div className="hidden sm:ml-6 sm:block">
 								<div className="flex space-x-4">
-									<NavigationLink to="/blueprint/list">{ Lang.Navigation.Home }</NavigationLink>
-									<NavigationLink to="/blueprint/packs">{ Lang.Navigation.Packs }</NavigationLink>
+									<NavigationLink to="/blueprint/list">Blueprints</NavigationLink>
+									<NavigationLink to="/blueprint/packs">Blueprint Packs</NavigationLink>
 								</div>
 							</div>
 						</div>
 						<div
 							className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
 							<div className="relative m-1 mt-2 ml-3">
-								<NavigationDropdown image={ `/images/lang/${ Code }.png` }>
-									{ AllCodes.map( ( code ) => (
-										<NavigationDropdownItem key={ "lang" + code } to={ "#" }
-										                        onClick={ () => setLang( code ) }>
-											<img alt="flag" src={ `/images/lang/${ code }.png` } width={ 20 }
-											     className={ "pb-1" }/>
-											<span className="px-2">
-											{ LangReadable[ code ] }
-										</span>
-										</NavigationDropdownItem>
-									) ) }
-								</NavigationDropdown>
-							</div>
-
-							<div className="relative m-1 mt-2 ml-3">
-								<NavigationDropdown text={ loggedIn ? user.Get.username : Lang.Auth.SignUpIn }
+								<NavigationDropdown text={ loggedIn ? user.Get.username : "Sign In/Up" }
 								                    image={ "/images/logo.png" }>
 									{ !loggedIn && (
 										<>
 											<NavigationDropdownItem to={ "/account/signin" }>
 												<CgLogIn size={ 20 }/>
 												<span className="px-2">
-										{ Lang.Auth.Signin }
+										Sign In
 									</span>
 											</NavigationDropdownItem>
 											<NavigationDropdownItem to={ "/account/signup" }>
 												<CgAdd size={ 20 }/>
 												<span className="px-2">
-								{ Lang.Auth.Signup }
+								Sign Up
 									</span>
 											</NavigationDropdownItem>
 										</>
 									) }
 
 									<NavigationDropdownItem permission={ ERoles.admin }
-									                        to={ "/admin/tags" }>{ Lang.Navigation.Admin_Tags }</NavigationDropdownItem>
+									                        to={ "/admin/tags" }>Admin: Tags</NavigationDropdownItem>
 									<NavigationDropdownItem permission={ ERoles.admin }
-									                        to={ "/admin/users" }>{ Lang.Navigation.Admin_Users }</NavigationDropdownItem>
+									                        to={ "/admin/users" }>Admin: Users</NavigationDropdownItem>
 									<NavigationDropdownItem permission={ ERoles.admin }
-									                        to={ "/admin/blacklisted" }>{ Lang.Navigation.Admin_BlacklistedBlueprints }</NavigationDropdownItem>
+									                        to={ "/admin/blacklisted" }>Admin: Blueprint
+										Blacklist</NavigationDropdownItem>
 
 
 									<NavigationDropdownItem permission={ ERoles.member }
-									                        to={ "/account/settings" }>{ Lang.Auth.AccSettings }</NavigationDropdownItem>
+									                        to={ "/account/settings" }>Account
+										Settigs</NavigationDropdownItem>
 									<NavigationDropdownItem permission={ ERoles.member }
-									                        to={ "/blueprint/create" }>{ Lang.Navigation.AddBlueprint }</NavigationDropdownItem>
+									                        to={ "/blueprint/create" }>Create a
+										Blueprint</NavigationDropdownItem>
 									<NavigationDropdownItem permission={ ERoles.member }
-									                        to={ "/blueprint/my" }>{ Lang.Navigation.MyBlueprints }</NavigationDropdownItem>
+									                        to={ "/blueprint/my" }>My
+										Blueprints</NavigationDropdownItem>
 									<NavigationDropdownItem to={ "#" } onClick={ logout } permission={ ERoles.member }
 									                        className="text-red-600">
 										<RiDoorOpenLine size={ 20 }/>
 										<span className="px-2">
-										{ Lang.Auth.logout }
+										Logout
 									</span>
 									</NavigationDropdownItem>
 								</NavigationDropdown>

@@ -2,11 +2,7 @@ import type {
 	FormEvent,
 	FunctionComponent
 }                                     from "react";
-import {
-	useContext,
-	useState
-}                                     from "react";
-import LangContext                    from "@context/LangContext";
+import { useState }                   from "react";
 import { usePageTitle }               from "@kyri123/k-reactutils";
 import FloatInput                     from "@comp/Boostrap/FloatInput";
 import LoadingButton                  from "@comp/Boostrap/LoadingButton";
@@ -18,7 +14,6 @@ import { useAuth }                    from "@hooks/useAuth";
 
 const Component : FunctionComponent = () => {
 	const { user, logout } = useAuth();
-	const { Lang } = useContext( LangContext );
 	usePageTitle( `SBS - ${ Lang.Auth.AccSettings }` );
 
 	const [ IsSending, setIsSending ] = useState( false );

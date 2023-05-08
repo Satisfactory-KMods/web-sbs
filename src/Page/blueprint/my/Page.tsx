@@ -1,11 +1,9 @@
 import type { FunctionComponent } from "react";
 import {
-	useContext,
 	useEffect,
 	useState
 }                                 from "react";
 import { Table }                  from "react-bootstrap";
-import LangContext                from "@context/LangContext";
 import { API_QueryLib }           from "@applib/Api/API_Query.Lib";
 import { EApiQuestionary }        from "@shared/Enum/EApiPath";
 import BlueprintTableRow          from "@comp/Blueprints/BlueprintTableRow";
@@ -13,7 +11,6 @@ import { useAuth }                from "@hooks/useAuth";
 import type { BlueprintData }     from "@server/MongoDB/DB_Blueprints";
 
 const Component : FunctionComponent = () => {
-	const { Lang } = useContext( LangContext );
 	const { user } = useAuth();
 	const [ MyBlueprints, setMyBlueprints ] = useState<BlueprintData[]>( [] );
 

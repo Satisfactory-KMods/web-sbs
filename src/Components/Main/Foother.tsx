@@ -1,8 +1,6 @@
 import type { FunctionComponent } from "react";
-import { useContext }             from "react";
 import { Footer }                 from "flowbite-react";
 import { Link }                   from "react-router-dom";
-import LangContext                from "@context/LangContext";
 import {
 	SiDiscord,
 	SiGithub,
@@ -10,8 +8,6 @@ import {
 }                                 from "react-icons/all";
 
 const Foother : FunctionComponent = () => {
-	const { Lang } = useContext( LangContext );
-
 	return (
 		<div className="bg-gray-800 border-t border-gray-700">
 			<div className="container mx-auto">
@@ -23,7 +19,7 @@ const Foother : FunctionComponent = () => {
 					/>
 					<Footer.LinkGroup>
 						<Footer.Link as={ Link } href="/terms/private">
-							{ Lang.Navigation.Privacy }
+							Private Policy
 						</Footer.Link>
 						<Footer.Link href="https://github.com/Kyri123/SBS" target="_blank">
 							<SiGithub size={ 20 }/>

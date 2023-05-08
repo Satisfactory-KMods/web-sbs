@@ -1,13 +1,13 @@
 import type { FunctionComponent } from "react";
-import TopNav                     from "@comp/Main/TopNav";
 import {
 	Outlet,
 	useLoaderData
 }                                 from "react-router-dom";
+import type { LayoutLoaderData }  from "@page/Loader";
 import AuthContext                from "@context/AuthContext";
 import { User }                   from "@shared/Class/User.Class";
-import type { LayoutLoaderData }  from "@page/Loader";
 import DataContext                from "@context/DataContext";
+import TopNav                     from "@comp/Main/TopNav";
 import Foother                    from "@comp/Main/Foother";
 
 const Component : FunctionComponent = () => {

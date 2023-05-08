@@ -8,15 +8,13 @@ import type {
 }                                       from "@shared/Enum/EApiPath";
 import withReactContent                 from "sweetalert2-react-content";
 import Swal                             from "sweetalert2";
-import { GetApiMessage }                from "@applib/lang/lang";
 import type { TRequest_BP_Questionary } from "@shared/Types/API_Request";
-import type { ILang }                   from "@app/types/lang";
 import { AUTHTOKEN }                    from "@applib/constance";
 
 export class API_QueryLib {
 
-	static async FireSwal( Code? : keyof ILang["ApiMessgaes"] ) {
-		const Message = GetApiMessage( Code );
+	static async FireSwal( Code? : keyof string ) {
+		const Message = undefined;
 		if ( Message ) {
 			const MySwal = withReactContent( Swal );
 			MySwal.fire( Message );

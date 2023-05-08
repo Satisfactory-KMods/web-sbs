@@ -4,11 +4,9 @@ import type {
 	FunctionComponent
 }                                  from "react";
 import React, {
-	useContext,
 	useEffect,
 	useState
 }                                  from "react";
-import LangContext                 from "@context/LangContext";
 import {
 	Navigate,
 	useNavigate,
@@ -36,13 +34,12 @@ import {
 import FileUploadInput             from "@comp/Boostrap/FileUploadInput";
 import LoadingButton               from "@comp/Boostrap/LoadingButton";
 import { useBlueprint }            from "@hooks/useBlueprint";
-import type { Tag }                     from "@server/MongoDB/DB_Tags";
-import type { Mod }                     from "@server/MongoDB/DB_Mods";
+import type { Tag }                from "@server/MongoDB/DB_Tags";
+import type { Mod }                from "@server/MongoDB/DB_Mods";
 
 const Component : FunctionComponent = () => {
 	const { id } = useParams();
 	const { Blueprint, AllowToEdit, BlueprintValid, ...BP } = useBlueprint( id! );
-	const { Lang } = useContext( LangContext );
 	const [ IsSending, setIsSending ] = useState( false );
 	const Nav = useNavigate();
 

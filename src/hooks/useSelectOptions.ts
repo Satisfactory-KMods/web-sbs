@@ -1,5 +1,4 @@
 import type { SelectOptionStruct } from "@shared/Types/SelectOptions";
-import { useLang }                 from "@hooks/useLang";
 import {
 	useCallback,
 	useContext,
@@ -15,25 +14,20 @@ import _                           from "lodash";
 
 export function useSelectOptions() {
 	const { mods, tags } = useContext( DataContext );
-	const { Lang } = useLang();
 
 	const vanillaSelectOptions : MultiValue<SelectOptionStruct<boolean>> = useMemo( () => [
-		{ value: true, label: Lang.General.IsVanilla },
-		{ value: false, label: Lang.General.IsModded }
-	], [ Lang ] );
+		{ value: true, label: "Vanilla" },
+		{ value: false, label: "Modded" }
+	], [] );
 
 	const sortSelectOptions : MultiValue<SelectOptionStruct<FilterSchema["sortBy"]>> = useMemo( () => [
-		{ value: { by: "createdAt", up: true }, label: Lang.Sorting.CreatedAt },
-		{ value: { by: "createdAt", up: false }, label: Lang.Sorting.CreatedAtRev },
-		{ value: { by: "downloads", up: true }, label: Lang.Sorting.Downloads },
-		{ value: { by: "downloads", up: false }, label: Lang.Sorting.DownloadsRev },
-		{ value: { by: "likes", up: true }, label: Lang.Sorting.Likes },
-		{ value: { by: "likes", up: false }, label: Lang.Sorting.LikesRev },
-		{ value: { by: "mods", up: true }, label: Lang.Sorting.Mods },
-		{ value: { by: "mods", up: false }, label: Lang.Sorting.ModsRev },
-		{ value: { by: "tags", up: true }, label: Lang.Sorting.Tags },
-		{ value: { by: "tags", up: false }, label: Lang.Sorting.TagsRev }
-	], [ Lang ] );
+		{ value: { by: "createdAt", up: true }, label: "Newest first" },
+		{ value: { by: "createdAt", up: false }, label: "Oldest first" },
+		{ value: { by: "downloads", up: true }, label: "Most downloads" },
+		{ value: { by: "downloads", up: false }, label: "Fewest downloads" },
+		{ value: { by: "likes", up: true }, label: "Most likes" },
+		{ value: { by: "likes", up: false }, label: "Fewest likes" }
+	], [] );
 
 	const tagsSelectOptions : MultiValue<SelectOptionStruct<string>> = useMemo( () => tags.map( R => ( {
 		label: R.DisplayName,
@@ -42,7 +36,7 @@ export function useSelectOptions() {
 
 	const modSelectOptions : MultiValue<SelectOptionStruct<string>> = useMemo( () => mods.map( R => ( {
 		label: R.name,
-		value: R._id
+		value: R.mod_reference
 	} ) ), [ mods ] );
 
 	const modSelected_Multi : ( mods : string[] ) => MultiValue<SelectOptionStruct<string>> = useCallback( ( mods ) => {

@@ -1,10 +1,6 @@
 import type { FunctionComponent }  from "react";
-import {
-	useContext,
-	useState
-}                                  from "react";
+import { useState }                from "react";
 import { usePageTitle }            from "@kyri123/k-reactutils";
-import LangContext                 from "@context/LangContext";
 import BlueprintCard               from "@comp/Blueprints/BlueprintCard";
 import {
 	Button,
@@ -52,8 +48,6 @@ const Component : FunctionComponent = () => {
 	}
 
 	const { setPage, currentPage, maxPage, filterOption } = useRawPageHandler( TotalBlueprints, onPageChange, 10 );
-
-	const { Lang } = useContext( LangContext );
 
 	const [ BlueprintName, setBlueprintName ] = useState<string>( "" );
 	const [ Select_Sorting, setSelect_Sorting ] = useState<SingleValue<SelectOptionStruct<FilterSchema["sortBy"]>>>( null );

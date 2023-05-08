@@ -7,17 +7,16 @@
     "server": "ts-node --project ./server/tsconfig.json -r tsconfig-paths/register server/src/index.ts",
     "preview": "vite preview",
     "dev": "concurrently -m 2 \"vite --host --port 3000\" \"nodemon\"",
-    "build": "yarn build.genType && yarn build.lint && yarn build.vite",
-    "build.genType": "yarn genType",
+    "build": "yarn build.lint && yarn build.vite",
     "build.lint": "concurrently -m 2 \"eslint src --fix\" \"eslint server/src --fix\"",
-    "build.vite": "concurrently -m 2 \"tsc --project ./server/tsconfig.json\" \"vite build\"",
-    "genType": "node LangToType.mjs"
+    "build.vite": "concurrently -m 2 \"tsc --project ./server/tsconfig.json\" \"vite build\""
   },
   "dependencies": {
     "@etothepii/satisfactory-file-parser": "^0.0.34",
     "@kyri123/k-javascript-utils": "^0.3.0-build.14",
     "@kyri123/k-reactutils": "^0.2.9-build.35",
     "@kyri123/lib": "^0.1.0-build.5",
+    "@sweetalert2/theme-dark": "^5.0.15",
     "@trpc/client": "^10.24.0",
     "@trpc/server": "^10.24.0",
     "compressing": "^1.9.0",
