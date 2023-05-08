@@ -1,7 +1,7 @@
 import type {
 	LoaderBlueprintBase,
 	LoaderDataBase
-}                                  from "@app/Types/loader";
+}                                  from "@app/types/loader";
 import type { LoaderFunctionArgs } from "@remix-run/router/utils";
 import { AUTHTOKEN }               from "@applib/constance";
 import { redirect }                from "react-router-dom";

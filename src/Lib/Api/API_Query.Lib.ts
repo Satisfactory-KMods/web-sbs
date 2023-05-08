@@ -10,7 +10,7 @@ import withReactContent                 from "sweetalert2-react-content";
 import Swal                             from "sweetalert2";
 import { GetApiMessage }                from "@applib/lang/lang";
 import type { TRequest_BP_Questionary } from "@shared/Types/API_Request";
-import type { ILang }                   from "@app/Types/lang";
+import type { ILang }                   from "@app/types/lang";
 import { AUTHTOKEN }                    from "@applib/constance";
 
 export class API_QueryLib {

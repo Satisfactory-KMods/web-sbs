@@ -1,4 +1,3 @@
-import type { LoaderDataBase } from "@app/Types/loader";
 import type { LoaderFunction } from "react-router-dom";
 import { json }                from "react-router-dom";
 import { validateLogin }       from "@applib/loaderHelper";
@@ -6,22 +5,33 @@ import {
 	tRPC_handleError,
 	tRPC_Public
 }                              from "@applib/tRPC";
-import type { BlueprintData }  from "@server/MongoDB/DB_Blueprints";
+import type { LoaderDataBase } from "@app/types/loader";
+import type { Mod }            from "@server/MongoDB/DB_Mods";
+import type { Tag }            from "@server/MongoDB/DB_Tags";
 
-export type IndexLoaderData = LoaderDataBase & {
-	blueprints : BlueprintData[],
-	totalBlueprints : number
+export type LayoutLoaderData = LoaderDataBase & {
+	mods : Mod[],
+	tags : Tag[]
 }
 
-export const loader : LoaderFunction = async( { params, request } ) => {
+export const defaultLoader : LoaderFunction = async( { params, request } ) => {
 	const result = await validateLogin( { params, request } );
-	const Blueprints = await tRPC_Public.blueprint.getBlueprints.query( { limit: 10 } ).catch( tRPC_handleError );
-	let blueprints : BlueprintData[] = [];
-	let totalBlueprints = 0;
-	if ( Blueprints ) {
-		blueprints = Blueprints.blueprints;
-		totalBlueprints = Blueprints.totalBlueprints;
+
+	const [ mods, tags ] = await Promise.all( [
+		tRPC_Public.mods.getMods.query().catch( tRPC_handleError ),
+		tRPC_Public.tags.getTags.query().catch( tRPC_handleError )
+	] );
+
+	const queryResult = {
+		...result,
+		mods: [] as Mod[],
+		tags: [] as Tag[]
+	};
+
+	if ( mods && tags ) {
+		queryResult.tags = tags.tags;
+		queryResult.mods = mods.mods as any;
 	}
 
-	return json<IndexLoaderData>( { ...result, blueprints, totalBlueprints } );
+	return json<LayoutLoaderData>( queryResult );
 };

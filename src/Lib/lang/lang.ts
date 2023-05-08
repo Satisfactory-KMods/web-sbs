@@ -1,8 +1,8 @@
-import en_us              from "@applib/lang/data/en_us.json";
-import de_de              from "@applib/lang/data/de_de.json";
-import * as _             from "lodash";
+import en_us                   from "@applib/lang/data/en_us.json";
+import de_de                   from "@applib/lang/data/de_de.json";
+import * as _                  from "lodash";
 import type { SweetAlertIcon } from "sweetalert2";
-import type { ILang }          from "@app/Types/lang";
+import type { ILang }          from "@app/types/lang";
 
 export interface IApiMessage {
 	title? : string,

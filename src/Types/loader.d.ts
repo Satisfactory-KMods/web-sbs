@@ -1,4 +1,5 @@
-import type { User } from "@shared/Class/User.Class";
+import type { User }     from "@shared/Class/User.Class";
+import type { BlueprintData } from "@server/MongoDB/DB_Blueprints";
 
 export interface LoaderDataBase {
 	loggedIn : boolean;
@@ -7,11 +8,5 @@ export interface LoaderDataBase {
 
 export interface LoaderBlueprintBase extends LoaderDataBase {
 	blueprintPermission : boolean;
-	blueprintData : Blueprint;
-}
-
-export interface LoaderBlueprintPack extends LoaderDataBase {
-	blueprintPermission : boolean;
-	blueprintDatas : Blueprint;
-	blueprintPack : BlueprintPack;
+	blueprintData : BlueprintData;
 }

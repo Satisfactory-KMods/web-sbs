@@ -22,7 +22,7 @@ import Select                      from "react-select";
 import type { SelectOptionStruct } from "@shared/Types/SelectOptions";
 import PageManager                 from "@comp/Main/PageManager";
 import { useLoaderData }           from "react-router-dom";
-import type { IndexLoaderData }    from "@page/Loader";
+import type { IndexLoaderData }    from "@page/blueprint/list/Loader";
 import {
 	tRPC_handleError,
 	tRPC_Public

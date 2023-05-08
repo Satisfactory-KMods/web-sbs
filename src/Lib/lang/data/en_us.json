@@ -83,13 +83,14 @@
     "Mods": "Mods"
   },
   "Navigation": {
+    "Packs": "Blueprint Packs",
     "FicsitApp": "Ficsit.App",
     "Discord": "Discord",
     "Github": "Github",
     "Patreon": "Patreon",
     "Privacy": "Privacy Policy",
     "Terms": "Terms of Service",
-    "Home": "Home",
+    "Home": "Blueprints",
     "AddBlueprint": "Create Blueprint",
     "MyBlueprints": "My Blueprints",
     "Admin_Users": "Manager Users",

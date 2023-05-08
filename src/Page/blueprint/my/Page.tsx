@@ -10,9 +10,9 @@ import { API_QueryLib }           from "@applib/Api/API_Query.Lib";
 import { EApiQuestionary }        from "@shared/Enum/EApiPath";
 import BlueprintTableRow          from "@comp/Blueprints/BlueprintTableRow";
 import { useAuth }                from "@hooks/useAuth";
-import type { BlueprintData }          from "@server/MongoDB/DB_Blueprints";
+import type { BlueprintData }     from "@server/MongoDB/DB_Blueprints";
 
-const Page : FunctionComponent = () => {
+const Component : FunctionComponent = () => {
 	const { Lang } = useContext( LangContext );
 	const { user } = useAuth();
 	const [ MyBlueprints, setMyBlueprints ] = useState<BlueprintData[]>( [] );
@@ -56,4 +56,4 @@ const Page : FunctionComponent = () => {
 	);
 };
 
-export default Page;
+export { Component };
