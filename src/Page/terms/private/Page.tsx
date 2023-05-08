@@ -1,11 +1,10 @@
-import type {
-	FunctionComponent} from "react";
+import type { FunctionComponent } from "react";
 import {
 	useEffect,
 	useState
-}                    from "react";
-import ReactMarkdown from "react-markdown";
-import PolicyText    from "@applib/lang/data/Policy.md";
+}                                 from "react";
+import ReactMarkdown              from "react-markdown";
+import PolicyText                 from "@applib/lib/Policy.md";
 
 const Component : FunctionComponent = () => {
 	const [ privacyPolicyText, setPrivacyPolicyText ] = useState( "" );

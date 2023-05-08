@@ -18,9 +18,9 @@ const Foother : FunctionComponent = () => {
 						year={ 2023 }
 					/>
 					<Footer.LinkGroup>
-						<Footer.Link as={ Link } href="/terms/private">
-							Private Policy
-						</Footer.Link>
+						<li className="last:mr-0 md:mr-6">
+							<Link to="/terms/private" className="hover:underline">Private Policy</Link>
+						</li>
 						<Footer.Link href="https://github.com/Kyri123/SBS" target="_blank">
 							<SiGithub size={ 20 }/>
 						</Footer.Link>
