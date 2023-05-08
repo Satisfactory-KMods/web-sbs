@@ -88,8 +88,8 @@ mongoose
 			NewUser.email = "admin@kmods.de";
 			NewUser.username = "Kyrium";
 			NewUser.role = ERoles.admin;
-			NewUser.setPassword( "123456" );
-			SystemLib.LogWarning( "start", " Default user was created. Kyrium | 23456 | admin@kmods.de" );
+			NewUser.setPassword( "12345678" );
+			SystemLib.LogWarning( "start", " Default user was created. Kyrium | 12345678 | admin@kmods.de" );
 			await NewUser.save();
 		}
 

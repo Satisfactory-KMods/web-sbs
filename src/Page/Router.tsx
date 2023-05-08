@@ -127,12 +127,12 @@ const rootRouter = createBrowserRouter( [
 			{
 				path: "/error/:statusCode",
 				lazy: async() => await import("@page/error/[statusCode]")
-			},
-			{
-				path: "*",
-				element: <Navigate to={ "/error/404" }/>
 			}
 		]
+	},
+	{
+		path: "*",
+		element: <Navigate to={ "/error/404" }/>
 	}
 ] );
 
