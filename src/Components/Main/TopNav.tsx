@@ -52,7 +52,7 @@ const TopNav : FunctionComponent = () => {
 	const divRef = useRef<HTMLDivElement>( null );
 
 	return (
-		<nav className="bg-[#5f668c]">
+		<nav className="bg-gray-800 border-b border-gray-700">
 			<div className="container mx-auto">
 				<div className="px-2 sm:px-6 lg:px-8">
 					<div className="relative flex h-16 items-center justify-between">
@@ -73,7 +73,6 @@ const TopNav : FunctionComponent = () => {
 								<div className="flex space-x-4">
 									<NavigationLink to="/blueprint/list">{ Lang.Navigation.Home }</NavigationLink>
 									<NavigationLink to="/blueprint/packs">{ Lang.Navigation.Packs }</NavigationLink>
-									<NavigationLink to="/terms/private">{ Lang.Navigation.Privacy }</NavigationLink>
 								</div>
 							</div>
 						</div>

@@ -22,7 +22,7 @@ const NavigationLink : FunctionComponent<NavigationLinkProps> = ( { children, cl
 	if ( pathname.startsWith( props.to.toString() ) ) {
 		return (
 			<Link
-				className={ "bg-[#383c54] text-white rounded-md px-3 py-2 text-sm font-medium " + ( className || "" ) } { ...props }>
+				className={ "bg-gray-700 text-white rounded-md px-3 py-2 text-sm font-medium " + ( className || "" ) } { ...props }>
 				{ children }
 			</Link>
 		);
@@ -30,7 +30,7 @@ const NavigationLink : FunctionComponent<NavigationLinkProps> = ( { children, cl
 
 	return (
 		<Link
-			className={ "text-gray-300 hover:bg-[#454b6b] hover:text-white rounded-md px-3 py-2 text-sm font-medium " + ( className || "" ) } { ...props }>
+			className={ "text-gray-300 hover:bg-gray-600 hover:text-white rounded-md px-3 py-2 text-sm font-medium " + ( className || "" ) } { ...props }>
 			{ children }
 		</Link>
 	);
