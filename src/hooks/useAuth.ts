@@ -1,10 +1,13 @@
 import { useContext }      from "react";
 import { useLocalStorage } from "@kyri123/k-reactutils";
-import { API_QueryLib }    from "@applib/Api/API_Query.Lib";
-import { EApiAuth }        from "@shared/Enum/EApiPath";
 import { AUTHTOKEN }       from "@applib/constance";
 import AuthContext         from "@context/AuthContext";
 import { useNavigate }     from "react-router-dom";
+import {
+	fireSwalFromApi,
+	tRPC_Auth,
+	tRPC_handleError
+}                          from "@applib/tRPC";
 
 export function useAuth() {
 	const navigate = useNavigate();
@@ -12,19 +15,15 @@ export function useAuth() {
 	const { loggedIn, user } = useContext( AuthContext );
 
 	const logout = () => {
-		ResetStorage();
-		Promise.all( [
-			API_QueryLib.FireSwal( "Auth.success.logout" ),
-			API_QueryLib.PostToAPI( EApiAuth.logout, { Storage } )
-		] ).then();
+		tRPC_Auth.logout.mutate().then( msg => {
+			ResetStorage();
+			fireSwalFromApi( msg, true );
+		} ).catch( tRPC_handleError );
 		navigate( 0 );
 	};
 
 	const setToken = ( token : string ) => {
 		SetStorage( token );
-		Promise.all( [
-			API_QueryLib.FireSwal( "Auth.success.logout" )
-		] ).then();
 		navigate( 0 );
 	};
 

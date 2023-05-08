@@ -15,8 +15,8 @@ export function handleTRCPErr( e : unknown ) {
 }
 
 export interface Context {
-	token? : string,
-	userClass? : User,
+	token : string,
+	userClass : User,
 }
 
 export const createContext = async( {
@@ -38,3 +38,4 @@ const t = trpc.initTRPC.context<Context>().create( {
 
 export const router = t.router;
 export const publicProcedure = t.procedure;
+export const authProcedure = t.procedure;

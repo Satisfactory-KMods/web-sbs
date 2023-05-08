@@ -11,6 +11,7 @@ import { BC }                   from "@server/Lib/System.Lib";
 import { public_blueprint }     from "@server/trpc/routings/public/blueprint";
 import { public_mods }          from "@server/trpc/routings/public/mods";
 import { public_tags }          from "@server/trpc/routings/public/tags";
+import { auth_logout }          from "@server/trpc/routings/auth/logout";
 
 
 const publicRouter = router( {
@@ -21,7 +22,9 @@ const publicRouter = router( {
 	tags: public_tags,
 	mods: public_mods
 } );
-const authRouter = router( {} );
+const authRouter = router( {
+	logout: auth_logout
+} );
 
 
 SystemLib.Log( "start", "register TRCP on", BC( "Red" ), "/api/v2/*" );

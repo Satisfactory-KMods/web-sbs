@@ -1,34 +1,8 @@
-import type {
-	IAPIResponseBase,
-	TResponse_BP_Questionary
-}                                       from "@shared/Types/API_Response";
-import type {
-	EApiQuestionary,
-	TApiPath
-}                                       from "@shared/Enum/EApiPath";
-import withReactContent                 from "sweetalert2-react-content";
-import Swal                             from "sweetalert2";
-import type { TRequest_BP_Questionary } from "@shared/Types/API_Request";
-import { AUTHTOKEN }                    from "@applib/constance";
+import type { IAPIResponseBase } from "@shared/Types/API_Response";
+import type { TApiPath }         from "@shared/Enum/EApiPath";
+import { AUTHTOKEN }             from "@applib/constance";
 
 export class API_QueryLib {
-
-	static async FireSwal( Code? : keyof string ) {
-		const Message = undefined;
-		if ( Message ) {
-			const MySwal = withReactContent( Swal );
-			MySwal.fire( Message );
-		}
-	}
-
-	static async Qustionary<T = any>(
-		Path : EApiQuestionary,
-		Data : TRequest_BP_Questionary<T>,
-		ContentType? : "application/json" | "application/x-www-form-urlencoded" | "multipart/form-data"
-	) : Promise<TResponse_BP_Questionary<T[]>> {
-		return API_QueryLib.PostToAPI<TResponse_BP_Questionary<T[]>, TRequest_BP_Questionary<T>>( Path, Data, ContentType );
-	}
-
 	static async PostToAPI<T extends IAPIResponseBase = IAPIResponseBase<any>, D = any>(
 		Path : TApiPath,
 		Data : D,
@@ -72,8 +46,6 @@ export class API_QueryLib {
 		catch ( e ) {
 			console.error( e );
 		}
-
-		await this.FireSwal( Response.MessageCode );
 
 		return Response as T;
 	}
@@ -125,8 +97,6 @@ export class API_QueryLib {
 		catch ( e ) {
 
 		}
-
-		await this.FireSwal( Response.MessageCode );
 
 		return Response as T;
 	}
