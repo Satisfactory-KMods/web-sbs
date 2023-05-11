@@ -8,7 +8,7 @@ type ResponseBase<T = any> = {
 	Data? : T;
 	Reached : boolean;
 	MessageCode? : keyof ILang["ApiMessgaes"];
-}
+};
 
 export type IAPIResponseBase<T = any> = ResponseBase<T>;
 
