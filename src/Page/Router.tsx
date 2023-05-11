@@ -1,12 +1,10 @@
 import {
 	createBrowserRouter,
 	Navigate
-}                        from "react-router-dom";
-import React             from "react";
-import { defaultLoader } from "@page/Loader";
+} from "react-router-dom";
 
 const rootRouter = createBrowserRouter( [
-	{
+	{ 
 		path: "/",
 		lazy: async() => await import("@page/Layout"),
 		loader: async( { request, params } ) => {
@@ -140,7 +138,7 @@ const rootRouter = createBrowserRouter( [
 	},
 	{
 		path: "*",
-		element: <Navigate to={ "/error/404" }/>
+		element: <Navigate to={ "/error/404" } />
 	}
 ] );
 

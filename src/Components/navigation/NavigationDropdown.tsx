@@ -2,7 +2,7 @@ import type {
 	FunctionComponent,
 	PropsWithChildren,
 	ReactElement
-}                 from "react";
+} from "react";
 import { useRef } from "react";
 
 interface NavigationDropdownProps extends PropsWithChildren {
@@ -39,11 +39,10 @@ const NavigationDropdown : FunctionComponent<NavigationDropdownProps> = ( { imag
 			        type="button">
 				{ image && <img className="h-8 w-8 rounded-full"
 				                src={ image }
-				                alt="Logoimage"/> }
+				                alt="Logoimage" /> }
 				{ text && <span className="ml-3 hidden md:block">{ text }</span> }
 			</button>
-			<div
-				className="z-20 hidden max-w-sm bg-white divide-y divide-gray-100 shadow absolute right-0 z-10 mt-2 w-56 origin-top-right"
+			<div className="z-20 hidden max-w-sm bg-white divide-y divide-gray-100 shadow absolute right-0 z-10 mt-2 w-56 origin-top-right"
 				ref={ dropDownRef }>
 				{ children }
 			</div>
