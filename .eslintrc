@@ -1,4 +1,5 @@
 {
+  "root": true,
   "settings": {
     "react": {
       "version": "detect"
@@ -9,9 +10,8 @@
     "plugin:react/recommended",
     "plugin:react/jsx-runtime",
     "plugin:jsx-a11y/recommended",
-    "plugin:@typescript-eslint/recommended",
     "plugin:import/typescript",
-    "plugin:react/jsx-runtime"
+    "plugin:@typescript-eslint/recommended"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
@@ -25,9 +25,30 @@
     "react",
     "import",
     "jsx-a11y",
-    "react-hooks"
+    "react-hooks",
+    "@typescript-eslint"
   ],
-  "rules": {
+  "rules": { 
+    "indent": "off",
+    "@typescript-eslint/indent": ["error", "tab"],
+    "no-tabs": 0,
+    "no-unused-vars":"warn",
+    //"@typescript-eslint/"
+    "no-restricted-imports":"warn",
+    "react/jsx-closing-bracket-location": ["warn", "after-props"],
+    "semi": "off",
+    "react/jsx-first-prop-new-line": ["error", "never"],
+    "react/jsx-curly-newline": ["error", { 
+      "multiline": "consistent", 
+      "singleline": "consistent" 
+    }],
+    "react/jsx-props-no-multi-spaces": ["warn"],
+    "react/jsx-tag-spacing": ["warn"],
+    "react/jsx-curly-spacing": ["warn", "always"],
+    "object-curly-spacing": ["warn", "always"], 
+    "array-bracket-spacing": ["warn", "always"], 
+    "computed-property-spacing": ["warn", "always"],
+    "@typescript-eslint/semi": "error",
     "@typescript-eslint/consistent-type-imports": "error",
     "semi-style": [
       "error",

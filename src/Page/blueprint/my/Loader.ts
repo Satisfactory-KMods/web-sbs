@@ -11,7 +11,7 @@ import type { BlueprintData }  from "@server/MongoDB/DB_Blueprints";
 export type IndexLoaderData = LoaderDataBase & {
 	blueprints : BlueprintData[],
 	totalBlueprints : number
-}
+};
 
 export const loader : LoaderFunction = async( { params, request } ) => {
 	const result = await validateLogin( { params, request } );

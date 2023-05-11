@@ -11,7 +11,7 @@ import type { Tag }               from "@server/MongoDB/DB_Tags";
 
 export type RequestWithUser<T = any> = {
 	UserClass? : T;
-}
+};
 
 export type IRequestBody<T> = RequestWithUser<User> & Partial<T>;
 
@@ -96,7 +96,7 @@ export type TRequest_BPUser_Create_Files = Partial<{
 	SBP : UploadedFile;
 	SBPCFG : UploadedFile;
 	Image : UploadedFile;
-}>
+}>;
 
 export type TRequest_BPUser_Edit = IRequestBody<{
 	BlueprintId : string;
@@ -108,7 +108,7 @@ export type TRequest_BPUser_Edit = IRequestBody<{
 }>;
 export type TRequest_BPUser_Edit_Files = Partial<{
 	Image : UploadedFile;
-}>
+}>;
 
 // ----------------------------------------
 // ----------------- Tags -----------------

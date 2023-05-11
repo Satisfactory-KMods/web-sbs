@@ -12,7 +12,7 @@ import type { Tag }            from "@server/MongoDB/DB_Tags";
 export type LayoutLoaderData = LoaderDataBase & {
 	mods : Mod[],
 	tags : Tag[]
-}
+};
 
 export const defaultLoader : LoaderFunction = async( { params, request } ) => {
 	const result = await validateLogin( { params, request } );

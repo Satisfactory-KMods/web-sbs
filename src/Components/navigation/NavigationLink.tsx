@@ -9,7 +9,7 @@ import { useAuth }                from "@hooks/useAuth";
 
 type NavigationLinkProps = LinkProps & {
 	role? : ERoles
-}
+};
 
 const NavigationLink : FunctionComponent<NavigationLinkProps> = ( { children, className, role, ...props } ) => {
 	const { pathname } = useLocation();
