@@ -12,6 +12,7 @@ import { public_blueprint }     from "@server/trpc/routings/public/blueprint";
 import { public_mods }          from "@server/trpc/routings/public/mods";
 import { public_tags }          from "@server/trpc/routings/public/tags";
 import { auth_logout }          from "@server/trpc/routings/auth/logout";
+import { auth_updateAccount }   from "@server/trpc/routings/auth/updateAccount";
 
 
 const publicRouter = router( {
@@ -23,6 +24,7 @@ const publicRouter = router( {
 	mods: public_mods
 } );
 const authRouter = router( {
+	updateAccount: auth_updateAccount,
 	logout: auth_logout
 } );
 

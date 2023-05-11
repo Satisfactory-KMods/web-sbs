@@ -31,7 +31,6 @@ const Component : FunctionComponent = () => {
 	const [ email, setEmail ] = useState( "" );
 	const [ password, setPassword ] = useState( "" );
 	const [ password2, setPassword2 ] = useState( "" );
-	const [ stayLoggedIn, setStayLoggedIn ] = useState( true );
 
 	const handleSubmit = async( e : FormEvent<HTMLFormElement> ) => {
 		e.preventDefault();
@@ -48,7 +47,7 @@ const Component : FunctionComponent = () => {
 
 		if ( response ) {
 			setToken( response.token );
-			fireSwalFromApi( response.message );
+			await fireSwalFromApi( response.message, true );
 			navigate( "/" );
 		}
 		setIsSending( false );

@@ -1,80 +1,119 @@
 import type {
 	FormEvent,
 	FunctionComponent
-}                                     from "react";
-import { useState }                   from "react";
-import { usePageTitle }               from "@kyri123/k-reactutils";
-import FloatInput                     from "@comp/Boostrap/FloatInput";
-import LoadingButton                  from "@comp/Boostrap/LoadingButton";
-import { API_QueryLib }               from "@applib/Api/API_Query.Lib";
-import type { TResponse_Auth_SignUp } from "@shared/Types/API_Response";
-import type { TRequest_Auth_Modify }  from "@shared/Types/API_Request";
-import { EApiAuth }                   from "@shared/Enum/EApiPath";
-import { useAuth }                    from "@hooks/useAuth";
+}                       from "react";
+import { useState }     from "react";
+import { useAuth }      from "@hooks/useAuth";
+import {
+	Button,
+	Label,
+	TextInput
+}                       from "flowbite-react";
+import { useNavigate }  from "react-router-dom";
+import {
+	fireSwalFromApi,
+	tRPC_Auth,
+	tRPC_handleError
+}                       from "@applib/tRPC";
+import { usePageTitle } from "@kyri123/k-reactutils";
 
 const Component : FunctionComponent = () => {
 	const { user, logout } = useAuth();
-	usePageTitle( `SBS - ${ Lang.Auth.AccSettings }` );
+	const navigate = useNavigate();
+	const [ isSending, setIsSending ] = useState( false );
+	usePageTitle( `SBS - Sign Up` );
 
-	const [ IsSending, setIsSending ] = useState( false );
-
-	const [ Login, setLogin ] = useState( "" );
-	const [ EMail, setEMail ] = useState( "" );
-	const [ Password, setPassword ] = useState( "" );
-	const [ RepeatPassword, setRepeatPassword ] = useState( "" );
+	const [ username, setUsername ] = useState( () => user.Get.username );
+	const [ email, setEmail ] = useState( () => user.Get.email );
+	const [ password, setPassword ] = useState( "" );
+	const [ password2, setPassword2 ] = useState( "" );
 
 	const handleSubmit = async( e : FormEvent<HTMLFormElement> ) => {
 		e.preventDefault();
 
-		console.log( "handleSubmit" );
-		if ( ( Password !== "" || RepeatPassword !== "" ) && Password !== RepeatPassword && Password.length < 8 ) {
-			await API_QueryLib.FireSwal( "Signup.error.password.invalid" );
+		if ( password !== password2 ) {
+			fireSwalFromApi( `Passwords do not match`, "warning" );
 			return;
 		}
-		else if ( Login !== "" && Login.length < 6 ) {
-			await API_QueryLib.FireSwal( "Signup.error.username.invalid" );
-			return;
+
+		const sendData : any = {
+			username,
+			email,
+			password
+		};
+		if ( sendData.username.clearWs().length <= 0 ) {
+			sendData.username = undefined;
 		}
-		else if ( EMail !== "" && !EMail.match( /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/ ) ) {
-			await API_QueryLib.FireSwal( "Signup.error.email.invalid" );
-			return;
+		if ( sendData.email.clearWs().length <= 0 ) {
+			sendData.email = undefined;
 		}
-		else if ( EMail === "" && Login === "" && Password === "" && RepeatPassword === "" ) {
-			await API_QueryLib.FireSwal( "Signup.error.missingfield" );
-			return;
+		if ( sendData.password.clearWs().length <= 0 ) {
+			sendData.password = undefined;
 		}
+
 		setIsSending( true );
+		const response = await tRPC_Auth.updateAccount.mutate( sendData ).catch( tRPC_handleError );
 
-		const Data : TRequest_Auth_Modify = { UserID: user.Get._id, Data: {}, Remove: false };
-		Password !== "" && ( Data.Data!.hash = Password );
-		Login !== "" && ( Data.Data!.username = Password );
-		EMail !== "" && ( Data.Data!.email = Password );
-
-		await API_QueryLib.PostToAPI<TResponse_Auth_SignUp>( EApiAuth.modify, Data );
-		logout();
+		if ( response ) {
+			await logout( false );
+			await fireSwalFromApi( response, true );
+			navigate( 0 );
+		}
 		setIsSending( false );
 	};
 
 	return (
-		<div className={ "d-flex h-100 justify-content-center" }>
-			<form onSubmit={ handleSubmit }
-			      className={ "align-self-center w-100 max-w-lg bg-gray-800 p-4 border rounded-4" }>
-				<h3 className={ "m-0" }>{ Lang.Auth.AccSettings }</h3>
-				<hr/>
-				<FloatInput type="text" onChange={ E => setLogin( E.target.value ) } value={ Login }
-				            className={ "mb-3" }>{ Lang.Auth.Username }</FloatInput>
-				<FloatInput type="email" onChange={ E => setEMail( E.target.value ) } value={ EMail }
-				            className={ "mb-3" }>{ Lang.Auth.Email }</FloatInput>
-				<FloatInput type="password" onChange={ E => setPassword( E.target.value ) } value={ Password }
-				            className={ "mb-3" }>{ Lang.Auth.Password }</FloatInput>
-				<FloatInput type="password" onChange={ E => setRepeatPassword( E.target.value ) }
-				            value={ RepeatPassword }>{ Lang.Auth.PasswordAgain }</FloatInput>
-				<hr/>
-				<div className={ "d-flex" }>
-					<LoadingButton IsLoading={ IsSending } className={ "w-100 flex-1 me-1" } variant="success"
-					               type={ "submit" }>{ Lang.Auth.Edit }</LoadingButton>
+		<div
+			className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-[85vh] lg:py-0 ">
+			<div
+				className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+				<div className="p-6 space-y-4 md:space-y-6 sm:p-8">
+					<h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+						Edit your account
+					</h1>
+					<hr className="border-gray-600"/>
+					<form className="space-y-3 md:space-y-3" onSubmit={ handleSubmit }>
+						<div>
+							<div className="mb-2 block">
+								<Label htmlFor="login" value="Your username"/>
+							</div>
+							<TextInput id="login" type="text" placeholder="Super Mario"
+							           value={ username }
+							           onChange={ e => setUsername( e.target.value ) }/>
+						</div>
+						<div>
+							<div className="mb-2 block">
+								<Label htmlFor="email" value="Your email"/>
+							</div>
+							<TextInput id="email" type="email" placeholder="kmods@example.com"
+							           value={ email }
+							           onChange={ e => setEmail( e.target.value ) }/>
+						</div>
+						<div>
+							<div className="mb-2 block">
+								<Label htmlFor="password" value="Password"/>
+							</div>
+							<TextInput id="password" type="password" placeholder="Password123"
+							           value={ password }
+							           onChange={ e => setPassword( e.target.value ) }/>
+						</div>
+						<div>
+							<div className="mb-2 block">
+								<Label htmlFor="password2" value="Repeat Password"/>
+							</div>
+							<TextInput id="password2" type="password" placeholder="Password123"
+							           value={ password2 }
+							           onChange={ e => setPassword2( e.target.value ) }/>
+						</div>
+						<hr className="border-gray-600"/>
+						<div className="flex items-center justify-between">
+							<Button disabled={ isSending } type="submit">
+								Save Changes
+							</Button>
+						</div>
+					</form>
 				</div>
-			</form>
+			</div>
 		</div>
 	);
 };

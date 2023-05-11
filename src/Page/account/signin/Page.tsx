@@ -42,7 +42,7 @@ const Component : FunctionComponent = () => {
 
 		if ( response ) {
 			setToken( response.token );
-			fireSwalFromApi( response.message );
+			await fireSwalFromApi( response.message, true );
 			navigate( "/" );
 		}
 

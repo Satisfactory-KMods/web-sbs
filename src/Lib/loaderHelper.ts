@@ -19,21 +19,27 @@ export enum LoginRule {
 const validateLogin = async( {
 	params,
 	request
-} : LoaderFunctionArgs, loggedInRule = LoginRule.DontCare, redirectTo = "/error/401", role = ERoles.member ) : Promise<LoaderDataBase | Response> => {
+} : LoaderFunctionArgs, loggedInRule = LoginRule.DontCare, redirectTo = "/error/401", role? : ERoles ) : Promise<LoaderDataBase | Response> => {
 	const token = window.localStorage.getItem( AUTHTOKEN ) || "";
 	const Response = await tRPC_Public.validate.query( { token } ).catch( console.warn );
 
 	const loggedIn = !!Response?.tokenValid;
-	console.log( loggedIn, loggedInRule );
-	if ( !loggedIn && loggedInRule === LoginRule.LoggedIn || loggedInRule === LoginRule.BlueprintOwner ) {
+
+	if ( !loggedIn && !!role ) {
+		return redirect( redirectTo );
+	}
+
+	if ( loggedIn && !!role ) {
 		const us = new User( token );
-		if ( us.HasPermssion( role ) ) {
+		if ( !us.HasPermssion( role ) ) {
 			return redirect( "/error/401" );
 		}
 	}
-	if ( loggedIn && loggedInRule === LoginRule.LoggedIn || loggedInRule === LoginRule.BlueprintOwner ) {
+
+	if ( !loggedIn && loggedInRule === ( LoginRule.LoggedIn || loggedInRule === LoginRule.BlueprintOwner ) ) {
 		return redirect( redirectTo );
 	}
+
 	if ( loggedIn && loggedInRule === LoginRule.NotLoggedIn ) {
 		return redirect( redirectTo );
 	}

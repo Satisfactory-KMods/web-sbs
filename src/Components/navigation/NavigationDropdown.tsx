@@ -6,7 +6,7 @@ import type {
 import { useRef } from "react";
 
 interface NavigationDropdownProps extends PropsWithChildren {
-	image : string;
+	image? : string;
 	text? : string | ReactElement;
 }
 
@@ -37,9 +37,9 @@ const NavigationDropdown : FunctionComponent<NavigationDropdownProps> = ( { imag
 			<button onClick={ onToggle }
 			        className="inline-flex items-center text-sm font-medium text-center text-neutral-200 hover:text-white focus:outline-none"
 			        type="button">
-				<img className="h-8 w-8 rounded-full"
-				     src={ image }
-				     alt="Logoimage"/>
+				{ image && <img className="h-8 w-8 rounded-full"
+				                src={ image }
+				                alt="Logoimage"/> }
 				{ text && <span className="ml-3 hidden md:block">{ text }</span> }
 			</button>
 			<div

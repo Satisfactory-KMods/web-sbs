@@ -12,5 +12,3 @@ export const loader : LoaderFunction = async( { params, request } ) => {
 	}
 	return json<IndexLoaderData>( { ...result } );
 };
-
-export { loader };

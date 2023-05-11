@@ -16,5 +16,5 @@ const loader : LoaderFunction = async( { params, request } ) => {
 	}
 	return json<LoaderDataBase>( { ...result } );
 };
-
+ 
 export { loader };

@@ -14,12 +14,14 @@ export function useAuth() {
 	const { Storage, SetStorage, ResetStorage } = useLocalStorage( AUTHTOKEN, "" );
 	const { loggedIn, user } = useContext( AuthContext );
 
-	const logout = () => {
-		tRPC_Auth.logout.mutate().then( msg => {
+	const logout = async( preventSwal? : boolean ) => {
+		return tRPC_Auth.logout.mutate().then( async msg => {
 			ResetStorage();
-			fireSwalFromApi( msg, true );
+			if ( !preventSwal ) {
+				await fireSwalFromApi( msg, true );
+				navigate( 0 );
+			}
 		} ).catch( tRPC_handleError );
-		navigate( 0 );
 	};
 
 	const setToken = ( token : string ) => {

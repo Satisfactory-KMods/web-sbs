@@ -45,7 +45,7 @@ const TopNav : FunctionComponent = () => {
 							className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
 							<div className="relative m-1 mt-2 ml-3">
 								<NavigationDropdown text={ loggedIn ? user.Get.username : "Sign In/Up" }
-								                    image={ "/images/logo.png" }>
+									/*image={ "/images/logo.png" }*/>
 									{ !loggedIn && (
 										<>
 											<NavigationDropdownItem to={ "/account/signin" }>
