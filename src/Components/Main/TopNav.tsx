@@ -77,7 +77,7 @@ const TopNav : FunctionComponent = () => {
 
 										<NavigationDropdownItem permission={ ERoles.member }
 										                        to={ "/account/settings" }>Account
-											Settigs</NavigationDropdownItem>
+											Settings</NavigationDropdownItem>
 										<NavigationDropdownItem permission={ ERoles.member }
 										                        to={ "/blueprint/create" }>Create a
 											Blueprint</NavigationDropdownItem>
