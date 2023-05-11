@@ -63,31 +63,36 @@ const TopNav : FunctionComponent = () => {
 										</>
 									) }
 
-									<NavigationDropdownItem permission={ ERoles.admin }
-									                        to={ "/admin/tags" }>Admin: Tags</NavigationDropdownItem>
-									<NavigationDropdownItem permission={ ERoles.admin }
-									                        to={ "/admin/users" }>Admin: Users</NavigationDropdownItem>
-									<NavigationDropdownItem permission={ ERoles.admin }
-									                        to={ "/admin/blacklisted" }>Admin: Blueprint
-										Blacklist</NavigationDropdownItem>
+									{ loggedIn && ( <>
+										<NavigationDropdownItem permission={ ERoles.admin }
+										                        to={ "/admin/tags" }>Admin:
+											Tags</NavigationDropdownItem>
+										<NavigationDropdownItem permission={ ERoles.admin }
+										                        to={ "/admin/users" }>Admin:
+											Users</NavigationDropdownItem>
+										<NavigationDropdownItem permission={ ERoles.admin }
+										                        to={ "/admin/blacklisted" }>Admin: Blueprint
+											Blacklist</NavigationDropdownItem>
 
 
-									<NavigationDropdownItem permission={ ERoles.member }
-									                        to={ "/account/settings" }>Account
-										Settigs</NavigationDropdownItem>
-									<NavigationDropdownItem permission={ ERoles.member }
-									                        to={ "/blueprint/create" }>Create a
-										Blueprint</NavigationDropdownItem>
-									<NavigationDropdownItem permission={ ERoles.member }
-									                        to={ "/blueprint/my" }>My
-										Blueprints</NavigationDropdownItem>
-									<NavigationDropdownItem to={ "#" } onClick={ logout } permission={ ERoles.member }
-									                        className="text-red-600">
-										<RiDoorOpenLine size={ 20 }/>
-										<span className="px-2">
-										Logout
-									</span>
-									</NavigationDropdownItem>
+										<NavigationDropdownItem permission={ ERoles.member }
+										                        to={ "/account/settings" }>Account
+											Settigs</NavigationDropdownItem>
+										<NavigationDropdownItem permission={ ERoles.member }
+										                        to={ "/blueprint/create" }>Create a
+											Blueprint</NavigationDropdownItem>
+										<NavigationDropdownItem permission={ ERoles.member }
+										                        to={ "/blueprint/my" }>My
+											Blueprints</NavigationDropdownItem>
+										<NavigationDropdownItem to={ "#" } onClick={ logout }
+										                        permission={ ERoles.member }
+										                        className="text-red-600">
+											<RiDoorOpenLine size={ 20 }/>
+											<span className="px-2">
+												Logout
+											</span>
+										</NavigationDropdownItem>
+									</> ) }
 								</NavigationDropdown>
 							</div>
 						</div>

@@ -17,11 +17,19 @@ const rootRouter = createBrowserRouter( [
 			// start auth --------------------------------
 			{
 				path: "/account/signin",
-				lazy: async() => await import("@page/account/signin/Page")
+				lazy: async() => await import("@page/account/signin/Page"),
+				loader: async( { request, params } ) => {
+					const { loader } = await import( "@page/account/OnlyLoggedInLoader" );
+					return loader( { request, params } );
+				}
 			},
 			{
 				path: "/account/signup",
-				lazy: async() => await import("@page/account/signup/Page")
+				lazy: async() => await import("@page/account/signup/Page"),
+				loader: async( { request, params } ) => {
+					const { loader } = await import( "@page/account/OnlyLoggedInLoader" );
+					return loader( { request, params } );
+				}
 			},
 			// end auth ----------------------------------
 

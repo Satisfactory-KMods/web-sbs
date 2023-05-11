@@ -7,6 +7,9 @@ export type IndexLoaderData = LoaderDataBase
 
 const blueprintIdLoader : LoaderFunction = async( { params, request } ) => {
 	const result = await validateLogin( { params, request } );
+	if ( result instanceof Response ) {
+		return result;
+	}
 	return json<IndexLoaderData>( { ...result } );
 };
 

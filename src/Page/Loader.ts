@@ -16,6 +16,9 @@ export type LayoutLoaderData = LoaderDataBase & {
 
 export const defaultLoader : LoaderFunction = async( { params, request } ) => {
 	const result = await validateLogin( { params, request } );
+	if ( result instanceof Response ) {
+		return result;
+	}
 
 	const [ mods, tags ] = await Promise.all( [
 		tRPC_Public.mods.getMods.query().catch( tRPC_handleError ),
