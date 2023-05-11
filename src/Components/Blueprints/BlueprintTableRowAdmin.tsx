@@ -33,18 +33,18 @@ const BlueprintTableRowAdmin : FunctionComponent<IBlueprintTableRowProps> = ( { 
 				<ButtonGroup className={ "h-100 w-100" }>
 					<Link to={ `/api/v1/download/${ Blueprint._id }` } target={ "_blank" }
 					      className={ "btn btn-dark rounded-none" }>
-						<Icon.BsDownload/>
+						<Icon.BsDownload />
 					</Link>
 					<Link to={ `/blueprint/edit/${ Blueprint._id }` }
 					      className={ "btn btn-dark rounded-none" }>
-						<Icon.BsGearFill/>
+						<Icon.BsGearFill />
 					</Link>
 					<Button variant={ "success" } className={ "rounded-none" } onClick={ async() => {
 						if ( await ToggleBlacklist() && onToggled !== undefined ) {
 							onToggled();
 						}
 					} }>
-						<Icon.BsCheck2/>
+						<Icon.BsCheck2 />
 					</Button>
 					<Button className={ "rounded-none" }
 					        variant={ "danger" }
@@ -53,7 +53,7 @@ const BlueprintTableRowAdmin : FunctionComponent<IBlueprintTableRowProps> = ( { 
 							        onToggled();
 						        }
 					        } } type={ "button" }>
-						<Icon.BsTrashFill/>
+						<Icon.BsTrashFill />
 					</Button>
 				</ButtonGroup>
 			</td>

@@ -29,7 +29,7 @@ const AdminUserRow : FunctionComponent<IAdminUserRowProps> = ( { User, onEditRol
 			<td className={ "p-0 text-center w-0" }>
 				{ user.Get._id !== User._id && <ButtonGroup className={ "w-100" }>
 					<Button className={ "rounded-none" } variant="danger" onClick={ () => onRemove( User ) }>
-						<Icon.BsTrashFill/>
+						<Icon.BsTrashFill />
 					</Button>
 				</ButtonGroup> }
 			</td>

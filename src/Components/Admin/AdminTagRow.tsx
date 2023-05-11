@@ -16,10 +16,10 @@ const AdminTagRow : FunctionComponent<IAdminTagRowProps> = ( { Tag, onEdit, onRe
 			<td className={ "p-0 text-center w-0" }>
 				<ButtonGroup className={ "w-100" }>
 					<Button className={ "rounded-none" } variant="danger" onClick={ () => onRemove( Tag._id ) }>
-						<Icon.BsTrashFill/>
+						<Icon.BsTrashFill />
 					</Button>
 					<Button className={ "rounded-none" } variant="success" onClick={ () => onEdit( Tag ) }>
-						<Icon.BsPencilSquare/>
+						<Icon.BsPencilSquare />
 					</Button>
 				</ButtonGroup>
 			</td>

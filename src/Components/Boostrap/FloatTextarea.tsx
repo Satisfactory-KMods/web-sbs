@@ -14,11 +14,9 @@ const FloatTextarea : React.FunctionComponent<IFloatTextareaProps> = ( {
 	const ID = useId();
 
 	return (
-		<FloatingLabel
-			controlId={ ID }
+		<FloatingLabel controlId={ ID }
 			label={ children }
-			className={ lableClassName }
-		>
+			className={ lableClassName }>
 			<textarea className={ "form-control " + ( className || "" ) } { ...Props } />
 		</FloatingLabel>
 	);

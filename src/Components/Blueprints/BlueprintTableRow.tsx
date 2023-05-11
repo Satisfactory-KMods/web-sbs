@@ -27,15 +27,15 @@ const BlueprintTableRow : FunctionComponent<IBlueprintTableRowProps> = ( { Data,
 			<td className={ "p-0 w-0 text-center" }>
 				<ButtonGroup className={ "h-100 w-100" }>
 					<Link to={ `/blueprint/${ Blueprint._id }` } className={ "btn btn-dark rounded-none" }>
-						<Icon.BsEyeFill/>
+						<Icon.BsEyeFill />
 					</Link>
 					<Link to={ `/api/v1/download/${ Blueprint._id }` } target={ "_blank" }
 					      className={ "btn btn-dark rounded-none" }>
-						<Icon.BsDownload/>
+						<Icon.BsDownload />
 					</Link>
 					<Link to={ `/blueprint/edit/${ Blueprint._id }` }
 					      className={ "btn btn-dark rounded-none" }>
-						<Icon.BsGearFill/>
+						<Icon.BsGearFill />
 					</Link>
 					<Button className={ "rounded-none" }
 					        variant={ "danger" }
@@ -44,7 +44,7 @@ const BlueprintTableRow : FunctionComponent<IBlueprintTableRowProps> = ( { Data,
 							        onToggled();
 						        }
 					        } } type={ "button" }>
-						<Icon.BsTrashFill/>
+						<Icon.BsTrashFill />
 					</Button>
 				</ButtonGroup>
 			</td>

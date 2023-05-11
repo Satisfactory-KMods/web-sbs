@@ -9,11 +9,9 @@ const FloatInput : React.FunctionComponent<IFloatInputProps> = ( { lableClassNam
 	const ID = useId();
 
 	return (
-		<FloatingLabel
-			controlId={ ID }
+		<FloatingLabel controlId={ ID }
 			label={ children }
-			className={ lableClassName }
-		>
+			className={ lableClassName }>
 			<FormControl { ...Props } />
 		</FloatingLabel>
 	);

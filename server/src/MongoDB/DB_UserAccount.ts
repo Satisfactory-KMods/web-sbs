@@ -36,7 +36,7 @@ const UserAccountSchema = new mongoose.Schema( {
 	}
 } );
 
-export type UserAccount = z.infer<typeof ZodUserAccountSchema> & MongoBase
+export type UserAccount = z.infer<typeof ZodUserAccountSchema> & MongoBase;
 export type ClientUserAccount = Omit<UserAccount, "hash" | "salt" | "__v">;
 
 export default mongoose.model<UserAccount, mongoose.Model<UserAccount, any, UserAccountMethods>>( "SBS_UserAccount", UserAccountSchema );

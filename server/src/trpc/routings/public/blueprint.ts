@@ -1,17 +1,20 @@
-import { z }                  from "zod";
-import { TRPCError }          from "@trpc/server";
+import { BlueprintParser } from "@/server/src/Lib/BlueprintParser";
+import type { BlueprintPack } from "@server/MongoDB/DB_BlueprintPacks";
+import type { BlueprintData } from "@server/MongoDB/DB_Blueprints";
+import DB_Blueprints from "@server/MongoDB/DB_Blueprints";
 import {
 	handleTRCPErr,
 	publicProcedure,
 	router
-}                             from "@server/trpc/trpc";
-import type { BlueprintData } from "@server/MongoDB/DB_Blueprints";
-import DB_Blueprints          from "@server/MongoDB/DB_Blueprints";
+} from "@server/trpc/trpc";
+import { TRPCError } from "@trpc/server";
+import * as fs from "fs";
 import type {
 	FilterQuery,
 	QueryOptions
-}                             from "mongoose";
-import type { BlueprintPack } from "@server/MongoDB/DB_BlueprintPacks";
+} from "mongoose";
+import path from "path";
+import { z } from "zod";
 
 export const filterSchema = z.object( {
 	name: z.string().optional(),
@@ -65,6 +68,27 @@ export function buildFilter<T extends BlueprintData | BlueprintPack>( filter? : 
 }
 
 export const public_blueprint = router( {
+	readBlueprint: publicProcedure.input( z.object( {
+		blueprintId: z.string().min( 6, { message: "Username is to short." } ).optional()
+	} ) ).mutation( async( { input, ctx } ) => {
+		const { blueprintId } = input;
+		try {
+			const BP = ( await DB_Blueprints.findById( blueprintId ) )!;
+			const SBP : Buffer = fs.readFileSync( path.join( __BlueprintDir, blueprintId!, `${ blueprintId }.sbp` ) );
+			const SBPCFG : Buffer = fs.readFileSync( path.join( __BlueprintDir, blueprintId!, `${ blueprintId }.sbp` ) );
+
+			const Blueprint = new BlueprintParser( BP.name, SBP, SBPCFG );
+			if ( Blueprint.Success ) {
+				return Blueprint.Get;
+			}
+			throw new TRPCError( { message: "User not found!", code: "INTERNAL_SERVER_ERROR" } );
+		}
+		catch ( e ) {
+			handleTRCPErr( e );
+		}
+		throw new TRPCError( { message: "Something goes wrong!", code: "INTERNAL_SERVER_ERROR" } );
+	} ),
+
 	getBlueprint: publicProcedure.input( z.object( {
 		blueprintId: z.string()
 	} ) ).query( async( { input } ) => {

@@ -1,21 +1,21 @@
-import type {
-	FormEvent,
-	FunctionComponent
-}                       from "react";
-import { useState }     from "react";
-import { useAuth }      from "@hooks/useAuth";
-import {
-	Button,
-	Label,
-	TextInput
-}                       from "flowbite-react";
-import { useNavigate }  from "react-router-dom";
 import {
 	fireSwalFromApi,
 	tRPC_Auth,
 	tRPC_handleError
-}                       from "@applib/tRPC";
+} from "@applib/tRPC";
+import { useAuth } from "@hooks/useAuth";
 import { usePageTitle } from "@kyri123/k-reactutils";
+import {
+	Button,
+	Label,
+	TextInput
+} from "flowbite-react";
+import type {
+	FormEvent,
+	FunctionComponent
+} from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Component : FunctionComponent = () => {
 	const { user, logout } = useAuth();
@@ -63,49 +63,47 @@ const Component : FunctionComponent = () => {
 	};
 
 	return (
-		<div
-			className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-[85vh] lg:py-0 ">
-			<div
-				className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+		<div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-[85vh] lg:py-0 ">
+			<div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
 				<div className="p-6 space-y-4 md:space-y-6 sm:p-8">
 					<h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
 						Edit your account
 					</h1>
-					<hr className="border-gray-600"/>
+					<hr className="border-gray-600" />
 					<form className="space-y-3 md:space-y-3" onSubmit={ handleSubmit }>
 						<div>
 							<div className="mb-2 block">
-								<Label htmlFor="login" value="Your username"/>
+								<Label htmlFor="login" value="Your username" />
 							</div>
 							<TextInput id="login" type="text" placeholder="Super Mario"
 							           value={ username }
-							           onChange={ e => setUsername( e.target.value ) }/>
+							           onChange={ e => setUsername( e.target.value ) } />
 						</div>
 						<div>
 							<div className="mb-2 block">
-								<Label htmlFor="email" value="Your email"/>
+								<Label htmlFor="email" value="Your email" />
 							</div>
 							<TextInput id="email" type="email" placeholder="kmods@example.com"
 							           value={ email }
-							           onChange={ e => setEmail( e.target.value ) }/>
+							           onChange={ e => setEmail( e.target.value ) } />
 						</div>
 						<div>
 							<div className="mb-2 block">
-								<Label htmlFor="password" value="Password"/>
+								<Label htmlFor="password" value="Password" />
 							</div>
 							<TextInput id="password" type="password" placeholder="Password123"
 							           value={ password }
-							           onChange={ e => setPassword( e.target.value ) }/>
+							           onChange={ e => setPassword( e.target.value ) } />
 						</div>
 						<div>
 							<div className="mb-2 block">
-								<Label htmlFor="password2" value="Repeat Password"/>
+								<Label htmlFor="password2" value="Repeat Password" />
 							</div>
 							<TextInput id="password2" type="password" placeholder="Password123"
 							           value={ password2 }
-							           onChange={ e => setPassword2( e.target.value ) }/>
+							           onChange={ e => setPassword2( e.target.value ) } />
 						</div>
-						<hr className="border-gray-600"/>
+						<hr className="border-gray-600" />
 						<div className="flex items-center justify-between">
 							<Button disabled={ isSending } type="submit">
 								Save Changes
@@ -121,3 +119,4 @@ const Component : FunctionComponent = () => {
 export {
 	Component
 };
+

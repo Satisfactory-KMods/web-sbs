@@ -1,8 +1,8 @@
 import type { LoaderDataBase } from "@app/Types/loader";
 import { validateLogin } from "@applib/loaderHelper";
 import {
-    tRPC_Public,
-    tRPC_handleError
+	tRPC_Public,
+	tRPC_handleError
 } from "@applib/tRPC";
 import type { BlueprintData } from "@server/MongoDB/DB_Blueprints";
 import type { LoaderFunction } from "react-router-dom";

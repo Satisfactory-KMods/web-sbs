@@ -1,25 +1,25 @@
-import type {
-	FormEvent,
-	FunctionComponent
-}                       from "react";
-import { useState }     from "react";
 import {
-	Link,
-	useNavigate
-}                       from "react-router-dom";
+	fireSwalFromApi,
+	tRPC_Public,
+	tRPC_handleError
+} from "@applib/tRPC";
+import { useAuth } from "@hooks/useAuth";
 import { usePageTitle } from "@kyri123/k-reactutils";
-import { useAuth }      from "@hooks/useAuth";
 import {
 	Button,
 	Checkbox,
 	Label,
 	TextInput
-}                       from "flowbite-react";
+} from "flowbite-react";
+import type {
+	FormEvent,
+	FunctionComponent
+} from "react";
+import { useState } from "react";
 import {
-	fireSwalFromApi,
-	tRPC_handleError,
-	tRPC_Public
-}                       from "@applib/tRPC";
+	Link,
+	useNavigate
+} from "react-router-dom";
 
 
 const Component : FunctionComponent = () => {
@@ -50,34 +50,32 @@ const Component : FunctionComponent = () => {
 	};
 
 	return (
-		<div
-			className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-[85vh] lg:py-0 ">
-			<div
-				className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+		<div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-[85vh] lg:py-0 ">
+			<div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
 				<div className="p-6 space-y-4 md:space-y-6 sm:p-8">
 					<h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
 						Sign in to your account
 					</h1>
-					<hr className="border-gray-600"/>
+					<hr className="border-gray-600" />
 					<form className="space-y-3 md:space-y-3" onSubmit={ handleSubmit }>
 						<div>
 							<div className="mb-2 block">
-								<Label htmlFor="login" value="Your email or username"/>
+								<Label htmlFor="login" value="Your email or username" />
 							</div>
 							<TextInput id="login" type="text" placeholder="kmods@example.com" required={ true }
-							           onChange={ e => setLogin( e.target.value ) }/>
+							           onChange={ e => setLogin( e.target.value ) } />
 						</div>
 						<div>
 							<div className="mb-2 block">
-								<Label htmlFor="password" value="Password"/>
+								<Label htmlFor="password" value="Password" />
 							</div>
 							<TextInput id="password" type="password" placeholder="Password123" required={ true }
-							           onChange={ e => setPassword( e.target.value ) }/>
+							           onChange={ e => setPassword( e.target.value ) } />
 						</div>
 						<div className="flex items-center justify-between">
 							<div className="flex items-center gap-2">
 								<Checkbox id="stay" value={ Number( stayLoggedIn ) }
-								          onChange={ e => setStayLoggedIn( e.target.checked ) }/>
+								          onChange={ e => setStayLoggedIn( e.target.checked ) } />
 								<Label htmlFor="stay">
 									Stay logged in
 								</Label>
@@ -86,7 +84,7 @@ const Component : FunctionComponent = () => {
 							      className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500 hidden">Forgot
 								password?</Link>
 						</div>
-						<hr className="border-gray-600"/>
+						<hr className="border-gray-600" />
 						<div className="flex items-center justify-between">
 							<Button disabled={ isSending } type="submit">
 								Sign in
@@ -109,3 +107,4 @@ const Component : FunctionComponent = () => {
 export {
 	Component
 };
+

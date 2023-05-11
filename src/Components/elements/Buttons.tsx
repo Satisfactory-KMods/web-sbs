@@ -22,7 +22,7 @@ const LoadingButton = forwardRef<HTMLButtonElement, LoadingButtonsProps>( ( {
 	}
 	return (
 		<Button disabled={ !!isLoading || !!disabled } { ...props }>
-			{ !!isLoading && <CgSpinner className="mr-2 h-5 w-5 animate-spin"/> || <Icon className="mr-2 h-5 w-5"/> }
+			{ !!isLoading && <CgSpinner className="mr-2 h-5 w-5 animate-spin" /> || <Icon className="mr-2 h-5 w-5" /> }
 			{ children }
 		</Button>
 	);

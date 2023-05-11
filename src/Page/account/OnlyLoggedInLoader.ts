@@ -1,7 +1,7 @@
 import type { LoaderDataBase } from "@app/Types/loader";
 import {
-    LoginRule,
-    validateLogin
+	LoginRule,
+	validateLogin
 } from "@applib/loaderHelper";
 import type { LoaderFunction } from "react-router-dom";
 import { json } from "react-router-dom";
@@ -15,3 +15,4 @@ const loader : LoaderFunction = async( { params, request } ) => {
 };
 
 export { loader };
+

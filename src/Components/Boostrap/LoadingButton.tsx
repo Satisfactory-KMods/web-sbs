@@ -18,7 +18,7 @@ const LoadingButton : FunctionComponent<ILoadingButtonProps> = ( {
 	return (
 		<Button disabled={ IsLoading || disabled } { ...Props }>
 			<>
-				{ IsLoading ? <FaSpinner className={ "animate-spin" }/> : Icon }
+				{ IsLoading ? <FaSpinner className={ "animate-spin" } /> : Icon }
 				{ !IsLoading ? children : "" }
 			</>
 		</Button>

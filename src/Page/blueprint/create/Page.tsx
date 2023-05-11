@@ -155,7 +155,7 @@ const Component : FunctionComponent = () => {
 		<form onSubmit={ HandleSubmit }
 		      className={ "bg-gray-800 p-4 border rounded-4 w-100" }>
 			<h2>{ Lang.Navigation.AddBlueprint }</h2>
-			<hr/>
+			<hr />
 			<FloatInput className={ "mb-3" } onChange={ E => setBlueprintName( E.target.value ) }
 			            value={ BlueprintName }>{ Lang.CreateBlueprint.BlueprintName }</FloatInput>
 			<div className={ "d-flex mb-3" }>
@@ -171,22 +171,21 @@ const Component : FunctionComponent = () => {
 				<Select options={ SelectMods } isMulti={ true } value={ Mods } onChange={ setMods }
 				        isClearable={ true }
 
-				        className="gray-select flex-1" classNamePrefix="my-react-select"/>
+				        className="gray-select flex-1" classNamePrefix="my-react-select" />
 			</InputGroup>
 			<InputGroup className={ "mb-3" }>
 				<InputGroup.Text className="text-bg-dark">{ Lang.CreateBlueprint.Tags }</InputGroup.Text>
 				<Select options={ SelectTags } isMulti={ true } value={ Tags } onChange={ setTags }
 				        isClearable={ true }
-				        className="gray-select flex-1" classNamePrefix="my-react-select"/>
+				        className="gray-select flex-1" classNamePrefix="my-react-select" />
 			</InputGroup>
 			<InputGroup className={ "mb-3" }>
-				<InputGroup.Text
-					className="text-bg-dark">{ Lang.CreateBlueprint.DesignerSize }</InputGroup.Text>
+				<InputGroup.Text className="text-bg-dark">{ Lang.CreateBlueprint.DesignerSize }</InputGroup.Text>
 				<Select isClearable={ false } options={ Object.values( EDesignerSize ).map( R => ( {
 					value: R,
 					label: R
 				} as SelectOptionStruct<EDesignerSize> ) ) } value={ DesignerSize } onChange={ setDesignerSize }
-				        className="gray-select flex-1" classNamePrefix="my-react-select"/>
+				        className="gray-select flex-1" classNamePrefix="my-react-select" />
 			</InputGroup>
 			<FileUploadInput BoxClassName={ "mb-3" } accept=".sbp" onChange={ HandleChange } name={ "sbp" }
 			                 type="file">{ Lang.CreateBlueprint.File1 }</FileUploadInput>
@@ -195,7 +194,7 @@ const Component : FunctionComponent = () => {
 			                 type="file">{ Lang.CreateBlueprint.File2 }</FileUploadInput>
 			<FileUploadInput BoxClassName={ "mb-3" } type="file" onChange={ HandleChange } name={ "image" }
 			                 accept=".jpg,.jpeg">{ Lang.CreateBlueprint.Image }</FileUploadInput>
-			<hr/>
+			<hr />
 			<LoadingButton variant={ "success" } type={ "submit" }
 			               disabled={ !CheckInput() }
 			               IsLoading={ IsSending }>{ Lang.CreateBlueprint.Submit }</LoadingButton>
