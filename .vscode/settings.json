@@ -4,4 +4,4 @@
     "editor.formatOnSave": true
   },
   "eslint.validate": ["typescript"]
- }
+ } 

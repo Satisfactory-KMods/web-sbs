@@ -1,16 +1,16 @@
+import DataContext from "@context/DataContext";
+import type { FilterSchema } from "@server/trpc/routings/public/blueprint";
 import type { SelectOptionStruct } from "@shared/Types/SelectOptions";
+import _ from "lodash";
 import {
 	useCallback,
 	useContext,
 	useMemo
-}                                  from "react";
-import DataContext                 from "@context/DataContext";
-import type { FilterSchema }       from "@server/trpc/routings/public/blueprint";
+} from "react";
 import type {
 	MultiValue,
 	SingleValue
-}                                  from "react-select";
-import _                           from "lodash";
+} from "react-select";
 
 export function useSelectOptions() {
 	const { mods, tags } = useContext( DataContext );

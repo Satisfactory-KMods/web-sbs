@@ -1,8 +1,8 @@
+import { useBlueprint } from "@hooks/useBlueprint";
+import type { BlueprintData } from "@server/MongoDB/DB_Blueprints";
 import type { FunctionComponent } from "react";
-import { useBlueprint }           from "@hooks/useBlueprint";
-import { Link }                   from "react-router-dom";
-import * as Icon                  from "react-icons/bs";
-import type { BlueprintData }     from "@server/MongoDB/DB_Blueprints";
+import * as Icon from "react-icons/bs";
+import { Link } from "react-router-dom";
 
 interface IBlueprintTableRowProps {
 	Data : BlueprintData;

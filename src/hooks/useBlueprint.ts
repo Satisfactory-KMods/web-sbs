@@ -21,7 +21,7 @@ import {
 export interface IBlueprintHookConfig {
 	IgnoreBlacklisted : boolean;
 }
-
+ 
 export function useBlueprint( InitValue : string | BlueprintData, Config? : Partial<IBlueprintHookConfig> ) {
 	const { mods, tags } = useContext( DataContext );
 	const [ Blueprint, setBlueprint ] = useState<BlueprintData>( () => {
@@ -88,7 +88,7 @@ export function useBlueprint( InitValue : string | BlueprintData, Config? : Part
 		}
 		return false;
 	}, [ user, loggedIn, Blueprint.owner, BlueprintValid ] );
-
+ 
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	useEffect( updateData, [ InitValue, BlueprintValid ] );
 
