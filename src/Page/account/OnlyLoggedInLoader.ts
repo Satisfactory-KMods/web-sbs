@@ -11,10 +11,7 @@ const loader : LoaderFunction = async( { params, request } ) => {
 	if ( result instanceof Response ) {
 		return result;
 	}
-	if ( result instanceof Response ) {
-		return result;
-	}
 	return json<LoaderDataBase>( { ...result } );
 };
- 
+
 export { loader };

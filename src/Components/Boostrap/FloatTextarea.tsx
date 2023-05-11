@@ -1,7 +1,5 @@
 import type React from "react";
-import { useId }     from "react";
-import { FloatingLabel }    from "react-bootstrap";
-import type { FormControlProps } from "react-bootstrap/FormControl";
+import { useId }  from "react";
 
 interface IFloatTextareaProps extends FormControlProps {
 	lableClassName? : string | undefined;

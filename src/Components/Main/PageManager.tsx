@@ -1,22 +1,11 @@
-import type {
-	FunctionComponent} from "react";
-import {
-	useEffect
-}                           from "react";
-import type {
-	ButtonProps
-} from "react-bootstrap";
-import {
-	Button,
-	ButtonGroup
-}                           from "react-bootstrap";
+import type { FunctionComponent } from "react";
+import { useEffect }              from "react";
 import {
 	FaAngleDoubleLeft,
 	FaAngleDoubleRight,
 	FaAngleLeft,
 	FaAngleRight
-}                           from "react-icons/all";
-import type { ButtonGroupProps } from "react-bootstrap/ButtonGroup";
+}                                 from "react-icons/all";
 
 interface IPageManagerProps {
 	MaxPage : number,

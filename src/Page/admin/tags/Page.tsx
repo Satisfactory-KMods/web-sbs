@@ -3,12 +3,6 @@ import {
 	useEffect,
 	useState
 }                                 from "react";
-import {
-	Button,
-	Modal,
-	Table
-}                                 from "react-bootstrap";
-import { useLang }                from "@hooks/useLang";
 import { useToggle }              from "@kyri123/k-reactutils";
 import * as Icon                  from "react-icons/bs";
 import FloatInput                 from "@comp/Boostrap/FloatInput";
@@ -19,7 +13,7 @@ import {
 	EApiTags
 }                                 from "@shared/Enum/EApiPath";
 import AdminTagRow                from "@comp/Admin/AdminTagRow";
-import type { Tag }                    from "@server/MongoDB/DB_Tags";
+import type { Tag }               from "@server/MongoDB/DB_Tags";
 
 const Component : FunctionComponent = () => {
 	const { Lang } = useLang();

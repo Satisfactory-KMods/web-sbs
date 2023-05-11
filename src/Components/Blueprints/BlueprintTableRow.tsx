@@ -2,11 +2,7 @@ import type { FunctionComponent } from "react";
 import { useBlueprint }           from "@hooks/useBlueprint";
 import { Link }                   from "react-router-dom";
 import * as Icon                  from "react-icons/bs";
-import {
-	Button,
-	ButtonGroup
-}                                 from "react-bootstrap";
-import type { BlueprintData }          from "@server/MongoDB/DB_Blueprints";
+import type { BlueprintData }     from "@server/MongoDB/DB_Blueprints";
 
 interface IBlueprintTableRowProps {
 	Data : BlueprintData;
@@ -30,18 +26,18 @@ const BlueprintTableRow : FunctionComponent<IBlueprintTableRowProps> = ( { Data,
 			<td className={ "p-2 text-center" }>{ Data.tags.length }</td>
 			<td className={ "p-0 w-0 text-center" }>
 				<ButtonGroup className={ "h-100 w-100" }>
-					<Link to={ `/blueprint/${ Blueprint._id }` } className={ "btn btn-dark rounded-0" }>
+					<Link to={ `/blueprint/${ Blueprint._id }` } className={ "btn btn-dark rounded-none" }>
 						<Icon.BsEyeFill/>
 					</Link>
 					<Link to={ `/api/v1/download/${ Blueprint._id }` } target={ "_blank" }
-					      className={ "btn btn-dark rounded-0" }>
+					      className={ "btn btn-dark rounded-none" }>
 						<Icon.BsDownload/>
 					</Link>
 					<Link to={ `/blueprint/edit/${ Blueprint._id }` }
-					      className={ "btn btn-dark rounded-0" }>
+					      className={ "btn btn-dark rounded-none" }>
 						<Icon.BsGearFill/>
 					</Link>
-					<Button className={ "rounded-0" }
+					<Button className={ "rounded-none" }
 					        variant={ "danger" }
 					        onClick={ async() => {
 						        if ( await ToggleBlacklist() && onToggled !== undefined ) {

@@ -5,18 +5,9 @@ import {
 	useParams
 }                                 from "react-router-dom";
 import { useBlueprint }           from "@hooks/useBlueprint";
-import {
-	Badge,
-	Button,
-	ButtonGroup,
-	Card,
-	Table
-}                                 from "react-bootstrap";
 import { usePageTitle }           from "@kyri123/k-reactutils";
 import ReactMarkdown              from "react-markdown";
 import * as Icon                  from "react-icons/bs";
-import { useLang }                from "@hooks/useLang";
-import Ribbon                     from "@comp/General/Ribbon";
 import { ERoles }                 from "@shared/Enum/ERoles";
 import { useAuth }                from "@hooks/useAuth";
 
@@ -57,7 +48,7 @@ const Component : FunctionComponent = () => {
 					<h3 className={ "py-1 pt-2 px-3 flex-1" }>{ Blueprint.name }</h3>
 					<Button disabled={ !AllowToLike }
 					        variant={ loggedIn ? ( !Blueprint.likes.includes( user.Get._id ) ? "danger" : "success" ) : "dark" }
-					        onClick={ ToggleLike } type={ "button" } className={ "rounded-0 rounded-tr-2xl px-4" }>
+					        onClick={ ToggleLike } type={ "button" } className={ "rounded-none rounded-tr-2xl px-4" }>
 						{ !Blueprint.likes.includes( user.Get._id ) ?
 							<Icon.BsFillHeartbreakFill className={ "me-2" }/> :
 							<Icon.BsFillHeartFill className={ "me-2" }/> } { Blueprint.likes.length }

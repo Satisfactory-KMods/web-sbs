@@ -1,22 +1,12 @@
 import type { FunctionComponent }  from "react";
 import { useState }                from "react";
 import { usePageTitle }            from "@kyri123/k-reactutils";
-import BlueprintCard               from "@comp/Blueprints/BlueprintCard";
-import {
-	Button,
-	Card,
-	Col,
-	Form,
-	Row
-}                                  from "react-bootstrap";
-import Ribbon                      from "@comp/General/Ribbon";
 import type {
 	MultiValue,
 	SingleValue
 }                                  from "react-select";
 import Select                      from "react-select";
 import type { SelectOptionStruct } from "@shared/Types/SelectOptions";
-import PageManager                 from "@comp/Main/PageManager";
 import { useLoaderData }           from "react-router-dom";
 import type { IndexLoaderData }    from "@page/blueprint/list/Loader";
 import {
@@ -27,6 +17,15 @@ import { useRawPageHandler }       from "@hooks/useRawPageHandler";
 import type { FilterSchema }       from "@server/trpc/routings/public/blueprint";
 import { useSelectOptions }        from "@hooks/useSelectOptions";
 import type { BlueprintData }      from "@server/MongoDB/DB_Blueprints";
+import {
+	BiTrash,
+	HiSearch
+}                                  from "react-icons/all";
+import { LoadingButton }           from "@comp/elements/Buttons";
+import {
+	SBSSelect,
+	SBSTextInput
+}                                  from "@comp/elements/Inputs";
 
 const Component : FunctionComponent = () => {
 	const { blueprints, totalBlueprints } = useLoaderData() as IndexLoaderData;
@@ -34,17 +33,19 @@ const Component : FunctionComponent = () => {
 
 	const [ TotalBlueprints, setTotalBlueprints ] = useState<number>( () => totalBlueprints );
 	const [ Blueprints, setBlueprints ] = useState<BlueprintData[]>( () => blueprints );
-
+	const [ isFetching, setIsFetching ] = useState<boolean>( false );
 
 	const [ filter, setFilter ] = useState<FilterSchema>( {} );
 
 	async function onPageChange( options : { skip : number, limit : number }, newFiler? : FilterSchema ) {
+		setIsFetching( true );
 		const queryFilter = { filterOptions: { ...filter, ...newFiler }, ...options };
 		const Blueprints = await tRPC_Public.blueprint.getBlueprints.query( queryFilter ).catch( tRPC_handleError );
 		if ( Blueprints ) {
 			setBlueprints( Blueprints.blueprints );
 			setTotalBlueprints( Blueprints.totalBlueprints );
 		}
+		setIsFetching( false );
 	}
 
 	const { setPage, currentPage, maxPage, filterOption } = useRawPageHandler( TotalBlueprints, onPageChange, 10 );
@@ -55,7 +56,7 @@ const Component : FunctionComponent = () => {
 	const [ Select_Mods, setSelect_Mods ] = useState<MultiValue<SelectOptionStruct>>( [] );
 	const [ Select_Tags, setSelect_Tags ] = useState<MultiValue<SelectOptionStruct>>( [] );
 
-	usePageTitle( `SBS - ${ Lang.Navigation.Home }` );
+	usePageTitle( `SBS - Blueprints` );
 
 	const DoFetch = async() => {
 		const filter : FilterSchema = {
@@ -87,74 +88,55 @@ const Component : FunctionComponent = () => {
 
 	return (
 		<>
-			<Card>
-				<Card.Header className={ "d-flex p-0" }>
-					<h4 className={ "py-1 pt-2 px-3 flex-1" }>{ Lang.General.SearchFilter }</h4>
-					<Ribbon innerClassName={ "text-bg-danger" }>ALPHA</Ribbon>
-				</Card.Header>
-				<Card.Body>
-					<Row>
-						<Col sm={ 12 } md={ 6 }>
-							<div className={ "bg-dark rounded-2 border mt-2 pt-2" }>
-								<span className={ "px-2" }>{ Lang.CreateBlueprint.BlueprintName }</span>
-								<Form.Control className={ "bg-neutral-700 mt-2" } value={ BlueprintName }
-								              onChange={ V => setBlueprintName( V.target.value ) }/>
-							</div>
-						</Col>
-						<Col sm={ 12 } md={ 6 }>
-							<div className={ "bg-dark rounded-2 border mt-2 pt-2" }>
-								<span className={ "px-2" }>{ Lang.General.SortingBy }</span>
-								<Select options={ sortSelectOptions } className="mt-2 my-react-select-container flex-1"
-								        classNamePrefix="my-react-select" isMulti={ false } value={ Select_Sorting }
-								        onChange={ setSelect_Sorting }/>
-							</div>
-						</Col>
-					</Row>
-					<Row>
-						<Col sm={ 12 } md={ 4 }>
-							<div className={ "bg-dark rounded-2 border mt-2 pt-2" }>
-								<span className={ "px-2" }>{ Lang.General.FilterMods }</span>
-								<Select options={ vanillaSelectOptions }
-								        className="mt-2 my-react-select-container flex-1"
-								        value={ Select_Vanilla } isClearable={ true }
-								        classNamePrefix="my-react-select" onChange={ setSelect_Vanilla }/>
-							</div>
-						</Col>
-						<Col sm={ 12 } md={ 4 }>
-							<div className={ "bg-dark rounded-2 border mt-2 pt-2" }>
-								<span className={ "px-2" }>{ Lang.CreateBlueprint.Mods }</span>
-								<Select options={ modSelectOptions } className="mt-2 my-react-select-container flex-1"
-								        value={ Select_Mods } isDisabled={ !!Select_Vanilla?.value }
-								        classNamePrefix="my-react-select" isMulti={ true } onChange={ setSelect_Mods }/>
-							</div>
-						</Col>
-						<Col sm={ 12 } md={ 4 }>
-							<div className={ "bg-dark rounded-2 border mt-2 pt-2" }>
-								<span className={ "px-2" }>{ Lang.CreateBlueprint.Tags }</span>
-								<Select options={ tagsSelectOptions } className="mt-2 my-react-select-container flex-1"
-								        value={ Select_Tags }
-								        classNamePrefix="my-react-select" isMulti={ true } onChange={ setSelect_Tags }/>
-							</div>
-						</Col>
-					</Row>
-					<div className={ "mt-3" }>
-						<Button className={ "me-2" } onClick={ DoFetch }>{ Lang.General.Search }</Button>
-						<Button variant={ "danger" } onClick={ ResetSearch }>{ Lang.General.ClearSearch }</Button>
-					</div>
-				</Card.Body>
-			</Card>
+			<div
+				className="w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+				<div className="bg-gray-700 p-3 text-2xl font-semibold text-neutral-300 border-b border-gray-600">
+					Blueprint Filter
+				</div>
+				<div className="p-5 grid grid-cols-1 text-neutral-200 md:grid-cols-2 lg:grid-cols-3 gap-2">
+					<SBSTextInput label="Blueprint Name" value={ BlueprintName }
+					              onChange={ ( e : any ) => setBlueprintName( e.target.value ) }>
+						<HiSearch/>
+					</SBSTextInput>
+					<SBSSelect label="Sort By">
+						<Select options={ sortSelectOptions } className="gray-select flex-1"
+						        classNamePrefix="my-react-select" isMulti={ false } value={ Select_Sorting }
+						        onChange={ setSelect_Sorting }/>
+					</SBSSelect>
 
-			<PageManager MaxPage={ maxPage } OnPageChange={ setPage } Page={ currentPage }
-			             Hide={ maxPage <= 1 }
-			             ButtonGroupProps={ { className: "mt-3 w-100 bg-dark" } }
-			             ButtonProps={ { size: "sm", className: "btn-dark" } }/>
-			<Row className={ "px-3 mt-3" }>
-				{ Blueprints.map( BP => <BlueprintCard key={ BP._id } Data={ BP } onToggled={ DoFetch }/> ) }
-			</Row>
-			<PageManager MaxPage={ maxPage } OnPageChange={ setPage } Page={ currentPage }
-			             Hide={ maxPage <= 1 }
-			             ButtonGroupProps={ { className: "mt-3 w-100 bg-dark" } }
-			             ButtonProps={ { size: "sm", className: "btn-dark" } }/>
+					<SBSSelect label="Filter Modded">
+						<Select options={ vanillaSelectOptions }
+						        className="gray-select flex-1"
+						        value={ Select_Vanilla } isClearable={ true }
+						        classNamePrefix="my-react-select" onChange={ setSelect_Vanilla }/>
+					</SBSSelect>
+
+					{ Select_Vanilla?.value !== true && <SBSSelect label="Mods">
+						<Select options={ modSelectOptions } className="gray-select flex-1"
+						        value={ Select_Mods } isDisabled={ !!Select_Vanilla?.value }
+						        classNamePrefix="my-react-select" isMulti={ true } onChange={ setSelect_Mods }/>
+					</SBSSelect> }
+
+					<SBSSelect label="Tags">
+						<Select options={ tagsSelectOptions } className="gray-select flex-1"
+						        value={ Select_Tags }
+						        classNamePrefix="my-react-select" isMulti={ true } onChange={ setSelect_Tags }/>
+					</SBSSelect>
+
+					<div className={ "mt-2 md:mt-0 flex gap-2" }>
+						<LoadingButton isLoading={ isFetching } color={ "gray" } className={ "flex-1" }
+						               Icon={ HiSearch } onClick={ DoFetch }>
+							Search
+						</LoadingButton>
+						<LoadingButton isLoading={ isFetching } color={ "red" } className={ "flex-1" } Icon={ BiTrash }
+						               onClick={ ResetSearch }>
+							Clear Searching
+						</LoadingButton>
+					</div>
+				</div>
+			</div>
+
+			{/* Blueprints.map( BP => <BlueprintCard key={ BP._id } Data={ BP } onToggled={ DoFetch }/> )*/ }
 		</>
 	);
 };

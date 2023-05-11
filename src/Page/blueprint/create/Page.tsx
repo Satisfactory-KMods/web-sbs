@@ -19,10 +19,6 @@ import {
 	EApiUserBlueprints
 }                                  from "@shared/Enum/EApiPath";
 import type { Blueprint }          from "@etothepii/satisfactory-file-parser";
-import {
-	Button,
-	InputGroup
-}                                  from "react-bootstrap";
 import type {
 	MultiValue,
 	SingleValue
@@ -175,13 +171,13 @@ const Component : FunctionComponent = () => {
 				<Select options={ SelectMods } isMulti={ true } value={ Mods } onChange={ setMods }
 				        isClearable={ true }
 
-				        className="my-react-select-container flex-1" classNamePrefix="my-react-select"/>
+				        className="gray-select flex-1" classNamePrefix="my-react-select"/>
 			</InputGroup>
 			<InputGroup className={ "mb-3" }>
 				<InputGroup.Text className="text-bg-dark">{ Lang.CreateBlueprint.Tags }</InputGroup.Text>
 				<Select options={ SelectTags } isMulti={ true } value={ Tags } onChange={ setTags }
 				        isClearable={ true }
-				        className="my-react-select-container flex-1" classNamePrefix="my-react-select"/>
+				        className="gray-select flex-1" classNamePrefix="my-react-select"/>
 			</InputGroup>
 			<InputGroup className={ "mb-3" }>
 				<InputGroup.Text
@@ -190,7 +186,7 @@ const Component : FunctionComponent = () => {
 					value: R,
 					label: R
 				} as SelectOptionStruct<EDesignerSize> ) ) } value={ DesignerSize } onChange={ setDesignerSize }
-				        className="my-react-select-container flex-1" classNamePrefix="my-react-select"/>
+				        className="gray-select flex-1" classNamePrefix="my-react-select"/>
 			</InputGroup>
 			<FileUploadInput BoxClassName={ "mb-3" } accept=".sbp" onChange={ HandleChange } name={ "sbp" }
 			                 type="file">{ Lang.CreateBlueprint.File1 }</FileUploadInput>

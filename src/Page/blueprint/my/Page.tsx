@@ -3,7 +3,6 @@ import {
 	useEffect,
 	useState
 }                                 from "react";
-import { Table }                  from "react-bootstrap";
 import { API_QueryLib }           from "@applib/Api/API_Query.Lib";
 import { EApiQuestionary }        from "@shared/Enum/EApiPath";
 import BlueprintTableRow          from "@comp/Blueprints/BlueprintTableRow";

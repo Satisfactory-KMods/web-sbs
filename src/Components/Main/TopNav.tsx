@@ -84,7 +84,7 @@ const TopNav : FunctionComponent = () => {
 										<NavigationDropdownItem permission={ ERoles.member }
 										                        to={ "/blueprint/my" }>My
 											Blueprints</NavigationDropdownItem>
-										<NavigationDropdownItem to={ "#" } onClick={ logout }
+										<NavigationDropdownItem to={ "#" } onClick={ () => logout() }
 										                        permission={ ERoles.member }
 										                        className="text-red-600">
 											<RiDoorOpenLine size={ 20 }/>

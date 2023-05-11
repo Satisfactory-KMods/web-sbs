@@ -14,7 +14,6 @@ import {
 import fs             from "fs";
 
 const react = [ "react", "react-router-dom", "react-dom" ];
-const bootstrap = [ "react-bootstrap", "bootstrap" ];
 const icons = [ "react-icons" ];
 const addons = [ "react-markdown", "react-select", "lodash" ];
 const sweetalert = [ "sweetalert2", "sweetalert2-react-content" ];
@@ -60,7 +59,7 @@ export default defineConfig( ( { command, mode, ssrBuild } ) => {
 					chunkFileNames: `chunk/[name].[hash].js`,
 					assetFileNames: `asset/[name].[hash].[ext]`,
 					manualChunks: {
-						react, bootstrap, icons, addons, sweetalert
+						react, icons, addons, sweetalert
 						//...renderChunks( dependencies )
 					}
 				}

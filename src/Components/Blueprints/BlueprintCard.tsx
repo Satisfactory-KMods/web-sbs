@@ -1,20 +1,11 @@
 import type { FunctionComponent } from "react";
-import {
-	Badge,
-	Button,
-	ButtonGroup,
-	Card,
-	Col
-}                                 from "react-bootstrap";
-import { useLang }                from "@hooks/useLang";
 import { Link }                   from "react-router-dom";
 import * as Icon                  from "react-icons/bs";
 import { useBlueprint }           from "@hooks/useBlueprint";
-import Ribbon                     from "@comp/General/Ribbon";
 import ReactMarkdown              from "react-markdown";
 import { ERoles }                 from "@shared/Enum/ERoles";
 import { useAuth }                from "@hooks/useAuth";
-import type { BlueprintData }          from "@server/MongoDB/DB_Blueprints";
+import type { BlueprintData }     from "@server/MongoDB/DB_Blueprints";
 
 interface IBlueprintCardProps {
 	Data : BlueprintData;
