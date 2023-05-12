@@ -13,7 +13,7 @@ export function useRawPageHandler<T extends Array<T>>( length : number, onPageUp
 
 	const setPage = useCallback( async( page : number ) => {
 		updatePage( () => page );
-		await onPageUpdated( { skip: page * show, limit: show } );
+		await onPageUpdated( { skip: page - 1 * show, limit: show } );
 	}, [ onPageUpdated, show ] );
 
 	useEffect( () => {

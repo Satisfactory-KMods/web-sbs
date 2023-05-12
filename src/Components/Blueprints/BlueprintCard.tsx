@@ -3,6 +3,7 @@ import { useBlueprint } from "@hooks/useBlueprint";
 import type { BlueprintData } from "@server/MongoDB/DB_Blueprints";
 import { useId, type FunctionComponent } from "react";
 import { Link } from "react-router-dom";
+import BlueprintRating from "./BlueprintRating";
 
 interface IBlueprintCardProps {
 	Data : BlueprintData;
@@ -27,13 +28,14 @@ const BlueprintCard : FunctionComponent<IBlueprintCardProps> = ( { Data, onToggl
 	const MoreCount = ModList.length;
 	const DisplayMods = SpliceMods.map( R =>
 		<Link key={ id + R.id } to={ `https://ficsit.app/mod/${ R.mod_reference }` }
-		      target={ "_blank" }
-		      className={ " m-1 p-0" }>{ R.name }</Link> );
-	
-			  console.log(Data);
+			target="_blank"
+			className="m-1 p-0">{ R.name }</Link> );
 	return (
 		<div className="w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-			
+			<img className="rounded-t-lg" src={ "/api/v1/image/" + Blueprint._id } alt="BlueprintLogo" />
+			<div className="p-3">
+				<BlueprintRating blueprint={ Blueprint } />
+			</div>
 		</div>
 	);
 };

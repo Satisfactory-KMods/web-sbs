@@ -30,11 +30,16 @@
     "@typescript-eslint"
   ],
   "rules": { 
+    "no-trailing-spaces": "warn",
+    "template-curly-spacing": ["error", "always"],
+    "object-curly-spacing": ["warn", "always"],
+    "space-in-parens": ["warn", "always"],
+    "space-before-function-paren": ["warn", "never"],
     "brace-style": ["error", "1tbs", { 
       "allowSingleLine": false 
     }],
     "indent": "off",
-    "@typescript-eslint/indent": ["error", "tab"],
+    "@typescript-eslint/indent": ["warn", "tab"],
     "no-tabs": 0,
     "no-restricted-imports":"warn",
     "react/jsx-closing-bracket-location": ["warn", "after-props"],
@@ -44,10 +49,6 @@
       "multiline": "consistent", 
       "singleline": "consistent" 
     }],
-    "react/jsx-props-no-multi-spaces": ["warn"],
-    "react/jsx-tag-spacing": ["warn"],
-    "react/jsx-curly-spacing": ["warn", "always"],
-    "object-curly-spacing": ["warn", "always"], 
     "array-bracket-spacing": ["warn", "always"], 
     "computed-property-spacing": ["warn", "always"],
     "@typescript-eslint/semi": "error",
@@ -67,19 +68,27 @@
       "warn",
       "always"
     ],
+    "no-mixed-spaces-and-tabs": 0,
     "prefer-const": "warn",
     "no-control-regex": "off",
     "no-empty": "off",
     "no-var": "off",
-    "jsx-a11y/no-static-element-interactions": "off",
-    "jsx-a11y/click-events-have-key-events": "off",
-    "no-mixed-spaces-and-tabs": "off",
     "@typescript-eslint/no-var-requires": "off",
     "@typescript-eslint/no-non-null-asserted-optional-chain": "off",
     "@typescript-eslint/ban-ts-comment": "off",
     "@typescript-eslint/no-empty-function": "off",
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-non-null-assertion": "off",
+    "react/jsx-curly-brace-presence": [
+      "error",
+      { "props": "never", "children": "never" }
+    ],
+    "react/jsx-curly-spacing": ["warn", {
+      "when": "always",
+      "children": {
+        "when": "always"
+      }
+    }],
     "@typescript-eslint/no-unused-vars": [
       "off",
       {
@@ -88,6 +97,10 @@
         "caughtErrorsIgnorePattern": "^_"
       }
     ],
+    "react/jsx-props-no-multi-spaces": ["warn"],
+    "react/jsx-tag-spacing": ["warn"],
+    "jsx-a11y/no-static-element-interactions": "off",
+    "jsx-a11y/click-events-have-key-events": "off",
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn"
   }
