@@ -8,9 +8,12 @@ declare global {
 			MONGODB_USER: string;
 			MONGODB_PASSWD: string;
 			MONGODB_DATABASE: string;
+			// for mod requests
+			APIKey: string
 		}
 	}
 }
 
 
 export { };
+

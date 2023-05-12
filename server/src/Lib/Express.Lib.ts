@@ -12,6 +12,7 @@ import type {
 	Response
 } from "express";
 import * as jwt from "jsonwebtoken";
+import _ from "lodash";
 import multer from "multer";
 
 export function ApiUrl( Url: TApiPath | string ) {
@@ -68,6 +69,16 @@ export async function MW_Blueprint( req: ExpressRequest<{
 				return next();
 			}
 		}
+	}
+	return res.status( 401 ).json( errorResponse( "Unauthorized", res ) );
+}
+
+export async function MW_Rest( req: Request, res: Response, next: NextFunction ) {
+	const apiKey = req.header( 'x-api-key' );
+	if( _.isEqual( apiKey, process.env.APIKey ) && process.env.APIKey ) {
+		return next();
+	} else if( !process.env.APIKey ) {
+		SystemLib.LogFatal( "MOD", "No API Key provided" );
 	}
 	return res.status( 401 ).json( errorResponse( "Unauthorized", res ) );
 }
