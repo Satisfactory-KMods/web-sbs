@@ -1,6 +1,6 @@
 import type {
 	FunctionComponent,
-	PropsWithChildren} from "react";
+	PropsWithChildren } from "react";
 import type React from "react";
 import {
 	useId

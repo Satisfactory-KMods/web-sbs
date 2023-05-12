@@ -29,7 +29,7 @@ const SBSTextInput = React.forwardRef<HTMLInputElement, SBSTextInputProps>( ( {
 						{ children }
 					</div>
 					<input { ...props } id={ id } ref={ ref }
-					       className={ `pe-10 block w-full border disabled:cursor-not-allowed disabled:opacity-50 bg-gray-50 border-gray-300 text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 rounded-r-lg p-2.5 text-sm dark:hover:border-gray-500 ${ className || "" }` }/>
+					       className={ `pe-10 block w-full border disabled:cursor-not-allowed disabled:opacity-50 bg-gray-50 border-gray-300 text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 rounded-r-lg p-2.5 text-sm dark:hover:border-gray-500 ${ className || "" }` } />
 				</div>
 			</div>
 		</div>

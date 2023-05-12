@@ -1,5 +1,5 @@
 import type {
-	Blueprint} from "@etothepii/satisfactory-file-parser";
+	Blueprint } from "@etothepii/satisfactory-file-parser";
 import {
 	Parser
 } from "@etothepii/satisfactory-file-parser";

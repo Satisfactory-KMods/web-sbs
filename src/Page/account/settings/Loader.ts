@@ -1,10 +1,10 @@
-import type { LoaderFunction } from "react-router-dom";
-import { json }                from "react-router-dom";
+import type { LoaderDataBase } from "@app/Types/loader";
 import {
 	LoginRule,
 	validateLogin
-}                              from "@applib/loaderHelper";
-import type { LoaderDataBase } from "@app/types/loader";
+} from "@applib/loaderHelper";
+import type { LoaderFunction } from "react-router-dom";
+import { json } from "react-router-dom";
 
 export type IndexLoaderData = LoaderDataBase;
 
@@ -17,3 +17,4 @@ const loader : LoaderFunction = async( { params, request } ) => {
 };
 
 export { loader };
+ 

@@ -1,13 +1,14 @@
+
 import type {
 	LoaderBlueprintBase,
 	LoaderDataBase
-}                                  from "@app/types/loader";
+} from "@app/Types/loader";
+import { AUTHTOKEN } from "@applib/constance";
+import { tRPC_Public } from "@applib/tRPC";
 import type { LoaderFunctionArgs } from "@remix-run/router/utils";
-import { AUTHTOKEN }               from "@applib/constance";
-import { redirect }                from "react-router-dom";
-import { tRPC_Public }             from "@applib/tRPC";
-import { User }                    from "@shared/Class/User.Class";
-import { ERoles }                  from "@shared/Enum/ERoles";
+import { User } from "@shared/Class/User.Class";
+import { ERoles } from "@shared/Enum/ERoles";
+import { redirect } from "react-router-dom";
 
 export enum LoginRule {
 	NotLoggedIn,
@@ -16,7 +17,7 @@ export enum LoginRule {
 	DontCare
 }
 
-const validateLogin = async( {
+const validateLogin = async( { 
 	params,
 	request
 } : LoaderFunctionArgs, loggedInRule = LoginRule.DontCare, redirectTo = "/error/401", role? : ERoles ) : Promise<LoaderDataBase | Response> => {
@@ -74,3 +75,4 @@ const validateBlueprint = async( {
 };
 
 export { validateLogin };
+

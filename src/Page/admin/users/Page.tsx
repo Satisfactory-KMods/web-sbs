@@ -55,21 +55,21 @@ const Component : FunctionComponent = () => {
 	return (
 		<Table striped bordered hover size="sm" variant="dark">
 			<thead>
-			<tr>
-				<th colSpan={ 4 }>
-					<h3 className="p-2 flex-1">{ Lang.Navigation.Admin_Users }</h3>
-				</th>
-			</tr>
-			<tr>
-				<th className={ "px-2 text-center" }>{ Lang.AdminUsers.Id }</th>
-				<th className={ "px-3 text-center" }>{ Lang.AdminUsers.Username }</th>
-				<th className={ "px-3 text-center" }>{ Lang.AdminUsers.Role }</th>
-				<th className={ "px-3 text-center w-0" }>{ Lang.AdminTags.Actions }</th>
-			</tr>
+				<tr>
+					<th colSpan={ 4 }>
+						<h3 className="p-2 flex-1">{ Lang.Navigation.Admin_Users }</h3>
+					</th>
+				</tr>
+				<tr>
+					<th className={ "px-2 text-center" }>{ Lang.AdminUsers.Id }</th>
+					<th className={ "px-3 text-center" }>{ Lang.AdminUsers.Username }</th>
+					<th className={ "px-3 text-center" }>{ Lang.AdminUsers.Role }</th>
+					<th className={ "px-3 text-center w-0" }>{ Lang.AdminTags.Actions }</th>
+				</tr>
 			</thead>
 			<tbody>
-			{ Users.map( R => <AdminUserRow key={ R._id } User={ R } onRemove={ onRemove }
-			                                onEditRole={ onEditRole }/> ) }
+				{ Users.map( R => <AdminUserRow key={ R._id } User={ R } onRemove={ onRemove }
+			                                onEditRole={ onEditRole } /> ) }
 			</tbody>
 		</Table>
 	);

@@ -12,15 +12,13 @@ export const mdxComponents : Components = {
 	li: ( { children } ) => <li className="mt-1">{ children }</li>,
 	img: ( { alt, src } ) => (
 		<div className="relative w-full aspect-video drop-shadow-xl">
-			<img
-				src={ src }
+			<img src={ src }
 				alt={ alt }
-				className="mt-4 mb-4"
-			/>
+				className="mt-4 mb-4" />
 		</div>
 	),
 	h1: ( { children } ) => <h1 className="text-3xl font-bold mb-2">{ children }
-		<hr className="border-gray-500 mt-2"/>
+		<hr className="border-gray-500 mt-2" />
 	</h1>,
 	h2: ( { children } ) => <h1 className="text-3xl font-bold mb-2">{ children } </h1>,
 	h3: ( { children } ) => <h1 className="text-2xl font-bold mb-2">{ children } </h1>,

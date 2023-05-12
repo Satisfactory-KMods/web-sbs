@@ -1,4 +1,4 @@
-import type { LoaderDataBase } from "@app/types/loader";
+import type { LoaderDataBase } from "@app/Types/loader";
 import { validateLogin } from "@applib/loaderHelper";
 import {
 	tRPC_Public,

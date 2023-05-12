@@ -1,11 +1,13 @@
+import { Button, type ButtonGroupProps, type ButtonProps } from "flowbite-react";
+import ButtonGroup from "flowbite-react/lib/esm/components/Button/ButtonGroup";
 import type { FunctionComponent } from "react";
-import { useEffect }              from "react";
+import { useEffect } from "react";
 import {
 	FaAngleDoubleLeft,
 	FaAngleDoubleRight,
 	FaAngleLeft,
 	FaAngleRight
-}                                 from "react-icons/all";
+} from "react-icons/all";
 
 interface IPageManagerProps {
 	MaxPage : number,
@@ -38,14 +40,14 @@ const PageManager : FunctionComponent<IPageManagerProps> = ( {
 	return (
 		<ButtonGroup { ...ButtonGroupProps }>
 			<Button { ...ButtonProps } onClick={ () => OnPageChange( 0 ) }
-			        disabled={ Page === 0 }><FaAngleDoubleLeft/></Button>
+			        disabled={ Page === 0 }><FaAngleDoubleLeft /></Button>
 			<Button { ...ButtonProps } onClick={ () => OnPageChange( Page - 1 ) }
-			        disabled={ Page - 1 <= 0 }><FaAngleLeft/></Button>
+			        disabled={ Page - 1 <= 0 }><FaAngleLeft /></Button>
 			<Button { ...ButtonProps } disabled={ true }>{ Page + 1 }</Button>
 			<Button { ...ButtonProps } onClick={ () => OnPageChange( Page + 1 ) }
-			        disabled={ Page + 1 >= MaxPage }><FaAngleRight/></Button>
+			        disabled={ Page + 1 >= MaxPage }><FaAngleRight /></Button>
 			<Button { ...ButtonProps } onClick={ () => OnPageChange( MaxPage - 1 ) }
-			        disabled={ Page === MaxPage - 1 }><FaAngleDoubleRight/></Button>
+			        disabled={ Page === MaxPage - 1 }><FaAngleDoubleRight /></Button>
 		</ButtonGroup>
 	);
 };

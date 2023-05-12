@@ -1,7 +1,7 @@
-import type * as http            from "http";
-import type core                 from "express";
-import type { SystemLib_Class }  from "@server/Lib/System.Lib";
+import type { SystemLib_Class } from "@server/Lib/System.Lib";
 import type { TaskManagerClass } from "@server/Tasks/TaskManager";
+import type core from "express";
+import type * as http from "http";
 
 export declare global {
 	var DownloadIPCached : { ip : string, id : string }[];
@@ -18,5 +18,4 @@ export declare global {
 	var __MountDir : string;
 	var __LogFile : string;
 	var __BlueprintDir : string;
-
-}
+} 

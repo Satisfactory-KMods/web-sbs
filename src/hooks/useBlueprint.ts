@@ -1,27 +1,29 @@
+import DataContext from "@app/Context/DataContext";
+import { fireSwalFromApi, tRPC_Public, tRPC_handleError } from "@app/Lib/tRPC";
+import { API_QueryLib } from "@applib/Api/API_Query.Lib";
+import type { Blueprint } from "@etothepii/satisfactory-file-parser";
+import { useAuth } from "@hooks/useAuth";
+import type { Mod } from "@kyri123/lib";
+import type { BlueprintData } from "@server/MongoDB/DB_Blueprints";
+import type { Tag } from "@server/MongoDB/DB_Tags";
 import {
+	EApiUserBlueprints
+} from "@shared/Enum/EApiPath";
+import { EDesignerSize } from "@shared/Enum/EDesignerSize";
+import { ERoles } from "@shared/Enum/ERoles";
+import {
+	useContext,
 	useEffect,
 	useMemo,
 	useState
-}                         from "react";
-import { API_QueryLib }   from "@applib/Api/API_Query.Lib";
-import {
-	EApiBlueprintUtils,
-	EApiQuestionary,
-	EApiUserBlueprints
-}                         from "@shared/Enum/EApiPath";
-import { EDesignerSize }  from "@shared/Enum/EDesignerSize";
-import { ERoles }         from "@shared/Enum/ERoles";
-import type { Blueprint } from "@etothepii/satisfactory-file-parser";
-import { useAuth }        from "@hooks/useAuth";
-import type { BlueprintData }  from "@server/MongoDB/DB_Blueprints";
-import type { Mod }            from "@server/MongoDB/DB_Mods";
-import type { Tag }            from "@server/MongoDB/DB_Tags";
+} from "react";
 
 export interface IBlueprintHookConfig {
 	IgnoreBlacklisted : boolean;
 }
-
+ 
 export function useBlueprint( InitValue : string | BlueprintData, Config? : Partial<IBlueprintHookConfig> ) {
+	const { mods, tags } = useContext( DataContext );
 	const [ Blueprint, setBlueprint ] = useState<BlueprintData>( () => {
 		if ( typeof InitValue === "string" ) {
 			return {
@@ -38,11 +40,11 @@ export function useBlueprint( InitValue : string | BlueprintData, Config? : Part
 		}
 		return InitValue as BlueprintData;
 	} );
-	const [ DoQueryLikes, setDoQueryLikes ] = useState<boolean>( false );
 	const { loggedIn, user } = useAuth();
-	const [ Mods, setMods ] = useState<Mod[]>( [] );
-	const [ Tags, setTags ] = useState<Tag[]>( [] );
+	const [ DoQueryLikes, setDoQueryLikes ] = useState<boolean>( false );
 	const [ BlueprintData, setBlueprintData ] = useState<Blueprint | undefined>( undefined );
+	const [ Tags, setTags ] = useState<Tag[]>( [] );
+	const [ Mods, setMods ] = useState<Mod[]>( [] );
 
 	const BlueprintID = useMemo( () => {
 		if ( typeof InitValue === "string" ) {
@@ -62,27 +64,21 @@ export function useBlueprint( InitValue : string | BlueprintData, Config? : Part
 		return Blueprint._id !== "" && !Blueprint.blacklisted;
 	}, [ Blueprint._id, Blueprint.blacklisted, Config?.IgnoreBlacklisted ] );
 
-	const QueryModsAndTags = async() => {
-		if ( !BlueprintValid ) {
-			return;
-		}
-
-		const [ Mods, Tags, BlueprintRead ] = await Promise.all( [
-			API_QueryLib.Qustionary<Mod>( EApiQuestionary.mods, { Filter: { mod_reference: { $in: Blueprint.mods } } } ),
-			API_QueryLib.Qustionary<Tag>( EApiQuestionary.tags, { Filter: { _id: { $in: Blueprint.tags } } } ),
-			API_QueryLib.PostToAPI( EApiBlueprintUtils.readblueprint, { Id: BlueprintID } )
-		] );
-
-		setMods( Mods.Data! );
-		setTags( Tags.Data! );
-		setBlueprintData( BlueprintRead.Data );
+	const updateData = (newData?:BlueprintData) => {
+		const blueprintData = newData || Blueprint;
+		setTags( tags.filter( e => blueprintData.tags.includes(e._id) ) );
+		setMods( mods.filter( e => blueprintData.mods.includes(e.id) ) );
 	};
 
 	const Query = async() => {
-		const Result = await API_QueryLib.Qustionary<BlueprintData>( EApiQuestionary.blueprints, { Filter: { _id: BlueprintID } } );
-		if ( Result.Data && Result.Data.length > 0 ) {
-			setBlueprint( Result.Data[ 0 ] );
-			await QueryModsAndTags();
+		const [ blueprintData, Result ] = await Promise.all([
+			tRPC_Public.blueprint.readBlueprint.mutate({ blueprintId: BlueprintID }).catch(tRPC_handleError),
+			tRPC_Public.blueprint.getBlueprint.query( { blueprintId: BlueprintID } )
+		]);
+		blueprintData && setBlueprintData( blueprintData );
+		if ( Result ) {
+			updateData(Result.blueprintData);
+			setBlueprint( Result.blueprintData );
 		}
 	};
 
@@ -92,23 +88,16 @@ export function useBlueprint( InitValue : string | BlueprintData, Config? : Part
 		}
 		return false;
 	}, [ user, loggedIn, Blueprint.owner, BlueprintValid ] );
+ 
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	useEffect( updateData, [ InitValue, BlueprintValid ] );
 
-	useEffect( () => {
-		Query();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [ InitValue, BlueprintValid ] );
-
-	useEffect( () => {
-		if ( BlueprintValid ) {
-			QueryModsAndTags();
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [ Blueprint.tags, Blueprint.mods ] );
-
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	useEffect( updateData, [ Blueprint.tags, Blueprint.mods ] );
 
 	const ToggleLike = async() : Promise<void> => {
 		if ( !loggedIn ) {
-			await API_QueryLib.FireSwal( "Api.error.Unauthorized" );
+			await fireSwalFromApi("You need to be logged in to do this!", "error");
 			return;
 		}
 
@@ -124,7 +113,7 @@ export function useBlueprint( InitValue : string | BlueprintData, Config? : Part
 
 	const ToggleBlacklist = async() : Promise<boolean> => {
 		if ( !loggedIn ) {
-			await API_QueryLib.FireSwal( "Api.error.Unauthorized" );
+			await fireSwalFromApi("You need to be logged in to do this!", "error");
 			return false;
 		}
 
@@ -140,7 +129,7 @@ export function useBlueprint( InitValue : string | BlueprintData, Config? : Part
 
 	const Remove = async() : Promise<boolean> => {
 		if ( !loggedIn ) {
-			await API_QueryLib.FireSwal( "Api.error.Unauthorized" );
+			await fireSwalFromApi("You need to be logged in to do this!", "error");
 			return false;
 		}
 

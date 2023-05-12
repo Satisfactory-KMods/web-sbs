@@ -1,16 +1,16 @@
+import Foother from "@comp/Main/Foother";
+import TopNav from "@comp/Main/TopNav";
+import AuthContext from "@context/AuthContext";
+import DataContext from "@context/DataContext";
+import type { LayoutLoaderData } from "@page/Loader";
+import { User } from "@shared/Class/User.Class";
 import type { FunctionComponent } from "react";
 import {
 	Outlet,
 	useLoaderData
-}                                 from "react-router-dom";
-import type { LayoutLoaderData }  from "@page/Loader";
-import AuthContext                from "@context/AuthContext";
-import { User }                   from "@shared/Class/User.Class";
-import DataContext                from "@context/DataContext";
-import TopNav                     from "@comp/Main/TopNav";
-import Foother                    from "@comp/Main/Foother";
+} from "react-router-dom";
 
-const Component : FunctionComponent = () => {
+const Component : FunctionComponent = () => { 
 	const { loggedIn, user, tags, mods } = useLoaderData() as LayoutLoaderData;
 
 	return (
@@ -20,11 +20,11 @@ const Component : FunctionComponent = () => {
 		} }>
 			<DataContext.Provider value={ { tags, mods } }>
 				<div className="flex flex-col h-screen justify-between">
-					<TopNav/>
+					<TopNav />
 					<div className="container py-3 px-2 md:px-0 md:mx-auto mb-auto">
-						<Outlet/>
+						<Outlet />
 					</div>
-					<Foother/>
+					<Foother />
 				</div>
 			</DataContext.Provider>
 		</AuthContext.Provider>
@@ -34,3 +34,4 @@ const Component : FunctionComponent = () => {
 export {
 	Component
 };
+

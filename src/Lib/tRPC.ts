@@ -1,16 +1,16 @@
-import {
-	createTRPCProxyClient,
-	httpBatchLink,
-	TRPCClientError
-}                                 from "@trpc/client";
+import { AUTHTOKEN } from "@applib/constance";
 import type {
 	AuthRouter,
 	PublicRouter
-}                                 from "@server/trpc/server";
-import type { SweetAlertOptions , SweetAlertIcon } from "sweetalert2";
-import Swal   from "sweetalert2";
-import { AUTHTOKEN }              from "@applib/constance";
-import { transformer }            from "@shared/transformer";
+} from "@server/trpc/server";
+import { transformer } from "@shared/transformer";
+import {
+	TRPCClientError,
+	createTRPCProxyClient,
+	httpBatchLink
+} from "@trpc/client";
+import type { SweetAlertIcon, SweetAlertOptions } from "sweetalert2";
+import Swal from "sweetalert2";
 
 
 export async function onConfirm<PreConfirmResult = any>( msg : string, moreOptions? : SweetAlertOptions<PreConfirmResult> ) : Promise<boolean> {

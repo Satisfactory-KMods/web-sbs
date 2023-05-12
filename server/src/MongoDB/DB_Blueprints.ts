@@ -31,7 +31,7 @@ interface BPInterface extends z.infer<typeof ZodBlueprintSchema> {
 	DesignerSize : EDesignerSize;
 }
 
-export type BlueprintData = BPInterface & MongoBase
+export type BlueprintData = BPInterface & MongoBase;
 
 export default mongoose.model<BlueprintData>( "SBS_Blueprints", BlueprintSchema );
 export { BlueprintSchema };

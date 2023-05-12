@@ -80,23 +80,23 @@ const Component : FunctionComponent = () => {
 		<>
 			<Table striped bordered hover size="sm" variant="dark">
 				<thead>
-				<tr>
-					<th colSpan={ 2 }>
-						<h3 className="p-2 flex-1">{ Lang.Navigation.Admin_Tags }</h3>
-					</th>
-					<th colSpan={ 1 } className={ "text-center py-3" }>
-						<Button variant="success"
-						        onClick={ ToggleModalWithReset }><Icon.BsPlusLg/></Button>
-					</th>
-				</tr>
-				<tr>
-					<th className={ "px-2 text-center" }>{ Lang.AdminTags.Id }</th>
-					<th className={ "px-3 text-center" }>{ Lang.AdminTags.DisplayName }</th>
-					<th className={ "px-3 text-center w-0" }>{ Lang.AdminTags.Actions }</th>
-				</tr>
+					<tr>
+						<th colSpan={ 2 }>
+							<h3 className="p-2 flex-1">{ Lang.Navigation.Admin_Tags }</h3>
+						</th>
+						<th colSpan={ 1 } className={ "text-center py-3" }>
+							<Button variant="success"
+						        onClick={ ToggleModalWithReset }><Icon.BsPlusLg /></Button>
+						</th>
+					</tr>
+					<tr>
+						<th className={ "px-2 text-center" }>{ Lang.AdminTags.Id }</th>
+						<th className={ "px-3 text-center" }>{ Lang.AdminTags.DisplayName }</th>
+						<th className={ "px-3 text-center w-0" }>{ Lang.AdminTags.Actions }</th>
+					</tr>
 				</thead>
 				<tbody>
-				{ Tags.map( R => <AdminTagRow key={ R._id } Tag={ R } onRemove={ Remove } onEdit={ OnEdit }/> ) }
+					{ Tags.map( R => <AdminTagRow key={ R._id } Tag={ R } onRemove={ Remove } onEdit={ OnEdit } /> ) }
 				</tbody>
 			</Table>
 
