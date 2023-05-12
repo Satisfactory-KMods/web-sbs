@@ -10,16 +10,16 @@ export const public_validate =
 		.input( z.object( {
 			token: z.string()
 		} ) ).query<{
-		tokenValid : boolean;
+		tokenValid: boolean;
 	}>( async( { input } ) => {
 		try {
 			const result = await jwt.verify( input.token, process.env.JWTToken || "" ) as UserSession;
 			const userAccountExsists = !!( await DB_UserAccount.exists( { _id: result._id } ) );
-			if ( !userAccountExsists ) {
+			if( !userAccountExsists ) {
 				DB_SessionToken.deleteMany( { userid: result._id } );
+			} else {
 			}
 			return { tokenValid: !!( await DB_SessionToken.exists( { token: input.token } ) ) && userAccountExsists };
-		} catch ( e ) {
-		}
+		} catch ( e ) {  }
 		return { tokenValid: false };
 	} );

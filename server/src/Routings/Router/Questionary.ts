@@ -19,21 +19,21 @@ import type {
 } from "express";
 
 export default function() {
-	Router.post( ApiUrl( EApiQuestionary.blueprintpack ), async( req : Request, res : Response ) => {
-		const Response : TResponse_BP_Questionary = {
+	Router.post( ApiUrl( EApiQuestionary.blueprintpack ), async( req: Request, res: Response ) => {
+		const Response: TResponse_BP_Questionary = {
 			...DefaultResponseSuccess,
 			Data: []
 		};
 
-		const Request : TRequest_BP_Questionary = req.body;
+		const Request: TRequest_BP_Questionary = req.body;
 
 		try {
 			Response.Data = await DB_BlueprintPacks.find( {
 				blacklisted: { $ne: true },
 				...Request.Filter
 			}, null, Request.Options );
-		} catch ( e ) {
-			if ( e instanceof Error ) {
+		} catch( e ) {
+			if( e instanceof Error ) {
 				SystemLib.LogError( "api", e.message );
 			}
 		}
@@ -43,21 +43,21 @@ export default function() {
 		} );
 	} );
 
-	Router.post( ApiUrl( EApiQuestionary.blueprints ), async( req : Request, res : Response ) => {
-		const Response : TResponse_BP_Questionary = {
+	Router.post( ApiUrl( EApiQuestionary.blueprints ), async( req: Request, res: Response ) => {
+		const Response: TResponse_BP_Questionary = {
 			...DefaultResponseSuccess,
 			Data: []
 		};
 
-		const Request : TRequest_BP_Questionary = req.body;
+		const Request: TRequest_BP_Questionary = req.body;
 
 		try {
 			Response.Data = await DB_Blueprints.find( {
 				blacklisted: { $ne: true },
 				...Request.Filter
 			}, null, Request.Options );
-		} catch ( e ) {
-			if ( e instanceof Error ) {
+		} catch( e ) {
+			if( e instanceof Error ) {
 				SystemLib.LogError( "api", e.message );
 			}
 		}
@@ -67,18 +67,18 @@ export default function() {
 		} );
 	} );
 
-	Api.post( ApiUrl( EApiQuestionary.num ), async( req : Request, res : Response ) => {
-		const Response : TResponse_BP_Questionary = {
+	Api.post( ApiUrl( EApiQuestionary.num ), async( req: Request, res: Response ) => {
+		const Response: TResponse_BP_Questionary = {
 			...DefaultResponseSuccess,
 			Data: 0
 		};
 
-		const Request : TRequest_BP_Questionary = req.body;
+		const Request: TRequest_BP_Questionary = req.body;
 
 		try {
 			Response.Data = Number( await DB_Blueprints.countDocuments( Request.Filter, Request.Options ) );
-		} catch ( e ) {
-			if ( e instanceof Error ) {
+		} catch( e ) {
+			if( e instanceof Error ) {
 				SystemLib.LogError( "api", e.message );
 			}
 		}
@@ -89,20 +89,20 @@ export default function() {
 	} );
 
 
-	Api.post( ApiUrl( EApiQuestionary.tags ), async( req : Request, res : Response ) => {
-		const Response : TResponse_BP_Questionary = {
+	Api.post( ApiUrl( EApiQuestionary.tags ), async( req: Request, res: Response ) => {
+		const Response: TResponse_BP_Questionary = {
 			...DefaultResponseSuccess,
 			Data: 0
 		};
 
-		const Request : TRequest_BP_Questionary = req.body;
+		const Request: TRequest_BP_Questionary = req.body;
 
 		try {
 			Response.Data = await DB_Tags.find( {
 				...Request.Filter
 			}, null, Request.Options );
-		} catch ( e ) {
-			if ( e instanceof Error ) {
+		} catch( e ) {
+			if( e instanceof Error ) {
 				SystemLib.LogError( "api", e.message );
 			}
 		}
@@ -113,20 +113,20 @@ export default function() {
 	} );
 
 
-	Api.post( ApiUrl( EApiQuestionary.mods ), async( req : Request, res : Response ) => {
-		const Response : TResponse_BP_Questionary = {
+	Api.post( ApiUrl( EApiQuestionary.mods ), async( req: Request, res: Response ) => {
+		const Response: TResponse_BP_Questionary = {
 			...DefaultResponseSuccess,
 			Data: 0
 		};
 
-		const Request : TRequest_BP_Questionary = req.body;
+		const Request: TRequest_BP_Questionary = req.body;
 
 		try {
 			Response.Data = await DB_Mods.find( {
 				...Request.Filter
 			}, null, Request.Options );
-		} catch ( e ) {
-			if ( e instanceof Error ) {
+		} catch( e ) {
+			if( e instanceof Error ) {
 				SystemLib.LogError( "api", e.message );
 			}
 		}
@@ -137,20 +137,20 @@ export default function() {
 	} );
 
 
-	Api.post( ApiUrl( EApiQuestionary.users ), MW_Auth, ( req, res, next ) => MW_Permission( req, res, next, ERoles.admin ), async( req : Request, res : Response ) => {
-		const Response : TResponse_BP_Questionary = {
+	Api.post( ApiUrl( EApiQuestionary.users ), MW_Auth, ( req, res, next ) => MW_Permission( req, res, next, ERoles.admin ), async( req: Request, res: Response ) => {
+		const Response: TResponse_BP_Questionary = {
 			...DefaultResponseSuccess,
 			Data: 0
 		};
 
-		const Request : TRequest_BP_Questionary = req.body;
+		const Request: TRequest_BP_Questionary = req.body;
 
 		try {
 			Response.Data = await DB_UserAccount.find( {
 				...Request.Filter
 			}, null, Request.Options );
-		} catch ( e ) {
-			if ( e instanceof Error ) {
+		} catch( e ) {
+			if( e instanceof Error ) {
 				SystemLib.LogError( "api", e.message );
 			}
 		}
