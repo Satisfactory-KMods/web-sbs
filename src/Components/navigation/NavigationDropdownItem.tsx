@@ -18,7 +18,7 @@ const NavigationDropdown: FunctionComponent<NavigationDropdownProps> = ( {
 } ) => {
 	const { user } = useAuth();
 
-	if( permission !== undefined && !user.HasPermssion( permission ) ) {
+	if( permission !== undefined && !user.HasPermission( permission ) ) {
 		return null;
 	}
 

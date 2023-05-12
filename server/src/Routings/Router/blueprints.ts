@@ -1,36 +1,67 @@
+import type { BlueprintClass } from "@/server/src/Lib/Blueprint.Class";
+import { dataResponse, errorResponse } from "@kyri123/lib";
+import { BlueprintParser } from "@server/Lib/BlueprintParser";
 import {
 	ApiUrl,
-	MW_Auth
+	MW_Auth,
+	upload
 } from "@server/Lib/Express.Lib";
-import DB_Blueprints from "@server/MongoDB/DB_Blueprints";
-import {
-	DefaultResponseFailed
-} from "@shared/Default/Auth.Default";
-import { EApiUserBlueprints } from "@shared/Enum/EApiPath";
+import type { BlueprintData } from "@server/MongoDB/DB_Blueprints";
+import type { ExpressRequest } from "@server/Types/express";
+import { EApiBlueprintUtils, EApiUserBlueprints } from "@shared/Enum/EApiPath";
 import type {
-	TRequest_BPUser_Create,
-	TRequest_BPUser_Create_Files,
-	TRequest_BPUser_Edit,
-	TRequest_BPUser_Edit_Files
-} from "@shared/Types/API_Request";
-import type {
-	TResponse_BPUser_Create,
-	TResponse_BPUser_Edit
-} from "@shared/Types/API_Response";
-import type {
-	Request,
 	Response
 } from "express";
 import fs from "fs";
-import path from "path";
+import { z } from "zod";
 
 export default function() {
-	Router.post( ApiUrl( EApiUserBlueprints.create ), MW_Auth, async( req: Request, res: Response ) => {
+	Router.post( ApiUrl( EApiBlueprintUtils.parseblueprint ), upload.array( 'blueprint', 2 ), upload.fields( [ { name: 'sbp', maxCount: 1 }, { name: 'sbpcfg', maxCount: 1 }, { name: 'images', maxCount: 5 } ] ), MW_Auth, async( req: ExpressRequest<{
+		blueprintName: string
+	}>, res: Response ) => {
+		if( req.files && Array.isArray( req.files ) && Number( req.files.length ) >= 2 ) {
+			try {
+				// test if we rly get a string
+				z.string().parse( req.body.blueprintName );
+
+				let SBP: Buffer = Buffer.from( "" );
+				let SBPCFG: Buffer = Buffer.from( "" );
+
+				for( const file of req.files ) {
+					if( file.filename.endsWith( ".sbp" ) ) {
+						SBP = fs.readFileSync( file.path );
+					} else if( file.filename.endsWith( ".sbpcfg" ) ) {
+						SBPCFG = fs.readFileSync( file.path );
+					}
+					fs.rmSync( file.path );
+					console.log( "ParseBlueprint delete file:", file.path );
+				}
+
+				const Blueprint = new BlueprintParser( req.body.blueprintName, SBP, SBPCFG );
+				if( Blueprint.Success ) {
+					return res.status( 200 ).json( dataResponse( Blueprint.Get ) );
+				}
+			} catch( e ) {
+				if( e instanceof Error ) {
+					SystemLib.LogError( e.message );
+				}
+			}
+		}
+
+		return res.status( 500 ).json( errorResponse( "Something goes wrong!", res ) );
+	} );
+
+
+	Router.post( ApiUrl( EApiUserBlueprints.create ), upload.fields( [ { name: 'sbp', maxCount: 1 }, { name: 'sbpcfg', maxCount: 1 }, { name: 'images', maxCount: 5 } ] ), MW_Auth, async( req: ExpressRequest<{
+		blueprint: Omit<BlueprintData, "_id" | "__v">,
+		blueprintName: string
+	}>, res: Response ) => {
+		/*
 		const Response: TResponse_BPUser_Create = {
 			...DefaultResponseFailed
 		};
 
-		const Request: TRequest_BPUser_Create = req.body;
+		const Request = req.body;
 		const Files = req.files as TRequest_BPUser_Create_Files;
 
 		try {
@@ -77,11 +108,15 @@ export default function() {
 
 		res.json( {
 			...Response
-		} );
+		} );*/
 	} );
 
-	Router.post( ApiUrl( EApiUserBlueprints.edit ), MW_Auth, async( req: Request, res: Response ) => {
-		const Response: TResponse_BPUser_Edit = {
+	Router.post( ApiUrl( EApiUserBlueprints.edit ), MW_Auth, async( req: ExpressRequest<{
+		blueprint: Omit<BlueprintData, "_id" | "__v">,
+		blueprintName: string,
+		blueprintId: BlueprintClass<true>
+	}>, res: Response ) => {
+		/*const Response: TResponse_BPUser_Edit = {
 			...DefaultResponseFailed
 		};
 
@@ -132,6 +167,6 @@ export default function() {
 
 		res.json( {
 			...Response
-		} );
+		} );*/
 	} );
 }

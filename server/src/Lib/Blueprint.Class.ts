@@ -1,4 +1,5 @@
 import type { IfClass } from "@shared/Types/helper";
+import _ from "lodash";
 import type { HydratedDocument } from "mongoose";
 import type { BlueprintData, BlueprintSchemaMethods } from "../MongoDB/DB_Blueprints";
 import DB_Blueprints from "../MongoDB/DB_Blueprints";
@@ -40,5 +41,9 @@ export class BlueprintClass<T extends boolean = false> {
 
 	public get get() {
 		return this.data;
+	}
+
+	public isOwner( userId: string ) {
+		return _.isEqual( userId, this.data?.owner );
 	}
 }

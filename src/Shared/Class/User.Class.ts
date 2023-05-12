@@ -45,7 +45,7 @@ export class User {
 		return this.IsValid ? "/images/default/unknown.png" : "/images/default/unknown.png";
 	}
 
-	public HasPermssion( Permssion: ERoles ) {
+	public HasPermission( Permssion: ERoles ) {
 		return this.user.role >= Permssion && this.IsValid;
 	}
 }

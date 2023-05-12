@@ -3,8 +3,8 @@ import type { ERoles } from "@shared/Enum/ERoles";
 import type { FunctionComponent } from "react";
 import type { LinkProps } from "react-router-dom";
 import {
-	Link,
-	useLocation
+  Link,
+  useLocation
 } from "react-router-dom";
 
 type NavigationLinkProps = LinkProps & {
@@ -15,7 +15,7 @@ const NavigationLink: FunctionComponent<NavigationLinkProps> = ( { children, cla
 	const { pathname } = useLocation();
 	const { user } = useAuth();
 
-	if( role !== undefined && !user.HasPermssion( role ) ) {
+	if( role !== undefined && !user.HasPermission( role ) ) {
 		return null;
 	}
 

@@ -1,4 +1,5 @@
 {
+  "typescript.preferences.importModuleSpecifier": "non-relative",
   "files.autoSave": "onFocusChange",
   "editor.codeActionsOnSave": {
     "source.fixAll": true,

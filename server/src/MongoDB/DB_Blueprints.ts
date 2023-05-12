@@ -3,18 +3,21 @@ import type { EDesignerSize } from "@shared/Enum/EDesignerSize";
 import * as mongoose from "mongoose";
 import { z } from "zod";
 
+const ZodRating = z.object( {
+	userid: z.string(),
+	rating: z.number().min( 1 ).max( 5 ),
+} );
+
 const ZodBlueprintSchema = z.object( {
 	name: z.string(),
 	description: z.string(),
 	owner: z.string(),
 	DesignerSize: z.string(),
 	mods: z.array( z.string() ),
-	rating: z.array( z.object( {
-		userid: z.string(),
-		rating: z.number().min( 1 ).max( 5 ),
-	} ) ),
+	rating: z.array( ZodRating ),
 	totalRating: z.number(),
 	tags: z.array( z.string() ),
+	images: z.array( z.string() ),
 	downloads: z.number(),
 	blacklisted: z.boolean()
 } );
@@ -36,7 +39,8 @@ const BlueprintSchema = new mongoose.Schema( {
 	DesignerSize: { type: String, required: true },
 	owner: { type: String, required: true },
 	downloads: { type: Number, required: true, default: 0 },
-	blacklisted: { type: Boolean, required: false, default: false }
+	blacklisted: { type: Boolean, required: false, default: false },
+	images: { type: [ String ], required: true },
 }, { timestamps: true, methods: {
 	updateRating: async function() {
 		const findRating = () => {
@@ -65,7 +69,8 @@ interface BPInterface extends z.infer<typeof ZodBlueprintSchema> {
 }
 
 export type BlueprintData = BPInterface & MongoBase;
+export type BlueprintRating = z.infer<typeof ZodRating>;
 
 export default mongoose.model<BlueprintData, mongoose.Model<BlueprintData, any, BlueprintSchemaMethods>>( "SBS_Blueprints", BlueprintSchema );
-export { BlueprintSchema };
+export { BlueprintSchema, ZodBlueprintSchema, ZodRating };
 

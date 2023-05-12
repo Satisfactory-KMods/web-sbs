@@ -84,7 +84,7 @@ export function useBlueprint( InitValue: string | BlueprintData, Config?: Partia
 
 	const allowedToEdit = useMemo( () => {
 		if( loggedIn && isValid ) {
-			return user.HasPermssion( ERoles.admin ) || Blueprint.owner.trim() === user.Get._id.trim();
+			return user.HasPermission( ERoles.admin ) || Blueprint.owner.trim() === user.Get._id.trim();
 		}
 		return false;
 	}, [ user, loggedIn, Blueprint.owner, isValid ] );

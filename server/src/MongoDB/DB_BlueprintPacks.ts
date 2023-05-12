@@ -1,20 +1,19 @@
 import type { MongoBase } from "@server/Types/mongo";
 import * as mongoose from "mongoose";
 import { z } from "zod";
+import { ZodRating } from "./DB_Blueprints";
 
 const ZodBlueprintPackSchema = z.object( {
 	name: z.string(),
 	description: z.string(),
 	owner: z.string(),
 	mods: z.array( z.string() ),
-	rating: z.array( z.object( {
-		userid: z.string(),
-		rating: z.number().min( 1 ).max( 5 ),
-	} ) ),
+	rating: z.array( ZodRating ),
 	totalRating: z.number(),
 	tags: z.array( z.string() ),
 	downloads: z.number(),
 	blacklisted: z.boolean(),
+	images: z.array( z.string() ),
 	blueprints: z.array( z.string() )
 } );
 
@@ -62,5 +61,5 @@ const BlueprintPackSchema = new mongoose.Schema( {
 export type BlueprintPack = z.infer<typeof ZodBlueprintPackSchema> & MongoBase;
 
 export default mongoose.model<BlueprintPack, mongoose.Model<BlueprintPack, any, BlueprintPackSchemaMethods>>( "SBS_BlueprintPacks", BlueprintPackSchema );
-export { BlueprintPackSchema };
+export { BlueprintPackSchema, ZodBlueprintPackSchema };
 

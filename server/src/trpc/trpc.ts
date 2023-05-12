@@ -61,7 +61,7 @@ const isOwnerMiddleware = middleware( async( opts ) => {
 	const { ctx } = opts;
 	const { blueprint, userClass } = ctx as{ blueprint: BlueprintClass<true> } & typeof ctx;
 	const isOwner = false;
-	if( !ctx.userClass.HasPermssion( ERoles.admin ) && !_.eq( blueprint.get.owner ,userClass.Get._id ) ) {
+	if( !ctx.userClass.HasPermission( ERoles.admin ) && !_.eq( blueprint.get.owner ,userClass.Get._id ) ) {
 		throw new TRPCError( { code: 'UNAUTHORIZED' } );
 	}
 	return opts.next();
@@ -72,7 +72,7 @@ const isModOrOwnerMiddleware = middleware( async( opts ) => {
 	const { ctx } = opts;
 	const { blueprint, userClass } = ctx as{ blueprint: BlueprintClass<true> } & typeof ctx;
 	const isOwner = false;
-	if( !(ctx.userClass.HasPermssion( ERoles.admin ) || ctx.userClass.HasPermssion( ERoles.moderator )) && !_.eq( blueprint.get.owner ,userClass.Get._id ) ) {
+	if( !( ctx.userClass.HasPermission( ERoles.admin ) || ctx.userClass.HasPermission( ERoles.moderator ) ) && !_.eq( blueprint.get.owner ,userClass.Get._id ) ) {
 		throw new TRPCError( { code: 'UNAUTHORIZED' } );
 	}
 	return opts.next();
@@ -81,7 +81,7 @@ const isModOrOwnerMiddleware = middleware( async( opts ) => {
 // check if we have a role for example for admin actions or something else
 const roleMiddleware = ( role: ERoles ) => middleware( async( opts ) => {
 	const { ctx } = opts;
-	if( !ctx.userClass.HasPermssion( role ) ) {
+	if( !ctx.userClass.HasPermission( role ) ) {
 		throw new TRPCError( { code: 'UNAUTHORIZED' } );
 	}
 	return opts.next();

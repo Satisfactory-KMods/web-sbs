@@ -1,7 +1,6 @@
 import "@kyri123/k-javascript-utils/lib/useAddons";
 import { ERoles } from "@shared/Enum/ERoles";
 import express from "express";
-import fileUpload from "express-fileupload";
 import fs from "fs";
 import http from "http";
 import * as mongoose from "mongoose";
@@ -29,10 +28,6 @@ global.HttpServer = http.createServer( global.Api );
 
 Api.use( express.json() );
 Api.use( express.urlencoded( { extended: true } ) );
-Api.use( fileUpload( {
-	useTempFiles: true,
-	tempFileDir: "/tmp/"
-} ) );
 Api.use( express.static( path.join( __BaseDir, "../..", "build" ), { extensions: [ "js" ] } ) );
 
 Api.use( function( req, res, next ) {

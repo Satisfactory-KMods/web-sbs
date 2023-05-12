@@ -1,7 +1,7 @@
 
 import type {
-	LoaderBlueprintBase,
-	LoaderDataBase
+  LoaderBlueprintBase,
+  LoaderDataBase
 } from "@app/Types/loader";
 import { AUTHTOKEN } from "@applib/constance";
 import { tRPC_Public } from "@applib/tRPC";
@@ -32,7 +32,7 @@ const validateLogin = async( {
 
 	if( loggedIn && !!role ) {
 		const us = new User( token );
-		if( !us.HasPermssion( role ) ) {
+		if( !us.HasPermission( role ) ) {
 			return redirect( "/error/401" );
 		}
 	}
@@ -63,7 +63,7 @@ const validateBlueprint = async( {
 		redirect( redirectTo );
 	}
 
-	const blueprintPermission = ( loaderBase.user.Get._id === result.blueprintData.owner || loaderBase.user.HasPermssion( ERoles.admin ) );
+	const blueprintPermission = ( loaderBase.user.Get._id === result.blueprintData.owner || loaderBase.user.HasPermission( ERoles.admin ) );
 
 	if( result.blueprintData && loggedInRule === LoginRule.BlueprintOwner ) {
 		if( !loaderBase.user.IsValid || !blueprintPermission ) {

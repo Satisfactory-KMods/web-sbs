@@ -1,15 +1,18 @@
+import { BlueprintClass } from "@/server/src/Lib/Blueprint.Class";
+import type { BlueprintData } from "@/server/src/MongoDB/DB_Blueprints";
+import type { ExpressRequest } from "@/server/src/Types/express";
+import { errorResponse } from "@kyri123/lib";
 import DB_SessionToken from "@server/MongoDB/DB_SessionToken";
 import { User } from "@shared/Class/User.Class";
-import { DefaultResponseFailed } from "@shared/Default/Auth.Default";
 import type { TApiPath } from "@shared/Enum/EApiPath";
 import type { ERoles } from "@shared/Enum/ERoles";
-import type { ResponseBase } from "@shared/Types/API_Response";
 import type {
 	NextFunction,
 	Request,
 	Response
 } from "express";
 import * as jwt from "jsonwebtoken";
+import multer from "multer";
 
 export function ApiUrl( Url: TApiPath | string ) {
 	const EndUrl = `/api/v1/${ Url }`;
@@ -18,11 +21,6 @@ export function ApiUrl( Url: TApiPath | string ) {
 }
 
 export async function MW_Auth( req: Request, res: Response, next: NextFunction ) {
-	const Response: ResponseBase = {
-		...DefaultResponseFailed,
-		MessageCode: "Api.error.Unauthorized"
-	};
-
 	const AuthHeader = req.headers[ "authorization" ];
 	let Token: string | undefined = undefined;
 	try {
@@ -45,17 +43,35 @@ export async function MW_Auth( req: Request, res: Response, next: NextFunction )
 		} catch( e ) {
 		}
 	}
-	res.json( Response );
+	return res.status( 401 ).json( errorResponse( "Unauthorized", res ) );
 }
 
 export async function MW_Permission( req: Request, res: Response, next: NextFunction, Permission: ERoles ) {
-	const Response: ResponseBase = {
-		...DefaultResponseFailed,
-		MessageCode: "Api.error.Unauthorized"
-	};
-	if( req.body.UserClass && req.body.UserClass.HasPermssion( Permission ) ) {
+	if( req.body.UserClass && req.body.UserClass.HasPermission( Permission ) ) {
 		next();
 		return;
 	}
-	res.json( Response );
+	return res.status( 401 ).json( errorResponse( "Unauthorized", res ) );
 }
+
+export async function MW_Blueprint( req: ExpressRequest<{
+	blueprint: Omit<BlueprintData, "_id" | "__v">,
+	blueprintName: string,
+	blueprintId: string | BlueprintClass<true>,
+	UserClass?: User
+}>, res: Response, next: NextFunction ) {
+	if( req.body.blueprintName && req.body.blueprint && req.body.blueprintId && typeof req.body.blueprintId === "string" ) {
+		const server = await BlueprintClass.createClass( req.body.blueprintId );
+		if( server && req.body.UserClass ) {
+			if( server.isOwner( req.body.UserClass?.Get._id ) ) {
+				req.body.blueprintId = server;
+				return next();
+			}
+		}
+	}
+	return res.status( 401 ).json( errorResponse( "Unauthorized", res ) );
+}
+
+export const upload = multer( {
+	dest: "/tmp/",
+} );

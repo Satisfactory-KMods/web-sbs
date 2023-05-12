@@ -111,7 +111,7 @@ const Component: FunctionComponent = () => {
 							      className="btn rounded-top-0 btn-secondary">
 								<Icon.BsGearFill />
 							</Link> }
-						{ ( user.HasPermssion( ERoles.moderator ) || IsOwner ) &&
+						{ ( user.HasPermission( ERoles.moderator ) || IsOwner ) &&
 							<Button variant="danger" onClick={ async() => {
 								await ToggleBlacklist();
 							} }
