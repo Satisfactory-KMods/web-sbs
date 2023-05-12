@@ -44,11 +44,6 @@
     "no-restricted-imports":"warn",
     "react/jsx-closing-bracket-location": ["warn", "after-props"],
     "semi": "off",
-    "react/jsx-first-prop-new-line": ["error", "never"],
-    "react/jsx-curly-newline": ["error", { 
-      "multiline": "consistent", 
-      "singleline": "consistent" 
-    }],
     "array-bracket-spacing": ["warn", "always"], 
     "computed-property-spacing": ["warn", "always"],
     "@typescript-eslint/semi": "error",
@@ -79,6 +74,14 @@
     "@typescript-eslint/no-empty-function": "off",
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-non-null-assertion": "off",
+    "@typescript-eslint/no-unused-vars": [
+      "off",
+      {
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_",
+        "caughtErrorsIgnorePattern": "^_"
+      }
+    ],
     "react/jsx-curly-brace-presence": [
       "error",
       { "props": "never", "children": "never" }
@@ -89,19 +92,16 @@
         "when": "always"
       }
     }],
-    "@typescript-eslint/no-unused-vars": [
-      "off",
-      {
-        "argsIgnorePattern": "^_",
-        "varsIgnorePattern": "^_",
-        "caughtErrorsIgnorePattern": "^_"
-      }
-    ],
     "react/jsx-props-no-multi-spaces": ["warn"],
     "react/jsx-tag-spacing": ["warn"],
     "jsx-a11y/no-static-element-interactions": "off",
     "jsx-a11y/click-events-have-key-events": "off",
     "react-hooks/rules-of-hooks": "error",
-    "react-hooks/exhaustive-deps": "warn"
+    "react-hooks/exhaustive-deps": "warn",
+    "react/jsx-first-prop-new-line": ["error", "never"],
+    "react/jsx-curly-newline": ["error", { 
+      "multiline": "consistent", 
+      "singleline": "consistent" 
+    }]
   }
 }

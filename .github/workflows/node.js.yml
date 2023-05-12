@@ -13,7 +13,7 @@ jobs:
       - name: 🔐 Authenticate with private NPM package
         run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
       - name: ⚡ Build as docker image
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v4 
         with:
           context: .
           push: false
@@ -28,9 +28,9 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-      - name: 🚚 Get latest code
+      - name: 🚚 Get latest code 
         uses: actions/checkout@v3
-      - name: 🔧 Use Node.js ${{ matrix.node-version }}
+      - name: 🔧 Use Node.js ${{ matrix.node-version }} 
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
