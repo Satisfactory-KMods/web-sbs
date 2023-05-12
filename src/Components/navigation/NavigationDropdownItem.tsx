@@ -5,11 +5,11 @@ import type { LinkProps } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 interface NavigationDropdownProps extends LinkProps {
-	to : string;
-	permission? : ERoles;
+	to: string;
+	permission?: ERoles;
 }
 
-const NavigationDropdown : FunctionComponent<NavigationDropdownProps> = ( {
+const NavigationDropdown: FunctionComponent<NavigationDropdownProps> = ( {
 	to,
 	permission,
 	children,
@@ -18,7 +18,7 @@ const NavigationDropdown : FunctionComponent<NavigationDropdownProps> = ( {
 } ) => {
 	const { user } = useAuth();
 
-	if ( permission !== undefined && !user.HasPermssion( permission ) ) {
+	if( permission !== undefined && !user.HasPermssion( permission ) ) {
 		return null;
 	}
 

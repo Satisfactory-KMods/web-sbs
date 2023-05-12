@@ -5,8 +5,8 @@ import { CgSpinner } from "react-icons/all";
 import type { IconType } from "react-icons/lib";
 
 interface LoadingButtonsProps extends ButtonProps {
-	isLoading? : boolean;
-	Icon : IconType;
+	isLoading?: boolean;
+	Icon: IconType;
 }
 
 const LoadingButton = forwardRef<HTMLButtonElement, LoadingButtonsProps>( ( {
@@ -17,7 +17,7 @@ const LoadingButton = forwardRef<HTMLButtonElement, LoadingButtonsProps>( ( {
 	disabled,
 	...props
 } ) => {
-	if ( hidden ) {
+	if( hidden ) {
 		return null;
 	}
 	return (

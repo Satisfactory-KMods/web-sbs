@@ -15,12 +15,12 @@ import type {
 export function useSelectOptions() {
 	const { mods, tags } = useContext( DataContext );
 
-	const vanillaSelectOptions : MultiValue<SelectOptionStruct<boolean>> = useMemo( () => [
+	const vanillaSelectOptions: MultiValue<SelectOptionStruct<boolean>> = useMemo( () => [
 		{ value: true, label: "Vanilla" },
 		{ value: false, label: "Modded" }
 	], [] );
 
-	const sortSelectOptions : MultiValue<SelectOptionStruct<FilterSchema["sortBy"]>> = useMemo( () => [
+	const sortSelectOptions: MultiValue<SelectOptionStruct<FilterSchema["sortBy"]>> = useMemo( () => [
 		{ value: { by: "createdAt", up: true }, label: "Newest first" },
 		{ value: { by: "createdAt", up: false }, label: "Oldest first" },
 		{ value: { by: "downloads", up: true }, label: "Most downloads" },
@@ -29,29 +29,29 @@ export function useSelectOptions() {
 		{ value: { by: "likes", up: false }, label: "Fewest likes" }
 	], [] );
 
-	const tagsSelectOptions : MultiValue<SelectOptionStruct<string>> = useMemo( () => tags.map( R => ( {
+	const tagsSelectOptions: MultiValue<SelectOptionStruct<string>> = useMemo( () => tags.map( R => ( {
 		label: R.DisplayName,
 		value: R._id
 	} ) ), [ tags ] );
 
-	const modSelectOptions : MultiValue<SelectOptionStruct<string>> = useMemo( () => mods.map( R => ( {
+	const modSelectOptions: MultiValue<SelectOptionStruct<string>> = useMemo( () => mods.map( R => ( {
 		label: R.name,
 		value: R.mod_reference
 	} ) ), [ mods ] );
 
-	const modSelected_Multi : ( mods : string[] ) => MultiValue<SelectOptionStruct<string>> = useCallback( ( mods ) => {
+	const modSelected_Multi: ( mods: string[] ) => MultiValue<SelectOptionStruct<string>> = useCallback( ( mods ) => {
 		return modSelectOptions.filter( m => mods.includes( m.value ) );
 	}, [ modSelectOptions ] );
 
-	const modSelected_Single : ( mod : string ) => SingleValue<SelectOptionStruct<string>> = useCallback( ( mod ) => {
+	const modSelected_Single: ( mod: string ) => SingleValue<SelectOptionStruct<string>> = useCallback( ( mod ) => {
 		return modSelectOptions.find( m => _.isEqual( mod, m.value ) ) || null;
 	}, [ modSelectOptions ] );
 
-	const tagSelected_Multi : ( tags : string[] ) => MultiValue<SelectOptionStruct<string>> = useCallback( ( tags ) => {
+	const tagSelected_Multi: ( tags: string[] ) => MultiValue<SelectOptionStruct<string>> = useCallback( ( tags ) => {
 		return tagsSelectOptions.filter( m => tags.includes( m.value ) );
 	}, [ tagsSelectOptions ] );
 
-	const tagSelected_Single : ( tag : string ) => SingleValue<SelectOptionStruct<string>> = useCallback( ( tag ) => {
+	const tagSelected_Single: ( tag: string ) => SingleValue<SelectOptionStruct<string>> = useCallback( ( tag ) => {
 		return tagsSelectOptions.find( m => _.isEqual( tag, m.value ) ) || null;
 	}, [ tagsSelectOptions ] );
 

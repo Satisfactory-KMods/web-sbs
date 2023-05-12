@@ -22,7 +22,7 @@ import {
 } from "react-router-dom";
 
 
-const Component : FunctionComponent = () => {
+const Component: FunctionComponent = () => {
 	const navigate = useNavigate();
 	const { setToken } = useAuth();
 	const [ isSending, setIsSending ] = useState( false );
@@ -32,7 +32,7 @@ const Component : FunctionComponent = () => {
 	const [ password, setPassword ] = useState( "" );
 	const [ stayLoggedIn, setStayLoggedIn ] = useState( true );
 
-	const handleSubmit = async( e : FormEvent<HTMLFormElement> ) => {
+	const handleSubmit = async( e: FormEvent<HTMLFormElement> ) => {
 		e.preventDefault();
 		setIsSending( true );
 
@@ -40,7 +40,7 @@ const Component : FunctionComponent = () => {
 			stayLoggedIn, login, password
 		} ).catch( tRPC_handleError );
 
-		if ( response ) {
+		if( response ) {
 			setToken( response.token );
 			await fireSwalFromApi( response.message, true );
 			navigate( "/" );

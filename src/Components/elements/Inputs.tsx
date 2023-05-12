@@ -2,13 +2,13 @@ import type { InputHTMLAttributes } from "react";
 import React, { useId } from "react";
 
 type SBSTextInputProps = InputHTMLAttributes<HTMLInputElement> & {
-	label : React.ReactElement | string,
-	mainClassName? : string,
+	label: React.ReactElement | string,
+	mainClassName?: string,
 };
 
 type SBSSelectProps = InputHTMLAttributes<HTMLDivElement> & {
-	label : React.ReactElement | string,
-	mainClassName? : string
+	label: React.ReactElement | string,
+	mainClassName?: string
 };
 
 const SBSTextInput = React.forwardRef<HTMLInputElement, SBSTextInputProps>( ( {

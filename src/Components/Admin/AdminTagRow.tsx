@@ -3,12 +3,12 @@ import type { FunctionComponent } from "react";
 import * as Icon from "react-icons/bs";
 
 interface IAdminTagRowProps {
-	Tag : Tag,
-	onRemove : ( Id : string ) => void,
-	onEdit : ( Tag : Tag ) => void
+	Tag: Tag,
+	onRemove: ( Id: string ) => void,
+	onEdit: ( Tag: Tag ) => void
 }
 
-const AdminTagRow : FunctionComponent<IAdminTagRowProps> = ( { Tag, onEdit, onRemove } ) => {
+const AdminTagRow: FunctionComponent<IAdminTagRowProps> = ( { Tag, onEdit, onRemove } ) => {
 	return (
 		<tr>
 			<td className="px-2 text-center">{ Tag._id }</td>

@@ -5,11 +5,11 @@ import * as Icon from "react-icons/bs";
 import { Link } from "react-router-dom";
 
 interface IBlueprintTableRowProps {
-	Data : BlueprintData;
-	onToggled? : () => void;
+	Data: BlueprintData;
+	onToggled?: () => void;
 }
 
-const BlueprintTableRowAdmin : FunctionComponent<IBlueprintTableRowProps> = ( { Data, onToggled } ) => {
+const BlueprintTableRowAdmin: FunctionComponent<IBlueprintTableRowProps> = ( { Data, onToggled } ) => {
 	const {
 		BlueprintValid,
 		Blueprint,
@@ -17,7 +17,7 @@ const BlueprintTableRowAdmin : FunctionComponent<IBlueprintTableRowProps> = ( { 
 		Remove
 	} = useBlueprint( Data, { IgnoreBlacklisted: true } );
 
-	if ( !BlueprintValid ) {
+	if( !BlueprintValid ) {
 		return null;
 	}
 
@@ -40,7 +40,7 @@ const BlueprintTableRowAdmin : FunctionComponent<IBlueprintTableRowProps> = ( { 
 						<Icon.BsGearFill />
 					</Link>
 					<Button variant="success" className="rounded-none" onClick={ async() => {
-						if ( await ToggleBlacklist() && onToggled !== undefined ) {
+						if( await ToggleBlacklist() && onToggled !== undefined ) {
 							onToggled();
 						}
 					} }>
@@ -49,7 +49,7 @@ const BlueprintTableRowAdmin : FunctionComponent<IBlueprintTableRowProps> = ( { 
 					<Button className="rounded-none"
 					        variant="danger"
 					        onClick={ async() => {
-						        if ( await Remove() && onToggled !== undefined ) {
+						        if( await Remove() && onToggled !== undefined ) {
 							        onToggled();
 						        }
 					        } } type="button">

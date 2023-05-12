@@ -5,12 +5,12 @@ import type { FunctionComponent } from "react";
 import * as Icon from "react-icons/bs";
 
 interface IAdminUserRowProps {
-	User : UserAccount,
-	onRemove : ( User : UserAccount ) => void,
-	onEditRole : ( User : UserAccount, Tag : ERoles ) => void
+	User: UserAccount,
+	onRemove: ( User: UserAccount ) => void,
+	onEditRole: ( User: UserAccount, Tag: ERoles ) => void
 }
 
-const AdminUserRow : FunctionComponent<IAdminUserRowProps> = ( { User, onEditRole, onRemove } ) => {
+const AdminUserRow: FunctionComponent<IAdminUserRowProps> = ( { User, onEditRole, onRemove } ) => {
 	const { user } = useAuth();
 	return (
 		<tr>

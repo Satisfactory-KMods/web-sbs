@@ -11,7 +11,7 @@ import {
 	useParams
 } from "react-router-dom";
 
-const Component : FunctionComponent = () => {
+const Component: FunctionComponent = () => {
 	const { id } = useParams();
 	const { loggedIn, user } = useAuth();
 	const {
@@ -28,13 +28,13 @@ const Component : FunctionComponent = () => {
 	} = useBlueprint( id! );
 	usePageTitle( `SBS - Blueprint` );
 
-	if ( !BlueprintValid ) {
+	if( !BlueprintValid ) {
 		return (
 			<></>
 		);
 	}
 
-	if ( Blueprint.blacklisted ) {
+	if( Blueprint.blacklisted ) {
 		return (
 			<Navigate to="/" />
 		);

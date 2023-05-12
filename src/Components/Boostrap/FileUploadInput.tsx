@@ -8,10 +8,10 @@ import {
 } from "react";
 
 interface IFileUploadInputProps extends PropsWithChildren {
-	BoxClassName? : string;
+	BoxClassName?: string;
 }
 
-const FileUploadInput : FunctionComponent<IFileUploadInputProps & React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>> = ( {
+const FileUploadInput: FunctionComponent<IFileUploadInputProps & React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>> = ( {
 	BoxClassName,
 	children,
 	className,

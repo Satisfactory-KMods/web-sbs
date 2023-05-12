@@ -13,7 +13,7 @@ interface IBlueprintCardProps {
 	onToggled: () => Promise<void>;
 }
 
-const BlueprintCard : FunctionComponent<IBlueprintCardProps> = ( { Data, onToggled } ) => {
+const BlueprintCard: FunctionComponent<IBlueprintCardProps> = ( { Data, onToggled } ) => {
 	const id = useId();
 	const bpHook = useBlueprint( Data );
 	const {

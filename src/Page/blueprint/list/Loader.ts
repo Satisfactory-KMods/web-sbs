@@ -9,19 +9,19 @@ import type { LoaderFunction } from "react-router-dom";
 import { json } from "react-router-dom";
 
 export type IndexLoaderData = LoaderDataBase & {
-	blueprints : BlueprintData[],
-	totalBlueprints : number
+	blueprints: BlueprintData[],
+	totalBlueprints: number
 };
 
-export const loader : LoaderFunction = async( { params, request } ) => {
+export const loader: LoaderFunction = async( { params, request } ) => {
 	const result = await validateLogin( { params, request } );
-	if ( result instanceof Response ) {
+	if( result instanceof Response ) {
 		return result;
 	}
 	const Blueprints = await tRPC_Public.blueprint.getBlueprints.query( { limit: 10 } ).catch( tRPC_handleError );
-	let blueprints : BlueprintData[] = [];
+	let blueprints: BlueprintData[] = [];
 	let totalBlueprints = 0;
-	if ( Blueprints ) {
+	if( Blueprints ) {
 		blueprints = Blueprints.blueprints;
 		totalBlueprints = Blueprints.totalBlueprints;
 	}

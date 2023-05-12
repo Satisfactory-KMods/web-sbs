@@ -15,13 +15,13 @@ import {
 	useState
 } from "react";
 
-const Component : FunctionComponent = () => {
+const Component: FunctionComponent = () => {
 	const { user } = useAuth();
 	const [ Users, setUsers ] = useState<UserAccount[]>( [] );
 
 	const QueryUsers = async() => {
 		const response = await API_QueryLib.Qustionary<UserAccount>( EApiQuestionary.users, {} );
-		if ( response.Data ) {
+		if( response.Data ) {
 			setUsers( response.Data );
 		}
 	};
@@ -30,7 +30,7 @@ const Component : FunctionComponent = () => {
 		QueryUsers();
 	}, [] );
 
-	const SendQuery = async( Id : string, Role : number, Removed = false ) => {
+	const SendQuery = async( Id: string, Role: number, Removed = false ) => {
 		const Result = await API_QueryLib.PostToAPI<TResponse_Auth_Modify, TRequest_Auth_Modify>( EApiAuth.modify, {
 			UserID: Id,
 			Data: {
@@ -38,16 +38,16 @@ const Component : FunctionComponent = () => {
 			},
 			Remove: Removed
 		} );
-		if ( Result.Success ) {
+		if( Result.Success ) {
 			await QueryUsers();
 		}
 	};
 
-	const onRemove = async( User : UserAccount ) => {
+	const onRemove = async( User: UserAccount ) => {
 		await SendQuery( User._id, User.role, true );
 	};
 
-	const onEditRole = async( User : UserAccount, Tag : ERoles ) => {
+	const onEditRole = async( User: UserAccount, Tag: ERoles ) => {
 		await SendQuery( User._id, Tag, false );
 	};
 

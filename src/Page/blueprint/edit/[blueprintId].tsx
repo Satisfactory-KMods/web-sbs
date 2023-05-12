@@ -33,7 +33,7 @@ import type {
 } from "react-select";
 import Select from "react-select";
 
-const Component : FunctionComponent = () => {
+const Component: FunctionComponent = () => {
 	const { id } = useParams();
 	const { Blueprint, AllowToEdit, BlueprintValid, ...BP } = useBlueprint( id! );
 	const [ IsSending, setIsSending ] = useState( false );
@@ -101,28 +101,28 @@ const Component : FunctionComponent = () => {
 		return BlueprintDesc.length >= 50 && BlueprintName.length >= 5;
 	};
 
-	const HandleSubmit = async( e : FormEvent<HTMLFormElement> ) => {
+	const HandleSubmit = async( e: FormEvent<HTMLFormElement> ) => {
 		e.preventDefault();
 		setIsSending( true );
 
-		if ( CheckInput() ) {
+		if( CheckInput() ) {
 			const data = new FormData();
 			data.append( "BlueprintId", id! );
 			data.append( "BlueprintName", BlueprintName );
 			data.append( "BlueprintDesc", BlueprintDesc );
-			for ( const Tag of Tags ) {
+			for( const Tag of Tags ) {
 				data.append( "BlueprintTags", Tag.value );
 			}
-			for ( const Mod of Mods ) {
+			for( const Mod of Mods ) {
 				data.append( "BlueprintMods", Mod.value );
 			}
 
-			if ( Image ) {
+			if( Image ) {
 				data.append( "Image", Image );
 			}
 			data.append( "DesignerSize", DesignerSize!.value );
 			const Result = await API_QueryLib.PostToAPI( EApiUserBlueprints.edit, data );
-			if ( Result.Success ) {
+			if( Result.Success ) {
 				const ID = Result.Data as string;
 				Nav( `/blueprint/${ ID }` );
 			}
@@ -133,9 +133,9 @@ const Component : FunctionComponent = () => {
 		setIsSending( false );
 	};
 
-	const HandleChange = ( e : ChangeEvent<HTMLInputElement> ) => {
+	const HandleChange = ( e: ChangeEvent<HTMLInputElement> ) => {
 		const File = e.target.files![ 0 ];
-		if ( !File || !File.name ) {
+		if( !File || !File.name ) {
 			return;
 		}
 		switch ( e.target.name ) {
@@ -145,11 +145,11 @@ const Component : FunctionComponent = () => {
 		}
 	};
 
-	if ( !BlueprintValid ) {
+	if( !BlueprintValid ) {
 		return <></>;
 	}
 
-	if ( !AllowToEdit ) {
+	if( !AllowToEdit ) {
 		return <Navigate to="/error/401" />;
 	}
 

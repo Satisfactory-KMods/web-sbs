@@ -28,11 +28,11 @@ import type {
 import Select from "react-select";
 
 export interface IFile {
-	Content : FileList | undefined,
-	FileName : string
+	Content: FileList | undefined,
+	FileName: string
 }
 
-const Component : FunctionComponent = () => {
+const Component: FunctionComponent = () => {
 	const [ IsSending, setIsSending ] = useState( false );
 	const Navigate = useNavigate();
 
@@ -57,14 +57,14 @@ const Component : FunctionComponent = () => {
 	const [ Image, setImage ] = useState<File | undefined>();
 
 	const HandleImport = async() => {
-		if ( BlueprintData ) {
+		if( BlueprintData ) {
 			setBlueprintName( BlueprintData.name );
 			setBlueprintDesc( BlueprintData.config.description );
 		}
 	};
 
 	const HandleFullBlueprint = async() => {
-		if (
+		if(
 			SBPCFG && SBP &&
 			SBPCFG.name.replace( ".sbpcfg", "" ) === SBP.name.replace( ".sbp", "" )
 		) {
@@ -83,18 +83,18 @@ const Component : FunctionComponent = () => {
 		return SBP && SBPCFG && Image && BlueprintDesc.length >= 50 && BlueprintName.length >= 5;
 	};
 
-	const HandleSubmit = async( e : FormEvent<HTMLFormElement> ) => {
+	const HandleSubmit = async( e: FormEvent<HTMLFormElement> ) => {
 		e.preventDefault();
 		setIsSending( true );
 
-		if ( CheckInput() ) {
+		if( CheckInput() ) {
 			const data = new FormData();
 			data.append( "BlueprintName", BlueprintName );
 			data.append( "BlueprintDesc", BlueprintDesc );
-			for ( const Tag of Tags ) {
+			for( const Tag of Tags ) {
 				data.append( "BlueprintTags", Tag.value );
 			}
-			for ( const Mod of Mods ) {
+			for( const Mod of Mods ) {
 				data.append( "BlueprintMods", Mod.value );
 			}
 			data.append( "SBP", SBP! );
@@ -102,7 +102,7 @@ const Component : FunctionComponent = () => {
 			data.append( "Image", Image! );
 			data.append( "DesignerSize", DesignerSize!.value );
 			const Result = await API_QueryLib.PostToAPI( EApiUserBlueprints.create, data );
-			if ( Result.Success ) {
+			if( Result.Success ) {
 				const ID = Result.Data as string;
 				Navigate( `/blueprint/${ ID }` );
 			}
@@ -121,26 +121,26 @@ const Component : FunctionComponent = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [ SBP, SBPCFG ] );
 
-	const HandleChange = ( e : ChangeEvent<HTMLInputElement> ) => {
+	const HandleChange = ( e: ChangeEvent<HTMLInputElement> ) => {
 		const File = e.target.files![ 0 ];
 
-		if ( !File || !File.name ) {
+		if( !File || !File.name ) {
 			return;
 		}
 
 		switch ( e.target.name ) {
 			case "sbp":
-				if ( File && File.name.endsWith( ".sbp" ) ) {
+				if( File && File.name.endsWith( ".sbp" ) ) {
 					setSBP( () => File );
 				}
 				break;
 			case "sbpcfg":
-				if ( File && File.name.endsWith( ".sbpcfg" ) ) {
+				if( File && File.name.endsWith( ".sbpcfg" ) ) {
 					setSBPCFG( () => File );
 				}
 				break;
 			case "image":
-				if ( File && File.name.endsWith( ".jpg" ) ) {
+				if( File && File.name.endsWith( ".jpg" ) ) {
 					setImage( () => File );
 				}
 				break;

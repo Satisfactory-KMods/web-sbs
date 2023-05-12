@@ -20,28 +20,28 @@ export enum LoginRule {
 const validateLogin = async( {
 	params,
 	request
-} : LoaderFunctionArgs, loggedInRule = LoginRule.DontCare, redirectTo = "/error/401", role? : ERoles ) : Promise<LoaderDataBase | Response> => {
+}: LoaderFunctionArgs, loggedInRule = LoginRule.DontCare, redirectTo = "/error/401", role?: ERoles ): Promise<LoaderDataBase | Response> => {
 	const token = window.localStorage.getItem( AUTHTOKEN ) || "";
 	const Response = await tRPC_Public.validate.query( { token } ).catch( console.warn );
 
 	const loggedIn = !!Response?.tokenValid;
 
-	if ( !loggedIn && !!role ) {
+	if( !loggedIn && !!role ) {
 		return redirect( redirectTo );
 	}
 
-	if ( loggedIn && !!role ) {
+	if( loggedIn && !!role ) {
 		const us = new User( token );
-		if ( !us.HasPermssion( role ) ) {
+		if( !us.HasPermssion( role ) ) {
 			return redirect( "/error/401" );
 		}
 	}
 
-	if ( !loggedIn && loggedInRule === ( LoginRule.LoggedIn || loggedInRule === LoginRule.BlueprintOwner ) ) {
+	if( !loggedIn && loggedInRule === ( LoginRule.LoggedIn || loggedInRule === LoginRule.BlueprintOwner ) ) {
 		return redirect( redirectTo );
 	}
 
-	if ( loggedIn && loggedInRule === LoginRule.NotLoggedIn ) {
+	if( loggedIn && loggedInRule === LoginRule.NotLoggedIn ) {
 		return redirect( redirectTo );
 	}
 
@@ -51,22 +51,22 @@ const validateLogin = async( {
 const validateBlueprint = async( {
 	params,
 	request
-} : LoaderFunctionArgs, redirectTo = "/", loggedInRule = LoginRule.DontCare, ownerRedirectTo = "/error/401", role = ERoles.member ) : Promise<LoaderBlueprintBase | Response> => {
+}: LoaderFunctionArgs, redirectTo = "/", loggedInRule = LoginRule.DontCare, ownerRedirectTo = "/error/401", role = ERoles.member ): Promise<LoaderBlueprintBase | Response> => {
 	const loaderBase = await validateLogin( { params, request }, loggedInRule, "/error/401", role );
-	if ( loaderBase instanceof Response ) {
+	if( loaderBase instanceof Response ) {
 		return loaderBase;
 	}
 	const { blueprintId } = params;
 
 	const result = await tRPC_Public.blueprint.getBlueprint.query( { blueprintId: blueprintId! } );
-	if ( !result ) {
+	if( !result ) {
 		redirect( redirectTo );
 	}
 
 	const blueprintPermission = ( loaderBase.user.Get._id === result.blueprintData.owner || loaderBase.user.HasPermssion( ERoles.admin ) );
 
-	if ( result.blueprintData && loggedInRule === LoginRule.BlueprintOwner ) {
-		if ( !loaderBase.user.IsValid || !blueprintPermission ) {
+	if( result.blueprintData && loggedInRule === LoginRule.BlueprintOwner ) {
+		if( !loaderBase.user.IsValid || !blueprintPermission ) {
 			redirect( ownerRedirectTo );
 		}
 	}

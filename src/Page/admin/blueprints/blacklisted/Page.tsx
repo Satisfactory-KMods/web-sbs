@@ -9,7 +9,7 @@ import {
 	useState
 } from "react";
 
-const Component : FunctionComponent = () => {
+const Component: FunctionComponent = () => {
 	const { user } = useAuth();
 	const [ Blueprints, setBlueprints ] = useState<BlueprintData[]>( [] );
 
@@ -19,7 +19,7 @@ const Component : FunctionComponent = () => {
 			Options: { sort: { createdAt: 1 } }
 		} )
 			.then( R => {
-				if ( R && R.Success && R.Data ) {
+				if( R && R.Success && R.Data ) {
 					setBlueprints( R.Data );
 				}
 			} );

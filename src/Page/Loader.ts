@@ -10,13 +10,13 @@ import type { LoaderFunction } from "react-router-dom";
 import { json } from "react-router-dom";
 
 export type LayoutLoaderData = LoaderDataBase & {
-	mods : Mod[],
-	tags : Tag[]
+	mods: Mod[],
+	tags: Tag[]
 };
 
-export const defaultLoader : LoaderFunction = async( { params, request } ) => {
+export const defaultLoader: LoaderFunction = async( { params, request } ) => {
 	const result = await validateLogin( { params, request } );
-	if ( result instanceof Response ) {
+	if( result instanceof Response ) {
 		return result;
 	}
 
@@ -31,7 +31,7 @@ export const defaultLoader : LoaderFunction = async( { params, request } ) => {
 		tags: [] as Tag[]
 	};
 
-	if ( mods && tags ) {
+	if( mods && tags ) {
 		queryResult.tags = tags;
 		queryResult.mods = mods;
 	}

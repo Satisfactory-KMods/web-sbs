@@ -3,11 +3,11 @@ import type { ILang } from "@app/Types/lang";
 import type { Blueprint } from "@etothepii/satisfactory-file-parser";
 
 type ResponseBase<T = any> = {
-	Success : boolean;
-	Auth : boolean;
-	Data? : T;
-	Reached : boolean;
-	MessageCode? : keyof ILang["ApiMessgaes"];
+	Success: boolean;
+	Auth: boolean;
+	Data?: T;
+	Reached: boolean;
+	MessageCode?: keyof ILang["ApiMessgaes"];
 };
 
 export type IAPIResponseBase<T = any> = ResponseBase<T>;
@@ -19,7 +19,7 @@ export type TResponse_AnyData<MessageOpt extends boolean = false> = IAPIResponse
 // ----------------------------------------
 
 export type TResponse_Auth_SignUp = IAPIResponseBase<{
-	Token : string;
+	Token: string;
 }>;
 export type TResponse_Auth_SignIn = TResponse_Auth_SignUp;
 export type TResponse_Auth_Vertify = IAPIResponseBase<>;

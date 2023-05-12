@@ -29,7 +29,7 @@ import type {
 } from "react-select";
 import Select from "react-select";
 
-const Component : FunctionComponent = () => {
+const Component: FunctionComponent = () => {
 	const { blueprints, totalBlueprints } = useLoaderData() as IndexLoaderData;
 	const { tagsSelectOptions, modSelectOptions, sortSelectOptions, vanillaSelectOptions } = useSelectOptions();
 
@@ -39,11 +39,11 @@ const Component : FunctionComponent = () => {
 
 	const [ filter, setFilter ] = useState<FilterSchema>( {} );
 
-	async function onPageChange( options : { skip : number, limit : number }, newFiler? : FilterSchema ) {
+	async function onPageChange( options: { skip: number, limit: number }, newFiler?: FilterSchema ) {
 		setIsFetching( true );
 		const queryFilter = { filterOptions: { ...filter, ...newFiler }, ...options };
 		const Blueprints = await tRPC_Public.blueprint.getBlueprints.query( queryFilter ).catch( tRPC_handleError );
-		if ( Blueprints ) {
+		if( Blueprints ) {
 			setBlueprints( Blueprints.blueprints );
 			setTotalBlueprints( Blueprints.totalBlueprints );
 		}
@@ -61,7 +61,7 @@ const Component : FunctionComponent = () => {
 	usePageTitle( `SBS - Blueprints` );
 
 	const DoFetch = async() => {
-		const filter : FilterSchema = {
+		const filter: FilterSchema = {
 			sortBy: Select_Sorting?.value || undefined,
 			name: BlueprintName !== "" ? BlueprintName : undefined,
 			onlyVanilla: Select_Vanilla?.value || undefined,
@@ -96,7 +96,7 @@ const Component : FunctionComponent = () => {
 				</div>
 				<div className="p-5 grid grid-cols-1 text-neutral-200 md:grid-cols-2 lg:grid-cols-3 gap-2">
 					<SBSTextInput label="Blueprint Name" value={ BlueprintName }
-						onChange={ ( e : any ) => setBlueprintName( e.target.value ) }>
+						onChange={ ( e: any ) => setBlueprintName( e.target.value ) }>
 						<HiSearch />
 					</SBSTextInput>
 					<SBSSelect label="Sort By">

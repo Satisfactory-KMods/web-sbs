@@ -6,20 +6,20 @@ import jwt from "jwt-decode";
 
 export class User {
 	public JsonWebToken;
-	private user : UserSession;
+	private user: UserSession;
 
-	constructor( JsonWebToken : string ) {
+	constructor( JsonWebToken: string ) {
 		this.JsonWebToken = JsonWebToken;
 		try {
 			this.user = jwt( JsonWebToken );
-		} catch ( e ) {
+		} catch( e ) {
 			this.user = {
 				...DefaultUser
 			};
 		}
 	}
 
-	public setuser( Data : UserAccount ) {
+	public setuser( Data: UserAccount ) {
 		this.user = {
 			...this.user,
 			...Data
@@ -27,7 +27,7 @@ export class User {
 	}
 
 	public GetTimeLeft() {
-		if ( this.user?.exp ) {
+		if( this.user?.exp ) {
 			return Math.max( this.user.exp - Date.now() / 1000, 0 );
 		}
 		return 0;
@@ -45,7 +45,7 @@ export class User {
 		return this.IsValid ? "/images/default/unknown.png" : "/images/default/unknown.png";
 	}
 
-	public HasPermssion( Permssion : ERoles ) {
+	public HasPermssion( Permssion: ERoles ) {
 		return this.user.role >= Permssion && this.IsValid;
 	}
 }

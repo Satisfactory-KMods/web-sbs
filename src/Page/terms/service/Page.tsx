@@ -1,7 +1,7 @@
 import type { FunctionComponent } from "react";
 
 
-const Component : FunctionComponent = () => {
+const Component: FunctionComponent = () => {
 
 	return (
 		<></>

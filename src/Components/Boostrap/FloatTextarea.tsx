@@ -2,10 +2,10 @@ import type React from "react";
 import { useId } from "react";
 
 interface IFloatTextareaProps extends FormControlProps {
-	lableClassName? : string | undefined;
+	lableClassName?: string | undefined;
 }
 
-const FloatTextarea : React.FunctionComponent<IFloatTextareaProps> = ( {
+const FloatTextarea: React.FunctionComponent<IFloatTextareaProps> = ( {
 	lableClassName,
 	children,
 	className,

@@ -2,10 +2,10 @@ import type React from "react";
 import { useId } from "react";
 
 interface IFloatInputProps extends FormControlProps {
-	lableClassName? : string | undefined;
+	lableClassName?: string | undefined;
 }
 
-const FloatInput : React.FunctionComponent<IFloatInputProps> = ( { lableClassName, children, ...Props } ) => {
+const FloatInput: React.FunctionComponent<IFloatInputProps> = ( { lableClassName, children, ...Props } ) => {
 	const ID = useId();
 
 	return (

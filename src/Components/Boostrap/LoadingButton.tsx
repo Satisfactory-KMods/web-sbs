@@ -3,11 +3,11 @@ import { FaSpinner } from "react-icons/all";
 import type { IconType } from "react-icons/lib/cjs/iconBase";
 
 interface ILoadingButtonProps extends ButtonProps {
-	IsLoading : boolean;
-	Icon? : IconType;
+	IsLoading: boolean;
+	Icon?: IconType;
 }
 
-const LoadingButton : FunctionComponent<ILoadingButtonProps> = ( {
+const LoadingButton: FunctionComponent<ILoadingButtonProps> = ( {
 	Icon,
 	IsLoading,
 	disabled,

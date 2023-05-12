@@ -12,7 +12,7 @@ import {
 	RiDoorOpenLine
 } from "react-icons/all";
 
-const TopNav : FunctionComponent = () => {
+const TopNav: FunctionComponent = () => {
 	const { user, loggedIn, logout } = useAuth();
 	const divRef = useRef<HTMLDivElement>( null );
 

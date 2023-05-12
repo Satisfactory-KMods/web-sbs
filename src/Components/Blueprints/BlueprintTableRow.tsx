@@ -5,14 +5,14 @@ import * as Icon from "react-icons/bs";
 import { Link } from "react-router-dom";
 
 interface IBlueprintTableRowProps {
-	Data : BlueprintData;
-	onToggled? : () => void;
+	Data: BlueprintData;
+	onToggled?: () => void;
 }
 
-const BlueprintTableRow : FunctionComponent<IBlueprintTableRowProps> = ( { Data, onToggled } ) => {
+const BlueprintTableRow: FunctionComponent<IBlueprintTableRowProps> = ( { Data, onToggled } ) => {
 	const { BlueprintValid, Blueprint, ToggleBlacklist } = useBlueprint( Data );
 
-	if ( !BlueprintValid ) {
+	if( !BlueprintValid ) {
 		return null;
 	}
 
@@ -40,7 +40,7 @@ const BlueprintTableRow : FunctionComponent<IBlueprintTableRowProps> = ( { Data,
 					<Button className="rounded-none"
 					        variant="danger"
 					        onClick={ async() => {
-						        if ( await ToggleBlacklist() && onToggled !== undefined ) {
+						        if( await ToggleBlacklist() && onToggled !== undefined ) {
 							        onToggled();
 						        }
 					        } } type="button">

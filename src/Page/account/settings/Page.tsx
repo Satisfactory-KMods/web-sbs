@@ -17,7 +17,7 @@ import type {
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const Component : FunctionComponent = () => {
+const Component: FunctionComponent = () => {
 	const { user, logout } = useAuth();
 	const navigate = useNavigate();
 	const [ isSending, setIsSending ] = useState( false );
@@ -28,33 +28,33 @@ const Component : FunctionComponent = () => {
 	const [ password, setPassword ] = useState( "" );
 	const [ password2, setPassword2 ] = useState( "" );
 
-	const handleSubmit = async( e : FormEvent<HTMLFormElement> ) => {
+	const handleSubmit = async( e: FormEvent<HTMLFormElement> ) => {
 		e.preventDefault();
 
-		if ( password !== password2 ) {
+		if( password !== password2 ) {
 			fireSwalFromApi( `Passwords do not match`, "warning" );
 			return;
 		}
 
-		const sendData : any = {
+		const sendData: any = {
 			username,
 			email,
 			password
 		};
-		if ( sendData.username.clearWs().length <= 0 ) {
+		if( sendData.username.clearWs().length <= 0 ) {
 			sendData.username = undefined;
 		}
-		if ( sendData.email.clearWs().length <= 0 ) {
+		if( sendData.email.clearWs().length <= 0 ) {
 			sendData.email = undefined;
 		}
-		if ( sendData.password.clearWs().length <= 0 ) {
+		if( sendData.password.clearWs().length <= 0 ) {
 			sendData.password = undefined;
 		}
 
 		setIsSending( true );
 		const response = await tRPC_Auth.updateAccount.mutate( sendData ).catch( tRPC_handleError );
 
-		if ( response ) {
+		if( response ) {
 			await logout( false );
 			await fireSwalFromApi( response, true );
 			navigate( 0 );

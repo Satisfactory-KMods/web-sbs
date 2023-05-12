@@ -21,7 +21,7 @@ import {
 } from "react-router-dom";
 
 
-const Component : FunctionComponent = () => {
+const Component: FunctionComponent = () => {
 	const navigate = useNavigate();
 	const { setToken } = useAuth();
 	const [ isSending, setIsSending ] = useState( false );
@@ -32,10 +32,10 @@ const Component : FunctionComponent = () => {
 	const [ password, setPassword ] = useState( "" );
 	const [ password2, setPassword2 ] = useState( "" );
 
-	const handleSubmit = async( e : FormEvent<HTMLFormElement> ) => {
+	const handleSubmit = async( e: FormEvent<HTMLFormElement> ) => {
 		e.preventDefault();
 
-		if ( password !== password2 ) {
+		if( password !== password2 ) {
 			fireSwalFromApi( `Passwords do not match`, "warning" );
 			return;
 		}
@@ -45,7 +45,7 @@ const Component : FunctionComponent = () => {
 			email, username, password
 		} ).catch( tRPC_handleError );
 
-		if ( response ) {
+		if( response ) {
 			setToken( response.token );
 			await fireSwalFromApi( response.message, true );
 			navigate( "/" );

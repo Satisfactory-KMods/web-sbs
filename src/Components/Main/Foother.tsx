@@ -7,7 +7,7 @@ import {
 } from "react-icons/all";
 import { Link } from "react-router-dom";
 
-const Foother : FunctionComponent = () => {
+const Foother: FunctionComponent = () => {
 	return (
 		<div className="bg-gray-800 border-t border-gray-700">
 			<div className="container mx-auto">

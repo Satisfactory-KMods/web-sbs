@@ -10,7 +10,7 @@ import {
 	useLoaderData
 } from "react-router-dom";
 
-const Component : FunctionComponent = () => {
+const Component: FunctionComponent = () => {
 	const { loggedIn, user, tags, mods } = useLoaderData() as LayoutLoaderData;
 
 	return (

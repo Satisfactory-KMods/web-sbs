@@ -7,7 +7,7 @@ import {
 import type { Components } from "react-markdown";
 import ReactMarkdown from "react-markdown";
 
-export const mdxComponents : Components = {
+export const mdxComponents: Components = {
 	ul: ( { children } ) => <ul className="list-disc ml-4 mt-4 mb-3">{ children }</ul>,
 	li: ( { children } ) => <li className="mt-1">{ children }</li>,
 	img: ( { alt, src } ) => (
@@ -27,7 +27,7 @@ export const mdxComponents : Components = {
 	h6: ( { children } ) => <h1 className="text-lg font-bold mb-2">{ children } </h1>
 };
 
-const Component : FunctionComponent = () => {
+const Component: FunctionComponent = () => {
 	const [ privacyPolicyText, setPrivacyPolicyText ] = useState( "" );
 
 	useEffect( () => {

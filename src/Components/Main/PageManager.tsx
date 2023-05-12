@@ -3,26 +3,26 @@ import type { FunctionComponent } from "react";
 import { useEffect } from "react";
 
 interface IPageManagerProps {
-	MaxPage : number,
-	OnPageChange : ( Page : number ) => void,
-	Page : number,
-	Hide? : boolean
+	MaxPage: number,
+	OnPageChange: ( Page: number ) => void,
+	Page: number,
+	Hide?: boolean
 }
 
-const PageManager : FunctionComponent<IPageManagerProps> = ( {
+const PageManager: FunctionComponent<IPageManagerProps> = ( {
 	MaxPage,
 	Page,
 	OnPageChange,
 	Hide
 } ) => {
 	useEffect( () => {
-		if ( Page > MaxPage || Page < 0 ) {
+		if( Page > MaxPage || Page < 0 ) {
 			OnPageChange( Math.clamp( 0, Page, MaxPage - 1 ) );
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [ MaxPage, Page ] );
 
-	if ( Hide || MaxPage <= 1 ) {
+	if( Hide || MaxPage <= 1 ) {
 		return null;
 	}
 

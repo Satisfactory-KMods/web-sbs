@@ -6,24 +6,24 @@ import type {
 import { useRef } from "react";
 
 interface NavigationDropdownProps extends PropsWithChildren {
-	image? : string;
-	text? : string | ReactElement;
+	image?: string;
+	text?: string | ReactElement;
 }
 
-const NavigationDropdown : FunctionComponent<NavigationDropdownProps> = ( { image, text, children } ) => {
+const NavigationDropdown: FunctionComponent<NavigationDropdownProps> = ( { image, text, children } ) => {
 
 	const dropDownRef = useRef<HTMLDivElement>( null );
 
 	const handleClickAnywhere = () => {
-		if ( dropDownRef.current ) {
+		if( dropDownRef.current ) {
 			dropDownRef.current.classList.toggle( "hidden", true );
 		}
 	};
 
 	const onToggle = () => {
 		document.body.removeEventListener( "mouseup", handleClickAnywhere );
-		if ( dropDownRef.current ) {
-			if ( !dropDownRef.current.classList.toggle( "hidden", false ) ) {
+		if( dropDownRef.current ) {
+			if( !dropDownRef.current.classList.toggle( "hidden", false ) ) {
 				document.body.addEventListener( "mouseup", handleClickAnywhere, {
 					passive: true,
 					once: true

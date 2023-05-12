@@ -13,7 +13,7 @@ import type { SweetAlertIcon, SweetAlertOptions } from "sweetalert2";
 import Swal from "sweetalert2";
 
 
-export async function onConfirm<PreConfirmResult = any>( msg : string, moreOptions? : SweetAlertOptions<PreConfirmResult> ) : Promise<boolean> {
+export async function onConfirm<PreConfirmResult = any>( msg: string, moreOptions?: SweetAlertOptions<PreConfirmResult> ): Promise<boolean> {
 	const accept = await fireSwalFromApi( msg, "question", {
 		showConfirmButton: true,
 		showCancelButton: true,
@@ -25,16 +25,16 @@ export async function onConfirm<PreConfirmResult = any>( msg : string, moreOptio
 	return !!accept?.isConfirmed;
 }
 
-export function successSwal( msg : string, toast? : boolean ) : void {
-	if ( toast ) {
+export function successSwal( msg: string, toast?: boolean ): void {
+	if( toast ) {
 		fireToastFromApi( msg, "success" );
 		return;
 	}
 	fireSwalFromApi( msg, "success" );
 }
 
-export function fireSwalFromApi<PreConfirmResult = any>( message : string[] | string | undefined, success? : boolean | SweetAlertIcon, moreOptions? : SweetAlertOptions<PreConfirmResult> ) {
-	if ( message && message.length >= 0 ) {
+export function fireSwalFromApi<PreConfirmResult = any>( message: string[] | string | undefined, success?: boolean | SweetAlertIcon, moreOptions?: SweetAlertOptions<PreConfirmResult> ) {
+	if( message && message.length >= 0 ) {
 		return Swal.fire<PreConfirmResult>( {
 			html: Array.isArray( message ) ? message.join( "<br />" ) : message,
 			icon: typeof success === "string" ? success : ( success ? "success" : "error" ),
@@ -47,8 +47,8 @@ export function fireSwalFromApi<PreConfirmResult = any>( message : string[] | st
 	return null;
 }
 
-export function fireToastFromApi<PreConfirmResult = any>( message : string[] | string | undefined, success? : boolean | SweetAlertIcon, moreOptions? : SweetAlertOptions<PreConfirmResult> ) {
-	if ( message && message.length >= 0 ) {
+export function fireToastFromApi<PreConfirmResult = any>( message: string[] | string | undefined, success?: boolean | SweetAlertIcon, moreOptions?: SweetAlertOptions<PreConfirmResult> ) {
+	if( message && message.length >= 0 ) {
 		return Swal.fire( {
 			position: "bottom-end",
 			toast: true,
@@ -89,16 +89,16 @@ export const tRPC_Auth = createTRPCProxyClient<AuthRouter>( {
 	]
 } );
 
-export const tRPC_handleError = ( e : any, asToast? : boolean ) => {
-	if ( e instanceof TRPCClientError ) {
-		let message : string | string[] = e.message;
+export const tRPC_handleError = ( e: any, asToast?: boolean ) => {
+	if( e instanceof TRPCClientError ) {
+		let message: string | string[] = e.message;
 		try {
-			const asArray : any[] = JSON.parse( e.message );
+			const asArray: any[] = JSON.parse( e.message );
 			message = asArray.map( msg => msg.message );
-		} catch ( err ) {
+		} catch( err ) {
 		}
 
-		if ( !asToast ) {
+		if( !asToast ) {
 			fireSwalFromApi( message );
 		} else {
 			fireToastFromApi( message );

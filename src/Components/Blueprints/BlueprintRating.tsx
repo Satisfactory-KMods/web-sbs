@@ -13,14 +13,14 @@ const BlueprintRating: FunctionComponent<BlueprintRatingProps> = ( { blueprintHo
 	const { Update, allowedToLike, Blueprint } = blueprintHook;
 
 	const setHoverRating = ( rating: number ) => {
-		if ( !allowedToLike ) {
+		if( !allowedToLike ) {
 			return;
 		}
 		setHover( () => rating );
 	};
 
 	const setRating = async( rating: number ) => {
-		if ( !allowedToLike ) {
+		if( !allowedToLike ) {
 			return;
 		}
 		await tRPC_Auth.blueprints.rate.mutate( {
