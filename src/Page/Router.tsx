@@ -14,6 +14,10 @@ const rootRouter = createBrowserRouter( [
 		children: [
 			// start auth --------------------------------
 			{
+				path: "/",
+				element: <Navigate to="/blueprint/list" />
+			},
+			{
 				path: "/account/signin",
 				lazy: async() => await import( "@page/account/signin/Page" ),
 				loader: async( { request, params } ) => {
