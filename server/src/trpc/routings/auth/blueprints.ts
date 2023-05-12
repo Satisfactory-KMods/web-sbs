@@ -16,15 +16,16 @@ export const auth_blueprints = router( {
 
 		try {
 			const bpDocument = await blueprint.getDocument();
-			const ratingIndex = bpDocument.rating.findIndex( e => _.isEqual( e.userid,userClass.Get._id ) );
-			if ( ratingIndex >= 0 ) {
-				bpDocument.rating[ ratingIndex ].rating = rating;
-			} else {
-				bpDocument.rating.push( { userid: userClass.Get._id, rating } );
-			}
-			bpDocument.markModified( "rating" );
-			if ( await bpDocument.save() ) {
-				return "Rating saved!";
+			if ( bpDocument ) {
+				const ratingIndex = bpDocument.rating.findIndex( e => _.isEqual( e.userid,userClass.Get._id ) );
+				if ( ratingIndex >= 0 ) {
+					bpDocument.rating[ ratingIndex ].rating = rating;
+				} else {
+					bpDocument.rating.push( { userid: userClass.Get._id, rating } );
+				}
+				if ( await bpDocument.updateRating() ) {
+					return "Rating saved!";
+				}
 			}
 		} catch ( e ) {
 			handleTRCPErr( e );

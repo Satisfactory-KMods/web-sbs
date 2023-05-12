@@ -2,7 +2,7 @@ import { successSwal, tRPC_Auth, tRPC_handleError } from "@app/Lib/tRPC";
 import type { useBlueprint } from "@app/hooks/useBlueprint";
 import type { RatingProps } from "flowbite-react";
 import { Rating } from "flowbite-react";
-import { useMemo, useState, type FunctionComponent } from "react";
+import { useState, type FunctionComponent } from "react";
 
 interface BlueprintRatingProps extends RatingProps {
 	blueprintHook: ReturnType<typeof useBlueprint>
@@ -11,13 +11,6 @@ interface BlueprintRatingProps extends RatingProps {
 const BlueprintRating: FunctionComponent<BlueprintRatingProps> = ( { blueprintHook, children, ...props } ) => {
 	const [ hover, setHover ] = useState( 0 );
 	const { Update, allowedToLike, Blueprint } = blueprintHook;
-
-	const rating = useMemo( () => {
-		const totalRating = Blueprint.rating.length * 5;
-		const currentTotalRating = Blueprint.rating.reduce( ( total, rating ) => total + rating.rating, 0 );
-		const currRating = Math.round( currentTotalRating / totalRating * 5 * 100 ) / 100;
-		return !isNaN( currRating ) ? currRating : 0;
-	}, [ Blueprint.rating ] );
 
 	const setHoverRating = ( rating: number ) => {
 		if ( !allowedToLike ) {
@@ -47,7 +40,7 @@ const BlueprintRating: FunctionComponent<BlueprintRatingProps> = ( { blueprintHo
 			<Rating.Star onClick={ () => setRating( 4 ) } onMouseEnter={ () => setHoverRating( 4 ) } onMouseLeave={ () => setHoverRating( 0 ) } filled={ ( rating >= 4 && hover === 0 ) || hover >= 4 } />
 			<Rating.Star onClick={ () => setRating( 5 ) } onMouseEnter={ () => setHoverRating( 5 ) } onMouseLeave={ () => setHoverRating( 0 ) } filled={ ( rating >= 5 && hover === 0 ) || hover >= 5 } />
 			<p className="ml-2 text-sm font-medium text-gray-500 dark:text-gray-400">
-				{ rating } out of 5
+				{ Blueprint.totalRation } out of 5
 			</p>
 			<span className="mx-1.5 h-1 w-1 rounded-full bg-gray-500 dark:bg-gray-400" />
 			<span className="text-sm font-medium text-gray-900 dark:text-white">

@@ -43,19 +43,20 @@ const BlueprintCard : FunctionComponent<IBlueprintCardProps> = ( { Data, onToggl
 					{ Blueprint.name }{ Blueprint.name }
 				</div>
 				<ReactMarkdown components={ mdxComponents } className="text-neutral-200 flex-1 p-3 border-t-1 border-gray-700">
-					{ Blueprint.description.substring( 0, 200 ) + " ..." }
+					{ `${ Blueprint.description.substring( 0, 200 ) } ...` }
 				</ReactMarkdown>
 			</Link>
 			<div className="p-3 border-t bg-gray-700 border-gray-700 flex">
 				<BlueprintRating className="flex-1" blueprintHook={ bpHook } />
 				<div className="flex flex-0">
-					{ allowedToEdit && <Button onClick={ doBlacklist } color="red" size="small" className="p-1 px-3">
-						&nbsp;<HiTrash /> &nbsp;
-					</Button> }
-
-					{ allowedToEdit && <Link to={ `/blueprint/edit/${ Blueprint._id }` } className="text-gray-900 bg-white border border-gray-200 hover:bg-gray-100 hover:text-blue-700 disabled:hover:bg-white focus:ring-blue-700 focus:text-blue-700 dark:bg-transparent dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 focus:ring-2 dark:disabled:hover:bg-gray-800 focus:!ring-2 group flex h-min items-center justify-center p-0.5 text-center font-medium focus:z-10 rounded-lg p-1 ms-2 px-3 p-1 ms-2 px-3">
-						&nbsp;<HiCog /> &nbsp;
-					</Link> }
+					{ allowedToEdit && <>
+						<Button onClick={ doBlacklist } color="red" size="small" className="p-1 px-3">
+							&nbsp;<HiTrash /> &nbsp;
+						</Button>
+						<Link to={ `/blueprint/edit/${ Blueprint._id }` } className="text-gray-900 bg-white border border-gray-200 hover:bg-gray-100 hover:text-blue-700 disabled:hover:bg-white focus:ring-blue-700 focus:text-blue-700 dark:bg-transparent dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 focus:ring-2 dark:disabled:hover:bg-gray-800 focus:!ring-2 group flex h-min items-center justify-center p-0.5 text-center font-medium focus:z-10 rounded-lg p-1 ms-2 px-3 p-1 ms-2 px-3">
+							&nbsp;<HiCog /> &nbsp;
+						</Link>
+					</> }
 
 					<Button href={ `/api/v1/download/${ Blueprint._id }` } target="_blank" color="gray" size="small" className="p-1 px-3 ms-2">
 						<HiDownload className="text-sm me-2" /> { Blueprint.downloads }

@@ -13,10 +13,15 @@ const ZodBlueprintSchema = z.object( {
 		userid: z.string(),
 		rating: z.number().min( 1 ).max( 5 ),
 	} ) ),
+	totalRating: z.number(),
 	tags: z.array( z.string() ),
 	downloads: z.number(),
 	blacklisted: z.boolean()
 } );
+
+export interface BlueprintSchemaMethods {
+	updateRating: () => Promise<boolean>;
+}
 
 const BlueprintSchema = new mongoose.Schema( {
 	name: { type: String, required: true },
@@ -27,11 +32,33 @@ const BlueprintSchema = new mongoose.Schema( {
 		userid: { type: String, required: true },
 		rating: { type: Number, required: true },
 	} ], required: true },
+	totalRating: { type: Number, required: true },
 	DesignerSize: { type: String, required: true },
 	owner: { type: String, required: true },
 	downloads: { type: Number, required: true, default: 0 },
 	blacklisted: { type: Boolean, required: false, default: false }
-}, { timestamps: true } );
+}, { timestamps: true, methods: {
+	updateRating: async function() {
+		const findRating = () => {
+			const totalRating = this.rating.length * 5;
+			const currentTotalRating = this.rating.reduce( ( total, rating ) => total + rating.rating, 0 );
+			const currRating = Math.round( currentTotalRating / totalRating * 5 * 100 ) / 100;
+			return !isNaN( currRating ) ? currRating : 0;
+		};
+		this.totalRating = findRating();
+		try {
+			this.markModified( "rating" );
+			this.markModified( "totalRation" );
+			await this.save();
+			return true;
+		} catch ( e ) {
+			if ( e instanceof Error ) {
+				SystemLib.LogError( e.message );
+			}
+		}
+		return false;
+	}
+} } );
 
 interface BPInterface extends z.infer<typeof ZodBlueprintSchema> {
 	DesignerSize : EDesignerSize;
@@ -39,6 +66,6 @@ interface BPInterface extends z.infer<typeof ZodBlueprintSchema> {
 
 export type BlueprintData = BPInterface & MongoBase;
 
-export default mongoose.model<BlueprintData>( "SBS_Blueprints", BlueprintSchema );
+export default mongoose.model<BlueprintData, mongoose.Model<BlueprintData, any, BlueprintSchemaMethods>>( "SBS_Blueprints", BlueprintSchema );
 export { BlueprintSchema };
 
