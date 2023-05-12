@@ -14,6 +14,7 @@ import {
 } from "@server/trpc/trpc";
 import * as trpcExpress from "@trpc/server/adapters/express";
 import { auth_blueprints } from "./routings/auth/blueprints";
+import { admin_tags } from "./routings/auth/tags";
 
 
 const publicRouter = router( {
