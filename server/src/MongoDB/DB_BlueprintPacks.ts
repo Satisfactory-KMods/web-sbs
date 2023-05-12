@@ -36,3 +36,4 @@ export type BlueprintPack = z.infer<typeof ZodBlueprintPackSchema> & MongoBase;
 
 export default mongoose.model<BlueprintPack>( "SBS_BlueprintPacks", BlueprintPackSchema );
 export { BlueprintPackSchema };
+

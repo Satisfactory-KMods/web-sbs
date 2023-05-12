@@ -1,11 +1,11 @@
+import PolicyText from "@applib/Policy.md";
 import type { FunctionComponent } from "react";
 import {
 	useEffect,
 	useState
-}                                 from "react";
-import type { Components }        from "react-markdown";
-import ReactMarkdown              from "react-markdown";
-import PolicyText                 from "@applib/Policy.md";
+} from "react";
+import type { Components } from "react-markdown";
+import ReactMarkdown from "react-markdown";
 
 export const mdxComponents : Components = {
 	ul: ( { children } ) => <ul className="list-disc ml-4 mt-4 mb-3">{ children }</ul>,
@@ -35,7 +35,7 @@ const Component : FunctionComponent = () => {
 	} );
 
 	return (
-		<div className={ "rounded-2xl bg-gray-700 border border-gray-800 p-5" }>
+		<div className="rounded-2xl bg-gray-700 border border-gray-800 p-5">
 			<ReactMarkdown components={ mdxComponents } className="text-white">
 				{ privacyPolicyText }
 			</ReactMarkdown>
@@ -46,3 +46,4 @@ const Component : FunctionComponent = () => {
 export {
 	Component
 };
+

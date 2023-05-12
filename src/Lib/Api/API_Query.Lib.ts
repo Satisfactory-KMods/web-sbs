@@ -1,6 +1,6 @@
+import { AUTHTOKEN } from "@applib/constance";
+import type { TApiPath } from "@shared/Enum/EApiPath";
 import type { IAPIResponseBase } from "@shared/Types/API_Response";
-import type { TApiPath }         from "@shared/Enum/EApiPath";
-import { AUTHTOKEN }             from "@applib/constance";
 
 export class API_QueryLib {
 	static async PostToAPI<T extends IAPIResponseBase = IAPIResponseBase<any>, D = any>(
@@ -42,8 +42,7 @@ export class API_QueryLib {
 					Response.Reached = true;
 				}
 			}
-		}
-		catch ( e ) {
+		} catch ( e ) {
 			console.error( e );
 		}
 
@@ -93,8 +92,7 @@ export class API_QueryLib {
 					Response.Reached = true;
 				}
 			}
-		}
-		catch ( e ) {
+		} catch ( e ) {
 
 		}
 

@@ -9,8 +9,8 @@ import { public_mods } from "@server/trpc/routings/public/mods";
 import { public_tags } from "@server/trpc/routings/public/tags";
 import { public_validate } from "@server/trpc/routings/public/validate";
 import {
-    createContext,
-    router
+	createContext,
+	router
 } from "@server/trpc/trpc";
 import * as trpcExpress from "@trpc/server/adapters/express";
 import { auth_blueprints } from "./routings/auth/blueprints";

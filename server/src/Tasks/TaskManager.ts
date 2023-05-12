@@ -1,4 +1,4 @@
-import fs   from "fs";
+import fs from "fs";
 import path from "path";
 
 export type TTasksRunner = "FicsitQuery" | "MakeItClean";
@@ -79,7 +79,7 @@ export class TaskManagerClass {
 			);
 			if ( Stats.isFile() && File.endsWith( ".Task.ts" ) ) {
 				const JobClass : JobTask = (
-					await import(path.join( __BaseDir, "/Tasks/Jobs", File ))
+					await import( path.join( __BaseDir, "/Tasks/Jobs", File ) )
 				).default as JobTask;
 				this.Jobs[ JobClass.JobName ] = JobClass;
 			}

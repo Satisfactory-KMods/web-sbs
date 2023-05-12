@@ -1,9 +1,9 @@
-import { z }                from "zod";
-import * as jwt             from "jsonwebtoken";
-import { publicProcedure }  from "@server/trpc/trpc";
-import DB_UserAccount       from "@server/MongoDB/DB_UserAccount";
-import DB_SessionToken      from "@server/MongoDB/DB_SessionToken";
 import type { UserSession } from "@server/Lib/Session.Lib";
+import DB_SessionToken from "@server/MongoDB/DB_SessionToken";
+import DB_UserAccount from "@server/MongoDB/DB_UserAccount";
+import { publicProcedure } from "@server/trpc/trpc";
+import * as jwt from "jsonwebtoken";
+import { z } from "zod";
 
 export const public_validate =
 	publicProcedure
@@ -19,8 +19,7 @@ export const public_validate =
 				DB_SessionToken.deleteMany( { userid: result._id } );
 			}
 			return { tokenValid: !!( await DB_SessionToken.exists( { token: input.token } ) ) && userAccountExsists };
-		}
-		catch ( e ) {
+		} catch ( e ) {
 		}
 		return { tokenValid: false };
 	} );

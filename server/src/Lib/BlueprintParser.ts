@@ -1,5 +1,6 @@
 import type {
-	Blueprint } from "@etothepii/satisfactory-file-parser";
+	Blueprint
+} from "@etothepii/satisfactory-file-parser";
 import {
 	Parser
 } from "@etothepii/satisfactory-file-parser";
@@ -14,8 +15,7 @@ export class BlueprintParser {
 		try {
 			this.Data = Parser.ParseBlueprintFiles( Name, sbp, sbpcfg );
 			this.Success = true;
-		}
-		catch ( e ) {
+		} catch ( e ) {
 			if ( e instanceof Error ) {
 				SystemLib.LogError( "api", e.message );
 			}

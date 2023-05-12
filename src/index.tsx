@@ -8,6 +8,6 @@ import "@sweetalert2/theme-dark/dark.css";
 
 createRoot( document.getElementById( "root" ) as HTMLElement ).render(
 	<StrictMode>
-		<App /> 
+		<App />
 	</StrictMode>
 );

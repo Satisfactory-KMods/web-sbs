@@ -1,22 +1,21 @@
-import type { FunctionComponent }     from "react";
-import {
-	useEffect,
-	useState
-}                                     from "react";
-import type { ERoles }                from "@shared/Enum/ERoles";
-import AdminUserRow                   from "@comp/Admin/AdminUserRow";
-import { API_QueryLib }               from "@applib/Api/API_Query.Lib";
+import { API_QueryLib } from "@applib/Api/API_Query.Lib";
+import AdminUserRow from "@comp/Admin/AdminUserRow";
+import { useAuth } from "@hooks/useAuth";
+import type { UserAccount } from "@server/MongoDB/DB_UserAccount";
 import {
 	EApiAuth,
 	EApiQuestionary
-}                                     from "@shared/Enum/EApiPath";
+} from "@shared/Enum/EApiPath";
+import type { ERoles } from "@shared/Enum/ERoles";
+import type { TRequest_Auth_Modify } from "@shared/Types/API_Request";
 import type { TResponse_Auth_Modify } from "@shared/Types/API_Response";
-import type { TRequest_Auth_Modify }  from "@shared/Types/API_Request";
-import { useAuth }                    from "@hooks/useAuth";
-import type { UserAccount }           from "@server/MongoDB/DB_UserAccount";
+import type { FunctionComponent } from "react";
+import {
+	useEffect,
+	useState
+} from "react";
 
 const Component : FunctionComponent = () => {
-	const { Lang } = useLang();
 	const { user } = useAuth();
 	const [ Users, setUsers ] = useState<UserAccount[]>( [] );
 
@@ -61,10 +60,10 @@ const Component : FunctionComponent = () => {
 					</th>
 				</tr>
 				<tr>
-					<th className={ "px-2 text-center" }>{ Lang.AdminUsers.Id }</th>
-					<th className={ "px-3 text-center" }>{ Lang.AdminUsers.Username }</th>
-					<th className={ "px-3 text-center" }>{ Lang.AdminUsers.Role }</th>
-					<th className={ "px-3 text-center w-0" }>{ Lang.AdminTags.Actions }</th>
+					<th className="px-2 text-center">{ Lang.AdminUsers.Id }</th>
+					<th className="px-3 text-center">{ Lang.AdminUsers.Username }</th>
+					<th className="px-3 text-center">{ Lang.AdminUsers.Role }</th>
+					<th className="px-3 text-center w-0">{ Lang.AdminTags.Actions }</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -78,3 +77,4 @@ const Component : FunctionComponent = () => {
 export {
 	Component
 };
+

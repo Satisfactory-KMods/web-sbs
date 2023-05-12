@@ -1,6 +1,6 @@
-import * as mongoose      from "mongoose";
 import type { MongoBase } from "@server/Types/mongo";
-import { z }              from "zod";
+import * as mongoose from "mongoose";
+import { z } from "zod";
 
 const ZodTagSchema = z.object( {
 	DisplayName: z.string()

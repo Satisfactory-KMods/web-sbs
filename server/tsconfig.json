@@ -7,7 +7,7 @@
     ],
     "types": [
       "node"
-    ],
+    ], 
     "target": "ESNext",
     "module": "NodeNext",
     "strict": true,

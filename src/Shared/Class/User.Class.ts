@@ -1,8 +1,8 @@
-import jwt             from "jwt-decode";
-import type { ERoles } from "@shared/Enum/ERoles";
-import { DefaultUser } from "@shared/Default/Auth.Default";
-import type { UserAccount } from "@server/MongoDB/DB_UserAccount";
 import type { UserSession } from "@server/Lib/Session.Lib";
+import type { UserAccount } from "@server/MongoDB/DB_UserAccount";
+import { DefaultUser } from "@shared/Default/Auth.Default";
+import type { ERoles } from "@shared/Enum/ERoles";
+import jwt from "jwt-decode";
 
 export class User {
 	public JsonWebToken;
@@ -12,8 +12,7 @@ export class User {
 		this.JsonWebToken = JsonWebToken;
 		try {
 			this.user = jwt( JsonWebToken );
-		}
-		catch ( e ) {
+		} catch ( e ) {
 			this.user = {
 				...DefaultUser
 			};

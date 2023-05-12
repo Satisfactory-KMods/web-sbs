@@ -16,7 +16,7 @@ const TopNav : FunctionComponent = () => {
 	const { user, loggedIn, logout } = useAuth();
 	const divRef = useRef<HTMLDivElement>( null );
 
-	return ( 
+	return (
 		<nav className="bg-gray-800 border-b border-gray-700">
 			<div className="container mx-auto">
 				<div className="px-2 sm:px-6 lg:px-8">
@@ -46,13 +46,13 @@ const TopNav : FunctionComponent = () => {
 								<NavigationDropdown text={ loggedIn ? user.Get.username : "Sign In/Up" }>
 									{ !loggedIn && (
 										<>
-											<NavigationDropdownItem to={ "/account/signin" }>
+											<NavigationDropdownItem to="/account/signin">
 												<CgLogIn size={ 20 } />
 												<span className="px-2">
 										Sign In
 												</span>
 											</NavigationDropdownItem>
-											<NavigationDropdownItem to={ "/account/signup" }>
+											<NavigationDropdownItem to="/account/signup">
 												<CgAdd size={ 20 } />
 												<span className="px-2">
 								Sign Up
@@ -63,26 +63,26 @@ const TopNav : FunctionComponent = () => {
 
 									{ loggedIn && ( <>
 										<NavigationDropdownItem permission={ ERoles.admin }
-										                        to={ "/admin/tags" }>Admin:
+										                        to="/admin/tags">Admin:
 											Tags</NavigationDropdownItem>
 										<NavigationDropdownItem permission={ ERoles.admin }
-										                        to={ "/admin/users" }>Admin:
+										                        to="/admin/users">Admin:
 											Users</NavigationDropdownItem>
 										<NavigationDropdownItem permission={ ERoles.admin }
-										                        to={ "/admin/blacklisted" }>Admin: Blueprint
+										                        to="/admin/blacklisted">Admin: Blueprint
 											Blacklist</NavigationDropdownItem>
 
 
 										<NavigationDropdownItem permission={ ERoles.member }
-										                        to={ "/account/settings" }>Account
+										                        to="/account/settings">Account
 											Settings</NavigationDropdownItem>
 										<NavigationDropdownItem permission={ ERoles.member }
-										                        to={ "/blueprint/create" }>Create a
+										                        to="/blueprint/create">Create a
 											Blueprint</NavigationDropdownItem>
 										<NavigationDropdownItem permission={ ERoles.member }
-										                        to={ "/blueprint/my" }>My
+										                        to="/blueprint/my">My
 											Blueprints</NavigationDropdownItem>
-										<NavigationDropdownItem to={ "#" } onClick={ () => logout() }
+										<NavigationDropdownItem to="#" onClick={ () => logout() }
 										                        permission={ ERoles.member }
 										                        className="text-red-600">
 											<RiDoorOpenLine size={ 20 } />

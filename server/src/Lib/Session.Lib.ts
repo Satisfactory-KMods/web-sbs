@@ -1,10 +1,10 @@
-import DB_SessionToken     from "@server/MongoDB/DB_SessionToken";
-import type { JwtPayload } from "jsonwebtoken";
-import * as jwt            from "jsonwebtoken";
+import DB_SessionToken from "@server/MongoDB/DB_SessionToken";
 import type {
 	ClientUserAccount,
 	UserAccount
-}                          from "@server/MongoDB/DB_UserAccount";
+} from "@server/MongoDB/DB_UserAccount";
+import type { JwtPayload } from "jsonwebtoken";
+import * as jwt from "jsonwebtoken";
 
 export type UserSession = ClientUserAccount & Partial<JwtPayload>;
 
@@ -25,8 +25,7 @@ export async function CreateSession( User : Partial<UserAccount>, stayLoggedIn =
 			} );
 			return session.token;
 		}
-	}
-	catch ( e ) {
+	} catch ( e ) {
 		if ( e instanceof Error ) {
 			SystemLib.LogError( "api", e.message );
 		}

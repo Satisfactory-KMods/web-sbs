@@ -1,8 +1,8 @@
+import { useAuth } from "@hooks/useAuth";
+import type { ERoles } from "@shared/Enum/ERoles";
 import type { FunctionComponent } from "react";
-import type { LinkProps }         from "react-router-dom";
-import { Link }                   from "react-router-dom";
-import type { ERoles }            from "@shared/Enum/ERoles";
-import { useAuth }                from "@hooks/useAuth";
+import type { LinkProps } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 interface NavigationDropdownProps extends LinkProps {
 	to : string;
@@ -25,7 +25,7 @@ const NavigationDropdown : FunctionComponent<NavigationDropdownProps> = ( {
 	return (
 		<div className="divide-y divide-gray-100">
 			<Link to={ to }
-			      className={ "flex p-2 hover:bg-gray-100" } { ...props }>
+			      className="flex p-2 hover:bg-gray-100" { ...props }>
 				<div className="w-full">
 					<div className={ `text-sm flex ${ className || "text-gray-500" }` }>
 						{ children }

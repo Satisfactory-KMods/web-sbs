@@ -1,41 +1,72 @@
-import { useAuth } from "@hooks/useAuth";
-import { useBlueprint } from "@hooks/useBlueprint";
+import { mdxComponents } from "@app/Page/terms/private/Page";
+import { useBlueprint } from "@app/hooks/useBlueprint";
 import type { BlueprintData } from "@server/MongoDB/DB_Blueprints";
+import { Button } from "flowbite-react";
 import { useId, type FunctionComponent } from "react";
+import { HiCog, HiDownload, HiTrash } from "react-icons/hi";
+import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import { Link } from "react-router-dom";
 import BlueprintRating from "./BlueprintRating";
 
 interface IBlueprintCardProps {
-	Data : BlueprintData;
-	onToggled? : () => void;
+	Data: BlueprintData;
+	onToggled: () => Promise<void>;
 }
 
 const BlueprintCard : FunctionComponent<IBlueprintCardProps> = ( { Data, onToggled } ) => {
 	const id = useId();
+	const bpHook = useBlueprint( Data );
 	const {
 		Blueprint,
-		ToggleLike,
-		AllowToLike,
-		AllowToEdit,
-		Mods,
-		Tags,
-		ToggleBlacklist,
-		IsOwner
-	} = useBlueprint( Data );
-	const { loggedIn, user } = useAuth();
-	const ModList = [ ...Mods ];
-	const SpliceMods = ModList.splice( 0, 3 );
-	const MoreCount = ModList.length;
-	const DisplayMods = SpliceMods.map( R =>
-		<Link key={ id + R.id } to={ `https://ficsit.app/mod/${ R.mod_reference }` }
-			target="_blank"
-			className="m-1 p-0">{ R.name }</Link> );
+		allowedToEdit,
+		toggleBlacklist,
+		Tags
+	} = bpHook;
+
+	const doBlacklist = async() => {
+		await toggleBlacklist(  );
+		await onToggled();
+	};
+
 	return (
-		<div className="w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-			<img className="rounded-t-lg" src={ "/api/v1/image/" + Blueprint._id } alt="BlueprintLogo" />
-			<div className="p-3">
-				<BlueprintRating blueprint={ Blueprint } />
+		<div className="flex flex-col w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+			<Link to={ `/blueprint/${ Blueprint._id }` } className="flex-1 flex flex-col">
+				<div className="relative">
+					<img className="rounded-t-lg" src={ "/api/v1/image/" + Blueprint._id } alt="BlueprintLogo" />
+					<div className="absolute top-0 right-0 m-3">
+						<div className="bg-orange-800 p-1 px-5 rounded-lg border border-orange-700 text-white">
+							{ Blueprint.mods.length ? "Modded" : "Vanilla" }
+						</div>
+					</div>
+				</div>
+				<div className="p-3 text-2xl border-b bg-gray-700 border-gray-700 text-neutral-200 truncate text-ellipsis overflow-hidden">
+					{ Blueprint.name }{ Blueprint.name }
+				</div>
+				<ReactMarkdown components={ mdxComponents } className="text-neutral-200 flex-1 p-3 border-t-1 border-gray-700">
+					{ Blueprint.description.substring( 0, 200 ) + " ..." }
+				</ReactMarkdown>
+			</Link>
+			<div className="p-3 border-t bg-gray-700 border-gray-700 flex">
+				<BlueprintRating className="flex-1" blueprintHook={ bpHook } />
+				<div className="flex flex-0">
+					{ allowedToEdit && <Button onClick={ doBlacklist } color="red" size="small" className="p-1 px-3">
+						&nbsp;<HiTrash /> &nbsp;
+					</Button> }
+
+					{ allowedToEdit && <Link to={ `/blueprint/edit/${ Blueprint._id }` } className="text-gray-900 bg-white border border-gray-200 hover:bg-gray-100 hover:text-blue-700 disabled:hover:bg-white focus:ring-blue-700 focus:text-blue-700 dark:bg-transparent dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 focus:ring-2 dark:disabled:hover:bg-gray-800 focus:!ring-2 group flex h-min items-center justify-center p-0.5 text-center font-medium focus:z-10 rounded-lg p-1 ms-2 px-3 p-1 ms-2 px-3">
+						&nbsp;<HiCog /> &nbsp;
+					</Link> }
+
+					<Button href={ `/api/v1/download/${ Blueprint._id }` } target="_blank" color="gray" size="small" className="p-1 px-3 ms-2">
+						<HiDownload className="text-sm me-2" /> { Blueprint.downloads }
+					</Button>
+				</div>
 			</div>
+			{ !!Blueprint.tags.length && <div className="flex flex-wrap p-3 pt-0 border-t bg-gray-700 border-gray-700 text-neutral-200 text-xs">
+				{ Tags.map( e => (
+					<div key={ id+e._id } className="bg-gray-900 p-1 px-3 rounded-lg border border-gray-800 shadow">{ e.DisplayName }</div>
+				) ) }
+			</div> }
 		</div>
 	);
 };

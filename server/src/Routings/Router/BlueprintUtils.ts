@@ -1,26 +1,26 @@
+import { BlueprintParser } from "@server/Lib/BlueprintParser";
 import {
 	ApiUrl,
 	MW_Auth
-}                                       from "@server/Lib/Express.Lib";
-import { EApiBlueprintUtils }           from "@shared/Enum/EApiPath";
-import type {
-	Request,
-	Response
-}                                       from "express";
+} from "@server/Lib/Express.Lib";
+import DB_Blueprints from "@server/MongoDB/DB_Blueprints";
 import {
 	DefaultResponseFailed,
 	DefaultResponseSuccess
-}                                       from "@shared/Default/Auth.Default";
+} from "@shared/Default/Auth.Default";
+import { EApiBlueprintUtils } from "@shared/Enum/EApiPath";
 import type {
 	TRequest_BPU_ParseBlueprint,
 	TRequest_BPU_ReadBlueprint
-}                                       from "@shared/Types/API_Request";
+} from "@shared/Types/API_Request";
 import type { TResponse_BPU_ParseBlueprint } from "@shared/Types/API_Response";
-import type { UploadedFile }                 from "express-fileupload";
-import fs                               from "fs";
-import { BlueprintParser }              from "@server/Lib/BlueprintParser";
-import path                             from "path";
-import DB_Blueprints                    from "@server/MongoDB/DB_Blueprints";
+import type {
+	Request,
+	Response
+} from "express";
+import type { UploadedFile } from "express-fileupload";
+import fs from "fs";
+import path from "path";
 
 export default function() {
 	Router.post( ApiUrl( EApiBlueprintUtils.parseblueprint ), MW_Auth, async( req : Request, res : Response ) => {
@@ -40,8 +40,7 @@ export default function() {
 					for ( const File of Files ) {
 						if ( File.name.endsWith( ".sbp" ) ) {
 							SBP = fs.readFileSync( File.tempFilePath );
-						}
-						else if ( File.name.endsWith( ".sbpcfg" ) ) {
+						} else if ( File.name.endsWith( ".sbpcfg" ) ) {
 							SBPCFG = fs.readFileSync( File.tempFilePath );
 						}
 					}
@@ -82,8 +81,7 @@ export default function() {
 					Data: Blueprint.Get
 				};
 			}
-		}
-		catch ( e ) {
+		} catch ( e ) {
 			if ( e instanceof Error ) {
 				SystemLib.LogError( "api", e.message );
 			}

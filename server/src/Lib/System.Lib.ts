@@ -1,8 +1,8 @@
-import process      from "process";
-import Util         from "util";
-import fs           from "fs";
 import * as console from "console";
-import * as dotenv  from "dotenv";
+import * as dotenv from "dotenv";
+import fs from "fs";
+import process from "process";
+import Util from "util";
 
 export type BashColorString =
 	| "Default"
@@ -44,8 +44,7 @@ export class SystemLib_Class {
 			dotenv.config( {
 				path: ".env.dev"
 			} );
-		}
-		else {
+		} else {
 			this.DebugLog( "SYSTEM", "Try to load:", ".env.local" );
 			dotenv.config( {
 				path: ".env.local"

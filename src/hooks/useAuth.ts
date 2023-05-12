@@ -1,13 +1,13 @@
-import { useContext }      from "react";
-import { useLocalStorage } from "@kyri123/k-reactutils";
-import { AUTHTOKEN }       from "@applib/constance";
-import AuthContext         from "@context/AuthContext";
-import { useNavigate }     from "react-router-dom";
+import { AUTHTOKEN } from "@applib/constance";
 import {
 	fireSwalFromApi,
 	tRPC_Auth,
 	tRPC_handleError
-}                          from "@applib/tRPC";
+} from "@applib/tRPC";
+import AuthContext from "@context/AuthContext";
+import { useLocalStorage } from "@kyri123/k-reactutils";
+import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 
 export function useAuth() {
 	const navigate = useNavigate();

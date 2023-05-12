@@ -1,8 +1,8 @@
-import * as mongoose      from "mongoose";
-import * as crypto        from "crypto";
-import { ERoles }         from "@shared/Enum/ERoles";
 import type { MongoBase } from "@server/Types/mongo";
-import { z }              from "zod";
+import { ERoles } from "@shared/Enum/ERoles";
+import * as crypto from "crypto";
+import * as mongoose from "mongoose";
+import { z } from "zod";
 
 const ZodUserAccountSchema = z.object( {
 	role: z.nativeEnum( ERoles ),

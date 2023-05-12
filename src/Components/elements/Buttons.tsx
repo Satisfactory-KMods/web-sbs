@@ -1,8 +1,8 @@
-import React, { forwardRef } from "react";
-import type { ButtonProps }  from "flowbite-react";
-import { Button }            from "flowbite-react";
-import type { IconType }     from "react-icons/lib";
-import { CgSpinner }         from "react-icons/all";
+import type { ButtonProps } from "flowbite-react";
+import { Button } from "flowbite-react";
+import { forwardRef } from "react";
+import { CgSpinner } from "react-icons/all";
+import type { IconType } from "react-icons/lib";
 
 interface LoadingButtonsProps extends ButtonProps {
 	isLoading? : boolean;
@@ -31,3 +31,4 @@ const LoadingButton = forwardRef<HTMLButtonElement, LoadingButtonsProps>( ( {
 LoadingButton.displayName = "LoadingButton";
 
 export { LoadingButton };
+

@@ -29,6 +29,10 @@ export class BlueprintClass<T extends boolean = false> {
 		}
 	}
 
+	public async getDocument() {
+		return ( await DB_Blueprints.findById( this.data?._id ) )!;
+	}
+
 	public isValid(): this is BlueprintClass<true> {
 		return !!this.data;
 	}

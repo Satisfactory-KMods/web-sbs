@@ -1,12 +1,12 @@
-import { z }           from "zod";
-import { TRPCError }   from "@trpc/server";
+import DB_SessionToken from "@server/MongoDB/DB_SessionToken";
+import DB_UserAccount from "@server/MongoDB/DB_UserAccount";
 import {
 	handleTRCPErr,
 	publicProcedure
-}                      from "@server/trpc/trpc";
-import DB_UserAccount  from "@server/MongoDB/DB_UserAccount";
-import _               from "lodash";
-import DB_SessionToken from "@server/MongoDB/DB_SessionToken";
+} from "@server/trpc/trpc";
+import { TRPCError } from "@trpc/server";
+import _ from "lodash";
+import { z } from "zod";
 
 export const auth_updateAccount =
 	publicProcedure.input( z.object( {
@@ -43,8 +43,7 @@ export const auth_updateAccount =
 				}
 			}
 			throw new TRPCError( { message: "User not found!", code: "INTERNAL_SERVER_ERROR" } );
-		}
-		catch ( e ) {
+		} catch ( e ) {
 			handleTRCPErr( e );
 		}
 		throw new TRPCError( { message: "Something goes wrong!", code: "INTERNAL_SERVER_ERROR" } );

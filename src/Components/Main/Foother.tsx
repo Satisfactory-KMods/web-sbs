@@ -8,7 +8,7 @@ import {
 import { Link } from "react-router-dom";
 
 const Foother : FunctionComponent = () => {
-	return ( 
+	return (
 		<div className="bg-gray-800 border-t border-gray-700">
 			<div className="container mx-auto">
 				<Footer container={ true }>

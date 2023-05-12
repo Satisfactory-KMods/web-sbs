@@ -18,32 +18,32 @@ const BlueprintTableRow : FunctionComponent<IBlueprintTableRowProps> = ( { Data,
 
 	return (
 		<tr>
-			<td className={ "p-2 text-center" }>{ Data.name }</td>
-			<td className={ "p-2 text-center" }>{ new Date( Data.createdAt! ).toLocaleString() }</td>
-			<td className={ "p-2 text-center" }>{ Data.downloads }</td>
-			<td className={ "p-2 text-center" }>{ Data.likes.length }</td>
-			<td className={ "p-2 text-center" }>{ Data.mods.length }</td>
-			<td className={ "p-2 text-center" }>{ Data.tags.length }</td>
-			<td className={ "p-0 w-0 text-center" }>
-				<ButtonGroup className={ "h-100 w-100" }>
-					<Link to={ `/blueprint/${ Blueprint._id }` } className={ "btn btn-dark rounded-none" }>
+			<td className="p-2 text-center">{ Data.name }</td>
+			<td className="p-2 text-center">{ new Date( Data.createdAt! ).toLocaleString() }</td>
+			<td className="p-2 text-center">{ Data.downloads }</td>
+			<td className="p-2 text-center">{ Data.likes.length }</td>
+			<td className="p-2 text-center">{ Data.mods.length }</td>
+			<td className="p-2 text-center">{ Data.tags.length }</td>
+			<td className="p-0 w-0 text-center">
+				<ButtonGroup className="h-100 w-100">
+					<Link to={ `/blueprint/${ Blueprint._id }` } className="btn btn-dark rounded-none">
 						<Icon.BsEyeFill />
 					</Link>
-					<Link to={ `/api/v1/download/${ Blueprint._id }` } target={ "_blank" }
-					      className={ "btn btn-dark rounded-none" }>
+					<Link to={ `/api/v1/download/${ Blueprint._id }` } target="_blank"
+					      className="btn btn-dark rounded-none">
 						<Icon.BsDownload />
 					</Link>
 					<Link to={ `/blueprint/edit/${ Blueprint._id }` }
-					      className={ "btn btn-dark rounded-none" }>
+					      className="btn btn-dark rounded-none">
 						<Icon.BsGearFill />
 					</Link>
-					<Button className={ "rounded-none" }
-					        variant={ "danger" }
+					<Button className="rounded-none"
+					        variant="danger"
 					        onClick={ async() => {
 						        if ( await ToggleBlacklist() && onToggled !== undefined ) {
 							        onToggled();
 						        }
-					        } } type={ "button" }>
+					        } } type="button">
 						<Icon.BsTrashFill />
 					</Button>
 				</ButtonGroup>

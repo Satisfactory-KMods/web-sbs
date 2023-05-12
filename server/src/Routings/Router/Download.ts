@@ -1,14 +1,13 @@
-import { ApiUrl }        from "@server/Lib/Express.Lib";
+import { ApiUrl } from "@server/Lib/Express.Lib";
+import DB_BlueprintPacks from "@server/MongoDB/DB_BlueprintPacks";
+import DB_Blueprints from "@server/MongoDB/DB_Blueprints";
+import * as Compress from "compressing";
 import type {
 	Request,
 	Response
-}                        from "express";
-import path              from "path";
-import DB_Blueprints     from "@server/MongoDB/DB_Blueprints";
-import fs                from "fs";
-import FS                from "fs";
-import * as Compress     from "compressing";
-import DB_BlueprintPacks from "@server/MongoDB/DB_BlueprintPacks";
+} from "express";
+import { default as FS, default as fs } from "fs";
+import path from "path";
 
 export default function() {
 	Router.get( ApiUrl( "download/:id" ), async( req : Request, res : Response ) => {
@@ -68,8 +67,7 @@ export default function() {
 				return res.status( 404 ).json( { error: "Blueprint not found" } );
 			} );
 
-		}
-		catch ( e ) {
+		} catch ( e ) {
 			if ( e instanceof Error ) {
 				SystemLib.LogError( "api", e.message );
 			}
@@ -122,8 +120,7 @@ export default function() {
 						ZipStream.addEntry( CopiedFileSBP );
 						ZipStream.addEntry( CopiedFileSBPCFG );
 					}
-				}
-				catch ( e ) {
+				} catch ( e ) {
 					if ( e instanceof Error ) {
 						SystemLib.LogError( "api", e.message );
 					}
@@ -143,8 +140,7 @@ export default function() {
 			} ).on( "error", ( err ) => {
 				return res.status( 404 ).json( { error: "Blueprint not found" } );
 			} );
-		}
-		catch ( e ) {
+		} catch ( e ) {
 			if ( e instanceof Error ) {
 				SystemLib.LogError( "api", e.message );
 			}

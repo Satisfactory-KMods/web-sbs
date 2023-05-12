@@ -1,13 +1,13 @@
+import type { BlueprintPack } from "@server/MongoDB/DB_BlueprintPacks";
+import type { Tag } from "@server/MongoDB/DB_Tags";
+import type { UserAccount } from "@server/MongoDB/DB_UserAccount";
+import type { User } from "@shared/Class/User.Class";
+import type { EDesignerSize } from "@shared/Enum/EDesignerSize";
 import type { UploadedFile } from "express-fileupload";
 import type {
 	FilterQuery,
 	QueryOptions
-}                            from "mongoose";
-import type { User }              from "@shared/Class/User.Class";
-import type { UserAccount }       from "@server/MongoDB/DB_UserAccount";
-import type { BlueprintPack }     from "@server/MongoDB/DB_BlueprintPacks";
-import type { EDesignerSize }     from "@shared/Enum/EDesignerSize";
-import type { Tag }               from "@server/MongoDB/DB_Tags";
+} from "mongoose";
 
 export type RequestWithUser<T = any> = {
 	UserClass? : T;

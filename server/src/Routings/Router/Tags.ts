@@ -2,21 +2,21 @@ import {
 	ApiUrl,
 	MW_Auth,
 	MW_Permission
-}                                     from "@server/Lib/Express.Lib";
-import { EApiTags }                   from "@shared/Enum/EApiPath";
-import type {
-	Request,
-	Response
-}                                     from "express";
+} from "@server/Lib/Express.Lib";
+import DB_Blueprints from "@server/MongoDB/DB_Blueprints";
+import DB_Tags from "@server/MongoDB/DB_Tags";
 import {
 	DefaultResponseFailed,
 	DefaultResponseSuccess
-}                                     from "@shared/Default/Auth.Default";
-import type { TRequest_Tags_Modify }  from "@shared/Types/API_Request";
+} from "@shared/Default/Auth.Default";
+import { EApiTags } from "@shared/Enum/EApiPath";
+import { ERoles } from "@shared/Enum/ERoles";
+import type { TRequest_Tags_Modify } from "@shared/Types/API_Request";
 import type { TResponse_Tags_Modify } from "@shared/Types/API_Response";
-import { ERoles }                     from "@shared/Enum/ERoles";
-import DB_Tags                        from "@server/MongoDB/DB_Tags";
-import DB_Blueprints                  from "@server/MongoDB/DB_Blueprints";
+import type {
+	Request,
+	Response
+} from "express";
 
 export default function() {
 	Router.post( ApiUrl( EApiTags.modifytag ), MW_Auth, ( req, res, next ) => MW_Permission( req, res, next, ERoles.admin ), async( req : Request, res : Response ) => {
@@ -37,8 +37,7 @@ export default function() {
 						MessageCode: "Tags.Delete.Success"
 					};
 				}
-			}
-			else if ( Request.Id && Request.Data ) {
+			} else if ( Request.Id && Request.Data ) {
 				const Document = ( await DB_Tags.findById( Request.Id ) )!;
 
 				delete Request.Data._id;
@@ -49,8 +48,7 @@ export default function() {
 						MessageCode: "Tags.Modify.Success"
 					};
 				}
-			}
-			else if ( !Request.Id && Request.Data ) {
+			} else if ( !Request.Id && Request.Data ) {
 				const Document = await DB_Tags.create( Request.Data );
 				if ( Document ) {
 					Response = {
@@ -59,8 +57,7 @@ export default function() {
 					};
 				}
 			}
-		}
-		catch ( e ) {
+		} catch ( e ) {
 			if ( e instanceof Error ) {
 				SystemLib.LogError( "api", e.message );
 			}

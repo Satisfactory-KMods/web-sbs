@@ -1,13 +1,13 @@
+import { API_QueryLib } from "@applib/Api/API_Query.Lib";
+import BlueprintTableRowAdmin from "@comp/Blueprints/BlueprintTableRowAdmin";
+import { useAuth } from "@hooks/useAuth";
+import type { BlueprintData } from "@server/MongoDB/DB_Blueprints";
+import { EApiQuestionary } from "@shared/Enum/EApiPath";
 import type { FunctionComponent } from "react";
 import {
 	useEffect,
 	useState
-}                                 from "react";
-import { API_QueryLib }           from "@applib/Api/API_Query.Lib";
-import { EApiQuestionary }        from "@shared/Enum/EApiPath";
-import BlueprintTableRowAdmin     from "@comp/Blueprints/BlueprintTableRowAdmin";
-import { useAuth }                from "@hooks/useAuth";
-import type { BlueprintData }     from "@server/MongoDB/DB_Blueprints";
+} from "react";
 
 const Component : FunctionComponent = () => {
 	const { user } = useAuth();
@@ -39,13 +39,13 @@ const Component : FunctionComponent = () => {
 					</th>
 				</tr>
 				<tr>
-					<th className={ "px-2 text-center" }>{ Lang.MyBlueprint.BP }</th>
-					<th className={ "px-3 text-center" }>{ Lang.MyBlueprint.CreatedAt }</th>
-					<th className={ "px-3 text-center" }>{ Lang.MyBlueprint.Downloads }</th>
-					<th className={ "px-3 text-center" }>{ Lang.MyBlueprint.Likes }</th>
-					<th className={ "px-3 text-center" }>{ Lang.MyBlueprint.Mods }</th>
-					<th className={ "px-3 text-center" }>{ Lang.MyBlueprint.Tags }</th>
-					<th className={ "px-2 text-center" }>{ Lang.MyBlueprint.Actions }</th>
+					<th className="px-2 text-center">{ Lang.MyBlueprint.BP }</th>
+					<th className="px-3 text-center">{ Lang.MyBlueprint.CreatedAt }</th>
+					<th className="px-3 text-center">{ Lang.MyBlueprint.Downloads }</th>
+					<th className="px-3 text-center">{ Lang.MyBlueprint.Likes }</th>
+					<th className="px-3 text-center">{ Lang.MyBlueprint.Mods }</th>
+					<th className="px-3 text-center">{ Lang.MyBlueprint.Tags }</th>
+					<th className="px-2 text-center">{ Lang.MyBlueprint.Actions }</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -58,3 +58,4 @@ const Component : FunctionComponent = () => {
 export {
 	Component
 };
+

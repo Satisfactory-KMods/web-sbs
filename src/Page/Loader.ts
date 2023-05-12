@@ -32,8 +32,8 @@ export const defaultLoader : LoaderFunction = async( { params, request } ) => {
 	};
 
 	if ( mods && tags ) {
-		queryResult.tags = tags.tags;
-		queryResult.mods = mods.mods;
+		queryResult.tags = tags;
+		queryResult.mods = mods;
 	}
 
 	return json<LayoutLoaderData>( queryResult );

@@ -79,17 +79,17 @@ const roleMiddleware = ( role: ERoles ) => middleware( async( opts ) => {
 export const router = t.router;
 export const publicProcedure = t.procedure;
 export const authProcedure = t.procedure;
-export const blueprintProcedure = t.procedure.input( z.object( {
+export const blueprintProcedure = authProcedure.input( z.object( {
 	blueprintId: z.string()
 } ) ).use( blueprintMiddleware );
-export const blueprintOwnerProcedure = t.procedure.input( z.object( {
+export const blueprintOwnerProcedure = authProcedure.input( z.object( {
 	blueprintId: z.string()
 } ) ).use( blueprintMiddleware ).use( isOwnerMiddleware );
-export const adminProcedure = t.procedure.use( roleMiddleware( ERoles.admin ) );
-export const modProcedure = t.procedure.use( roleMiddleware( ERoles.moderator ) );
-export const adminBlueprintProcedure = t.procedure.use( roleMiddleware( ERoles.admin ) ).input( z.object( {
+export const adminProcedure = authProcedure.use( roleMiddleware( ERoles.admin ) );
+export const modProcedure = authProcedure.use( roleMiddleware( ERoles.moderator ) );
+export const adminBlueprintProcedure = authProcedure.use( roleMiddleware( ERoles.admin ) ).input( z.object( {
 	blueprintId: z.string()
 } ) ).use( blueprintMiddleware );
-export const modBlueprintProcedure = t.procedure.use( roleMiddleware( ERoles.moderator ) ).input( z.object( {
+export const modBlueprintProcedure = authProcedure.use( roleMiddleware( ERoles.moderator ) ).input( z.object( {
 	blueprintId: z.string()
 } ) ).use( blueprintMiddleware );

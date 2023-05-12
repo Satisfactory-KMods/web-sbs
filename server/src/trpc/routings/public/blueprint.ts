@@ -59,8 +59,7 @@ export function buildFilter<T extends BlueprintData | BlueprintPack>( filter? : 
 			// @ts-ignore
 			result.filter[ "mods.1" ] = { $exists: !filter.onlyVanilla };
 		}
-	}
-	else {
+	} else {
 		result.options.sort = { createdAt: -1 };
 	}
 
@@ -82,8 +81,7 @@ export const public_blueprint = router( {
 				return Blueprint.Get;
 			}
 			throw new TRPCError( { message: "User not found!", code: "INTERNAL_SERVER_ERROR" } );
-		}
-		catch ( e ) {
+		} catch ( e ) {
 			handleTRCPErr( e );
 		}
 		throw new TRPCError( { message: "Something goes wrong!", code: "INTERNAL_SERVER_ERROR" } );
@@ -98,8 +96,7 @@ export const public_blueprint = router( {
 			if ( blueprint ) {
 				return { blueprintData: blueprint.toJSON() };
 			}
-		}
-		catch ( e ) {
+		} catch ( e ) {
 			handleTRCPErr( e );
 		}
 		throw new TRPCError( { message: "Something goes wrong!", code: "INTERNAL_SERVER_ERROR" } );
@@ -116,8 +113,7 @@ export const public_blueprint = router( {
 			const totalBlueprints = await DB_Blueprints.count( filter );
 			const blueprints = await DB_Blueprints.find<BlueprintData>( filter, null, { ...options, limit, skip } );
 			return { blueprints, totalBlueprints };
-		}
-		catch ( e ) {
+		} catch ( e ) {
 			handleTRCPErr( e );
 		}
 		throw new TRPCError( { message: "Something goes wrong!", code: "INTERNAL_SERVER_ERROR" } );

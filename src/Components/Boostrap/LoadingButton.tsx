@@ -1,7 +1,6 @@
 import type { FunctionComponent } from "react";
-import React                      from "react";
-import { FaSpinner }              from "react-icons/all";
-import type { IconType }          from "react-icons/lib/cjs/iconBase";
+import { FaSpinner } from "react-icons/all";
+import type { IconType } from "react-icons/lib/cjs/iconBase";
 
 interface ILoadingButtonProps extends ButtonProps {
 	IsLoading : boolean;
@@ -18,7 +17,7 @@ const LoadingButton : FunctionComponent<ILoadingButtonProps> = ( {
 	return (
 		<Button disabled={ IsLoading || disabled } { ...Props }>
 			<>
-				{ IsLoading ? <FaSpinner className={ "animate-spin" } /> : Icon }
+				{ IsLoading ? <FaSpinner className="animate-spin" /> : Icon }
 				{ !IsLoading ? children : "" }
 			</>
 		</Button>

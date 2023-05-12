@@ -17,7 +17,7 @@ export enum LoginRule {
 	DontCare
 }
 
-const validateLogin = async( { 
+const validateLogin = async( {
 	params,
 	request
 } : LoaderFunctionArgs, loggedInRule = LoginRule.DontCare, redirectTo = "/error/401", role? : ERoles ) : Promise<LoaderDataBase | Response> => {

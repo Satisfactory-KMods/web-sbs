@@ -2,9 +2,9 @@ import { ApiUrl } from "@server/Lib/Express.Lib";
 import type {
 	Request,
 	Response
-}                 from "express";
-import path       from "path";
-import fs         from "fs";
+} from "express";
+import fs from "fs";
+import path from "path";
 
 export default function() {
 	Router.get( ApiUrl( "image/:id" ), async( req : Request, res : Response ) => {

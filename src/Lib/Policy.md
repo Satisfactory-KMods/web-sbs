@@ -8,7 +8,7 @@ You use the Service and tells You about Your privacy rights and how the law prot
 We use Your Personal data to provide and improve the Service. By using the Service, You agree to the collection and use
 of information in accordance with this Privacy Policy. This Privacy Policy has been created with the help of
 the [Privacy Policy Generator](https://www.privacypolicies.com/privacy-policy-generator/).
-
+ 
 # Interpretation and Definitions
 
 ## Interpretation

@@ -9,12 +9,12 @@ import {
 
 type NavigationLinkProps = LinkProps & {
 	role? : ERoles
-}; 
+};
 
 const NavigationLink : FunctionComponent<NavigationLinkProps> = ( { children, className, role, ...props } ) => {
 	const { pathname } = useLocation();
 	const { user } = useAuth();
- 
+
 	if ( role !== undefined && !user.HasPermssion( role ) ) {
 		return null;
 	}

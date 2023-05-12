@@ -1,31 +1,31 @@
 import {
 	ApiUrl,
 	MW_Auth
-}                        from "@server/Lib/Express.Lib";
-import { EApiAuth }      from "@shared/Enum/EApiPath";
-import type {
-	Request,
-	Response
-}                        from "express";
+} from "@server/Lib/Express.Lib";
+import { CreateSession } from "@server/Lib/Session.Lib";
+import DB_SessionToken from "@server/MongoDB/DB_SessionToken";
+import DB_UserAccount from "@server/MongoDB/DB_UserAccount";
 import {
 	DefaultResponseFailed,
 	DefaultResponseSuccess
-}                        from "@shared/Default/Auth.Default";
-import type {
-	TResponse_Auth_Modify,
-	TResponse_Auth_SignUp,
-	TResponse_Auth_Vertify
-}                        from "@shared/Types/API_Response";
+} from "@shared/Default/Auth.Default";
+import { EApiAuth } from "@shared/Enum/EApiPath";
+import { ERoles } from "@shared/Enum/ERoles";
 import type {
 	TRequest_Auth_Logout,
 	TRequest_Auth_Modify,
 	TRequest_Auth_SignIn,
 	TRequest_Auth_SignUp
-}                        from "@shared/Types/API_Request";
-import DB_UserAccount    from "@server/MongoDB/DB_UserAccount";
-import { CreateSession } from "@server/Lib/Session.Lib";
-import { ERoles }        from "@shared/Enum/ERoles";
-import DB_SessionToken   from "@server/MongoDB/DB_SessionToken";
+} from "@shared/Types/API_Request";
+import type {
+	TResponse_Auth_Modify,
+	TResponse_Auth_SignUp,
+	TResponse_Auth_Vertify
+} from "@shared/Types/API_Response";
+import type {
+	Request,
+	Response
+} from "express";
 
 export default function() {
 	Router.post( ApiUrl( EApiAuth.validate ), MW_Auth, ( req : Request, res : Response ) => {
@@ -53,28 +53,22 @@ export default function() {
 							Response.MessageCode = "User.Modify.Remove";
 							return res.json( Response );
 						}
-					}
-
-					else if ( Request.Data && Request.Data?.hash && Request.Data?.hash.length < 8 ) {
+					} else if ( Request.Data && Request.Data?.hash && Request.Data?.hash.length < 8 ) {
 						return res.json( {
 							...Response,
 							MessageCode: "Signup.error.password.invalid"
 						} );
-					}
-					else if ( Request.Data && Request.Data?.username && Request.Data?.username.length < 6 ) {
+					} else if ( Request.Data && Request.Data?.username && Request.Data?.username.length < 6 ) {
 						return res.json( {
 							...Response,
 							MessageCode: "Signup.error.username.invalid"
 						} );
-					}
-					else if ( Request.Data && Request.Data?.email && !Request.Data?.email.match( /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/ ) ) {
+					} else if ( Request.Data && Request.Data?.email && !Request.Data?.email.match( /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/ ) ) {
 						return res.json( {
 							...Response,
 							MessageCode: "Signup.error.email.invalid"
 						} );
-					}
-
-					else if ( !Request.Remove && Request.Data ) {
+					} else if ( !Request.Remove && Request.Data ) {
 						delete Request.Data._id;
 						delete Request.Data.salt;
 						delete Request.Data.createdAt;
@@ -102,14 +96,12 @@ export default function() {
 					if ( Response.Success ) {
 						await DB_SessionToken.deleteMany( { userid: Request.UserID } );
 					}
-				}
-				catch ( e ) {
+				} catch ( e ) {
 					if ( e instanceof Error ) {
 						SystemLib.LogError( "api", e.message );
 					}
 				}
-			}
-			else {
+			} else {
 				Response.MessageCode = "Api.error.Unauthorized";
 			}
 		}
@@ -121,8 +113,7 @@ export default function() {
 		if ( Request.Token ) {
 			try {
 				await DB_SessionToken.findOneAndRemove( { token: Request.Token } );
-			}
-			catch ( e ) {
+			} catch ( e ) {
 				if ( e instanceof Error ) {
 					SystemLib.LogError( "api", e.message );
 				}
@@ -145,20 +136,17 @@ export default function() {
 				...Response,
 				MessageCode: "Signup.error.missingfield"
 			} );
-		}
-		else if ( !( Request.Password === Request.RepeatPassword && Request.Password.length >= 8 ) ) {
+		} else if ( !( Request.Password === Request.RepeatPassword && Request.Password.length >= 8 ) ) {
 			return res.json( {
 				...Response,
 				MessageCode: "Signup.error.password.invalid"
 			} );
-		}
-		else if ( Request.Login.length < 6 ) {
+		} else if ( Request.Login.length < 6 ) {
 			return res.json( {
 				...Response,
 				MessageCode: "Signup.error.username.invalid"
 			} );
-		}
-		else if ( !Request.EMail.match( /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/ ) ) {
+		} else if ( !Request.EMail.match( /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/ ) ) {
 			return res.json( {
 				...Response,
 				MessageCode: "Signup.error.email.invalid"
@@ -187,8 +175,7 @@ export default function() {
 					Response.Data = { Token };
 				}
 			}
-		}
-		else {
+		} else {
 			Response.MessageCode = "Signup.error.accountexsists";
 		}
 
@@ -221,12 +208,10 @@ export default function() {
 						Response.MessageCode = "Auth.success.LoggedIn";
 						Response.Data = { Token };
 					}
-				}
-				else {
+				} else {
 					Response.MessageCode = "Auth.error.LoginInvalid";
 				}
-			}
-			else {
+			} else {
 				Response.MessageCode = "Auth.error.LoginInvalid";
 			}
 		}

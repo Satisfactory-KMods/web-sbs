@@ -1,6 +1,6 @@
 import { JobTask } from "@server/Tasks/TaskManager";
-import path        from "path";
-import fs          from "fs";
+import fs from "fs";
+import path from "path";
 
 export default new JobTask(
 	1800000 * 2,
@@ -30,8 +30,7 @@ export default new JobTask(
 						SystemLib.LogWarning( "tasks", "Remove Zip for BP:", DirPath );
 						fs.rmSync( DirPath, { recursive: true } );
 					}
-				}
-				else {
+				} else {
 					SystemLib.LogWarning( "tasks", "Remove Zip for BP:", DirPath );
 					fs.rmSync( DirPath, { recursive: true } );
 				}

@@ -139,7 +139,7 @@ const Component : FunctionComponent = () => {
 
 			<PageManager MaxPage={ maxPage } Page={ currentPage } OnPageChange={ setPage } />
 
-			<div className="mt-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+			<div className="mt-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-3">
 				{ Blueprints.map( BP => <BlueprintCard key={ BP._id } Data={ BP } onToggled={ DoFetch } /> ) }
 			</div>
 

@@ -1,5 +1,5 @@
+import type { Mod } from "@kyri123/lib";
 import * as mongoose from "mongoose";
-import type { Mod }  from "@kyri123/lib";
 
 const ModSchema = new mongoose.Schema<Mod>( {
 	versions: {

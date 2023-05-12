@@ -1,4 +1,4 @@
-import fs   from "fs";
+import fs from "fs";
 import path from "path";
 
 export async function InstallRoutings( Dir : string ) {
@@ -7,8 +7,7 @@ export async function InstallRoutings( Dir : string ) {
 		const Stats = fs.statSync( DirTarget );
 		if ( Stats.isDirectory() ) {
 			await InstallRoutings( DirTarget );
-		}
-		else {
+		} else {
 			await import( DirTarget ).then(
 				( Module ) => Module.default()
 			);

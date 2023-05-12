@@ -1,15 +1,15 @@
-import type { TApiPath }         from "@shared/Enum/EApiPath";
+import DB_SessionToken from "@server/MongoDB/DB_SessionToken";
+import { User } from "@shared/Class/User.Class";
+import { DefaultResponseFailed } from "@shared/Default/Auth.Default";
+import type { TApiPath } from "@shared/Enum/EApiPath";
+import type { ERoles } from "@shared/Enum/ERoles";
+import type { ResponseBase } from "@shared/Types/API_Response";
 import type {
 	NextFunction,
 	Request,
 	Response
-}                                from "express";
-import type { ERoles }           from "@shared/Enum/ERoles";
-import * as jwt                  from "jsonwebtoken";
-import { DefaultResponseFailed } from "@shared/Default/Auth.Default";
-import type { ResponseBase }     from "@shared/Types/API_Response";
-import { User }                  from "@shared/Class/User.Class";
-import DB_SessionToken           from "@server/MongoDB/DB_SessionToken";
+} from "express";
+import * as jwt from "jsonwebtoken";
 
 export function ApiUrl( Url : TApiPath | string ) {
 	const EndUrl = `/api/v1/${ Url }`;
@@ -27,8 +27,7 @@ export async function MW_Auth( req : Request, res : Response, next : NextFunctio
 	let Token : string | undefined = undefined;
 	try {
 		Token = AuthHeader && AuthHeader.split( " " )[ 1 ].replaceAll( "\"", "" );
-	}
-	catch ( e ) {
+	} catch ( e ) {
 	}
 
 	if ( Token ) {
@@ -43,8 +42,7 @@ export async function MW_Auth( req : Request, res : Response, next : NextFunctio
 					return;
 				}
 			}
-		}
-		catch ( e ) {
+		} catch ( e ) {
 		}
 	}
 	res.json( Response );

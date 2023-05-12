@@ -2,24 +2,23 @@ import {
 	ApiUrl,
 	MW_Auth,
 	MW_Permission
-}                             from "@server/Lib/Express.Lib";
-import { EApiBlueprintPack }  from "@shared/Enum/EApiPath";
-import type {
-	Request,
-	Response
-}                             from "express";
+} from "@server/Lib/Express.Lib";
+import DB_BlueprintPacks from "@server/MongoDB/DB_BlueprintPacks";
 import {
 	DefaultResponseFailed,
 	DefaultResponseSuccess
-}                             from "@shared/Default/Auth.Default";
+} from "@shared/Default/Auth.Default";
+import { EApiBlueprintPack } from "@shared/Enum/EApiPath";
+import { ERoles } from "@shared/Enum/ERoles";
 import type {
 	TResponse_BPP_Manage_DELETE,
-	TResponse_BPP_Manage_POST,
-	TResponse_BPP_Manage_SUB
-}                             from "@shared/Types/API_Request";
+	TResponse_BPP_Manage_POST
+} from "@shared/Types/API_Request";
 import type { TResponse_BPP } from "@shared/Types/API_Response";
-import { ERoles }             from "@shared/Enum/ERoles";
-import DB_BlueprintPacks      from "@server/MongoDB/DB_BlueprintPacks";
+import type {
+	Request,
+	Response
+} from "express";
 
 export default function() {
 	Router
@@ -37,7 +36,7 @@ export default function() {
 					if ( Document.owner === Request.UserClass.Get._id ) {
 						delete Request.PackInformation._id;
 						delete Request.PackInformation.downloads;
-						delete Request.PackInformation.likes;
+						delete Request.PackInformation.rating;
 						delete Request.PackInformation.createdAt;
 						delete Request.PackInformation.updatedAt;
 						delete Request.PackInformation.owner;
@@ -48,8 +47,7 @@ export default function() {
 							MessageCode: "BBP.Modify.Success"
 						};
 					}
-				}
-				catch ( e ) {
+				} catch ( e ) {
 					if ( e instanceof Error ) {
 						SystemLib.LogError( "api", e.message );
 					}
@@ -76,7 +74,7 @@ export default function() {
 
 						Request.PackInformation.owner = Request.UserClass.Get._id;
 						Request.PackInformation.downloads = 0;
-						Request.PackInformation.likes = [];
+						Request.PackInformation.rating = [];
 
 						Document = await DB_BlueprintPacks.create( Request.PackInformation );
 						if ( Document ) {
@@ -87,8 +85,7 @@ export default function() {
 							};
 						}
 					}
-				}
-				catch ( e ) {
+				} catch ( e ) {
 					if ( e instanceof Error ) {
 						SystemLib.LogError( "api", e.message );
 					}
@@ -117,45 +114,7 @@ export default function() {
 							MessageCode: "BBP.Removed.Success"
 						};
 					}
-				}
-				catch ( e ) {
-					if ( e instanceof Error ) {
-						SystemLib.LogError( "api", e.message );
-					}
-				}
-			}
-
-			res.json( {
-				...Response
-			} );
-		} )
-		.subscribe( ApiUrl( EApiBlueprintPack.manage ), MW_Auth, async( req : Request, res : Response ) => {
-			let Response : TResponse_BPP = {
-				...DefaultResponseFailed
-			};
-
-			const Request : TResponse_BPP_Manage_SUB = req.body;
-			if ( Request.UserClass && Request.ID ) {
-				try {
-					let Document = ( await DB_BlueprintPacks.findById( Request.ID ) )!;
-
-					if ( Document.owner !== Request.UserClass.Get._id ) {
-						const UserId = Document.likes.indexOf( Request.UserClass.Get._id );
-						if ( UserId >= 0 ) {
-							Document.likes.splice( UserId, 1 );
-						}
-						else {
-							Document.likes.push( Request.UserClass.Get._id );
-						}
-						if ( await Document.save() ) {
-							Document = ( await DB_BlueprintPacks.findById( Request.ID ) )!;
-							Response = {
-								...DefaultResponseSuccess
-							};
-						}
-					}
-				}
-				catch ( e ) {
+				} catch ( e ) {
 					if ( e instanceof Error ) {
 						SystemLib.LogError( "api", e.message );
 					}
@@ -184,8 +143,7 @@ export default function() {
 							MessageCode: "BBP.Modify.Success"
 						};
 					}
-				}
-				catch ( e ) {
+				} catch ( e ) {
 					if ( e instanceof Error ) {
 						SystemLib.LogError( "api", e.message );
 					}
@@ -213,8 +171,7 @@ export default function() {
 							MessageCode: "BBP.Removed.Success"
 						};
 					}
-				}
-				catch ( e ) {
+				} catch ( e ) {
 					if ( e instanceof Error ) {
 						SystemLib.LogError( "api", e.message );
 					}

@@ -35,7 +35,7 @@ const PageManager : FunctionComponent<IPageManagerProps> = ( {
 				totalPages={ MaxPage }
 				previousLabel="Go back"
 				nextLabel="Go forward" />
-		</div> 
+		</div>
 	);
 };
 

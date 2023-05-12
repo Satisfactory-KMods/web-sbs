@@ -1,18 +1,18 @@
-import * as path            from "path";
-import http                 from "http";
-import express              from "express";
-import { InstallRoutings }  from "./Routings/InitRouter";
-import process              from "process";
-import * as mongoose        from "mongoose";
 import "@kyri123/k-javascript-utils/lib/useAddons";
-import fs                   from "fs";
+import { ERoles } from "@shared/Enum/ERoles";
+import express from "express";
+import fileUpload from "express-fileupload";
+import fs from "fs";
+import http from "http";
+import * as mongoose from "mongoose";
+import * as path from "path";
+import process from "process";
 import {
 	BC,
 	SystemLib_Class
-}                           from "./Lib/System.Lib";
-import DB_UserAccount       from "./MongoDB/DB_UserAccount";
-import { ERoles }           from "@shared/Enum/ERoles";
-import fileUpload           from "express-fileupload";
+} from "./Lib/System.Lib";
+import DB_UserAccount from "./MongoDB/DB_UserAccount";
+import { InstallRoutings } from "./Routings/InitRouter";
 import { TaskManagerClass } from "./Tasks/TaskManager";
 
 global.__BaseDir = __dirname;
@@ -23,7 +23,7 @@ global.__BlueprintDir = path.join( __MountDir, "Blueprints" );
 ( !fs.existsSync( __BlueprintDir ) ) && fs.mkdirSync( __BlueprintDir, { recursive: true } );
 
 global.SystemLib = new SystemLib_Class();
- 
+
 global.Api = express();
 global.HttpServer = http.createServer( global.Api );
 
@@ -57,7 +57,7 @@ mongoose
 	)
 	.then( async() => {
 		SystemLib.Log( "start", "Connected to mongodb..." );
-		await import("@server/trpc/server");
+		await import( "@server/trpc/server" );
 		SystemLib.Log( "Revalidate", "MongoDB" );
 		for ( const DB of fs.readdirSync( path.join( __BaseDir, "MongoDB" ) ) ) {
 			const File = path.join( __BaseDir, "MongoDB", DB );

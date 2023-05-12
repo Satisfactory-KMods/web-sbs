@@ -1,12 +1,12 @@
-import { z }             from "zod";
-import { TRPCError }     from "@trpc/server";
-import { ERoles }        from "@shared/Enum/ERoles";
+import { CreateSession } from "@server/Lib/Session.Lib";
+import DB_UserAccount from "@server/MongoDB/DB_UserAccount";
 import {
 	handleTRCPErr,
 	publicProcedure
-}                        from "@server/trpc/trpc";
-import DB_UserAccount    from "@server/MongoDB/DB_UserAccount";
-import { CreateSession } from "@server/Lib/Session.Lib";
+} from "@server/trpc/trpc";
+import { ERoles } from "@shared/Enum/ERoles";
+import { TRPCError } from "@trpc/server";
+import { z } from "zod";
 
 export const public_createAccount =
 	publicProcedure.input( z.object( {
@@ -44,8 +44,7 @@ export const public_createAccount =
 				}
 				throw new TRPCError( { message: "User can't saved!", code: "INTERNAL_SERVER_ERROR" } );
 			}
-		}
-		catch ( e ) {
+		} catch ( e ) {
 			handleTRCPErr( e );
 		}
 		throw new TRPCError( { message: "Something goes wrong!", code: "INTERNAL_SERVER_ERROR" } );

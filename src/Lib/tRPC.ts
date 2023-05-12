@@ -95,18 +95,15 @@ export const tRPC_handleError = ( e : any, asToast? : boolean ) => {
 		try {
 			const asArray : any[] = JSON.parse( e.message );
 			message = asArray.map( msg => msg.message );
-		}
-		catch ( err ) {
+		} catch ( err ) {
 		}
 
 		if ( !asToast ) {
 			fireSwalFromApi( message );
-		}
-		else {
+		} else {
 			fireToastFromApi( message );
 		}
-	}
-	else {
+	} else {
 		fireToastFromApi( "Something goes wrong!" );
 	}
 };

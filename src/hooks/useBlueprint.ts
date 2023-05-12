@@ -21,7 +21,7 @@ import {
 export interface IBlueprintHookConfig {
 	IgnoreBlacklisted : boolean;
 }
- 
+
 export function useBlueprint( InitValue : string | BlueprintData, Config? : Partial<IBlueprintHookConfig> ) {
 	const { mods, tags } = useContext( DataContext );
 	const [ Blueprint, setBlueprint ] = useState<BlueprintData>( () => {
@@ -42,7 +42,7 @@ export function useBlueprint( InitValue : string | BlueprintData, Config? : Part
 	} );
 	const { loggedIn, user } = useAuth();
 	const [ DoQueryLikes, setDoQueryLikes ] = useState<boolean>( false );
-	const [ BlueprintData, setBlueprintData ] = useState<Blueprint | undefined>( undefined );
+	const [ blueprintData, setBlueprintData ] = useState<Blueprint | undefined>( undefined );
 	const [ Tags, setTags ] = useState<Tag[]>( [] );
 	const [ Mods, setMods ] = useState<Mod[]>( [] );
 
@@ -53,55 +53,55 @@ export function useBlueprint( InitValue : string | BlueprintData, Config? : Part
 		return InitValue._id;
 	}, [ InitValue ] );
 
-	const IsOwner = useMemo( () => {
+	const isOwner = useMemo( () => {
 		return user.Get._id === Blueprint.owner;
 	}, [ user.Get._id, Blueprint.owner ] );
 
-	const BlueprintValid = useMemo( () => {
+	const isValid = useMemo( () => {
 		if ( Config?.IgnoreBlacklisted ) {
 			return Blueprint._id !== "";
 		}
 		return Blueprint._id !== "" && !Blueprint.blacklisted;
 	}, [ Blueprint._id, Blueprint.blacklisted, Config?.IgnoreBlacklisted ] );
 
-	const updateData = (newData?:BlueprintData) => {
+	const updateData = ( newData?:BlueprintData ) => {
 		const blueprintData = newData || Blueprint;
-		setTags( tags.filter( e => blueprintData.tags.includes(e._id) ) );
-		setMods( mods.filter( e => blueprintData.mods.includes(e.id) ) );
+		setTags( tags.filter( e => blueprintData.tags.includes( e._id ) ) );
+		setMods( mods.filter( e => blueprintData.mods.includes( e.id ) ) );
 	};
 
 	const Query = async() => {
-		const [ blueprintData, Result ] = await Promise.all([
-			tRPC_Public.blueprint.readBlueprint.mutate({ blueprintId: BlueprintID }).catch(tRPC_handleError),
+		const [ blueprintData, Result ] = await Promise.all( [
+			tRPC_Public.blueprint.readBlueprint.mutate( { blueprintId: BlueprintID } ).catch( tRPC_handleError ),
 			tRPC_Public.blueprint.getBlueprint.query( { blueprintId: BlueprintID } )
-		]);
+		] );
 		blueprintData && setBlueprintData( blueprintData );
 		if ( Result ) {
-			updateData(Result.blueprintData);
+			updateData( Result.blueprintData );
 			setBlueprint( Result.blueprintData );
 		}
 	};
 
-	const AllowToEdit = useMemo( () => {
-		if ( loggedIn && BlueprintValid ) {
+	const allowedToEdit = useMemo( () => {
+		if ( loggedIn && isValid ) {
 			return user.HasPermssion( ERoles.admin ) || Blueprint.owner.trim() === user.Get._id.trim();
 		}
 		return false;
-	}, [ user, loggedIn, Blueprint.owner, BlueprintValid ] );
- 
+	}, [ user, loggedIn, Blueprint.owner, isValid ] );
+
 	// eslint-disable-next-line react-hooks/exhaustive-deps
-	useEffect( updateData, [ InitValue, BlueprintValid ] );
+	useEffect( updateData, [ InitValue, isValid ] );
 
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	useEffect( updateData, [ Blueprint.tags, Blueprint.mods ] );
 
 	const ToggleLike = async() : Promise<void> => {
 		if ( !loggedIn ) {
-			await fireSwalFromApi("You need to be logged in to do this!", "error");
+			await fireSwalFromApi( "You need to be logged in to do this!", "error" );
 			return;
 		}
 
-		if ( !BlueprintValid ) {
+		if ( !isValid ) {
 			return;
 		}
 
@@ -111,13 +111,13 @@ export function useBlueprint( InitValue : string | BlueprintData, Config? : Part
 		setDoQueryLikes( false );
 	};
 
-	const ToggleBlacklist = async() : Promise<boolean> => {
+	const toggleBlacklist = async() : Promise<boolean> => {
 		if ( !loggedIn ) {
-			await fireSwalFromApi("You need to be logged in to do this!", "error");
+			await fireSwalFromApi( "You need to be logged in to do this!", "error" );
 			return false;
 		}
 
-		if ( !BlueprintValid ) {
+		if ( !isValid ) {
 			return false;
 		}
 
@@ -127,13 +127,13 @@ export function useBlueprint( InitValue : string | BlueprintData, Config? : Part
 		return Result.Success;
 	};
 
-	const Remove = async() : Promise<boolean> => {
+	const remove = async() : Promise<boolean> => {
 		if ( !loggedIn ) {
-			await fireSwalFromApi("You need to be logged in to do this!", "error");
+			await fireSwalFromApi( "You need to be logged in to do this!", "error" );
 			return false;
 		}
 
-		if ( !BlueprintValid ) {
+		if ( !isValid ) {
 			return false;
 		}
 
@@ -144,15 +144,15 @@ export function useBlueprint( InitValue : string | BlueprintData, Config? : Part
 	};
 
 	return {
-		IsOwner,
-		Remove,
-		ToggleBlacklist,
-		BlueprintData,
+		isOwner,
+		remove,
+		toggleBlacklist,
+		blueprintData,
 		Mods,
 		Tags,
-		AllowToLike: loggedIn && Blueprint.owner !== user.Get._id,
-		AllowToEdit,
-		BlueprintValid,
+		allowedToLike: loggedIn && Blueprint.owner !== user.Get._id,
+		allowedToEdit,
+		isValid,
 		Update: Query,
 		Blueprint,
 		BlueprintID,

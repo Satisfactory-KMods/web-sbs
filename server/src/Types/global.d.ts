@@ -18,4 +18,4 @@ export declare global {
 	var __MountDir : string;
 	var __LogFile : string;
 	var __BlueprintDir : string;
-} 
+}
