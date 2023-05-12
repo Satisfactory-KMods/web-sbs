@@ -67,6 +67,17 @@ const isOwnerMiddleware = middleware( async( opts ) => {
 	return opts.next();
 } );
 
+// only check if we have admin or we are the owner
+const isModOrOwnerMiddleware = middleware( async( opts ) => {
+	const { ctx } = opts;
+	const { blueprint, userClass } = ctx as{ blueprint: BlueprintClass<true> } & typeof ctx;
+	const isOwner = false;
+	if( !(ctx.userClass.HasPermssion( ERoles.admin ) || ctx.userClass.HasPermssion( ERoles.moderator )) && !_.eq( blueprint.get.owner ,userClass.Get._id ) ) {
+		throw new TRPCError( { code: 'UNAUTHORIZED' } );
+	}
+	return opts.next();
+} );
+
 // check if we have a role for example for admin actions or something else
 const roleMiddleware = ( role: ERoles ) => middleware( async( opts ) => {
 	const { ctx } = opts;
@@ -85,6 +96,9 @@ export const blueprintProcedure = authProcedure.input( z.object( {
 export const blueprintOwnerProcedure = authProcedure.input( z.object( {
 	blueprintId: z.string()
 } ) ).use( blueprintMiddleware ).use( isOwnerMiddleware );
+export const blueprintModOwnerProcedure = authProcedure.input( z.object( {
+	blueprintId: z.string()
+} ) ).use( blueprintMiddleware ).use( isModOrOwnerMiddleware );
 export const adminProcedure = authProcedure.use( roleMiddleware( ERoles.admin ) );
 export const modProcedure = authProcedure.use( roleMiddleware( ERoles.moderator ) );
 export const adminBlueprintProcedure = authProcedure.use( roleMiddleware( ERoles.admin ) ).input( z.object( {

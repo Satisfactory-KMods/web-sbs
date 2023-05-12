@@ -147,5 +147,4 @@ export default function() {
 			return res.status( 404 ).json( { error: "Blueprint not found" } );
 		}
 	} );
-
 }

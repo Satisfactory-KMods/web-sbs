@@ -27,7 +27,8 @@ const publicRouter = router( {
 const authRouter = router( {
 	blueprints: auth_blueprints,
 	updateAccount: auth_updateAccount,
-	logout: auth_logout
+	logout: auth_logout,
+	adminTags: admin_tags
 } );
 
 

@@ -60,35 +60,4 @@ export default function() {
 			...Response
 		} );
 	} );
-
-	Router.post( ApiUrl( EApiBlueprintUtils.readblueprint ), async( req: Request, res: Response ) => {
-		let Response: TResponse_BPU_ParseBlueprint = {
-			...DefaultResponseFailed,
-			MessageCode: undefined
-		};
-
-		const Request: TRequest_BPU_ReadBlueprint = req.body;
-
-		try {
-			const BP = ( await DB_Blueprints.findById( Request.Id ) )!;
-			const SBP: Buffer = fs.readFileSync( path.join( __BlueprintDir, Request.Id!, `${ Request.Id }.sbp` ) );
-			const SBPCFG: Buffer = fs.readFileSync( path.join( __BlueprintDir, Request.Id!, `${ Request.Id }.sbp` ) );
-
-			const Blueprint = new BlueprintParser( BP.name, SBP, SBPCFG );
-			if( Blueprint.Success ) {
-				Response = {
-					...DefaultResponseSuccess,
-					Data: Blueprint.Get
-				};
-			}
-		} catch( e ) {
-			if( e instanceof Error ) {
-				SystemLib.LogError( "api", e.message );
-			}
-		}
-
-		res.json( {
-			...Response
-		} );
-	} );
 }

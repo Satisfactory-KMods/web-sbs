@@ -80,7 +80,6 @@ export default function() {
 		} );
 	} );
 
-
 	Router.post( ApiUrl( EApiUserBlueprints.edit ), MW_Auth, async( req: Request, res: Response ) => {
 		const Response: TResponse_BPUser_Edit = {
 			...DefaultResponseFailed
