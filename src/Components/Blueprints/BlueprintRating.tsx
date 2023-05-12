@@ -16,7 +16,7 @@ const BlueprintRating: FunctionComponent<BlueprintRatingProps> = ( { blueprintHo
 		if ( !allowedToLike ) {
 			return;
 		}
-		setHover( () =>rating );
+		setHover( () => rating );
 	};
 
 	const setRating = async( rating: number ) => {
@@ -32,6 +32,8 @@ const BlueprintRating: FunctionComponent<BlueprintRatingProps> = ( { blueprintHo
 		} ).catch( tRPC_handleError );
 	};
 
+	const rating = Blueprint.totalRating || 1;
+
 	return (
 		<Rating { ...props }>
 			<Rating.Star onClick={ () => setRating( 1 ) } onMouseEnter={ () => setHoverRating( 1 ) } onMouseLeave={ () => setHoverRating( 0 ) } filled={ ( rating >= 1 && hover === 0 ) || hover >= 1 } />
@@ -40,11 +42,11 @@ const BlueprintRating: FunctionComponent<BlueprintRatingProps> = ( { blueprintHo
 			<Rating.Star onClick={ () => setRating( 4 ) } onMouseEnter={ () => setHoverRating( 4 ) } onMouseLeave={ () => setHoverRating( 0 ) } filled={ ( rating >= 4 && hover === 0 ) || hover >= 4 } />
 			<Rating.Star onClick={ () => setRating( 5 ) } onMouseEnter={ () => setHoverRating( 5 ) } onMouseLeave={ () => setHoverRating( 0 ) } filled={ ( rating >= 5 && hover === 0 ) || hover >= 5 } />
 			<p className="ml-2 text-sm font-medium text-gray-500 dark:text-gray-400">
-				{ Blueprint.totalRation } out of 5
+				{ Blueprint.totalRating } out of 5
 			</p>
 			<span className="mx-1.5 h-1 w-1 rounded-full bg-gray-500 dark:bg-gray-400" />
 			<span className="text-sm font-medium text-gray-900 dark:text-white">
-				{ Blueprint.rating.length } { children || "votes" }
+				{ Blueprint.rating?.length || 0 } { children || "votes" }
 			</span>
 		</Rating>
 	);
