@@ -8,7 +8,7 @@ import * as jwt from "jsonwebtoken";
 
 export type UserSession = ClientUserAccount & Partial<JwtPayload>;
 
-export async function CreateSession( User : Partial<UserAccount>, stayLoggedIn = false ) : Promise<string | undefined> {
+export async function CreateSession( User: Partial<UserAccount>, stayLoggedIn = false ): Promise<string | undefined> {
 	delete User.salt;
 	delete User.hash;
 	try {
@@ -16,7 +16,7 @@ export async function CreateSession( User : Partial<UserAccount>, stayLoggedIn =
 			expiresIn: stayLoggedIn ? "28d" : "1d"
 		} );
 		const Decoded = jwt.verify( Token, process.env.JWTToken || "" ) as jwt.JwtPayload;
-		if ( Decoded ) {
+		if( Decoded ) {
 			await DB_SessionToken.deleteMany( { expire: { $lte: new Date() } } );
 			const session = await DB_SessionToken.create( {
 				token: Token,
@@ -25,8 +25,8 @@ export async function CreateSession( User : Partial<UserAccount>, stayLoggedIn =
 			} );
 			return session.token;
 		}
-	} catch ( e ) {
-		if ( e instanceof Error ) {
+	} catch( e ) {
+		if( e instanceof Error ) {
 			SystemLib.LogError( "api", e.message );
 		}
 	}

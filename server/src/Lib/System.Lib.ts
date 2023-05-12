@@ -23,10 +23,10 @@ export type BashColorString =
 	| "White";
 
 export class SystemLib_Class {
-	public readonly IsDevMode : boolean;
-	private readonly UseDebug : boolean;
+	public readonly IsDevMode: boolean;
+	private readonly UseDebug: boolean;
 
-	static IsDev() : boolean {
+	static IsDev(): boolean {
 		return process.env.NODE_ENV !== "production";
 	}
 
@@ -39,7 +39,7 @@ export class SystemLib_Class {
 
 		this.DebugLog( "SYSTEM", "Try to load:", ".env" );
 		dotenv.config();
-		if ( SystemLib_Class.IsDev() ) {
+		if( SystemLib_Class.IsDev() ) {
 			this.DebugLog( "SYSTEM", "Try to load:", ".env.dev" );
 			dotenv.config( {
 				path: ".env.dev"
@@ -52,11 +52,11 @@ export class SystemLib_Class {
 		}
 	}
 
-	public DebugMode() : boolean {
+	public DebugMode(): boolean {
 		return this.UseDebug;
 	}
 
-	static TBC( String : BashColorString ) {
+	static TBC( String: BashColorString ) {
 		switch ( String ) {
 			case "Black":
 				return "\x1B[30m";
@@ -93,30 +93,30 @@ export class SystemLib_Class {
 		}
 	}
 
-	public ToBashColor( String : BashColorString ) {
+	public ToBashColor( String: BashColorString ) {
 		return SystemLib_Class.TBC( String );
 	}
 
-	public ClearANSI( Log : string ) : string {
+	public ClearANSI( Log: string ): string {
 		return Log.replaceAll(
 			/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g,
 			""
 		);
 	}
 
-	public WriteStringToLog( ...Log : any[] ) : void {
+	public WriteStringToLog( ...Log: any[] ): void {
 		Log.push( "\n" );
-		const OutLog : string = Util.format( ...Log );
+		const OutLog: string = Util.format( ...Log );
 		let CurrentLog = "";
-		if ( fs.existsSync( __LogFile ) ) {
+		if( fs.existsSync( __LogFile ) ) {
 			CurrentLog = fs.readFileSync( __LogFile ).toString();
 		}
 		CurrentLog = CurrentLog + OutLog;
 		fs.writeFileSync( __LogFile, this.ClearANSI( CurrentLog ) );
 	}
 
-	public DebugLog( Prefix : string, ...data : any[] ) {
-		if ( this.DebugMode() ) {
+	public DebugLog( Prefix: string, ...data: any[] ) {
+		if( this.DebugMode() ) {
 			data.addAtIndex(
 				`${ this.ToBashColor( "Red" ) }[${ Prefix.toUpperCase() }]\x1B[0m`
 			);
@@ -129,7 +129,7 @@ export class SystemLib_Class {
 		}
 	}
 
-	public Log( Prefix : string, ...data : any[] ) {
+	public Log( Prefix: string, ...data: any[] ) {
 		data.addAtIndex(
 			`${ this.ToBashColor( "Red" ) }[${ Prefix.toUpperCase() }]\x1B[0m`
 		);
@@ -140,7 +140,7 @@ export class SystemLib_Class {
 		this.WriteStringToLog( ...data );
 	}
 
-	public LogError( Prefix : string, ...data : any[] ) {
+	public LogError( Prefix: string, ...data: any[] ) {
 		data.addAtIndex(
 			this.ToBashColor( "Light Red" ) +
 			`[${ new Date().toUTCString() }][ERROR]\x1B[0m`
@@ -152,7 +152,7 @@ export class SystemLib_Class {
 		this.WriteStringToLog( ...data );
 	}
 
-	public LogWarning( Prefix : string, ...data : any[] ) {
+	public LogWarning( Prefix: string, ...data: any[] ) {
 		data.addAtIndex(
 			`${ this.ToBashColor( "Red" ) }[${ Prefix.toUpperCase() }]\x1B[0m`
 		);
@@ -163,7 +163,7 @@ export class SystemLib_Class {
 		this.WriteStringToLog( ...data );
 	}
 
-	public LogFatal( Prefix : string, ...data : any[] ) {
+	public LogFatal( Prefix: string, ...data: any[] ) {
 		data.addAtIndex(
 			`${ this.ToBashColor( "Red" ) }[${ Prefix.toUpperCase() }]\x1B[0m`
 		);
@@ -176,17 +176,17 @@ export class SystemLib_Class {
 	}
 
 	public CustomLog(
-		Color : BashColorString,
-		Key : string,
-		IsFata : boolean,
-		...data : any[]
+		Color: BashColorString,
+		Key: string,
+		IsFata: boolean,
+		...data: any[]
 	) {
 		data.addAtIndex(
 			this.ToBashColor( Color ) + `[${ new Date().toUTCString() }][${ Key }]\x1B[0m`
 		);
 		console.error( ...data );
 		this.WriteStringToLog( ...data );
-		if ( IsFata ) {
+		if( IsFata ) {
 			process.exit();
 		}
 	}

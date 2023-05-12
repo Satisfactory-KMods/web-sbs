@@ -14,12 +14,12 @@ export const public_createAccount =
 		email: z.string().email( { message: "Email is invalid." } ),
 		password: z.string().min( 8, { message: "Password is to short." } )
 	} ) ).mutation<{
-		token : string;
-		message : string;
+		token: string;
+		message: string;
 	}>( async( { input } ) => {
 		const { password, email, username } = input;
 		try {
-			if ( !await DB_UserAccount.exists( {
+			if( !await DB_UserAccount.exists( {
 				$or: [
 					{ username },
 					{ email }
@@ -32,9 +32,9 @@ export const public_createAccount =
 				userDocument.email = email;
 				userDocument.setPassword( password );
 
-				if ( await userDocument.save() ) {
+				if( await userDocument.save() ) {
 					const token = await CreateSession( userDocument.toJSON() );
-					if ( token ) {
+					if( token ) {
 						return {
 							token: token,
 							message: "Account created and logged in successfully!"
@@ -44,7 +44,7 @@ export const public_createAccount =
 				}
 				throw new TRPCError( { message: "User can't saved!", code: "INTERNAL_SERVER_ERROR" } );
 			}
-		} catch ( e ) {
+		} catch( e ) {
 			handleTRCPErr( e );
 		}
 		throw new TRPCError( { message: "Something goes wrong!", code: "INTERNAL_SERVER_ERROR" } );

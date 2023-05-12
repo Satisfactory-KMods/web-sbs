@@ -50,8 +50,8 @@ const BlueprintPackSchema = new mongoose.Schema( {
 			this.markModified( "totalRation" );
 			await this.save();
 			return true;
-		} catch ( e ) {
-			if ( e instanceof Error ) {
+		} catch( e ) {
+			if( e instanceof Error ) {
 				SystemLib.LogError( e.message );
 			}
 		}

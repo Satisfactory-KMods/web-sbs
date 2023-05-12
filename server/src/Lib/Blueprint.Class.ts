@@ -14,7 +14,7 @@ export class BlueprintClass<T extends boolean = false> {
 	static async createClass( blueprintId: string ): Promise<BlueprintClass<true> | undefined> {
 		const BP = new BlueprintClass( blueprintId );
 		await BP.readData();
-		if ( BP.isValid() ) {
+		if( BP.isValid() ) {
 			return BP;
 		}
 		return undefined;
@@ -23,8 +23,8 @@ export class BlueprintClass<T extends boolean = false> {
 	public async readData() {
 		try {
 			this.data =  await DB_Blueprints.findById( this.id ) as IfClass<T, BlueprintData> ;
-		} catch ( e ) {
-			if ( e instanceof Error ) {
+		} catch( e ) {
+			if( e instanceof Error ) {
 				SystemLib.LogError( e.message );
 			}
 		}

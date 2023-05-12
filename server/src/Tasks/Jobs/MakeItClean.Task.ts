@@ -14,19 +14,19 @@ export default new JobTask(
 
 		global.DownloadIPCached.empty();
 		const ZipPath = path.join( __MountDir, "Zips" );
-		if ( fs.existsSync( ZipPath ) ) {
-			for ( const Dir of fs.readdirSync( ZipPath ) ) {
+		if( fs.existsSync( ZipPath ) ) {
+			for( const Dir of fs.readdirSync( ZipPath ) ) {
 				const DirPath = path.join( ZipPath, Dir );
 				const State = fs.statSync( DirPath );
-				if ( State.isDirectory() ) {
+				if( State.isDirectory() ) {
 					const CreateFile = path.join( DirPath, "created.log" );
-					if ( !fs.existsSync( CreateFile ) ) {
+					if( !fs.existsSync( CreateFile ) ) {
 						SystemLib.LogWarning( "tasks", "Remove Zip for BP:", DirPath );
 						fs.rmSync( DirPath, { recursive: true } );
 						continue;
 					}
 					const Time = parseInt( fs.readFileSync( CreateFile ).toString() );
-					if ( Time <= Date.now() - 1800000 * 2 ) {
+					if( Time <= Date.now() - 1800000 * 2 ) {
 						SystemLib.LogWarning( "tasks", "Remove Zip for BP:", DirPath );
 						fs.rmSync( DirPath, { recursive: true } );
 					}

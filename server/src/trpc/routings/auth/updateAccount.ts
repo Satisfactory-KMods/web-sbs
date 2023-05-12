@@ -18,15 +18,15 @@ export const auth_updateAccount =
 		const { password, email, username } = input;
 		try {
 			const userDocument = await DB_UserAccount.findById( userClass.Get._id );
-			if ( userDocument ) {
-				if ( username && !_.isEqual( username, userClass.Get.username ) && await DB_UserAccount.exists( { username } ) ) {
+			if( userDocument ) {
+				if( username && !_.isEqual( username, userClass.Get.username ) && await DB_UserAccount.exists( { username } ) ) {
 					throw new TRPCError( {
 						message: "An account with this username already exists and cant be used.",
 						code: "BAD_REQUEST"
 					} );
 				}
 
-				if ( email && !_.isEqual( email, userClass.Get.email ) && await DB_UserAccount.exists( { email } ) ) {
+				if( email && !_.isEqual( email, userClass.Get.email ) && await DB_UserAccount.exists( { email } ) ) {
 					throw new TRPCError( {
 						message: "An account with this e-mail already exists and cant be used.",
 						code: "BAD_REQUEST"
@@ -37,13 +37,13 @@ export const auth_updateAccount =
 				( email && !_.isEqual( email, userClass.Get.email ) ) && ( userDocument.email = email );
 				password && userDocument.setPassword( password );
 
-				if ( await userDocument.save() ) {
+				if( await userDocument.save() ) {
 					await DB_SessionToken.deleteMany( { userid: userClass.Get._id } );
 					return "Account created you will logged out!";
 				}
 			}
 			throw new TRPCError( { message: "User not found!", code: "INTERNAL_SERVER_ERROR" } );
-		} catch ( e ) {
+		} catch( e ) {
 			handleTRCPErr( e );
 		}
 		throw new TRPCError( { message: "Something goes wrong!", code: "INTERNAL_SERVER_ERROR" } );

@@ -11,7 +11,7 @@ export const auth_logout = authProcedure.mutation( async( { ctx } ) => {
 	try {
 		await DB_SessionToken.findOneAndDelete( { token } );
 		return "Successfully logged out";
-	} catch ( e ) {
+	} catch( e ) {
 		handleTRCPErr( e );
 	}
 	throw new TRPCError( { message: "password or login is to short.", code: "BAD_REQUEST" } );

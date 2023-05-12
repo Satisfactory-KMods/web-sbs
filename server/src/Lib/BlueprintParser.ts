@@ -7,16 +7,16 @@ import {
 
 export class BlueprintParser {
 	public readonly Success;
-	private readonly Data : Blueprint | undefined;
+	private readonly Data: Blueprint | undefined;
 	private readonly CachedName;
 
-	constructor( Name : string, sbp : Buffer, sbpcfg : Buffer ) {
+	constructor( Name: string, sbp: Buffer, sbpcfg: Buffer ) {
 		this.CachedName = Name;
 		try {
 			this.Data = Parser.ParseBlueprintFiles( Name, sbp, sbpcfg );
 			this.Success = true;
-		} catch ( e ) {
-			if ( e instanceof Error ) {
+		} catch( e ) {
+			if( e instanceof Error ) {
 				SystemLib.LogError( "api", e.message );
 			}
 			this.Data = undefined;

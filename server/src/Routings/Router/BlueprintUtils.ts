@@ -23,30 +23,30 @@ import fs from "fs";
 import path from "path";
 
 export default function() {
-	Router.post( ApiUrl( EApiBlueprintUtils.parseblueprint ), MW_Auth, async( req : Request, res : Response ) => {
-		let Response : TResponse_BPU_ParseBlueprint = {
+	Router.post( ApiUrl( EApiBlueprintUtils.parseblueprint ), MW_Auth, async( req: Request, res: Response ) => {
+		let Response: TResponse_BPU_ParseBlueprint = {
 			...DefaultResponseFailed
 		};
 
-		const Request : TRequest_BPU_ParseBlueprint = req.body;
-		const Files : UploadedFile[] | undefined = req.files?.files as UploadedFile[] | undefined;
+		const Request: TRequest_BPU_ParseBlueprint = req.body;
+		const Files: UploadedFile[] | undefined = req.files?.files as UploadedFile[] | undefined;
 
-		if ( Array.isArray( Files ) ) {
-			if ( Files.length >= 2 ) {
-				if ( Request.BlueprintName ) {
-					let SBP : Buffer = Buffer.from( "" );
-					let SBPCFG : Buffer = Buffer.from( "" );
+		if( Array.isArray( Files ) ) {
+			if( Files.length >= 2 ) {
+				if( Request.BlueprintName ) {
+					let SBP: Buffer = Buffer.from( "" );
+					let SBPCFG: Buffer = Buffer.from( "" );
 
-					for ( const File of Files ) {
-						if ( File.name.endsWith( ".sbp" ) ) {
+					for( const File of Files ) {
+						if( File.name.endsWith( ".sbp" ) ) {
 							SBP = fs.readFileSync( File.tempFilePath );
-						} else if ( File.name.endsWith( ".sbpcfg" ) ) {
+						} else if( File.name.endsWith( ".sbpcfg" ) ) {
 							SBPCFG = fs.readFileSync( File.tempFilePath );
 						}
 					}
 
 					const Blueprint = new BlueprintParser( Request.BlueprintName, SBP, SBPCFG );
-					if ( Blueprint.Success ) {
+					if( Blueprint.Success ) {
 						Response = {
 							...DefaultResponseSuccess,
 							Data: Blueprint.Get
@@ -61,28 +61,28 @@ export default function() {
 		} );
 	} );
 
-	Router.post( ApiUrl( EApiBlueprintUtils.readblueprint ), async( req : Request, res : Response ) => {
-		let Response : TResponse_BPU_ParseBlueprint = {
+	Router.post( ApiUrl( EApiBlueprintUtils.readblueprint ), async( req: Request, res: Response ) => {
+		let Response: TResponse_BPU_ParseBlueprint = {
 			...DefaultResponseFailed,
 			MessageCode: undefined
 		};
 
-		const Request : TRequest_BPU_ReadBlueprint = req.body;
+		const Request: TRequest_BPU_ReadBlueprint = req.body;
 
 		try {
 			const BP = ( await DB_Blueprints.findById( Request.Id ) )!;
-			const SBP : Buffer = fs.readFileSync( path.join( __BlueprintDir, Request.Id!, `${ Request.Id }.sbp` ) );
-			const SBPCFG : Buffer = fs.readFileSync( path.join( __BlueprintDir, Request.Id!, `${ Request.Id }.sbp` ) );
+			const SBP: Buffer = fs.readFileSync( path.join( __BlueprintDir, Request.Id!, `${ Request.Id }.sbp` ) );
+			const SBPCFG: Buffer = fs.readFileSync( path.join( __BlueprintDir, Request.Id!, `${ Request.Id }.sbp` ) );
 
 			const Blueprint = new BlueprintParser( BP.name, SBP, SBPCFG );
-			if ( Blueprint.Success ) {
+			if( Blueprint.Success ) {
 				Response = {
 					...DefaultResponseSuccess,
 					Data: Blueprint.Get
 				};
 			}
-		} catch ( e ) {
-			if ( e instanceof Error ) {
+		} catch( e ) {
+			if( e instanceof Error ) {
 				SystemLib.LogError( "api", e.message );
 			}
 		}

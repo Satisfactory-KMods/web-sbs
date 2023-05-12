@@ -19,46 +19,46 @@ import type {
 } from "express";
 
 export default function() {
-	Router.post( ApiUrl( EApiTags.modifytag ), MW_Auth, ( req, res, next ) => MW_Permission( req, res, next, ERoles.admin ), async( req : Request, res : Response ) => {
-		let Response : TResponse_Tags_Modify = {
+	Router.post( ApiUrl( EApiTags.modifytag ), MW_Auth, ( req, res, next ) => MW_Permission( req, res, next, ERoles.admin ), async( req: Request, res: Response ) => {
+		let Response: TResponse_Tags_Modify = {
 			...DefaultResponseFailed
 		};
 
-		const Request : TRequest_Tags_Modify = req.body;
+		const Request: TRequest_Tags_Modify = req.body;
 
 		try {
-			if ( Request.Remove && Request.Id ) {
+			if( Request.Remove && Request.Id ) {
 				const Document = ( await DB_Tags.findById( Request.Id ) )!;
 				const ID = Document._id.toString();
-				if ( await Document.deleteOne() ) {
+				if( await Document.deleteOne() ) {
 					await DB_Blueprints.updateMany( {}, { $pull: { tags: ID } } );
 					Response = {
 						...DefaultResponseSuccess,
 						MessageCode: "Tags.Delete.Success"
 					};
 				}
-			} else if ( Request.Id && Request.Data ) {
+			} else if( Request.Id && Request.Data ) {
 				const Document = ( await DB_Tags.findById( Request.Id ) )!;
 
 				delete Request.Data._id;
 
-				if ( await Document.updateOne( Request.Data ) ) {
+				if( await Document.updateOne( Request.Data ) ) {
 					Response = {
 						...DefaultResponseSuccess,
 						MessageCode: "Tags.Modify.Success"
 					};
 				}
-			} else if ( !Request.Id && Request.Data ) {
+			} else if( !Request.Id && Request.Data ) {
 				const Document = await DB_Tags.create( Request.Data );
-				if ( Document ) {
+				if( Document ) {
 					Response = {
 						...DefaultResponseSuccess,
 						MessageCode: "Tags.Create.Success"
 					};
 				}
 			}
-		} catch ( e ) {
-			if ( e instanceof Error ) {
+		} catch( e ) {
+			if( e instanceof Error ) {
 				SystemLib.LogError( "api", e.message );
 			}
 		}

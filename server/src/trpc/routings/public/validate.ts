@@ -20,6 +20,6 @@ export const public_validate =
 			} else {
 			}
 			return { tokenValid: !!( await DB_SessionToken.exists( { token: input.token } ) ) && userAccountExsists };
-		} catch ( e ) {  }
+		} catch( e ) {  }
 		return { tokenValid: false };
 	} );

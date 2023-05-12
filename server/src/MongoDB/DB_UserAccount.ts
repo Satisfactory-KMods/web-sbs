@@ -13,8 +13,8 @@ const ZodUserAccountSchema = z.object( {
 } );
 
 export interface UserAccountMethods {
-	setPassword : ( password : string ) => void;
-	validPassword : ( password : string ) => boolean;
+	setPassword: ( password: string ) => void;
+	validPassword: ( password: string ) => boolean;
 }
 
 const UserAccountSchema = new mongoose.Schema( {

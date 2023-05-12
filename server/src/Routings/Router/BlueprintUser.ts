@@ -25,17 +25,17 @@ import fs from "fs";
 import path from "path";
 
 export default function() {
-	Router.post( ApiUrl( EApiUserBlueprints.create ), MW_Auth, async( req : Request, res : Response ) => {
-		const Response : TResponse_BPUser_Create = {
+	Router.post( ApiUrl( EApiUserBlueprints.create ), MW_Auth, async( req: Request, res: Response ) => {
+		const Response: TResponse_BPUser_Create = {
 			...DefaultResponseFailed
 		};
 
-		const Request : TRequest_BPUser_Create = req.body;
+		const Request: TRequest_BPUser_Create = req.body;
 		const Files = req.files as TRequest_BPUser_Create_Files;
 
 		try {
-			if ( Request.BlueprintName && Request.BlueprintDesc && Request.UserClass && Request.DesignerSize ) {
-				if ( Files.SBP && Files.SBPCFG && Files.Image ) {
+			if( Request.BlueprintName && Request.BlueprintDesc && Request.UserClass && Request.DesignerSize ) {
+				if( Files.SBP && Files.SBPCFG && Files.Image ) {
 					const Blueprint = new DB_Blueprints();
 					Blueprint.description = Request.BlueprintDesc;
 					Blueprint.name = Request.BlueprintName;
@@ -45,8 +45,8 @@ export default function() {
 					Blueprint.DesignerSize = Request.DesignerSize;
 					const ID = Blueprint._id.toString();
 
-					if ( await Blueprint.save() ) {
-						for ( const [ Key, File ] of Object.entries( Files ) ) {
+					if( await Blueprint.save() ) {
+						for( const [ Key, File ] of Object.entries( Files ) ) {
 							fs.mkdirSync( path.join( __BlueprintDir, ID ), { recursive: true } );
 							switch ( Key ) {
 								case "SBP":
@@ -69,8 +69,8 @@ export default function() {
 					}
 				}
 			}
-		} catch ( e ) {
-			if ( e instanceof Error ) {
+		} catch( e ) {
+			if( e instanceof Error ) {
 				SystemLib.LogError( "api", e.message );
 			}
 		}
@@ -81,18 +81,18 @@ export default function() {
 	} );
 
 
-	Router.post( ApiUrl( EApiUserBlueprints.edit ), MW_Auth, async( req : Request, res : Response ) => {
-		const Response : TResponse_BPUser_Edit = {
+	Router.post( ApiUrl( EApiUserBlueprints.edit ), MW_Auth, async( req: Request, res: Response ) => {
+		const Response: TResponse_BPUser_Edit = {
 			...DefaultResponseFailed
 		};
 
-		const Request : TRequest_BPUser_Edit = req.body;
+		const Request: TRequest_BPUser_Edit = req.body;
 		const Files = req.files as TRequest_BPUser_Edit_Files;
 
 		try {
-			if ( Request.BlueprintName && Request.BlueprintDesc && Request.UserClass && Request.DesignerSize ) {
+			if( Request.BlueprintName && Request.BlueprintDesc && Request.UserClass && Request.DesignerSize ) {
 				const Blueprint = await DB_Blueprints.findById( Request.BlueprintId );
-				if ( Blueprint ) {
+				if( Blueprint ) {
 					Blueprint.description = Request.BlueprintDesc;
 					Blueprint.name = Request.BlueprintName;
 					Blueprint.tags = Request.BlueprintTags || [];
@@ -101,9 +101,9 @@ export default function() {
 					Blueprint.DesignerSize = Request.DesignerSize;
 					const ID = Blueprint._id.toString();
 
-					if ( await Blueprint.save() ) {
-						if ( Files?.Image ) {
-							for ( const [ Key, File ] of Object.entries( Files ) ) {
+					if( await Blueprint.save() ) {
+						if( Files?.Image ) {
+							for( const [ Key, File ] of Object.entries( Files ) ) {
 								fs.mkdirSync( path.join( __BlueprintDir, ID ), { recursive: true } );
 								switch ( Key ) {
 									case "Image":
@@ -125,8 +125,8 @@ export default function() {
 					}
 				}
 			}
-		} catch ( e ) {
-			if ( e instanceof Error ) {
+		} catch( e ) {
+			if( e instanceof Error ) {
 				SystemLib.LogError( "api", e.message );
 			}
 		}

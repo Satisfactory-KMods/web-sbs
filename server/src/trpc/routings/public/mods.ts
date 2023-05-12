@@ -11,10 +11,10 @@ export const public_mods = router( {
 	getMods: publicProcedure.query( async() => {
 		try {
 			const mods = await DB_Mods.find<Mod>();
-			if ( mods ) {
+			if( mods ) {
 				return mods;
 			}
-		} catch ( e ) {
+		} catch( e ) {
 			handleTRCPErr( e );
 		}
 		throw new TRPCError( { message: "Something goes wrong!", code: "INTERNAL_SERVER_ERROR" } );

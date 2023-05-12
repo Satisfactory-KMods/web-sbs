@@ -22,18 +22,18 @@ import type {
 
 export default function() {
 	Router
-		.post( ApiUrl( EApiBlueprintPack.manage ), MW_Auth, async( req : Request, res : Response ) => {
-			let Response : TResponse_BPP = {
+		.post( ApiUrl( EApiBlueprintPack.manage ), MW_Auth, async( req: Request, res: Response ) => {
+			let Response: TResponse_BPP = {
 				...DefaultResponseFailed
 			};
 
-			const Request : TResponse_BPP_Manage_POST = req.body;
+			const Request: TResponse_BPP_Manage_POST = req.body;
 
-			if ( Request.ID && Request.UserClass && Request.PackInformation ) {
+			if( Request.ID && Request.UserClass && Request.PackInformation ) {
 				try {
 					let Document = ( await DB_BlueprintPacks.findById( Request.ID ) )!;
 
-					if ( Document.owner === Request.UserClass.Get._id ) {
+					if( Document.owner === Request.UserClass.Get._id ) {
 						delete Request.PackInformation._id;
 						delete Request.PackInformation.downloads;
 						delete Request.PackInformation.rating;
@@ -47,8 +47,8 @@ export default function() {
 							MessageCode: "BBP.Modify.Success"
 						};
 					}
-				} catch ( e ) {
-					if ( e instanceof Error ) {
+				} catch( e ) {
+					if( e instanceof Error ) {
 						SystemLib.LogError( "api", e.message );
 					}
 				}
@@ -58,18 +58,18 @@ export default function() {
 				...Response
 			} );
 		} )
-		.put( ApiUrl( EApiBlueprintPack.manage ), MW_Auth, async( req : Request, res : Response ) => {
-			let Response : TResponse_BPP = {
+		.put( ApiUrl( EApiBlueprintPack.manage ), MW_Auth, async( req: Request, res: Response ) => {
+			let Response: TResponse_BPP = {
 				...DefaultResponseFailed
 			};
 
-			const Request : TResponse_BPP_Manage_POST = req.body;
+			const Request: TResponse_BPP_Manage_POST = req.body;
 
-			if ( Request.ID && Request.UserClass && Request.PackInformation ) {
+			if( Request.ID && Request.UserClass && Request.PackInformation ) {
 				try {
 					let Document = ( await DB_BlueprintPacks.findById( Request.ID ) )!;
 
-					if ( Document.owner === Request.UserClass.Get._id && ( Request.PackInformation.name?.length || 0 ) > 6 && ( Request.PackInformation.description?.length || 0 ) >= 50 ) {
+					if( Document.owner === Request.UserClass.Get._id && ( Request.PackInformation.name?.length || 0 ) > 6 && ( Request.PackInformation.description?.length || 0 ) >= 50 ) {
 						delete Request.PackInformation._id;
 
 						Request.PackInformation.owner = Request.UserClass.Get._id;
@@ -77,7 +77,7 @@ export default function() {
 						Request.PackInformation.rating = [];
 
 						Document = await DB_BlueprintPacks.create( Request.PackInformation );
-						if ( Document ) {
+						if( Document ) {
 							Response = {
 								...DefaultResponseSuccess,
 								Data: Document._id.toString(),
@@ -85,8 +85,8 @@ export default function() {
 							};
 						}
 					}
-				} catch ( e ) {
-					if ( e instanceof Error ) {
+				} catch( e ) {
+					if( e instanceof Error ) {
 						SystemLib.LogError( "api", e.message );
 					}
 				}
@@ -96,26 +96,26 @@ export default function() {
 				...Response
 			} );
 		} )
-		.delete( ApiUrl( EApiBlueprintPack.manage ), MW_Auth, async( req : Request, res : Response ) => {
-			let Response : TResponse_BPP = {
+		.delete( ApiUrl( EApiBlueprintPack.manage ), MW_Auth, async( req: Request, res: Response ) => {
+			let Response: TResponse_BPP = {
 				...DefaultResponseFailed
 			};
 
-			const Request : TResponse_BPP_Manage_DELETE = req.body;
+			const Request: TResponse_BPP_Manage_DELETE = req.body;
 
-			if ( Request.ID && Request.UserClass ) {
+			if( Request.ID && Request.UserClass ) {
 				try {
 					let Document = ( await DB_BlueprintPacks.findById( Request.ID ) )!;
 
-					if ( Document.owner === Request.UserClass.Get._id || Request.UserClass.HasPermssion( ERoles.moderator ) ) {
+					if( Document.owner === Request.UserClass.Get._id || Request.UserClass.HasPermssion( ERoles.moderator ) ) {
 						Document = ( await DB_BlueprintPacks.findByIdAndUpdate( Request.ID, { blacklisted: true } ) )!;
 						Response = {
 							...DefaultResponseSuccess,
 							MessageCode: "BBP.Removed.Success"
 						};
 					}
-				} catch ( e ) {
-					if ( e instanceof Error ) {
+				} catch( e ) {
+					if( e instanceof Error ) {
 						SystemLib.LogError( "api", e.message );
 					}
 				}
@@ -127,24 +127,24 @@ export default function() {
 		} );
 
 	Router
-		.post( ApiUrl( EApiBlueprintPack.admin ), MW_Auth, ( req, res, next ) => MW_Permission( req, res, next, ERoles.admin ), async( req : Request, res : Response ) => {
-			let Response : TResponse_BPP = {
+		.post( ApiUrl( EApiBlueprintPack.admin ), MW_Auth, ( req, res, next ) => MW_Permission( req, res, next, ERoles.admin ), async( req: Request, res: Response ) => {
+			let Response: TResponse_BPP = {
 				...DefaultResponseFailed
 			};
 
-			const Request : TResponse_BPP_Manage_POST = req.body;
+			const Request: TResponse_BPP_Manage_POST = req.body;
 
-			if ( Request.ID && Request.UserClass && Request.PackInformation ) {
+			if( Request.ID && Request.UserClass && Request.PackInformation ) {
 				try {
 					const Document = ( await DB_BlueprintPacks.findByIdAndUpdate( Request.ID, Request.PackInformation ) )!;
-					if ( Document ) {
+					if( Document ) {
 						Response = {
 							...DefaultResponseSuccess,
 							MessageCode: "BBP.Modify.Success"
 						};
 					}
-				} catch ( e ) {
-					if ( e instanceof Error ) {
+				} catch( e ) {
+					if( e instanceof Error ) {
 						SystemLib.LogError( "api", e.message );
 					}
 				}
@@ -154,25 +154,25 @@ export default function() {
 				...Response
 			} );
 		} )
-		.delete( ApiUrl( EApiBlueprintPack.admin ), MW_Auth, ( req, res, next ) => MW_Permission( req, res, next, ERoles.admin ), async( req : Request, res : Response ) => {
-			let Response : TResponse_BPP = {
+		.delete( ApiUrl( EApiBlueprintPack.admin ), MW_Auth, ( req, res, next ) => MW_Permission( req, res, next, ERoles.admin ), async( req: Request, res: Response ) => {
+			let Response: TResponse_BPP = {
 				...DefaultResponseFailed
 			};
 
-			const Request : TResponse_BPP_Manage_DELETE = req.body;
+			const Request: TResponse_BPP_Manage_DELETE = req.body;
 
-			if ( Request.ID && Request.UserClass ) {
+			if( Request.ID && Request.UserClass ) {
 				try {
 					const Document = ( await DB_BlueprintPacks.findById( Request.ID ) )!;
-					if ( Document ) {
+					if( Document ) {
 						await DB_BlueprintPacks.findByIdAndDelete( Request.ID, { blacklisted: true } );
 						Response = {
 							...DefaultResponseSuccess,
 							MessageCode: "BBP.Removed.Success"
 						};
 					}
-				} catch ( e ) {
-					if ( e instanceof Error ) {
+				} catch( e ) {
+					if( e instanceof Error ) {
 						SystemLib.LogError( "api", e.message );
 					}
 				}

@@ -12,10 +12,10 @@ export const public_tags = router( {
 	getTags: publicProcedure.query( async() => {
 		try {
 			const tags = await DB_Tags.find<Tag>();
-			if ( tags ) {
+			if( tags ) {
 				return tags;
 			}
-		} catch ( e ) {
+		} catch( e ) {
 			handleTRCPErr( e );
 		}
 		throw new TRPCError( { message: "Something goes wrong!", code: "INTERNAL_SERVER_ERROR" } );

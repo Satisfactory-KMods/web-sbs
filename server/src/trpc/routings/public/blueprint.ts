@@ -29,10 +29,10 @@ export const filterSchema = z.object( {
 
 export type FilterSchema = z.infer<typeof filterSchema>;
 
-export function buildFilter<T extends BlueprintData | BlueprintPack>( filter? : FilterSchema ) {
-	const result : {
-		filter : FilterQuery<T>,
-		options : QueryOptions<T>
+export function buildFilter<T extends BlueprintData | BlueprintPack>( filter?: FilterSchema ) {
+	const result: {
+		filter: FilterQuery<T>,
+		options: QueryOptions<T>
 	} = {
 		filter: {
 			blacklisted: { $ne: true }
@@ -42,20 +42,20 @@ export function buildFilter<T extends BlueprintData | BlueprintPack>( filter? : 
 		}
 	};
 
-	if ( filter ) {
-		if ( filter.name ) {
+	if( filter ) {
+		if( filter.name ) {
 			result.filter.name = { "$regex": filter.name, "$options": "i" };
 		}
-		if ( filter.sortBy ) {
+		if( filter.sortBy ) {
 			result.options.sort = { [ filter.sortBy.by ]: filter.sortBy.up ? 1 : -1 };
 		}
-		if ( filter.tags ) {
+		if( filter.tags ) {
 			result.filter.tags = { $all: filter.tags };
 		}
-		if ( filter.mods ) {
+		if( filter.mods ) {
 			result.filter.mods = { $all: filter.mods };
 		}
-		if ( filter.onlyVanilla !== undefined ) {
+		if( filter.onlyVanilla !== undefined ) {
 			// @ts-ignore
 			result.filter[ "mods.1" ] = { $exists: !filter.onlyVanilla };
 		}
@@ -73,15 +73,15 @@ export const public_blueprint = router( {
 		const { blueprintId } = input;
 		try {
 			const BP = ( await DB_Blueprints.findById( blueprintId ) )!;
-			const SBP : Buffer = fs.readFileSync( path.join( __BlueprintDir, blueprintId!, `${ blueprintId }.sbp` ) );
-			const SBPCFG : Buffer = fs.readFileSync( path.join( __BlueprintDir, blueprintId!, `${ blueprintId }.sbp` ) );
+			const SBP: Buffer = fs.readFileSync( path.join( __BlueprintDir, blueprintId!, `${ blueprintId }.sbp` ) );
+			const SBPCFG: Buffer = fs.readFileSync( path.join( __BlueprintDir, blueprintId!, `${ blueprintId }.sbp` ) );
 
 			const Blueprint = new BlueprintParser( BP.name, SBP, SBPCFG );
-			if ( Blueprint.Success ) {
+			if( Blueprint.Success ) {
 				return Blueprint.Get;
 			}
 			throw new TRPCError( { message: "User not found!", code: "INTERNAL_SERVER_ERROR" } );
-		} catch ( e ) {
+		} catch( e ) {
 			handleTRCPErr( e );
 		}
 		throw new TRPCError( { message: "Something goes wrong!", code: "INTERNAL_SERVER_ERROR" } );
@@ -93,10 +93,10 @@ export const public_blueprint = router( {
 		const { blueprintId } = input;
 		try {
 			const blueprint = await DB_Blueprints.findById( blueprintId );
-			if ( blueprint ) {
+			if( blueprint ) {
 				return { blueprintData: blueprint.toJSON() };
 			}
-		} catch ( e ) {
+		} catch( e ) {
 			handleTRCPErr( e );
 		}
 		throw new TRPCError( { message: "Something goes wrong!", code: "INTERNAL_SERVER_ERROR" } );
@@ -113,7 +113,7 @@ export const public_blueprint = router( {
 			const totalBlueprints = await DB_Blueprints.count( filter );
 			const blueprints = await DB_Blueprints.find<BlueprintData>( filter, null, { ...options, limit, skip } );
 			return { blueprints, totalBlueprints };
-		} catch ( e ) {
+		} catch( e ) {
 			handleTRCPErr( e );
 		}
 		throw new TRPCError( { message: "Something goes wrong!", code: "INTERNAL_SERVER_ERROR" } );

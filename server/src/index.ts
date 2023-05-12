@@ -59,12 +59,12 @@ mongoose
 		SystemLib.Log( "start", "Connected to mongodb..." );
 		await import( "@server/trpc/server" );
 		SystemLib.Log( "Revalidate", "MongoDB" );
-		for ( const DB of fs.readdirSync( path.join( __BaseDir, "MongoDB" ) ) ) {
+		for( const DB of fs.readdirSync( path.join( __BaseDir, "MongoDB" ) ) ) {
 			const File = path.join( __BaseDir, "MongoDB", DB );
 			const Stats = fs.statSync( File );
-			if ( Stats.isFile() && DB !== "DB_UserAccount.ts" ) {
+			if( Stats.isFile() && DB !== "DB_UserAccount.ts" ) {
 				const DBImport = await import( File );
-				if ( DBImport.Revalidate ) {
+				if( DBImport.Revalidate ) {
 					SystemLib.Log( "Revalidate", `Schema for${ BC( "Cyan" ) }`, DB.toString().replace( ".ts", "" ) );
 					await DBImport.Revalidate();
 				}
@@ -83,7 +83,7 @@ mongoose
 			res.sendFile( path.join( __BaseDir, "../..", "build", "index.html" ) );
 		} );
 
-		if ( !await DB_UserAccount.findOne() ) {
+		if( !await DB_UserAccount.findOne() ) {
 			const NewUser = new DB_UserAccount();
 			NewUser.email = "admin@kmods.de";
 			NewUser.username = "Kyrium";
