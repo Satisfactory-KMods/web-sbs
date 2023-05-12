@@ -1,33 +1,28 @@
 import {
 	ApiUrl,
-	MW_Auth,
-	MW_Permission
-}                             from "@server/Lib/Express.Lib";
-import { EApiUserBlueprints } from "@shared/Enum/EApiPath";
-import type {
-	Request,
-	Response
-}                             from "express";
+	MW_Auth
+} from "@server/Lib/Express.Lib";
+import DB_Blueprints from "@server/MongoDB/DB_Blueprints";
 import {
-	DefaultResponseFailed,
-	DefaultResponseSuccess
-}                             from "@shared/Default/Auth.Default";
+	DefaultResponseFailed
+} from "@shared/Default/Auth.Default";
+import { EApiUserBlueprints } from "@shared/Enum/EApiPath";
 import type {
 	TRequest_BPUser_Create,
 	TRequest_BPUser_Create_Files,
 	TRequest_BPUser_Edit,
-	TRequest_BPUser_Edit_Files,
-	TRequest_BPUser_ToggleLike
-}                             from "@shared/Types/API_Request";
+	TRequest_BPUser_Edit_Files
+} from "@shared/Types/API_Request";
 import type {
 	TResponse_BPUser_Create,
-	TResponse_BPUser_Edit,
-	TResponse_BPUser_ToggleLike
-}                             from "@shared/Types/API_Response";
-import DB_Blueprints          from "@server/MongoDB/DB_Blueprints";
-import path                   from "path";
-import fs                     from "fs";
-import { ERoles }             from "@shared/Enum/ERoles";
+	TResponse_BPUser_Edit
+} from "@shared/Types/API_Response";
+import type {
+	Request,
+	Response
+} from "express";
+import fs from "fs";
+import path from "path";
 
 export default function() {
 	Router.post( ApiUrl( EApiUserBlueprints.create ), MW_Auth, async( req : Request, res : Response ) => {
@@ -74,8 +69,7 @@ export default function() {
 					}
 				}
 			}
-		}
-		catch ( e ) {
+		} catch ( e ) {
 			if ( e instanceof Error ) {
 				SystemLib.LogError( "api", e.message );
 			}
@@ -131,120 +125,7 @@ export default function() {
 					}
 				}
 			}
-		}
-		catch ( e ) {
-			if ( e instanceof Error ) {
-				SystemLib.LogError( "api", e.message );
-			}
-		}
-
-		res.json( {
-			...Response
-		} );
-	} );
-
-
-	Router.post( ApiUrl( EApiUserBlueprints.like ), MW_Auth, async( req : Request, res : Response ) => {
-		let Response : TResponse_BPUser_ToggleLike = {
-			...DefaultResponseFailed
-		};
-
-		const Request : TRequest_BPUser_ToggleLike = req.body;
-
-		try {
-			if ( Request.Id && Request.UserClass ) {
-				const UserId = Request.UserClass.Get._id;
-				const Document = ( await DB_Blueprints.findById( Request.Id ) )!;
-				const Idx = Document.likes.indexOf( UserId );
-
-				if ( Idx >= 0 ) {
-					Document.likes.splice( Idx, 1 );
-				}
-				else {
-					Document.likes.push( UserId );
-				}
-
-				await Document.save();
-
-				Response = {
-					...DefaultResponseSuccess,
-					Data: Document.likes
-				};
-
-			}
-		}
-		catch ( e ) {
-			if ( e instanceof Error ) {
-				SystemLib.LogError( "api", e.message );
-			}
-		}
-
-		res.json( {
-			...Response
-		} );
-	} );
-
-	Router.post( ApiUrl( EApiUserBlueprints.blacklist ), MW_Auth, ( req, res, next ) => MW_Permission( req, res, next, ERoles.moderator ), async( req : Request, res : Response ) => {
-		let Response : TResponse_BPUser_ToggleLike = {
-			...DefaultResponseFailed
-		};
-
-		const Request : TRequest_BPUser_ToggleLike = req.body;
-
-		try {
-			if ( Request.Id && Request.UserClass ) {
-				const Document = ( await DB_Blueprints.findById( Request.Id ) )!;
-
-				Document.blacklisted = !Document.blacklisted;
-
-				await Document.save();
-
-				Response = {
-					...DefaultResponseSuccess,
-					Data: Document.likes,
-					MessageCode: Document.blacklisted ? "Blueprint.success.Blacklisted" : "Blueprint.success.UnBlacklisted"
-				};
-
-			}
-		}
-		catch ( e ) {
-			if ( e instanceof Error ) {
-				SystemLib.LogError( "api", e.message );
-			}
-		}
-
-		res.json( {
-			...Response
-		} );
-	} );
-
-	Router.post( ApiUrl( EApiUserBlueprints.remove ), MW_Auth, async( req : Request, res : Response ) => {
-		let Response : TResponse_BPUser_ToggleLike = {
-			...DefaultResponseFailed
-		};
-
-		const Request : TRequest_BPUser_ToggleLike = req.body;
-
-		try {
-			const Document = ( await DB_Blueprints.findById( Request.Id ) )!;
-			if ( Request.Id && Request.UserClass && ( Request.UserClass.HasPermssion( ERoles.admin ) || Document._id.toString() === Request.UserClass.Get._id.toString() ) ) {
-
-				const Zips = path.join( __MountDir, "Zips", Document._id.toString() );
-				const Files = path.join( __BlueprintDir, Document._id.toString() );
-
-				await Document.deleteOne();
-
-				fs.existsSync( Zips ) && fs.rmSync( Zips, { recursive: true } );
-				fs.existsSync( Files ) && fs.rmSync( Files, { recursive: true } );
-
-				Response = {
-					...DefaultResponseSuccess,
-					Data: Document.likes,
-					MessageCode: "Blueprint.success.Removed"
-				};
-			}
-		}
-		catch ( e ) {
+		} catch ( e ) {
 			if ( e instanceof Error ) {
 				SystemLib.LogError( "api", e.message );
 			}

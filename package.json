@@ -15,7 +15,7 @@
     "@etothepii/satisfactory-file-parser": "^0.0.34",
     "@kyri123/k-javascript-utils": "^0.3.0-build.14",
     "@kyri123/k-reactutils": "^0.2.9-build.35",
-    "@kyri123/lib": "^0.1.0-build.5",
+    "@kyri123/lib": "^0.1.0-build.6",
     "@sweetalert2/theme-dark": "^5.0.15",
     "@trpc/client": "^10.24.0",
     "@trpc/server": "^10.24.0",

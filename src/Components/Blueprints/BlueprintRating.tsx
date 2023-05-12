@@ -1,3 +1,4 @@
+import { tRPC_Auth } from "@app/Lib/tRPC";
 import { useAuth } from "@app/hooks/useAuth";
 import type { BlueprintData } from "@server/MongoDB/DB_Blueprints";
 import { Rating } from "flowbite-react";
@@ -12,8 +13,10 @@ const BlueprintRating: FunctionComponent<BlueprintRatingProps> = ( { blueprint }
 	const { loggedIn } = useAuth();
 
 	const rating = useMemo( () => {
-		return Math.round( ( Math.random() * 5 + 1 ) * 100 ) / 100;
-	}, [] );
+		const totalRating = blueprint.rating.length * 5;
+		const currentTotalRating = blueprint.rating.reduce( ( total, rating ) => total + rating.rating, 0 );
+		return Math.round( currentTotalRating / totalRating * 5 * 100 ) / 100;
+	}, [ blueprint.rating ] );
 
 	const setHoverRating = ( rating: number ) => {
 		if ( !loggedIn ) {
@@ -26,6 +29,10 @@ const BlueprintRating: FunctionComponent<BlueprintRatingProps> = ( { blueprint }
 		if ( !loggedIn ) {
 			return;
 		}
+		tRPC_Auth.blueprints.rate.mutate( {
+			blueprintId: blueprint._id,
+			rating
+		} );
 	};
 
 	console.log( hover, rating );
@@ -42,7 +49,7 @@ const BlueprintRating: FunctionComponent<BlueprintRatingProps> = ( { blueprint }
 			</p>
 			<span className="mx-1.5 h-1 w-1 rounded-full bg-gray-500 dark:bg-gray-400" />
 			<span className="text-sm font-medium text-gray-900 dark:text-white">
-				{ blueprint.likes } reviews
+				{ blueprint.rating.length } reviews
 			</span>
 		</Rating>
 	);
