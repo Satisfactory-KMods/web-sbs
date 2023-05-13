@@ -1,4 +1,5 @@
 import { AUTHTOKEN } from "@applib/constance";
+import type { SuccessDataResponseFormat } from "@kyri123/lib";
 import type { EApiBlueprintUtils } from "@shared/Enum/EApiPath";
 import superjson from 'superjson';
 
@@ -7,7 +8,7 @@ export class API_QueryLib {
 		Path: EApiBlueprintUtils,
 		Data: D,
 		ContentType?: "application/json" | "application/x-www-form-urlencoded" | "multipart/form-data"
-	): Promise<T | undefined> {
+	): Promise<T> {
 		const Token = window.localStorage.getItem( AUTHTOKEN );
 		const requestOptions: RequestInit = {
 			method: "POST",
@@ -30,15 +31,15 @@ export class API_QueryLib {
 			).catch( console.error );
 			if( Resp ) {
 				if( Resp.ok && Resp.status === 200 ) {
-					Response = ( await Resp.json() ) as SuccessDataResponseFormat;
-					return superjson.parse( Response.result.data ) as T;
+					const resultJson = ( await Resp.json() ) as SuccessDataResponseFormat;
+					return superjson.parse( JSON.stringify( resultJson.result.data ) ) as T;
 				}
 			}
 		} catch( e ) {
 			console.error( e );
 		}
 
-		return undefined;
+		throw new Error( "Request failed" );
 	}
 
 	static async GetFromAPI<T, D = any>(
@@ -72,14 +73,14 @@ export class API_QueryLib {
 			).catch( console.error );
 			if( Resp ) {
 				if( Resp.ok && Resp.status === 200 ) {
-					Response = ( await Resp.json() ) as SuccessDataResponseFormat;
-					return superjson.parse( Response.result.data ) as T;
+					const resultJson = ( await Resp.json() ) as SuccessDataResponseFormat;
+					return superjson.parse( JSON.stringify( resultJson.result.data ) ) as T;
 				}
 			}
 		} catch( e ) {
 
 		}
 
-		return undefined;
+		throw new Error( "Request failed" );
 	}
 }
