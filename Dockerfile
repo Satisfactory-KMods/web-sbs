@@ -3,7 +3,7 @@ FROM node:alpine
 WORKDIR ./
 
 # Packages
-COPY .npmrc ./
+# COPY .npmrc ./
 COPY *.json ./
 COPY *.lock ./
 RUN yarn install
