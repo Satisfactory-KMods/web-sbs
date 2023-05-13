@@ -57,11 +57,15 @@ const validateBlueprint = async( {
 		return loaderBase;
 	}
 	const { blueprintId } = params;
+	const blueprintOwner = { id: "", username: "" };
 
 	const result = await tRPC_Public.blueprint.getBlueprint.query( { blueprintId: blueprintId! } );
 	if( !result ) {
 		redirect( redirectTo );
 	}
+
+	blueprintOwner.id = result.blueprintData.owner;
+	blueprintOwner.username = result.bpOwnerName;
 
 	const blueprintPermission = ( loaderBase.user.Get._id === result.blueprintData.owner || loaderBase.user.HasPermission( ERoles.admin ) );
 
@@ -71,8 +75,8 @@ const validateBlueprint = async( {
 		}
 	}
 
-	return { ...loaderBase, blueprintData: result.blueprintData, blueprintPermission };
+	return { ...loaderBase, blueprintData: result.blueprintData, blueprintPermission, blueprintOwner };
 };
 
-export { validateLogin };
+export { validateLogin, validateBlueprint };
 

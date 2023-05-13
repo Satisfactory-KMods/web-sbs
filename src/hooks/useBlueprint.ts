@@ -22,7 +22,7 @@ export interface IBlueprintHookConfig {
 	IgnoreBlacklisted: boolean;
 }
 
-export function useBlueprint( InitValue: string | BlueprintData, Config?: Partial<IBlueprintHookConfig> ) {
+export function useBlueprint( InitValue: string | BlueprintData, defaultUser?: { id: string, username: string }, Config?: Partial<IBlueprintHookConfig> ) {
 	const { mods, tags } = useContext( DataContext );
 	const [ Blueprint, setBlueprint ] = useState<BlueprintData>( () => {
 		if( typeof InitValue === "string" ) {
@@ -45,7 +45,7 @@ export function useBlueprint( InitValue: string | BlueprintData, Config?: Partia
 	const [ blueprintData, setBlueprintData ] = useState<Blueprint | undefined>( undefined );
 	const [ Tags, setTags ] = useState<Tag[]>( [] );
 	const [ Mods, setMods ] = useState<Mod[]>( [] );
-	const [ owner, setOwner ] = useState<{ id: string, username: string }>( { id: "", username: "" } );
+	const [ owner, setOwner ] = useState<{ id: string, username: string }>( () => defaultUser || { id: "", username: "" } );
 
 	const BlueprintID = useMemo( () => {
 		if( typeof InitValue === "string" ) {
@@ -68,7 +68,15 @@ export function useBlueprint( InitValue: string | BlueprintData, Config?: Partia
 	const updateData = ( newData?: BlueprintData ) => {
 		const blueprintData = newData || Blueprint;
 		setTags( tags.filter( e => blueprintData.tags.includes( e._id ) ) );
-		setMods( mods.filter( e => blueprintData.mods.includes( e.id ) ) );
+		setMods( mods.filter( e => blueprintData.mods.includes( e.mod_reference ) ) );
+	};
+
+	const QueryBlueprintParse = async() => {
+		const Result = await tRPC_Public.blueprint.readBlueprint.mutate( { blueprintId: BlueprintID } ).catch( () => {} );
+
+		if( Result ) {
+			setBlueprintData( Result );
+		}
 	};
 
 	const Query = async() => {
@@ -76,7 +84,6 @@ export function useBlueprint( InitValue: string | BlueprintData, Config?: Partia
 			tRPC_Public.blueprint.readBlueprint.mutate( { blueprintId: BlueprintID } ).catch( () => {} ),
 			tRPC_Public.blueprint.getBlueprint.query( { blueprintId: BlueprintID } ).catch( () => {} )
 		] );
-		console.log( Result );
 		blueprintData && setBlueprintData( blueprintData );
 		if( Result ) {
 			setOwner( { id: Result.blueprintData.owner, username: Result.bpOwnerName } );
@@ -93,9 +100,14 @@ export function useBlueprint( InitValue: string | BlueprintData, Config?: Partia
 	}, [ user, loggedIn, Blueprint.owner, isValid ] );
 
 	useEffect( () => {
-		Query();
+		if( typeof InitValue === "string" ) {
+			Query();
+		} else {
+			QueryBlueprintParse();
+			updateData( Blueprint );
+		}
 	// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [] );
+	}, [ InitValue ] );
 
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	useEffect( updateData, [ InitValue, isValid ] );
@@ -156,7 +168,7 @@ export function useBlueprint( InitValue: string | BlueprintData, Config?: Partia
 		isOwner,
 		remove,
 		toggleBlacklist,
-		blueprintData,
+		blueprintParse: blueprintData,
 		Mods,
 		Tags,
 		allowedToLike: loggedIn && Blueprint.owner !== user.Get._id,

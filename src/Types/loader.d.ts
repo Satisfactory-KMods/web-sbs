@@ -9,4 +9,5 @@ export interface LoaderDataBase {
 export interface LoaderBlueprintBase extends LoaderDataBase {
 	blueprintPermission: boolean;
 	blueprintData: BlueprintData;
+	blueprintOwner: { id: string, username: string };
 }

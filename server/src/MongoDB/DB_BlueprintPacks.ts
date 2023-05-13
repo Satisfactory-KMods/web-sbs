@@ -1,7 +1,7 @@
 import type { MongoBase } from "@server/Types/mongo";
 import * as mongoose from "mongoose";
 import { z } from "zod";
-import { ZodRating } from "./DB_Blueprints";
+import DB_Blueprints, { ZodRating } from "./DB_Blueprints";
 
 const ZodBlueprintPackSchema = z.object( {
 	name: z.string(),
@@ -19,6 +19,8 @@ const ZodBlueprintPackSchema = z.object( {
 
 export interface BlueprintPackSchemaMethods {
 	updateRating: () => Promise<boolean>;
+	updateModRefs: () => Promise<void>;
+
 }
 
 const BlueprintPackSchema = new mongoose.Schema( {
@@ -55,6 +57,19 @@ const BlueprintPackSchema = new mongoose.Schema( {
 			}
 		}
 		return false;
+	},
+	updateModRefs: async function( save?: boolean ) {
+		const blueprintSet = new Set<string>();
+		for await ( const bp of DB_Blueprints.find( { _id: this.blueprints } ) ) {
+			for( const mod of bp.mods ) {
+				blueprintSet.add( mod );
+			}
+		}
+		this.mods = Array.from( blueprintSet );
+		if( save ) {
+			this.markModified( "mods" );
+			await this.save();
+		}
 	}
 } } );
 

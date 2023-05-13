@@ -32,14 +32,6 @@ const BlueprintCard: FunctionComponent<IBlueprintCardProps> = ( { Data, onToggle
 	return (
 		<div className="flex flex-col w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
 			<Link to={ `/blueprint/${ Blueprint._id }` } className="flex-1 flex flex-col">
-				<div className="relative">
-					<img className="rounded-t-lg" src={ "/api/v1/image/" + Blueprint._id } alt="BlueprintLogo" />
-					<div className="absolute top-0 right-0 m-3">
-						<div className="bg-orange-800 p-1 px-5 rounded-lg border border-orange-700 text-white">
-							{ Blueprint.mods.length ? "Modded" : "Vanilla" }
-						</div>
-					</div>
-				</div>
 				<div className="p-3 border-b bg-gray-700 border-gray-700 text-neutral-200 truncate text-ellipsis overflow-hidden">
 					<span className="text-2xl">
 						{ Blueprint.name }
@@ -47,6 +39,14 @@ const BlueprintCard: FunctionComponent<IBlueprintCardProps> = ( { Data, onToggle
 					<span className="text-xs text-gray-400 block">
 						Creator: <b>{ owner.username }</b>
 					</span>
+				</div>
+				<div className="relative">
+					<img className="rounded-t-lg" src={ "/api/v1/image/" + Blueprint._id } alt="BlueprintLogo" />
+					<div className="absolute top-0 right-0 m-3">
+						<div className="bg-orange-800 p-1 px-5 rounded-lg border border-orange-700 text-white">
+							{ Blueprint.mods.length ? "Modded" : "Vanilla" }
+						</div>
+					</div>
 				</div>
 				<ReactMarkdown components={ mdxComponents } className="text-neutral-200 flex-1 p-3 border-t-1 border-gray-700">
 					{ `${ Blueprint.description.substring( 0, 200 ) } ...` }
@@ -59,7 +59,7 @@ const BlueprintCard: FunctionComponent<IBlueprintCardProps> = ( { Data, onToggle
 						<Button onClick={ doBlacklist } color="red" size="small" className="p-1 px-3">
 							&nbsp;<HiTrash /> &nbsp;
 						</Button>
-						<Link to={ `/blueprint/edit/${ Blueprint._id }` } className="text-gray-900 bg-white border border-gray-200 hover:bg-gray-100 hover:text-blue-700 disabled:hover:bg-white focus:ring-blue-700 focus:text-blue-700 dark:bg-transparent dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 focus:ring-2 dark:disabled:hover:bg-gray-800 focus:!ring-2 group flex h-min items-center justify-center p-0.5 text-center font-medium focus:z-10 rounded-lg p-1 ms-2 px-3 p-1 ms-2 px-3">
+						<Link to={ `/blueprint/edit/${ Blueprint._id }` } className="text-gray-900 bg-white border border-gray-200 hover:bg-gray-100 hover:text-blue-700 disabled:hover:bg-white focus:ring-blue-700 focus:text-blue-700 dark:bg-transparent dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 focus:ring-2 dark:disabled:hover:bg-gray-800 group flex h-min items-center justify-centertext-center font-medium focus:z-10 rounded-lg p-1 ms-2 px-3">
 							&nbsp;<HiCog /> &nbsp;
 						</Link>
 					</> }

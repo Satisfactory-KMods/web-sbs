@@ -1,130 +1,138 @@
-import { useAuth } from "@hooks/useAuth";
+import BlueprintRating from "@app/Components/Blueprints/BlueprintRating";
+import { mdxComponents } from "@app/Page/terms/private/Page";
+import type { LoaderBlueprintBase } from "@app/Types/loader";
+import type { SaveComponent, SaveEntity } from "@etothepii/satisfactory-file-parser";
 import { useBlueprint } from "@hooks/useBlueprint";
-import { usePageTitle } from "@kyri123/k-reactutils";
-import { ERoles } from "@shared/Enum/ERoles";
+import { Button } from "flowbite-react";
 import type { FunctionComponent } from "react";
-import * as Icon from "react-icons/bs";
+import { useId, useMemo } from "react";
+import { BiUser, BiWrench } from "react-icons/bi";
+import { BsBox, BsBoxes, BsHouseAdd } from "react-icons/bs";
+import { FaClock } from "react-icons/fa";
+import { HiCog, HiDownload, HiTrash } from "react-icons/hi";
+import { MdOutlinePhotoSizeSelectSmall } from "react-icons/md";
 import ReactMarkdown from "react-markdown";
 import {
 	Link,
-	Navigate,
-	useParams
+	useLoaderData
 } from "react-router-dom";
 
 const Component: FunctionComponent = () => {
-	const { id } = useParams();
-	const { loggedIn, user } = useAuth();
+	const id = useId();
+	const { blueprintData, blueprintOwner } = useLoaderData() as LoaderBlueprintBase;
+	const bpHook = useBlueprint( blueprintData, blueprintOwner );
 	const {
-		IsOwner,
-		ToggleBlacklist,
+		owner,
 		Blueprint,
-		BlueprintValid,
-		AllowToLike,
-		ToggleLike,
-		AllowToEdit,
-		Mods,
+		blueprintParse,
+		allowedToEdit,
+		toggleBlacklist,
 		Tags,
-		BlueprintData
-	} = useBlueprint( id! );
-	usePageTitle( `SBS - Blueprint` );
+		Mods
+	} = bpHook;
 
-	if( !BlueprintValid ) {
-		return (
-			<></>
-		);
-	}
+	const doBlacklist = async() => {
+		await toggleBlacklist();
+	};
 
-	if( Blueprint.blacklisted ) {
-		return (
-			<Navigate to="/" />
-		);
-	}
+	const buildingCount = useMemo( () => {
+		const objects: ( SaveEntity | SaveComponent )[] = blueprintParse?.objects || [];
+		return objects.filter( e => e.type === "SaveEntity" ).length;
+	}, [ blueprintParse?.objects ] );
+
+	const totalItemCost = useMemo( () => {
+		const itemCosts: [string, number][] = blueprintParse?.header.itemCosts || [];
+		return itemCosts.reduce( ( total, cost ) => total + cost[ 1 ], 0 );
+	}, [ blueprintParse?.header.itemCosts ] );
 
 	return (
-		<div className="p-0 w-100">
-			<Card className="mb-3">
-				<Card.Header className="d-flex p-0">
-					<h3 className="py-1 pt-2 px-3 flex-1">{ Blueprint.name }</h3>
-					<Button disabled={ !AllowToLike }
-					        variant={ loggedIn ? ( !Blueprint.likes.includes( user.Get._id ) ? "danger" : "success" ) : "dark" }
-					        onClick={ ToggleLike } type="button" className="rounded-none rounded-tr-2xl px-4">
-						{ !Blueprint.likes.includes( user.Get._id ) ?
-							<Icon.BsFillHeartbreakFill className="me-2" /> :
-							<Icon.BsFillHeartFill className="me-2" /> } { Blueprint.likes.length }
-					</Button>
-				</Card.Header>
+		<div className="grid grid-cols-1 xl:grid-cols-5 gap-3">
+			<div className="xl:col-span-3 flex flex-col w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+				<div className="p-3 border-b bg-gray-700 border-gray-700 text-neutral-200 truncate text-ellipsis overflow-hidden">
+					<span className="text-2xl">
+						{ Blueprint.name }
+					</span>
+					<span className="text-xs text-gray-400 block">
+						Creator: <b>{ owner.username }</b>
+					</span>
+				</div>
+				<div className="relative">
+					<img className="rounded-t-lg" src={ "/api/v1/image/" + Blueprint._id } alt="BlueprintLogo" />
+					<div className="absolute top-0 right-0 m-3">
+						<div className="bg-orange-800 p-1 px-5 rounded-lg border border-orange-700 text-white">
+							{ Blueprint.mods.length ? "Modded" : "Vanilla" }
+						</div>
+					</div>
+				</div>
+				<ReactMarkdown components={ mdxComponents } className="text-neutral-200 flex-1 p-3 border-t-1 border-gray-700">
+					{ Blueprint.description }
+				</ReactMarkdown>
+				<div className=" p-3 border-t bg-gray-700 border-gray-700 flex">
+					<BlueprintRating className="flex-1" blueprintHook={ bpHook } />
+				</div>
+				{ !!Blueprint.tags.length && <div className="flex flex-wrap p-3 pt-0 border-t bg-gray-700 border-gray-700 text-neutral-200 text-xs">
+					{ Tags.map( e => (
+						<div key={ id+e._id } className="bg-gray-900 p-1 px-3 rounded-lg border border-gray-800 shadow">{ e.DisplayName }</div>
+					) ) }
+				</div> }
+			</div>
 
-				<Card.Header style={ {
-					backgroundImage: `url('/api/v1/image/${ Blueprint._id }')`,
-					backgroundRepeat: "no-repeat",
-					backgroundSize: "cover",
-					height: 350,
-					backgroundPosition: "center"
-				} }></Card.Header>
+			<div className="flex flex-col xl:col-span-2 w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+				<div className="flex-1 flex flex-col mb-auto">
+					<div className="p-3 border-b bg-gray-900 border-gray-700 text-neutral-300 rounded-t-lg">
+						<BiUser className="inline me-1 text-xl pb-1" /> <b>Creator:</b> <span className="text-neutral-100">{ owner.username }</span>
+					</div>
+					<div className="p-3 border-b bg-gray-900 border-gray-700 text-neutral-300">
+						<MdOutlinePhotoSizeSelectSmall className="inline me-1 text-xl pb-1" /> <b>Designer Size:</b> <span className="text-neutral-100">{ Blueprint.DesignerSize }</span>
+					</div>
+					<div className="p-3 border-b bg-gray-900 border-gray-700 text-neutral-300">
+						<BsHouseAdd className="inline me-1 text-xl pb-1" /> <b>Buildings:</b> <span className="text-neutral-100">{ buildingCount }</span>
+					</div>
+					<div className="p-3 border-b bg-gray-900 border-gray-700 text-neutral-300">
+						<BsBox className="inline me-1 text-xl pb-1" /> <b>Object-Count:</b> <span className="text-neutral-100">{ blueprintParse?.objects.length || 0 }</span>
+					</div>
+					<div className="p-3 border-b bg-gray-900 border-gray-700 text-neutral-300">
+						<BsBoxes className="inline me-1 text-xl pb-1" /> <b>Total Cost:</b> <span className="text-neutral-100">{ totalItemCost } items</span>
+					</div>
+					<div className="p-3 border-b bg-gray-900 border-gray-700 text-neutral-300">
+						<HiDownload className="inline me-1 text-xl pb-1" /> <b>Total Downloads:</b> <span className="text-neutral-100">{ Blueprint.downloads }</span>
+					</div>
+					<div className="p-3 border-b bg-gray-900 border-gray-700 text-neutral-300">
+						<FaClock className="inline me-1 text-xl pb-1" /> <b>Created at:</b> <span className="text-neutral-100">{ new Date( Blueprint.createdAt ).toLocaleString() }</span>
+					</div>
+					<div className="p-3 border-b bg-gray-900 border-gray-700 text-neutral-300">
+						<FaClock className="inline me-1 text-xl pb-1" /> <b>Last Update:</b> <span className="text-neutral-100">{ new Date( Blueprint.updatedAt ).toLocaleString() }</span>
+					</div>
+					{ !!Mods.length && <div className="p-3 border-b bg-gray-900 border-gray-700 text-neutral-300">
+						<BiWrench className="inline me-1 text-xl pb-1" /> <b>Used Mods:</b>
+						{ Mods.map( e => {
+							return (
+								<Link to={ `https://ficsit.app/mod/${ e.id }` } target="_blank" key={ id + e.id } className="mt-2 flex hover:bg-gray-700 bg-gray-600 p-0 rounded-lg border border-gray-700 shadow">
+									<img onError={ e => {
+										e.currentTarget.src = "/images/default/unknown.png";
+									} } src={ e.logo } alt={ e.name } className="h-8 w-8 rounded-l-lg" />
+									<span className="px-2 py-1">{ e.name }</span>
+								</Link>
+							);
+						} ) }
+					</div> }
+				</div>
 
-				<Card.Body className="pb-0 relative">
-					<ReactMarkdown>{ Blueprint.description.length > 200 ? Blueprint.description.slice( 0, 200 ) + "..." : Blueprint.description }</ReactMarkdown>
-					<Ribbon innerClassName={ Blueprint.mods.length >= 1 ? "text-bg-danger" : "text-bg-success" }>{ Blueprint.mods.length >= 1 ? Lang.General.IsModded : Lang.General.IsVanilla }</Ribbon>
-				</Card.Body>
-
-				<Card.Body className="p-0 border-t">
-					<Table striped border={ 1 }
-					       className="my-0 table-bordered border-b-0 border-l-0 border-r-0">
-						<tbody>
-							<tr>
-								<td>{ Lang.MyBlueprint.CreatedAt }</td>
-								<td>{ new Date( Blueprint.createdAt! ).toLocaleString() }</td>
-							</tr>
-							<tr>
-								<td>{ Lang.ShowBlueprint.ObjectCount }</td>
-								<td>{ BlueprintData?.objects.length }</td>
-							</tr>
-							<tr>
-								<td className="w-25">{ Lang.CreateBlueprint.BlueprintSize }</td>
-								<td className="w-75">{ Blueprint.DesignerSize }</td>
-							</tr>
-							<tr>
-								<td>{ Lang.CreateBlueprint.Mods }</td>
-								<td>{ Mods.map( R => (
-									<Link key={ R._id } to={ `https://ficsit.app/mod/${ R.mod_reference }` }
-								      target="_blank"
-								      className="btn btn-secondary m-1 p-0">
-										<img onError={ E => E.currentTarget.src = "/images/default/unknown.png" }
-									     alt={ R.mod_reference } src={ R.logo }
-									     className="w-10 h-10 rounded-l-md" /><span className="px-2 pe-3">{ R.name }</span>
-									</Link>
-								) ) }</td>
-							</tr>
-							<tr>
-								<td>{ Lang.CreateBlueprint.Tags }</td>
-								<td>{ Tags.map( R => <Badge key={ R._id } className="me-2"
-							                            bg="secondary">{ R.DisplayName }</Badge> ) }</td>
-							</tr>
-						</tbody>
-					</Table>
-				</Card.Body>
-
-				<Card.Footer className="p-0">
-					<ButtonGroup className="h-100 w-100">
-						{ AllowToEdit &&
-							<Link to={ `/blueprint/edit/${ Blueprint._id }` }
-							      className="btn rounded-top-0 btn-secondary">
-								<Icon.BsGearFill />
-							</Link> }
-						{ ( user.HasPermission( ERoles.moderator ) || IsOwner ) &&
-							<Button variant="danger" onClick={ async() => {
-								await ToggleBlacklist();
-							} }
-							        className="rounded-top-0">
-								<Icon.BsTrashFill />
-							</Button> }
-						<Link to={ `/api/v1/download/${ Blueprint._id }` } target="_blank"
-						      className="btn rounded-top-0 btn-success">
-							<Icon.BsDownload /> { Blueprint.downloads }
+				<div className="flex flex-0 bg-gray-700 border-t border-gray-800 p-3">
+					{ allowedToEdit && <>
+						<Button onClick={ doBlacklist } color="red" size="small" className="p-1 px-3">
+							<HiTrash className="text-sm me-2" /> Delete
+						</Button>
+						<Link to={ `/blueprint/edit/${ Blueprint._id }` } className="text-gray-900 bg-white border border-gray-200 hover:bg-gray-100 hover:text-blue-700 disabled:hover:bg-white focus:ring-blue-700 focus:text-blue-700 dark:bg-transparent dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 focus:ring-2 dark:disabled:hover:bg-gray-800 group flex h-min items-center justify-centertext-center font-medium focus:z-10 rounded-lg p-1 ms-2 px-3">
+							<HiCog className="text-sm me-2" /> Edit Blueprint
 						</Link>
-					</ButtonGroup>
-				</Card.Footer>
-			</Card>
+					</> }
+
+					<Button href={ `/api/v1/download/${ Blueprint._id }` } target="_blank" color="gray" size="small" className="p-1 px-3 ms-2">
+						<HiDownload className="text-sm me-2" /> Download ({ Blueprint.downloads })
+					</Button>
+				</div>
+			</div>
 		</div>
 	);
 };

@@ -1,5 +1,5 @@
 
-import { BlueprintParser } from "@/server/src/Lib/BlueprintParser";
+import { parseBlueprintById } from "@/server/src/Lib/BlueprintParser";
 import DB_UserAccount from "@/server/src/MongoDB/DB_UserAccount";
 import type { BlueprintPack } from "@server/MongoDB/DB_BlueprintPacks";
 import type { BlueprintData } from "@server/MongoDB/DB_Blueprints";
@@ -10,12 +10,10 @@ import {
 	router
 } from "@server/trpc/trpc";
 import { TRPCError } from "@trpc/server";
-import * as fs from "fs";
 import type {
 	FilterQuery,
 	QueryOptions
 } from "mongoose";
-import path from "path";
 import { z } from "zod";
 
 export const filterSchema = z.object( {
@@ -70,19 +68,16 @@ export function buildFilter<T extends BlueprintData | BlueprintPack>( filter?: F
 
 export const public_blueprint = router( {
 	readBlueprint: publicProcedure.input( z.object( {
-		blueprintId: z.string().min( 6, { message: "Username is to short." } ).optional()
-	} ) ).mutation( async( { input, ctx } ) => {
+		blueprintId: z.string().min( 5 )
+	} ) ).mutation( async( { input } ) => {
 		const { blueprintId } = input;
 		try {
 			const BP = ( await DB_Blueprints.findById( blueprintId ) )!;
-			const SBP: Buffer = fs.readFileSync( path.join( __BlueprintDir, blueprintId!, `${ blueprintId }.sbp` ) );
-			const SBPCFG: Buffer = fs.readFileSync( path.join( __BlueprintDir, blueprintId!, `${ blueprintId }.sbp` ) );
-
-			const Blueprint = new BlueprintParser( BP.name, SBP, SBPCFG );
-			if( Blueprint.Success ) {
-				return Blueprint.Get;
+			const parse = parseBlueprintById( BP._id.toString(), BP.name );
+			if( parse ) {
+				return parse;
 			}
-			throw new TRPCError( { message: "User not found!", code: "INTERNAL_SERVER_ERROR" } );
+			throw new TRPCError( { message: "Failed to read blueprint data!", code: "INTERNAL_SERVER_ERROR" } );
 		} catch( e ) {
 			handleTRCPErr( e );
 		}

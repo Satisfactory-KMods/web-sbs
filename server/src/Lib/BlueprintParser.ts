@@ -4,6 +4,19 @@ import type {
 import {
 	Parser
 } from "@etothepii/satisfactory-file-parser";
+import * as fs from 'fs';
+import path from 'path';
+
+export function parseBlueprintById( blueprintId: string, blueprintName: string ) {
+	const SBP: Buffer = fs.readFileSync( path.join( __BlueprintDir, blueprintId!, `${ blueprintId }.sbp` ) );
+	const SBPCFG: Buffer = fs.readFileSync( path.join( __BlueprintDir, blueprintId!, `${ blueprintId }.sbp` ) );
+
+	const Blueprint = new BlueprintParser( blueprintName, SBP, SBPCFG );
+	if( Blueprint.Success ) {
+		return Blueprint.Get;
+	}
+	return undefined;
+}
 
 export class BlueprintParser {
 	public readonly Success;
