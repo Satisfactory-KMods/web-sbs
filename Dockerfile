@@ -9,6 +9,7 @@ COPY *.lock ./
 RUN yarn install
 
 # Copy main configs
+COPY *.ts ./
 COPY *.cts ./
 COPY *.mts ./
 COPY *.js ./
