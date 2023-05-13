@@ -1,7 +1,7 @@
 
 import type {
-  LoaderBlueprintBase,
-  LoaderDataBase
+	LoaderBlueprintBase,
+	LoaderDataBase
 } from "@app/Types/loader";
 import { AUTHTOKEN } from "@applib/constance";
 import { tRPC_Public } from "@applib/tRPC";

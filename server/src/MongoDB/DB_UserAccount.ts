@@ -1,8 +1,9 @@
+/** @type {import("mongoose").Model} */
 import type { MongoBase } from "@server/Types/mongo";
-import { ERoles } from "@shared/Enum/ERoles";
-import * as crypto from "crypto";
-import * as mongoose from "mongoose";
-import { z } from "zod";
+import { ERoles }         from "@shared/Enum/ERoles";
+import * as crypto        from "crypto";
+import * as mongoose      from "mongoose";
+import { z }              from "zod";
 
 const ZodUserAccountSchema = z.object( {
 	role: z.nativeEnum( ERoles ),
@@ -39,5 +40,12 @@ const UserAccountSchema = new mongoose.Schema( {
 export type UserAccount = z.infer<typeof ZodUserAccountSchema> & MongoBase;
 export type ClientUserAccount = Omit<UserAccount, "hash" | "salt" | "__v">;
 
-export default mongoose.model<UserAccount, mongoose.Model<UserAccount, any, UserAccountMethods>>( "SBS_UserAccount", UserAccountSchema );
+/**
+ * @typedef {object} DestructuredModel
+ * @property {object} models
+ * @property {import("mongoose").Model} models.Note
+ */
+/** @type {DestructuredModel} */
+export default mongoose.model<UserAccount, mongoose.Model<UserAccount, unknown, UserAccountMethods>>( "SBS_UserAccount", UserAccountSchema );
 export { UserAccountSchema };
+

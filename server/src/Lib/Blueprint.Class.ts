@@ -1,7 +1,6 @@
 import type { IfClass } from "@shared/Types/helper";
 import _ from "lodash";
-import type { HydratedDocument } from "mongoose";
-import type { BlueprintData, BlueprintSchemaMethods } from "../MongoDB/DB_Blueprints";
+import type { BlueprintData } from "../MongoDB/DB_Blueprints";
 import DB_Blueprints from "../MongoDB/DB_Blueprints";
 
 export class BlueprintClass<T extends boolean = false> {
@@ -31,8 +30,8 @@ export class BlueprintClass<T extends boolean = false> {
 		}
 	}
 
-	public async getDocument(): Promise<HydratedDocument<BlueprintData, BlueprintSchemaMethods>> {
-		return DB_Blueprints.findById( this.data?._id );
+	public async getDocument() {
+		return await DB_Blueprints.findById( this.data?._id  ).catch( () => {} );
 	}
 
 	public isValid(): this is BlueprintClass<true> {

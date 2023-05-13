@@ -3,8 +3,8 @@ import type { ERoles } from "@shared/Enum/ERoles";
 import type { FunctionComponent } from "react";
 import type { LinkProps } from "react-router-dom";
 import {
-  Link,
-  useLocation
+	Link,
+	useLocation
 } from "react-router-dom";
 
 type NavigationLinkProps = LinkProps & {

@@ -71,6 +71,6 @@ interface BPInterface extends z.infer<typeof ZodBlueprintSchema> {
 export type BlueprintData = BPInterface & MongoBase;
 export type BlueprintRating = z.infer<typeof ZodRating>;
 
-export default mongoose.model<BlueprintData, mongoose.Model<BlueprintData, any, BlueprintSchemaMethods>>( "SBS_Blueprints", BlueprintSchema );
+export default mongoose.model<BlueprintData, mongoose.Model<BlueprintData, unknown, BlueprintSchemaMethods>>( "SBS_Blueprints", BlueprintSchema );
 export { BlueprintSchema, ZodBlueprintSchema, ZodRating };
 

@@ -57,6 +57,7 @@ module.exports = {
 		"space-before-blocks": "off",
 		"@typescript-eslint/space-before-blocks": "warn",
 
+		"arrow-spacing": [ "warn", { "before": true, "after": true } ],
 		"space-before-function-paren": "off",
 		"@typescript-eslint/space-before-function-paren": [ "warn", "never" ],
 

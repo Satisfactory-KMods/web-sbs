@@ -1,5 +1,5 @@
 import DataContext from "@app/Context/DataContext";
-import { fireSwalFromApi, tRPC_Public, tRPC_handleError } from "@app/Lib/tRPC";
+import { fireSwalFromApi, tRPC_Public } from "@app/Lib/tRPC";
 import { API_QueryLib } from "@applib/Api/API_Query.Lib";
 import type { Blueprint } from "@etothepii/satisfactory-file-parser";
 import { useAuth } from "@hooks/useAuth";
@@ -45,6 +45,7 @@ export function useBlueprint( InitValue: string | BlueprintData, Config?: Partia
 	const [ blueprintData, setBlueprintData ] = useState<Blueprint | undefined>( undefined );
 	const [ Tags, setTags ] = useState<Tag[]>( [] );
 	const [ Mods, setMods ] = useState<Mod[]>( [] );
+	const [ owner, setOwner ] = useState<{ id: string, username: string }>( { id: "", username: "" } );
 
 	const BlueprintID = useMemo( () => {
 		if( typeof InitValue === "string" ) {
@@ -54,8 +55,8 @@ export function useBlueprint( InitValue: string | BlueprintData, Config?: Partia
 	}, [ InitValue ] );
 
 	const isOwner = useMemo( () => {
-		return user.Get._id === Blueprint.owner;
-	}, [ user.Get._id, Blueprint.owner ] );
+		return user.Get._id === owner.id;
+	}, [ owner.id, user.Get._id ] );
 
 	const isValid = useMemo( () => {
 		if( Config?.IgnoreBlacklisted ) {
@@ -72,11 +73,13 @@ export function useBlueprint( InitValue: string | BlueprintData, Config?: Partia
 
 	const Query = async() => {
 		const [ blueprintData, Result ] = await Promise.all( [
-			tRPC_Public.blueprint.readBlueprint.mutate( { blueprintId: BlueprintID } ).catch( tRPC_handleError ),
-			tRPC_Public.blueprint.getBlueprint.query( { blueprintId: BlueprintID } )
+			tRPC_Public.blueprint.readBlueprint.mutate( { blueprintId: BlueprintID } ).catch( () => {} ),
+			tRPC_Public.blueprint.getBlueprint.query( { blueprintId: BlueprintID } ).catch( () => {} )
 		] );
+		console.log( Result );
 		blueprintData && setBlueprintData( blueprintData );
 		if( Result ) {
+			setOwner( { id: Result.blueprintData.owner, username: Result.bpOwnerName } );
 			updateData( Result.blueprintData );
 			setBlueprint( Result.blueprintData );
 		}
@@ -88,6 +91,11 @@ export function useBlueprint( InitValue: string | BlueprintData, Config?: Partia
 		}
 		return false;
 	}, [ user, loggedIn, Blueprint.owner, isValid ] );
+
+	useEffect( () => {
+		Query();
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [] );
 
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	useEffect( updateData, [ InitValue, isValid ] );
@@ -144,6 +152,7 @@ export function useBlueprint( InitValue: string | BlueprintData, Config?: Partia
 	};
 
 	return {
+		owner,
 		isOwner,
 		remove,
 		toggleBlacklist,

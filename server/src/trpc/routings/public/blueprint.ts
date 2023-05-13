@@ -1,4 +1,6 @@
+
 import { BlueprintParser } from "@/server/src/Lib/BlueprintParser";
+import DB_UserAccount from "@/server/src/MongoDB/DB_UserAccount";
 import type { BlueprintPack } from "@server/MongoDB/DB_BlueprintPacks";
 import type { BlueprintData } from "@server/MongoDB/DB_Blueprints";
 import DB_Blueprints from "@server/MongoDB/DB_Blueprints";
@@ -56,7 +58,7 @@ export function buildFilter<T extends BlueprintData | BlueprintPack>( filter?: F
 			result.filter.mods = { $all: filter.mods };
 		}
 		if( filter.onlyVanilla !== undefined ) {
-			// @ts-ignore
+			// @ts-ignore because this key is fine here!
 			result.filter[ "mods.1" ] = { $exists: !filter.onlyVanilla };
 		}
 	} else {
@@ -94,7 +96,11 @@ export const public_blueprint = router( {
 		try {
 			const blueprint = await DB_Blueprints.findById( blueprintId );
 			if( blueprint ) {
-				return { blueprintData: blueprint.toJSON() };
+				const owner = await DB_UserAccount.findById( blueprint.owner );
+				const bpOwnerName: string = owner?.username || "Deleted User";
+				if( blueprint ) {
+					return { blueprintData: blueprint.toJSON() as BlueprintData, bpOwnerName };
+				}
 			}
 		} catch( e ) {
 			handleTRCPErr( e );

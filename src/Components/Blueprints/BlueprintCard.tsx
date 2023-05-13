@@ -17,6 +17,7 @@ const BlueprintCard: FunctionComponent<IBlueprintCardProps> = ( { Data, onToggle
 	const id = useId();
 	const bpHook = useBlueprint( Data );
 	const {
+		owner,
 		Blueprint,
 		allowedToEdit,
 		toggleBlacklist,
@@ -39,8 +40,13 @@ const BlueprintCard: FunctionComponent<IBlueprintCardProps> = ( { Data, onToggle
 						</div>
 					</div>
 				</div>
-				<div className="p-3 text-2xl border-b bg-gray-700 border-gray-700 text-neutral-200 truncate text-ellipsis overflow-hidden">
-					{ Blueprint.name }{ Blueprint.name }
+				<div className="p-3 border-b bg-gray-700 border-gray-700 text-neutral-200 truncate text-ellipsis overflow-hidden">
+					<span className="text-2xl">
+						{ Blueprint.name }
+					</span>
+					<span className="text-xs text-gray-400 block">
+						Creator: <b>{ owner.username }</b>
+					</span>
 				</div>
 				<ReactMarkdown components={ mdxComponents } className="text-neutral-200 flex-1 p-3 border-t-1 border-gray-700">
 					{ `${ Blueprint.description.substring( 0, 200 ) } ...` }
