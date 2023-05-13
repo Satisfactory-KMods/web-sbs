@@ -57,6 +57,7 @@ module.exports = {
 		"space-before-blocks": "off",
 		"@typescript-eslint/space-before-blocks": "warn",
 
+		"comma-spacing": [ "error", { "before": false, "after": true } ],
 		"space-infix-ops": "error",
 		"arrow-spacing": [ "warn", { "before": true, "after": true } ],
 		"space-before-function-paren": "off",

@@ -1,13 +1,13 @@
 import { AUTHTOKEN } from "@applib/constance";
-import type { TApiPath } from "@shared/Enum/EApiPath";
-import type { IAPIResponseBase } from "@shared/Types/API_Response";
+import type { EApiBlueprintUtils } from "@shared/Enum/EApiPath";
+import superjson from 'superjson';
 
 export class API_QueryLib {
-	static async PostToAPI<T extends IAPIResponseBase = IAPIResponseBase<any>, D = any>(
-		Path: TApiPath,
+	static async PostToAPI<T, D = any>(
+		Path: EApiBlueprintUtils,
 		Data: D,
 		ContentType?: "application/json" | "application/x-www-form-urlencoded" | "multipart/form-data"
-	): Promise<T> {
+	): Promise<T | undefined> {
 		const Token = window.localStorage.getItem( AUTHTOKEN );
 		const requestOptions: RequestInit = {
 			method: "POST",
@@ -23,14 +23,6 @@ export class API_QueryLib {
 			requestOptions.headers[ "Content-Type" ] = ContentType || "application/json";
 		}
 
-		let Response: IAPIResponseBase<T> = {
-			Success: false,
-			Auth: false,
-			Reached: false,
-			Data: undefined,
-			MessageCode: "Api.error.NotReachable"
-		} as T;
-
 		try {
 			const Resp: Response | void = await fetch(
 				`/api/v1/${ Path }`,
@@ -38,19 +30,19 @@ export class API_QueryLib {
 			).catch( console.error );
 			if( Resp ) {
 				if( Resp.ok && Resp.status === 200 ) {
-					Response = ( await Resp.json() ) as IAPIResponseBase<T>;
-					Response.Reached = true;
+					Response = ( await Resp.json() ) as SuccessDataResponseFormat;
+					return superjson.parse( Response.result.data ) as T;
 				}
 			}
 		} catch( e ) {
 			console.error( e );
 		}
 
-		return Response as T;
+		return undefined;
 	}
 
-	static async GetFromAPI<T extends IAPIResponseBase = IAPIResponseBase<any>, D = any>(
-		Path: TApiPath,
+	static async GetFromAPI<T, D = any>(
+		Path: EApiBlueprintUtils,
 		Data: D
 	): Promise<T> {
 		const RequestData: string[] = [];
@@ -73,14 +65,6 @@ export class API_QueryLib {
 			}
 		};
 
-		let Response: IAPIResponseBase<T> = {
-			Success: false,
-			Auth: false,
-			Reached: false,
-			Data: undefined,
-			MessageCode: "Api.error.NotReachable"
-		} as T;
-
 		try {
 			const Resp: Response | void = await fetch(
 				`/api/v1/${ Path }`,
@@ -88,14 +72,14 @@ export class API_QueryLib {
 			).catch( console.error );
 			if( Resp ) {
 				if( Resp.ok && Resp.status === 200 ) {
-					Response = ( await Resp.json() ) as IAPIResponseBase<T>;
-					Response.Reached = true;
+					Response = ( await Resp.json() ) as SuccessDataResponseFormat;
+					return superjson.parse( Response.result.data ) as T;
 				}
 			}
 		} catch( e ) {
 
 		}
 
-		return Response as T;
+		return undefined;
 	}
 }

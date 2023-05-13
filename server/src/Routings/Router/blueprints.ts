@@ -8,7 +8,7 @@ import {
 } from "@server/Lib/Express.Lib";
 import type { BlueprintData } from "@server/MongoDB/DB_Blueprints";
 import type { ExpressRequest } from "@server/Types/express";
-import { EApiBlueprintUtils, EApiUserBlueprints } from "@shared/Enum/EApiPath";
+import { EApiBlueprintUtils } from "@shared/Enum/EApiPath";
 import type {
 	Response
 } from "express";
@@ -52,7 +52,7 @@ export default function() {
 	} );
 
 
-	Router.post( ApiUrl( EApiUserBlueprints.create ), upload.fields( [ { name: 'sbp', maxCount: 1 }, { name: 'sbpcfg', maxCount: 1 }, { name: 'images', maxCount: 5 } ] ), MW_Auth, async( req: ExpressRequest<{
+	Router.post( ApiUrl( EApiBlueprintUtils.create ), upload.fields( [ { name: 'sbp', maxCount: 1 }, { name: 'sbpcfg', maxCount: 1 }, { name: 'images', maxCount: 5 } ] ), MW_Auth, async( req: ExpressRequest<{
 		blueprint: Omit<BlueprintData, "_id" | "__v">,
 		blueprintName: string
 	}>, res: Response ) => {
@@ -111,7 +111,7 @@ export default function() {
 		} );*/
 	} );
 
-	Router.post( ApiUrl( EApiUserBlueprints.edit ), MW_Auth, async( req: ExpressRequest<{
+	Router.post( ApiUrl( EApiBlueprintUtils.edit ), MW_Auth, async( req: ExpressRequest<{
 		blueprint: Omit<BlueprintData, "_id" | "__v">,
 		blueprintName: string,
 		blueprintId: BlueprintClass<true>

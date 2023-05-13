@@ -80,7 +80,7 @@ const Component: FunctionComponent = () => {
 				</div>
 				{ !!Blueprint.tags.length && <div className="flex flex-wrap p-3 pt-0 border-t bg-gray-700 border-gray-700 text-neutral-200 text-xs">
 					{ Tags.map( e => (
-						<div key={ id+e._id } className="bg-gray-900 p-1 px-3 rounded-lg border border-gray-800 shadow">{ e.DisplayName }</div>
+						<div key={ id + e._id } className="bg-gray-900 p-1 px-3 rounded-lg border border-gray-800 shadow">{ e.DisplayName }</div>
 					) ) }
 				</div> }
 			</div>

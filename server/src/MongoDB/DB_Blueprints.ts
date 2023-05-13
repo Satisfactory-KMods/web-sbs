@@ -1,7 +1,7 @@
 import { parseBlueprintById } from "@/server/src/Lib/BlueprintParser";
 import { findModsFromBlueprint } from "@/src/Shared/blueprintReadingHelper";
 import type { MongoBase } from "@server/Types/mongo";
-import type { EDesignerSize } from "@shared/Enum/EDesignerSize";
+import { EDesignerSize } from "@shared/Enum/EDesignerSize";
 import * as mongoose from "mongoose";
 import { z } from "zod";
 
@@ -14,7 +14,7 @@ const ZodBlueprintSchema = z.object( {
 	name: z.string(),
 	description: z.string(),
 	owner: z.string(),
-	DesignerSize: z.string(),
+	DesignerSize: z.nativeEnum( EDesignerSize ),
 	mods: z.array( z.string() ),
 	rating: z.array( ZodRating ),
 	totalRating: z.number(),
