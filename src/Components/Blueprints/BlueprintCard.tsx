@@ -40,8 +40,10 @@ const BlueprintCard: FunctionComponent<IBlueprintCardProps> = ( { Data, onToggle
 						Creator: <b>{ owner.username }</b>
 					</span>
 				</div>
-				<div className="relative">
-					<img className="rounded-t-lg" src={ "/api/v1/image/" + Blueprint._id } alt="BlueprintLogo" />
+				<div className="relative aspect-video">
+					<div className="absolute inset-0 flex items-center justify-center w-full h-full">
+						<img className="w-full h-full object-cover" src={ "/api/v1/image/" + Blueprint.images[ 0 ] } alt="BlueprintLogo" />
+					</div>
 					<div className="absolute top-0 right-0 m-3">
 						<div className="bg-orange-800 p-1 px-5 rounded-lg border border-orange-700 text-white">
 							{ Blueprint.mods.length ? "Modded" : "Vanilla" }

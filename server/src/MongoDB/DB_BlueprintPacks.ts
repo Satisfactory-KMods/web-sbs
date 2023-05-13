@@ -19,7 +19,7 @@ const ZodBlueprintPackSchema = z.object( {
 
 export interface BlueprintPackSchemaMethods {
 	updateRating: () => Promise<boolean>;
-	updateModRefs: () => Promise<void>;
+	updateModRefs: ( save?: boolean ) => Promise<void>;
 
 }
 
@@ -58,7 +58,7 @@ const BlueprintPackSchema = new mongoose.Schema( {
 		}
 		return false;
 	},
-	updateModRefs: async function( save?: boolean ) {
+	updateModRefs: async function( save = true ) {
 		const blueprintSet = new Set<string>();
 		for await ( const bp of DB_Blueprints.find( { _id: this.blueprints } ) ) {
 			for( const mod of bp.mods ) {

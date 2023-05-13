@@ -3,7 +3,7 @@ import { mdxComponents } from "@app/Page/terms/private/Page";
 import type { LoaderBlueprintBase } from "@app/Types/loader";
 import type { SaveComponent, SaveEntity } from "@etothepii/satisfactory-file-parser";
 import { useBlueprint } from "@hooks/useBlueprint";
-import { Button } from "flowbite-react";
+import { Button, Carousel } from "flowbite-react";
 import type { FunctionComponent } from "react";
 import { useId, useMemo } from "react";
 import { BiUser, BiWrench } from "react-icons/bi";
@@ -56,8 +56,16 @@ const Component: FunctionComponent = () => {
 						Creator: <b>{ owner.username }</b>
 					</span>
 				</div>
-				<div className="relative">
-					<img className="rounded-t-lg" src={ "/api/v1/image/" + Blueprint._id } alt="BlueprintLogo" />
+				<div className="relative h-56 sm:h-64 xl:h-80 2xl:h-96">
+					<div className="absolute inset-0 flex items-center justify-center w-full h-full">
+						{ Blueprint.images.length > 1 ?
+							( <Carousel>
+								{ Blueprint.images.map( e => (
+									<img className="w-full h-full object-cover" src={ "/api/v1/image/" + e } key={ id + e } alt="BlueprintLogo" />
+								) ) }
+							</Carousel> )
+							: ( <img className="w-full h-full object-cover" src={ "/api/v1/image/" + Blueprint.images[ 0 ] } alt="BlueprintLogo" /> ) }
+					</div>
 					<div className="absolute top-0 right-0 m-3">
 						<div className="bg-orange-800 p-1 px-5 rounded-lg border border-orange-700 text-white">
 							{ Blueprint.mods.length ? "Modded" : "Vanilla" }

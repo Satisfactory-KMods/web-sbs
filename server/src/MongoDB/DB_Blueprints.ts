@@ -26,7 +26,7 @@ const ZodBlueprintSchema = z.object( {
 
 export interface BlueprintSchemaMethods {
 	updateRating: () => Promise<boolean>;
-	updateModRefs: () => Promise<void>;
+	updateModRefs: ( save?: boolean ) => Promise<void>;
 }
 
 const BlueprintSchema = new mongoose.Schema( {
@@ -65,7 +65,7 @@ const BlueprintSchema = new mongoose.Schema( {
 		}
 		return false;
 	},
-	updateModRefs: async function( save?: boolean ) {
+	updateModRefs: async function( save = true ) {
 		const parse = parseBlueprintById( this._id.toString(), this.name );
 		if( parse ) {
 			this.mods = findModsFromBlueprint( parse.objects );
