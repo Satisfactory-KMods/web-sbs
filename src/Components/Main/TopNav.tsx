@@ -22,13 +22,13 @@ const TopNav: FunctionComponent = () => {
 			<NavigationLink label="Browse blueprints" to="/blueprint/list">Browse all blueprints!</NavigationLink>
 			{ loggedIn && ( <>
 				<NavigationLink label="Create a blueprint" to="/blueprint/create">Add you own blueprint</NavigationLink>
-				<NavigationLink label="My blueprints" to="/blueprint/create">Show all of your blueprints</NavigationLink>
+				<NavigationLink label="My blueprints" to="/blueprint/my">Show all of your blueprints</NavigationLink>
 			</> ) }
 		</NavigationContainer>
 		{ user.HasPermission( ERoles.admin ) && (
 			<NavigationContainer path="/admin" label="Admin" >
 				<NavigationLink label="Users" to="/admin/users">Manage all Users</NavigationLink>
-				<NavigationLink label="Blueprints" to="/admin/blueprints">Manage all blacklisted blueprints</NavigationLink>
+				<NavigationLink label="Blueprints" to="/admin/blueprint/blacklisted">Manage all blacklisted blueprints</NavigationLink>
 				<NavigationLink label="Tags" to="/admin/tags">Manage all Tags</NavigationLink>
 			</NavigationContainer>
 		) }

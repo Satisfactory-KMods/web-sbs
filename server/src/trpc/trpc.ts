@@ -61,7 +61,7 @@ const isOwnerMiddleware = middleware( async( opts ) => {
 	const { ctx } = opts;
 	const { blueprint, userClass } = ctx as{ blueprint: BlueprintClass<true> } & typeof ctx;
 	const isOwner = false;
-	if( !ctx.userClass.HasPermission( ERoles.admin ) && !_.eq( blueprint.get.owner ,userClass.Get._id ) ) {
+	if( !ctx.userClass.HasPermission( ERoles.admin ) && !_.eq( blueprint.get.owner, userClass.Get._id ) ) {
 		throw new TRPCError( { code: 'UNAUTHORIZED' } );
 	}
 	return opts.next();
@@ -72,7 +72,7 @@ const isModOrOwnerMiddleware = middleware( async( opts ) => {
 	const { ctx } = opts;
 	const { blueprint, userClass } = ctx as{ blueprint: BlueprintClass<true> } & typeof ctx;
 	const isOwner = false;
-	if( !( ctx.userClass.HasPermission( ERoles.admin ) || ctx.userClass.HasPermission( ERoles.moderator ) ) && !_.eq( blueprint.get.owner ,userClass.Get._id ) ) {
+	if( !( ctx.userClass.HasPermission( ERoles.admin ) || ctx.userClass.HasPermission( ERoles.moderator ) ) && !_.eq( blueprint.get.owner, userClass.Get._id ) ) {
 		throw new TRPCError( { code: 'UNAUTHORIZED' } );
 	}
 	return opts.next();

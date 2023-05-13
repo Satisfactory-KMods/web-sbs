@@ -1,7 +1,8 @@
-import { AUTHTOKEN } from "@applib/constance";
-import type { SuccessDataResponseFormat } from "@kyri123/lib";
+import { fireSwalFromApi, tRPC_token } from "@app/Lib/tRPC";
+import type { ErrorDataResponseFormat, SuccessDataResponseFormat } from "@kyri123/lib";
 import type { EApiBlueprintUtils } from "@shared/Enum/EApiPath";
 import superjson from 'superjson';
+import type { SuperJSONResult } from "superjson/dist/types";
 
 export class API_QueryLib {
 	static async PostToAPI<T, D = any>(
@@ -9,11 +10,10 @@ export class API_QueryLib {
 		Data: D,
 		ContentType?: "application/json" | "application/x-www-form-urlencoded" | "multipart/form-data"
 	): Promise<T> {
-		const Token = window.localStorage.getItem( AUTHTOKEN );
 		const requestOptions: RequestInit = {
 			method: "POST",
 			headers: {
-				Authorization: "Bearer " + Token || "",
+				Authorization: "Bearer " + tRPC_token(),
 				"User-Agent": "Frontend"
 			},
 			body: Data instanceof FormData ? Data : JSON.stringify( Data )
@@ -25,14 +25,17 @@ export class API_QueryLib {
 		}
 
 		try {
-			const Resp: Response | void = await fetch(
+			const Resp: Response = await fetch(
 				`/api/v1/${ Path }`,
 				requestOptions
 			).catch( console.error );
 			if( Resp ) {
-				if( Resp.ok && Resp.status === 200 ) {
-					const resultJson = ( await Resp.json() ) as SuccessDataResponseFormat;
-					return superjson.parse( JSON.stringify( resultJson.result.data ) ) as T;
+				const resultJson = ( await Resp.json() ) as( SuccessDataResponseFormat | { error: SuperJSONResult } );
+				if( Resp.status === 200 ) {
+					return superjson.parse( JSON.stringify( ( resultJson as SuccessDataResponseFormat ).result.data ) ) as T;
+				} else {
+					const result = superjson.parse( JSON.stringify( ( resultJson as{ error: SuperJSONResult } ).error ) ) as ErrorDataResponseFormat;
+					fireSwalFromApi( result.message || "Something goes wrong!" );
 				}
 			}
 		} catch( e ) {
@@ -56,11 +59,10 @@ export class API_QueryLib {
 			}
 		}
 
-		const Token = window.localStorage.getItem( AUTHTOKEN );
 		const requestOptions: RequestInit = {
 			method: "GET",
 			headers: {
-				Authorization: "Bearer " + Token || "",
+				Authorization: "Bearer " + tRPC_token(),
 				"User-Agent": "Frontend",
 				"Content-Type": "application/json"
 			}
@@ -72,13 +74,16 @@ export class API_QueryLib {
 				requestOptions
 			).catch( console.error );
 			if( Resp ) {
-				if( Resp.ok && Resp.status === 200 ) {
-					const resultJson = ( await Resp.json() ) as SuccessDataResponseFormat;
-					return superjson.parse( JSON.stringify( resultJson.result.data ) ) as T;
+				const resultJson = ( await Resp.json() ) as( SuccessDataResponseFormat | { error: SuperJSONResult } );
+				if( Resp.status === 200 ) {
+					return superjson.parse( JSON.stringify( ( resultJson as SuccessDataResponseFormat ).result.data ) ) as T;
+				} else {
+					const result = superjson.parse( JSON.stringify( ( resultJson as{ error: SuperJSONResult } ).error ) ) as ErrorDataResponseFormat;
+					fireSwalFromApi( result.message || "Something goes wrong!" );
 				}
 			}
 		} catch( e ) {
-
+			console.error( e );
 		}
 
 		throw new Error( "Request failed" );

@@ -1,8 +1,4 @@
-
-import type {
-	LoaderBlueprintBase,
-	LoaderDataBase
-} from "@app/Types/loader";
+import type { LoaderBlueprintBase, LoaderDataBase } from "@app/Types/loader";
 import { AUTHTOKEN } from "@applib/constance";
 import { tRPC_Public } from "@applib/tRPC";
 import type { LoaderFunctionArgs } from "@remix-run/router/utils";

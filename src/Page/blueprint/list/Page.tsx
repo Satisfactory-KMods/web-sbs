@@ -6,8 +6,8 @@ import {
 } from "@applib/tRPC";
 import { LoadingButton } from "@comp/elements/Buttons";
 import {
-	SBSSelect,
-	SBSTextInput
+	SBSInput,
+	SBSSelect
 } from "@comp/elements/Inputs";
 import { useRawPageHandler } from "@hooks/useRawPageHandler";
 import { useSelectOptions } from "@hooks/useSelectOptions";
@@ -95,10 +95,10 @@ const Component: FunctionComponent = () => {
 					Blueprint Filter
 				</div>
 				<div className="p-5 grid grid-cols-1 text-neutral-200 md:grid-cols-2 lg:grid-cols-3 gap-2">
-					<SBSTextInput label="Blueprint Name" value={ BlueprintName }
+					<SBSInput label="Blueprint Name" value={ BlueprintName }
 						onChange={ ( e: any ) => setBlueprintName( e.target.value ) }>
 						<HiSearch />
-					</SBSTextInput>
+					</SBSInput>
 					<SBSSelect label="Sort By">
 						<Select options={ sortSelectOptions } className="gray-select flex-1"
 						        classNamePrefix="my-react-select" isMulti={ false } value={ Select_Sorting }

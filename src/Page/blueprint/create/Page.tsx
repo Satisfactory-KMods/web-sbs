@@ -1,3 +1,4 @@
+import BlueprintEditor from "@app/Components/Blueprints/BlueprintEditor";
 import type {
 	FunctionComponent
 } from "react";
@@ -8,7 +9,10 @@ export interface IFile {
 }
 
 const Component: FunctionComponent = () => {
-	return null;
+	const onSaved = async() => {
+	};
+
+	return <BlueprintEditor onSaved={ onSaved } />;
 };
 
 export {

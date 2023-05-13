@@ -13,13 +13,14 @@ import type {
 	Response
 } from "express";
 import fs from "fs";
+import path from "path";
 import { z } from "zod";
 
 export default function() {
-	Router.post( ApiUrl( EApiBlueprintUtils.parseblueprint ), upload.array( 'blueprint', 2 ), upload.fields( [ { name: 'sbp', maxCount: 1 }, { name: 'sbpcfg', maxCount: 1 }, { name: 'images', maxCount: 5 } ] ), MW_Auth, async( req: ExpressRequest<{
+	Router.post( ApiUrl( EApiBlueprintUtils.parseblueprint ), upload.array( "blueprint", 2 ), MW_Auth, async( req: ExpressRequest<{
 		blueprintName: string
 	}>, res: Response ) => {
-		if( req.files && Array.isArray( req.files ) && Number( req.files.length ) >= 2 ) {
+		if( req.files && Array.isArray( req.files ) && Number( req.files.length ) === 2 ) {
 			try {
 				// test if we rly get a string
 				z.string().parse( req.body.blueprintName );
@@ -28,13 +29,13 @@ export default function() {
 				let SBPCFG: Buffer = Buffer.from( "" );
 
 				for( const file of req.files ) {
-					if( file.filename.endsWith( ".sbp" ) ) {
-						SBP = fs.readFileSync( file.path );
-					} else if( file.filename.endsWith( ".sbpcfg" ) ) {
-						SBPCFG = fs.readFileSync( file.path );
+					const filePath = path.join( file.destination, file.filename );
+					if( file.originalname.endsWith( ".sbp" ) ) {
+						SBP = fs.readFileSync( filePath );
+					} else if( file.originalname.endsWith( ".sbpcfg" ) ) {
+						SBPCFG = fs.readFileSync( filePath );
 					}
-					fs.rmSync( file.path );
-					console.log( "ParseBlueprint delete file:", file.path );
+					fs.rmSync( filePath );
 				}
 
 				const Blueprint = new BlueprintParser( req.body.blueprintName, SBP, SBPCFG );

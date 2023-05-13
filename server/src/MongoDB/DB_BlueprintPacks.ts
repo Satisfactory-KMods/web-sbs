@@ -37,7 +37,7 @@ const BlueprintPackSchema = new mongoose.Schema( {
 	downloads: { type: Number, required: true, default: 0 },
 	blacklisted: { type: Boolean, required: false, default: false },
 	blueprints: { type: [ String ], required: true }
-}, { timestamps: true , methods: {
+}, { timestamps: true, methods: {
 	updateRating: async function() {
 		const findRating = () => {
 			const totalRating = this.rating.length * 5;

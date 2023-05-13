@@ -1,14 +1,10 @@
 import DataContext from "@app/Context/DataContext";
 import { fireSwalFromApi, tRPC_Public } from "@app/Lib/tRPC";
-import { API_QueryLib } from "@applib/Api/API_Query.Lib";
 import type { Blueprint } from "@etothepii/satisfactory-file-parser";
 import { useAuth } from "@hooks/useAuth";
 import type { Mod } from "@kyri123/lib";
 import type { BlueprintData } from "@server/MongoDB/DB_Blueprints";
 import type { Tag } from "@server/MongoDB/DB_Tags";
-import {
-	EApiUserBlueprints
-} from "@shared/Enum/EApiPath";
 import { EDesignerSize } from "@shared/Enum/EDesignerSize";
 import { ERoles } from "@shared/Enum/ERoles";
 import {
@@ -115,22 +111,6 @@ export function useBlueprint( InitValue: string | BlueprintData, defaultUser?: {
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	useEffect( updateData, [ Blueprint.tags, Blueprint.mods ] );
 
-	const ToggleLike = async(): Promise<void> => {
-		if( !loggedIn ) {
-			await fireSwalFromApi( "You need to be logged in to do this!", "error" );
-			return;
-		}
-
-		if( !isValid ) {
-			return;
-		}
-
-		setDoQueryLikes( true );
-		await API_QueryLib.PostToAPI( EApiUserBlueprints.like, { Id: Blueprint._id } );
-
-		setDoQueryLikes( false );
-	};
-
 	const toggleBlacklist = async(): Promise<boolean> => {
 		if( !loggedIn ) {
 			await fireSwalFromApi( "You need to be logged in to do this!", "error" );
@@ -141,10 +121,8 @@ export function useBlueprint( InitValue: string | BlueprintData, defaultUser?: {
 			return false;
 		}
 
-		setDoQueryLikes( true );
-		const Result = await API_QueryLib.PostToAPI( EApiUserBlueprints.blacklist, { Id: Blueprint._id } );
-		setDoQueryLikes( false );
-		return Result.Success;
+		// todo: need rework
+		return false;
 	};
 
 	const remove = async(): Promise<boolean> => {
@@ -157,10 +135,8 @@ export function useBlueprint( InitValue: string | BlueprintData, defaultUser?: {
 			return false;
 		}
 
-		setDoQueryLikes( true );
-		const Result = await API_QueryLib.PostToAPI( EApiUserBlueprints.remove, { Id: Blueprint._id } );
-		setDoQueryLikes( false );
-		return Result.Success;
+		// todo: need rework
+		return false;
 	};
 
 	return {
@@ -178,7 +154,6 @@ export function useBlueprint( InitValue: string | BlueprintData, defaultUser?: {
 		Blueprint,
 		BlueprintID,
 		UpdateBlueprintCache: setBlueprint,
-		ToggleLike,
 		DoQueryLikes
 	};
 }

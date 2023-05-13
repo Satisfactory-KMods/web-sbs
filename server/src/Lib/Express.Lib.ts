@@ -1,10 +1,10 @@
 import { BlueprintClass } from "@/server/src/Lib/Blueprint.Class";
 import type { BlueprintData } from "@/server/src/MongoDB/DB_Blueprints";
 import type { ExpressRequest } from "@/server/src/Types/express";
+import type { EApiBlueprintUtils } from "@/src/Shared/Enum/EApiPath";
 import { errorResponse } from "@kyri123/lib";
 import DB_SessionToken from "@server/MongoDB/DB_SessionToken";
 import { User } from "@shared/Class/User.Class";
-import type { TApiPath } from "@shared/Enum/EApiPath";
 import type { ERoles } from "@shared/Enum/ERoles";
 import type {
 	NextFunction,
@@ -14,8 +14,9 @@ import type {
 import * as jwt from "jsonwebtoken";
 import _ from "lodash";
 import multer from "multer";
+import path from "path";
 
-export function ApiUrl( Url: TApiPath | string ) {
+export function ApiUrl( Url: EApiBlueprintUtils | string ) {
 	const EndUrl = `/api/v1/${ Url }`;
 	SystemLib.Log( "URL", "Routing registered:", SystemLib.ToBashColor( "Red" ), EndUrl );
 	return EndUrl;
@@ -84,5 +85,5 @@ export async function MW_Rest( req: Request, res: Response, next: NextFunction )
 }
 
 export const upload = multer( {
-	dest: "/tmp/",
+	dest: path.join( __BaseDir, "tmp" ),
 } );
