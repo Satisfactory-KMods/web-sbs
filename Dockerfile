@@ -9,7 +9,6 @@ COPY *.lock ./
 RUN yarn install
 
 # Copy main configs
-COPY .eslintrc ./
 COPY *.cts ./
 COPY *.mts ./
 COPY *.js ./
