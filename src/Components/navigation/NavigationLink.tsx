@@ -20,14 +20,15 @@ const NavigationLink: FunctionComponent<NavigationLinkProps> = ( { children, cla
 		return null;
 	}
 
-	let classNames = "flex bg-gray-700 text-white rounded-md px-3 py-2 text-sm font-medium " + ( className || "" );
+	let classNames = "text-neutral-100 px-3 py-2 font-medium bg-gray-600" + ( className || "" );
 	if( !pathname.startsWith( props.to.toString() ) ) {
-		classNames = "flex text-gray-300 hover:bg-gray-600 hover:text-white rounded-md px-3 py-2 text-sm font-medium " + ( className || "" );
+		classNames = "text-neutral-300 px-3 py-2 font-medium hover:bg-gray-600 hover:text-neutral-100" + ( className || "" );
 	}
 
 	return (
 		<Link className={ classNames } { ...props }>
-			{ label }
+			<span className="block font-semibold">{ label }</span>
+			<span className="block text-xs">{ children }</span>
 		</Link>
 	);
 };
