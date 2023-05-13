@@ -1,3 +1,4 @@
+import NavigationContainer from "@app/Components/navigation/NavigationContainer";
 import NavigationDropdown from "@comp/navigation/NavigationDropdown";
 import NavigationDropdownItem from "@comp/navigation/NavigationDropdownItem";
 import NavigationLink from "@comp/navigation/NavigationLink";
@@ -15,6 +16,23 @@ import {
 const TopNav: FunctionComponent = () => {
 	const { user, loggedIn, logout } = useAuth();
 	const divRef = useRef<HTMLDivElement>( null );
+
+	const Nav = ( <>
+		<NavigationContainer path="/blueprint" label="Blueprints" >
+			<NavigationLink label="Browse blueprints" to="/blueprint/list">Browse all blueprints!</NavigationLink>
+			{ loggedIn && ( <>
+				<NavigationLink label="Create a blueprint" to="/blueprint/create">Add you own blueprint</NavigationLink>
+				<NavigationLink label="My blueprints" to="/blueprint/create">Show all of your blueprints</NavigationLink>
+			</> ) }
+		</NavigationContainer>
+		{ user.HasPermission( ERoles.admin ) && (
+			<NavigationContainer path="/admin" label="Admin" >
+				<NavigationLink label="Users" to="/admin/users">Manage all Users</NavigationLink>
+				<NavigationLink label="Blueprints" to="/admin/blueprints">Manage all blacklisted blueprints</NavigationLink>
+				<NavigationLink label="Tags" to="/admin/tags">Manage all Tags</NavigationLink>
+			</NavigationContainer>
+		) }
+	</> );
 
 	return (
 		<nav className="bg-gray-800 border-b border-gray-700">
@@ -36,8 +54,7 @@ const TopNav: FunctionComponent = () => {
 							</div>
 							<div className="hidden sm:ml-6 sm:block">
 								<div className="flex space-x-4">
-									<NavigationLink to="/blueprint/list">Blueprints</NavigationLink>
-									<NavigationLink to="/blueprint/packs">Blueprint Packs</NavigationLink>
+									{ Nav }
 								</div>
 							</div>
 						</div>
@@ -62,26 +79,9 @@ const TopNav: FunctionComponent = () => {
 									) }
 
 									{ loggedIn && ( <>
-										<NavigationDropdownItem permission={ ERoles.admin }
-										                        to="/admin/tags">Admin:
-											Tags</NavigationDropdownItem>
-										<NavigationDropdownItem permission={ ERoles.admin }
-										                        to="/admin/users">Admin:
-											Users</NavigationDropdownItem>
-										<NavigationDropdownItem permission={ ERoles.admin }
-										                        to="/admin/blacklisted">Admin: Blueprint
-											Blacklist</NavigationDropdownItem>
-
-
 										<NavigationDropdownItem permission={ ERoles.member }
 										                        to="/account/settings">Account
 											Settings</NavigationDropdownItem>
-										<NavigationDropdownItem permission={ ERoles.member }
-										                        to="/blueprint/create">Create a
-											Blueprint</NavigationDropdownItem>
-										<NavigationDropdownItem permission={ ERoles.member }
-										                        to="/blueprint/my">My
-											Blueprints</NavigationDropdownItem>
 										<NavigationDropdownItem to="#" onClick={ () => logout() }
 										                        permission={ ERoles.member }
 										                        className="text-red-600">
@@ -99,7 +99,7 @@ const TopNav: FunctionComponent = () => {
 
 				<div className="hidden sm:hidden" id="mobile-menu" ref={ divRef }>
 					<div className="space-y-1 px-2 pb-3 pt-2">
-						<NavigationLink to="/home" className="w-full block">Blueprints</NavigationLink>
+						{ Nav }
 					</div>
 				</div>
 			</div>
