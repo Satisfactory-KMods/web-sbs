@@ -1,3 +1,4 @@
+import type { ClientUserAccount } from "@/server/src/MongoDB/DB_UserAccount";
 import DB_UserAccount from "@/server/src/MongoDB/DB_UserAccount";
 import { ERoles } from "@/src/Shared/Enum/ERoles";
 import {
@@ -16,7 +17,7 @@ export const admin_users = router( {
 	} ) ).query( async( { input } ) => {
 		const { limit, skip } = input;
 		try {
-			const data = await DB_UserAccount.find( {}, { salt:0, hash:0, email:0 }, { sort: { cratedAt: -1 }, limit, skip } );
+			const data = await DB_UserAccount.find( {}, { salt:0, hash:0, email:0 }, { sort: { cratedAt: -1 }, limit, skip } ) as ClientUserAccount[];
 			const count = await DB_UserAccount.count( {} );
 			return { data, count };
 		} catch( e ) {

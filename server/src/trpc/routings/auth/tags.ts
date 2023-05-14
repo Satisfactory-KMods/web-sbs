@@ -1,3 +1,6 @@
+import DB_BlueprintPacks from "@/server/src/MongoDB/DB_BlueprintPacks";
+import DB_Blueprints from "@/server/src/MongoDB/DB_Blueprints";
+import type { Tag } from "@server/MongoDB/DB_Tags";
 import DB_Tags from "@server/MongoDB/DB_Tags";
 import {
 	adminProcedure,
@@ -15,7 +18,7 @@ export const admin_tags = router( {
 	} ) ).query( async( { input } ) => {
 		const { limit, skip } = input;
 		try {
-			const data = await DB_Tags.find( {}, {}, { sort: { cratedAt: -1 }, limit, skip } );
+			const data = await DB_Tags.find( {}, {}, { sort: { cratedAt: -1 }, limit, skip } ) as Tag[];
 			const count = await DB_Tags.count( {} );
 			return { data, count };
 		} catch( e ) {
@@ -57,6 +60,8 @@ export const admin_tags = router( {
 		const { id } = input;
 		try {
 			await DB_Tags.findByIdAndDelete( id );
+			await DB_BlueprintPacks.updateMany( { tags: { $in: [ id ] } }, { $pull: { tags: id } } );
+			await DB_Blueprints.updateMany( { tags: { $in: [ id ] } }, { $pull: { tags: id } } );
 			return "Tag deleted";
 		} catch( e ) {
 			handleTRCPErr( e );
