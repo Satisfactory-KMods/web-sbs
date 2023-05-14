@@ -12,6 +12,7 @@ import {
 	HiBars3,
 	RiDoorOpenLine
 } from "react-icons/all";
+import { Link } from "react-router-dom";
 
 const TopNav: FunctionComponent = () => {
 	const { user, loggedIn, logout } = useAuth();
@@ -47,11 +48,11 @@ const TopNav: FunctionComponent = () => {
 							</button>
 						</div>
 						<div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-							<div className="flex flex-shrink-0 items-center">
+							<Link to="/blueprint/list" className="flex flex-shrink-0 items-center">
 								<img className="block h-8 w-auto"
 								     src="/images/logo.png"
 								     alt="Kmods" />
-							</div>
+							</Link>
 							<div className="hidden sm:ml-6 sm:block">
 								<div className="flex space-x-4">
 									{ Nav }
