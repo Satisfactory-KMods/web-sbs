@@ -2,7 +2,6 @@ import BlueprintCard from "@app/Components/Blueprints/BlueprintCard";
 import BlueprintFilter from "@app/Components/Blueprints/BlueprintFilter";
 import PageManager from "@app/Components/Main/PageManager";
 import {
-	tRPC_Auth,
 	tRPC_Public,
 	tRPC_handleError
 } from "@applib/tRPC";
@@ -28,7 +27,7 @@ const Component: FunctionComponent = () => {
 	const onPageChange: Parameters<typeof useRawPageHandler>[1] = async( options ) => {
 		setIsFetching( true );
 		const queryFilter = { filterOptions: filter, ...options };
-		const Blueprints = await tRPC_Auth.blueprints.myBlueprints.query( queryFilter ).catch( tRPC_handleError );
+		const Blueprints = await tRPC_Public.blueprint.getBlueprints.query( queryFilter ).catch( tRPC_handleError );
 		if( Blueprints ) {
 			setBlueprints( Blueprints.blueprints );
 			setTotalBlueprints( Blueprints.totalBlueprints );
