@@ -27,8 +27,8 @@ global.SystemLib = new SystemLib_Class();
 global.Api = express();
 global.HttpServer = http.createServer( global.Api );
 
-Api.use( bodyParser.urlencoded( { extended: true } ) );
 Api.use( bodyParser.json() );
+Api.use( bodyParser.urlencoded( { extended: true } ) );
 Api.use( express.static( path.join( __BaseDir, "../..", "build" ), { extensions: [ "js" ] } ) );
 
 Api.use( function( req, res, next ) {

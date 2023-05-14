@@ -14,7 +14,7 @@ const BlueprintEditorCheckList: FunctionComponent<BlueprintEditorCheckListProps>
 
 	return (
 		<div className={ `p-3 border-b bg-gray-900 border-gray-700  ${ done ? "text-green-500" : unCheckedColor }` }>
-			{ done ? <FaCheck className="inline me-1 text-xl pb-1" /> : unCheckedIcon } <b>{ label }</b> <span>Upload one or up to 5 images</span>
+			{ done ? <FaCheck className="inline me-1 text-xl pb-1" /> : unCheckedIcon } <b>{ label }</b> <span>{ children }</span>
 		</div>
 	 );
 };

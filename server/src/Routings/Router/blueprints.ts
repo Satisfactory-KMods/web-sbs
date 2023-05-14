@@ -1,5 +1,5 @@
-import type { BlueprintClass } from "@/server/src/Lib/Blueprint.Class";
 import type { User } from "@/src/Shared/Class/User.Class";
+import { ERoles } from "@/src/Shared/Enum/ERoles";
 import { dataResponse, errorResponse } from "@kyri123/lib";
 import { BlueprintParser } from "@server/Lib/BlueprintParser";
 import {
@@ -15,6 +15,8 @@ import type {
 	Response
 } from "express";
 import fs from "fs";
+import _ from "lodash";
+import type { HydratedDocument } from "mongoose";
 import path from "path";
 import { z } from "zod";
 
@@ -111,47 +113,74 @@ export default function() {
 		res.status( 500 ).json( errorResponse( "Something goes wrong!", res ) );
 	} );
 
-	Router.post( ApiUrl( EApiBlueprintUtils.edit ), MW_Auth, async( req: ExpressRequest<{
+	Router.post( ApiUrl( EApiBlueprintUtils.edit ), upload.fields( [ { name: 'sbp', maxCount: 1 }, { name: 'sbpcfg', maxCount: 1 }, { name: 'images', maxCount: 5 } ] ), MW_Auth, async( req: ExpressRequest<{
 		blueprint: Omit<BlueprintData, "_id" | "__v">,
-		blueprintName: string,
-		blueprintId: BlueprintClass<true>
+		blueprintId: string,
+		UserClass: User
 	}>, res: Response ) => {
 		try {
 			if( typeof req.body.blueprint === "string" ) {
 				req.body.blueprint = JSON.parse( req.body.blueprint );
 			}
-			const blueprint = new DB_Blueprints( req.body.blueprint );
-			blueprint.totalRating = 0;
-			blueprint.downloads = 0;
-			blueprint.totalRatingCount = 0;
-			blueprint.rating = [];
-			blueprint.images = [];
-			blueprint.blacklisted = false;
+			const blueprint = await DB_Blueprints.findById<HydratedDocument<BlueprintData>>( req.body.blueprintId );
+			if( !blueprint ) {
+				return res.status( 404 ).json( errorResponse( "Blueprint not found!", res ) );
+			}
+			if( !( _.isEqual( req.body.UserClass.Get._id, blueprint.owner ) || req.body.UserClass.HasPermission( ERoles.moderator ) ) ) {
+				return res.status( 401 ).json( errorResponse( "Unauthorized", res ) );
+			}
+
+			blueprint.name = req.body.blueprint.name;
+			blueprint.description = req.body.blueprint.description;
+			blueprint.tags = req.body.blueprint.tags;
+			blueprint.mods = req.body.blueprint.mods;
+			blueprint.DesignerSize = req.body.blueprint.DesignerSize;
+
+			blueprint.markModified( "name" );
+			blueprint.markModified( "description" );
+			blueprint.markModified( "tags" );
+			blueprint.markModified( "mods" );
+			blueprint.markModified( "DesignerSize" );
 
 			if( req.files && !Array.isArray( req.files ) ) {
 				const id = blueprint._id.toString();
 				const blueprintDir = path.join( __BlueprintDir, id );
 				fs.mkdirSync( blueprintDir, { recursive: true } );
-				blueprint.originalName = req.files.sbp[ 0 ].originalname.replace( ".sbp", "" );
-				fs.renameSync( req.files.sbp[ 0 ].path, path.join( blueprintDir, `${ id }.sbp` ) );
-				fs.renameSync( req.files.sbpcfg[ 0 ].path, path.join( blueprintDir, `${ id }.sbpcfg` ) );
-				let idx = 0;
-				for( const file of req.files.images ) {
-					if( file.mimetype && file.mimetype.split( "/" )[ 0 ] === "image" && file.mimetype.split( "/" )[ 1 ] ) {
-						const newName = `image_${ id }_${ idx }.${ file.mimetype.split( "/" )[ 1 ] }`;
-						console.log( `Renaming ${ file.originalname } to ${ newName }` );
-						fs.renameSync( file.path, path.join( blueprintDir, newName ) );
-						blueprint.images.push( newName );
-						idx++;
-					}
-				}
 
-				if( await blueprint.save() ) {
-					return res.status( 200 ).json( dataResponse( {
-						msg: "Blueprint created successfully",
-						blueprintId: id
-					} ) );
+				if( req.files.sbp && req.files.sbpcfg ) {
+					fs.rmSync( path.join( blueprintDir, `${ blueprint.originalName }.sbp` ), { recursive: true } );
+					fs.rmSync( path.join( blueprintDir, `${ blueprint.originalName }.sbpcfg` ), { recursive: true } );
+					blueprint.originalName = req.files.sbp[ 0 ].originalname.replace( ".sbp", "" );
+					blueprint.markModified( "originalName" );
+					fs.renameSync( req.files.sbp[ 0 ].path, path.join( blueprintDir, `${ id }.sbp` ) );
+					fs.renameSync( req.files.sbpcfg[ 0 ].path, path.join( blueprintDir, `${ id }.sbpcfg` ) );
 				}
+				if( req.files.images ) {
+					let idx = 0;
+					blueprint.images = [];
+					for( const file of fs.readdirSync( blueprintDir ) ) {
+						if( file.startsWith( "image_" ) ) {
+							fs.rmSync( path.join( blueprintDir, file ), { recursive: true } );
+						}
+					}
+					for( const file of req.files.images ) {
+						if( file.mimetype && file.mimetype.split( "/" )[ 0 ] === "image" && file.mimetype.split( "/" )[ 1 ] ) {
+							const newName = `image_${ id }_${ idx }.${ file.mimetype.split( "/" )[ 1 ] }`;
+							console.log( `Renaming ${ file.originalname } to ${ newName }` );
+							fs.renameSync( file.path, path.join( blueprintDir, newName ) );
+							blueprint.images.push( newName );
+							idx++;
+						}
+					}
+					blueprint.markModified( "images" );
+				}
+			}
+
+			if( await blueprint.save() ) {
+				return res.status( 200 ).json( dataResponse( {
+					msg: "Blueprint edited successfully",
+					blueprintId: blueprint._id.toString()
+				} ) );
 			}
 		} catch( e ) {
 			if( e instanceof Error ) {

@@ -9,10 +9,7 @@ export interface IFile {
 }
 
 const Component: FunctionComponent = () => {
-	const onSaved = async() => {
-	};
-
-	return <BlueprintEditor onSaved={ onSaved } />;
+	return <BlueprintEditor />;
 };
 
 export {

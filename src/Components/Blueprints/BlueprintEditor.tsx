@@ -19,9 +19,8 @@ import { Button, Label, Textarea } from "flowbite-react";
 import _ from "lodash";
 import type { ChangeEventHandler, FunctionComponent } from "react";
 import { useContext, useEffect, useId, useMemo, useState } from "react";
-import { BiTag, BiUser, BiWrench } from "react-icons/bi";
+import { BiSave, BiTag, BiUser, BiWrench } from "react-icons/bi";
 import { BsBox, BsBoxes, BsHouseAdd } from "react-icons/bs";
-import { HiSave } from "react-icons/hi";
 import { MdOutlinePhotoSizeSelectSmall } from "react-icons/md";
 import ReactMarkdown from "react-markdown";
 import { Link, useNavigate } from "react-router-dom";
@@ -30,11 +29,10 @@ import Select from "react-select";
 
 interface BlueprintEditorProps {
 	defaultData?: BlueprintData
-	defaultBlueprintData?: Blueprint,
-	onSaved: () => Promise<void>
+	defaultBlueprintData?: Blueprint
 }
 
-const BlueprintEditor: FunctionComponent<BlueprintEditorProps> = ( { defaultData, defaultBlueprintData, onSaved } ) => {
+const BlueprintEditor: FunctionComponent<BlueprintEditorProps> = ( { defaultData, defaultBlueprintData } ) => {
 	const id = useId();
 	const navigate = useNavigate();
 	const { user } = useAuth();
@@ -132,7 +130,7 @@ const BlueprintEditor: FunctionComponent<BlueprintEditorProps> = ( { defaultData
 	useEffect( () => {
 		if( sbpFile && sbpcfgFile ) {
 			if( !_.isEqual( sbpFile.name.replace( ".sbp", "" ), sbpcfgFile.name.replace( ".sbpcfg", "" ) ) ) {
-				setBlueprintParse( undefined );
+				setBlueprintParse( defaultBlueprintData );
 				return;
 			}
 			const formData = new FormData();
@@ -146,8 +144,8 @@ const BlueprintEditor: FunctionComponent<BlueprintEditorProps> = ( { defaultData
 				} );
 			return;
 		}
-		setBlueprintParse( undefined );
-	}, [ sbpFile, sbpcfgFile ] );
+		setBlueprintParse( defaultBlueprintData );
+	}, [ defaultBlueprintData, sbpFile, sbpcfgFile ] );
 
 	// [ title, description, sameblueprint, image(s), tag(s) ]
 	const checkList = useMemo( () => {
@@ -169,17 +167,27 @@ const BlueprintEditor: FunctionComponent<BlueprintEditorProps> = ( { defaultData
 	const uploadBlueprint = async() => {
 		setIsUploading( true );
 		if( isEditing ) {
-			const data = new FormData();
-			sbpFile && data.append( "sbp", sbpFile );
-			sbpcfgFile && data.append( "sbpcfg", sbpcfgFile );
-			if( images ) {
+			const data: FormData = new FormData();
+
+			if( data instanceof FormData ) {
+				for( var pair of data.entries() ) {
+					console.log( pair[ 0 ] + ', ' + pair[ 1 ] );
+				}
+			}
+			if( checkList[ 2 ] && sbpFile && sbpcfgFile ) {
+				data.append( "sbp", sbpFile );
+				data.append( "sbpcfg", sbpcfgFile );
+			}
+			if( checkList[ 3 ] && images ) {
 			 	for( const file of images ) {
 					data.append( "images", file );
 				}
 			}
-			sbpcfgFile && data.append( "blueprint", JSON.stringify( form ) );
+			data.append( "blueprintId", defaultData!._id );
+			data.append( "blueprint", JSON.stringify( form ) );
+
 			//FormData_append_object( data, form, "blueprint" );
-			await API_QueryLib.PostToAPI<{ msg: string, blueprintId: string }>( EApiBlueprintUtils.create, data )
+			await API_QueryLib.PostToAPI<{ msg: string, blueprintId: string }>( EApiBlueprintUtils.edit, data, data instanceof FormData ? "multipart/form-data" : "application/json" )
 				.then( async response => {
 					await successSwalAwait( response.msg );
 					navigate( `/blueprint/${ response.blueprintId }` );
@@ -193,7 +201,7 @@ const BlueprintEditor: FunctionComponent<BlueprintEditorProps> = ( { defaultData
 				for( const file of images ) {
 					data.append( "images", file );
 				}
-				sbpcfgFile && data.append( "blueprint", JSON.stringify( form ) );
+				data.append( "blueprint", JSON.stringify( form ) );
 				//FormData_append_object( data, form, "blueprint" );
 				await API_QueryLib.PostToAPI<{ msg: string, blueprintId: string }>( EApiBlueprintUtils.create, data )
 					.then( async response => {
@@ -258,7 +266,7 @@ const BlueprintEditor: FunctionComponent<BlueprintEditorProps> = ( { defaultData
 						<SBSInput name="img" accept=".gif,.jpg,.jpeg,.png" multiple max={ 5 } min={ 1 } required={ !isEditing } label="Images (Min 1, Max 5)" type="file" onChange={ handleFileSelect } />
 
 						{ ( ( !isEditing && checkList[ 0 ] && checkList[ 1 ] && checkList[ 2 ] && checkList[ 3 ] ) || isEditing ) && (
-							<LoadingButton isLoading={ isUploading } color="green" onClick={ uploadBlueprint } Icon={ HiSave } fullSized>Start Upload</LoadingButton>
+							<LoadingButton isLoading={ isUploading } color="green" onClick={ uploadBlueprint } Icon={ BiSave } fullSized>Start Upload</LoadingButton>
 						) }
 					</div>
 				</div>
@@ -312,11 +320,11 @@ const BlueprintEditor: FunctionComponent<BlueprintEditorProps> = ( { defaultData
 					</BlueprintEditorCheckList>
 
 					<BlueprintEditorCheckList done={ checkList[ 2 ] } optional={ isEditing } label="Blueprint" >
-						Set a title
+						Select the .sbp and .sbpcfg files (note the names must be matched)
 					</BlueprintEditorCheckList>
 
 					<BlueprintEditorCheckList done={ checkList[ 3 ] } optional={ isEditing } label="Images" >
-						Select the .sbp and .sbpcfg files (note the names must be matched)
+						Select some images (up to 5 but min 1)
 					</BlueprintEditorCheckList>
 
 					<BlueprintEditorCheckList done={ checkList[ 4 ] } optional={ true } label="Tags" >
