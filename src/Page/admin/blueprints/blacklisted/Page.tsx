@@ -12,12 +12,11 @@ import { useState } from "react";
 import { useLoaderData } from "react-router-dom";
 
 const Component: FunctionComponent = () => {
+	usePageTitle( `SBS - Admin: Blueprints` );
 	const { blueprints, totalBlueprints } = useLoaderData() as IndexLoaderData;
 
 	const [ TotalBlueprints, setTotalBlueprints ] = useState<number>( () => totalBlueprints );
 	const [ Blueprints, setBlueprints ] = useState<BlueprintData[]>( () => blueprints );
-
-	usePageTitle( `SBS - My Blueprints` );
 
 	const [ filter, setFilter ] = useState<FilterSchema>( {} );
 	const [ isFetching, setIsFetching ] = useState<boolean>( false );

@@ -1,4 +1,5 @@
 import PolicyText from "@applib/Policy.md";
+import { usePageTitle } from "@kyri123/k-reactutils";
 import type { FunctionComponent } from "react";
 import {
 	useEffect,
@@ -28,6 +29,7 @@ export const mdxComponents: Components = {
 };
 
 const Component: FunctionComponent = () => {
+	usePageTitle( `SBS - Private Policy` );
 	const [ privacyPolicyText, setPrivacyPolicyText ] = useState( "" );
 
 	useEffect( () => {

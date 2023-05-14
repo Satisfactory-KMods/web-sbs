@@ -13,14 +13,13 @@ import { FaPlus } from "react-icons/fa";
 import { useLoaderData } from "react-router-dom";
 
 const Component: FunctionComponent = () => {
+	usePageTitle( `SBS - Admin: Tags` );
 	const { tags, totalTags } = useLoaderData() as TagAdminLoaderData;
 
 	const [ total, setTotal ] = useState( () => totalTags );
 	const [ data, setData ] = useState( () => tags );
 	const [ DisplayName, setDisplayName ] = useState( "" );
 	const [ isFetching, setIsFetching ] = useState( false );
-
-	usePageTitle( `SBS - My Blueprints` );
 
 	const onPageChange: Parameters<typeof useRawPageHandler>[1] = async( options ) => {
 		const response = await tRPC_Auth.adminTags.list.query( options ).catch( tRPC_handleError );
