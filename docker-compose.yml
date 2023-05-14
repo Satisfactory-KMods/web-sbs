@@ -16,7 +16,6 @@ services:
     volumes:
       # config for the cashboard if you want to edit that copy to a other path and mount it to here.
       - ./mount/files:/mount/
-      - ./mount/tmp:/tmp/
       - ./mount/users:/build/images/user/
     external_links:
       - mongodb:mongodb
