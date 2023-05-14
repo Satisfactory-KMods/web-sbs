@@ -1,4 +1,5 @@
-import DB_Tags from "@server/MongoDB/DB_Tags";
+import DB_UserAccount from "@/server/src/MongoDB/DB_UserAccount";
+import { ERoles } from "@/src/Shared/Enum/ERoles";
 import {
 	adminProcedure,
 	handleTRCPErr,
@@ -8,14 +9,14 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 
-export const admin_tags = router( {
-	list: adminProcedure.input( z.object( {
+export const admin_users = router( {
+	listUsers: adminProcedure.input( z.object( {
 		limit: z.number().optional(),
 		skip: z.number().optional()
 	} ) ).mutation( async( { input } ) => {
 		const { limit, skip } = input;
 		try {
-			const users = await DB_Tags.find( {}, {}, { sort: { cratedAt: -1 }, limit, skip } );
+			const users = await DB_UserAccount.find( {}, { salt:0, hash:0, email:0 }, { sort: { cratedAt: -1 }, limit, skip } );
 			return users;
 		} catch( e ) {
 			handleTRCPErr( e );
@@ -23,27 +24,14 @@ export const admin_tags = router( {
 		throw new TRPCError( { message: "Something goes wrong!", code: "INTERNAL_SERVER_ERROR" } );
 	} ),
 
-	create: adminProcedure.input( z.object( {
-		DisplayName: z.string()
-	} ) ).mutation( async( { input } ) => {
-		const { DisplayName } = input;
-		try {
-			await DB_Tags.create( { DisplayName } );
-			return "Tag created";
-		} catch( e ) {
-			handleTRCPErr( e );
-		}
-		throw new TRPCError( { message: "Something goes wrong!", code: "INTERNAL_SERVER_ERROR" } );
-	} ),
-
-	edit: adminProcedure.input( z.object( {
+	setRole: adminProcedure.input( z.object( {
 		id: z.string(),
-		DisplayName: z.string()
+		role: z.nativeEnum( ERoles )
 	} ) ).mutation( async( { input } ) => {
-		const { DisplayName, id } = input;
+		const { role, id } = input;
 		try {
-			await DB_Tags.findByIdAndUpdate( id, { DisplayName } );
-			return "Tag modified";
+			await DB_UserAccount.findByIdAndUpdate( id, { role } );
+			return "User modified";
 		} catch( e ) {
 			handleTRCPErr( e );
 		}
@@ -55,8 +43,8 @@ export const admin_tags = router( {
 	} ) ).mutation( async( { input } ) => {
 		const { id } = input;
 		try {
-			await DB_Tags.findByIdAndDelete( id );
-			return "Tag deleted";
+			await DB_UserAccount.findByIdAndDelete( id );
+			return "User deleted";
 		} catch( e ) {
 			handleTRCPErr( e );
 		}

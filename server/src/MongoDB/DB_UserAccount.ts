@@ -40,12 +40,6 @@ const UserAccountSchema = new mongoose.Schema( {
 export type UserAccount = z.infer<typeof ZodUserAccountSchema> & MongoBase;
 export type ClientUserAccount = Omit<UserAccount, "hash" | "salt" | "__v">;
 
-/**
- * @typedef {object} DestructuredModel
- * @property {object} models
- * @property {import("mongoose").Model} models.Note
- */
-/** @type {DestructuredModel} */
 export default mongoose.model<UserAccount, mongoose.Model<UserAccount, unknown, UserAccountMethods>>( "SBS_UserAccount", UserAccountSchema );
 export { UserAccountSchema };
 
