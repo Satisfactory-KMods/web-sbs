@@ -12,11 +12,12 @@ export const admin_tags = router( {
 	list: adminProcedure.input( z.object( {
 		limit: z.number().optional(),
 		skip: z.number().optional()
-	} ) ).mutation( async( { input } ) => {
+	} ) ).query( async( { input } ) => {
 		const { limit, skip } = input;
 		try {
-			const users = await DB_Tags.find( {}, {}, { sort: { cratedAt: -1 }, limit, skip } );
-			return users;
+			const data = await DB_Tags.find( {}, {}, { sort: { cratedAt: -1 }, limit, skip } );
+			const count = await DB_Tags.count( {} );
+			return { data, count };
 		} catch( e ) {
 			handleTRCPErr( e );
 		}

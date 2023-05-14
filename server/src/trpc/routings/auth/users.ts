@@ -13,11 +13,12 @@ export const admin_users = router( {
 	listUsers: adminProcedure.input( z.object( {
 		limit: z.number().optional(),
 		skip: z.number().optional()
-	} ) ).mutation( async( { input } ) => {
+	} ) ).query( async( { input } ) => {
 		const { limit, skip } = input;
 		try {
-			const users = await DB_UserAccount.find( {}, { salt:0, hash:0, email:0 }, { sort: { cratedAt: -1 }, limit, skip } );
-			return users;
+			const data = await DB_UserAccount.find( {}, { salt:0, hash:0, email:0 }, { sort: { cratedAt: -1 }, limit, skip } );
+			const count = await DB_UserAccount.count( {} );
+			return { data, count };
 		} catch( e ) {
 			handleTRCPErr( e );
 		}

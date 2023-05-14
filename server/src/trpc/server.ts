@@ -1,3 +1,4 @@
+import { admin_users } from "@/server/src/trpc/routings/auth/users";
 import { MW_Auth } from "@server/Lib/Express.Lib";
 import { BC } from "@server/Lib/System.Lib";
 import { auth_logout } from "@server/trpc/routings/auth/logout";
@@ -29,7 +30,8 @@ const authRouter = router( {
 	blueprints: auth_blueprints,
 	updateAccount: auth_updateAccount,
 	logout: auth_logout,
-	adminTags: admin_tags
+	adminTags: admin_tags,
+	adminUsers: admin_users
 } );
 
 
