@@ -1,6 +1,6 @@
 import { tRPC_Public } from "@app/Lib/tRPC";
 import type { LoaderBlueprintBase } from "@app/Types/loader";
-import { validateBlueprint } from "@applib/loaderHelper";
+import { LoginRule, validateBlueprint } from "@applib/loaderHelper";
 import type { Blueprint } from "@etothepii/satisfactory-file-parser";
 import type { LoaderFunction } from "react-router-dom";
 import { json, redirect } from "react-router-dom";
@@ -10,7 +10,7 @@ export type BlueprintIdLoader = LoaderBlueprintBase & {
 };
 
 const blueprintIdLoader: LoaderFunction = async( { params, request } ) => {
-	const result = await validateBlueprint( { params, request } );
+	const result = await validateBlueprint( { params, request }, "/error/401", LoginRule.BlueprintOwner );
 	if( result instanceof Response ) {
 		return result;
 	}

@@ -6,14 +6,12 @@ import {
 import type { LoaderFunction } from "react-router-dom";
 import { json } from "react-router-dom";
 
-export type IndexLoaderData = LoaderDataBase;
-
 const loader: LoaderFunction = async( { params, request } ) => {
-	const result = await validateLogin( { params, request }, LoginRule.LoggedIn );
+	const result = await validateLogin( { params, request }, LoginRule.LoggedIn, "/account/signin" );
 	if( result instanceof Response ) {
 		return result;
 	}
-	return json<IndexLoaderData>( { ...result } );
+	return json<LoaderDataBase>( { ...result } );
 };
 
 export { loader };

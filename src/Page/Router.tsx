@@ -98,22 +98,6 @@ const rootRouter = createBrowserRouter( [
 				}
 			},
 			{
-				path: "/blueprint/packs",
-				lazy: async() => await import( "@page/blueprint/packs/Page" ),
-				loader: async( { request, params } ) => {
-					const { loader } = await import( "@page/blueprint/packs/Loader" );
-					return loader( { request, params } );
-				}
-			},
-			{
-				path: "/blueprint/packs/:packId",
-				lazy: async() => await import( "@page/blueprint/packs/[packId]" ),
-				loader: async( { request, params } ) => {
-					const { loader } = await import( "@page/blueprint/packs/[packId]Loader" );
-					return loader( { request, params } );
-				}
-			},
-			{
 				path: "/blueprint/list",
 				lazy: async() => await import( "@page/blueprint/list/Page" ),
 				loader: async( { request, params } ) => {

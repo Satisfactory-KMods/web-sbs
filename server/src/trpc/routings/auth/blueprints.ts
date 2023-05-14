@@ -81,7 +81,7 @@ export const auth_blueprints = router( {
 		try {
 			const { filter, options } = buildFilter( filterOptions );
 			const totalBlueprints = await DB_Blueprints.count( filter );
-			const blueprints = await DB_Blueprints.find<BlueprintData>( { ...filter, blacklisted: { $ne : false }, owner: userClass.Get._id }, null, { ...options, limit, skip } );
+			const blueprints = await DB_Blueprints.find<BlueprintData>( { ...filter, blacklisted: { $ne : true }, owner: userClass.Get._id }, null, { ...options, limit, skip } );
 			return { blueprints, totalBlueprints };
 		} catch( e ) {
 			handleTRCPErr( e );

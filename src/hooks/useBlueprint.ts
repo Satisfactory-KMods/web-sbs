@@ -1,5 +1,5 @@
 import DataContext from "@app/Context/DataContext";
-import { fireSwalFromApi, successSwal, tRPC_Auth, tRPC_Public, tRPC_handleError } from "@app/Lib/tRPC";
+import { fireSwalFromApi, onConfirm, successSwal, tRPC_Auth, tRPC_Public, tRPC_handleError } from "@app/Lib/tRPC";
 import type { Blueprint } from "@etothepii/satisfactory-file-parser";
 import { useAuth } from "@hooks/useAuth";
 import type { Mod } from "@kyri123/lib";
@@ -122,11 +122,15 @@ export function useBlueprint( InitValue: string | BlueprintData, defaultUser?: {
 			return false;
 		}
 
-		const result = await tRPC_Auth.blueprints.toggleBlueprint.mutate( { blueprintId: BlueprintID } )
-			.then( successSwal )
-			.catch( tRPC_handleError );
 
-		return !!result;
+		if( await onConfirm( "Do you really want to remove that Blueprint?" ) ) {
+			const result = await tRPC_Auth.blueprints.toggleBlueprint.mutate( { blueprintId: BlueprintID } )
+				.then( successSwal )
+				.catch( tRPC_handleError );
+
+			return !!result;
+		}
+		return false;
 	};
 
 	const remove = async(): Promise<boolean> => {
@@ -139,11 +143,14 @@ export function useBlueprint( InitValue: string | BlueprintData, defaultUser?: {
 			return false;
 		}
 
-		const result = await tRPC_Auth.blueprints.deleteBlueprint.mutate( { blueprintId: BlueprintID } )
-			.then( successSwal )
-			.catch( tRPC_handleError );
+		if( await onConfirm( "Do you really want to remove that Blueprint?" ) ) {
+			const result = await tRPC_Auth.blueprints.deleteBlueprint.mutate( { blueprintId: BlueprintID } )
+				.then( successSwal )
+				.catch( tRPC_handleError );
 
-		return !!result;
+			return !!result;
+		}
+		return false;
 	};
 
 	return {
