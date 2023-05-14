@@ -1,17 +1,22 @@
-import { IMO_UserAccount } from "@shared/Types/MongoDB";
-import DB_SessionToken     from "@server/MongoDB/DB_SessionToken";
-import * as jwt            from "jsonwebtoken";
+import DB_SessionToken from "@server/MongoDB/DB_SessionToken";
+import type {
+	ClientUserAccount,
+	UserAccount
+} from "@server/MongoDB/DB_UserAccount";
+import type { JwtPayload } from "jsonwebtoken";
+import * as jwt from "jsonwebtoken";
 
-export async function CreateSession( User : Partial<IMO_UserAccount> ) : Promise<string | undefined> {
-	delete User.__v;
+export type UserSession = ClientUserAccount & Partial<JwtPayload>;
+
+export async function CreateSession( User: Partial<UserAccount>, stayLoggedIn = false ): Promise<string | undefined> {
 	delete User.salt;
 	delete User.hash;
 	try {
 		const Token = jwt.sign( User, process.env.JWTToken || "", {
-			expiresIn: "7d"
+			expiresIn: stayLoggedIn ? "28d" : "1d"
 		} );
 		const Decoded = jwt.verify( Token, process.env.JWTToken || "" ) as jwt.JwtPayload;
-		if ( Decoded ) {
+		if( Decoded ) {
 			await DB_SessionToken.deleteMany( { expire: { $lte: new Date() } } );
 			const session = await DB_SessionToken.create( {
 				token: Token,
@@ -20,9 +25,8 @@ export async function CreateSession( User : Partial<IMO_UserAccount> ) : Promise
 			} );
 			return session.token;
 		}
-	}
-	catch ( e ) {
-		if ( e instanceof Error ) {
+	} catch( e ) {
+		if( e instanceof Error ) {
 			SystemLib.LogError( "api", e.message );
 		}
 	}

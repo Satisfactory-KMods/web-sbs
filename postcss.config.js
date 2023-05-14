@@ -1,7 +1,8 @@
-const { join } = require( "path" );
+/* eslint-disable no-undef */
 module.exports = {
-	plugins: {
-		tailwindcss: { config: join( __dirname, 'tailwind.config.js' ) },
-		autoprefixer: {}
-	},
-}
+	plugins:
+		{
+			tailwindcss: {},
+			autoprefixer: {}
+		}
+};

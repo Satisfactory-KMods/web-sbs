@@ -1,33 +1,29 @@
+import DataContext from "@app/Context/DataContext";
+import { fireSwalFromApi, onConfirm, successSwal, tRPC_Auth, tRPC_Public, tRPC_handleError } from "@app/Lib/tRPC";
+import type { Blueprint } from "@etothepii/satisfactory-file-parser";
+import { useAuth } from "@hooks/useAuth";
+import type { Mod } from "@kyri123/lib";
+import type { BlueprintData } from "@server/MongoDB/DB_Blueprints";
+import type { Tag } from "@server/MongoDB/DB_Tags";
+import { EDesignerSize } from "@shared/Enum/EDesignerSize";
+import { ERoles } from "@shared/Enum/ERoles";
+import _ from "lodash";
 import {
 	useContext,
 	useEffect,
 	useMemo,
 	useState
-}                        from "react";
-import { API_QueryLib }  from "@applib/Api/API_Query.Lib";
-import {
-	EApiBlueprintUtils,
-	EApiQuestionary,
-	EApiUserBlueprints
-}                        from "@shared/Enum/EApiPath";
-import {
-	IMO_Blueprint,
-	IMO_Mod,
-	IMO_Tag
-}                        from "@shared/Types/MongoDB";
-import { EDesignerSize } from "@shared/Enum/EDesignerSize";
-import AuthContext       from "@context/AuthContext";
-import { GetSocket }     from "@applib/SocketIO";
-import { ERoles }        from "@shared/Enum/ERoles";
-import { Blueprint }     from "@etothepii/satisfactory-file-parser";
+} from "react";
 
 export interface IBlueprintHookConfig {
-	IgnoreBlacklisted : boolean;
+	IgnoreBlacklisted: boolean;
+	blueprint: Blueprint;
 }
 
-export function useBlueprint( InitValue : string | IMO_Blueprint, Config? : Partial<IBlueprintHookConfig> ) {
-	const [ Blueprint, setBlueprint ] = useState<IMO_Blueprint>( () => {
-		if ( typeof InitValue === "string" ) {
+export function useBlueprint( InitValue: string | BlueprintData, defaultUser?: { id: string, username: string }, Config?: Partial<IBlueprintHookConfig> ) {
+	const { mods, tags } = useContext( DataContext );
+	const [ Blueprint, setBlueprint ] = useState<BlueprintData>( () => {
+		if( typeof InitValue === "string" ) {
 			return {
 				downloads: 0,
 				name: "",
@@ -37,157 +33,142 @@ export function useBlueprint( InitValue : string | IMO_Blueprint, Config? : Part
 				mods: [],
 				likes: [],
 				owner: "",
-				_id: "",
-				__v: 0
-			} as IMO_Blueprint;
+				_id: ""
+			} as unknown as BlueprintData;
 		}
-		return InitValue as IMO_Blueprint;
+		return InitValue as BlueprintData;
 	} );
+	const { loggedIn, user } = useAuth();
 	const [ DoQueryLikes, setDoQueryLikes ] = useState<boolean>( false );
-	const { IsLoggedIn, UserData } = useContext( AuthContext );
-	const [ Mods, setMods ] = useState<IMO_Mod[]>( [] );
-	const [ Tags, setTags ] = useState<IMO_Tag[]>( [] );
-	const [ BlueprintData, setBlueprintData ] = useState<Blueprint | undefined>( undefined );
+	const [ blueprintData, setBlueprintData ] = useState<Blueprint | undefined>( Config?.blueprint );
+	const [ Tags, setTags ] = useState<Tag[]>( [] );
+	const [ Mods, setMods ] = useState<Mod[]>( [] );
+	const [ owner, setOwner ] = useState<{ id: string, username: string }>( () => defaultUser || { id: "", username: "" } );
 
 	const BlueprintID = useMemo( () => {
-		if ( typeof InitValue === "string" ) {
+		if( typeof InitValue === "string" ) {
 			return InitValue;
 		}
 		return InitValue._id;
 	}, [ InitValue ] );
 
-	const IsOwner = useMemo( () => {
-		return UserData.Get._id === Blueprint.owner;
-	}, [ UserData.Get._id, Blueprint.owner ] );
+	const isOwner = useMemo( () => {
+		return user.Get._id === owner.id;
+	}, [ owner.id, user.Get._id ] );
 
-	const BlueprintValid = useMemo( () => {
-		if ( Config?.IgnoreBlacklisted ) {
+	const isValid = useMemo( () => {
+		if( Config?.IgnoreBlacklisted ) {
 			return Blueprint._id !== "";
 		}
 		return Blueprint._id !== "" && !Blueprint.blacklisted;
 	}, [ Blueprint._id, Blueprint.blacklisted, Config?.IgnoreBlacklisted ] );
 
-	const QueryModsAndTags = async() => {
-		if ( !BlueprintValid ) {
-			return;
+	const updateData = ( newData?: BlueprintData ) => {
+		const blueprintData = newData || Blueprint;
+		setTags( tags.filter( e => blueprintData.tags.includes( e._id ) ) );
+		setMods( mods.filter( e => blueprintData.mods.includes( e.mod_reference ) ) );
+	};
+
+	const QueryBlueprintParse = async() => {
+		const Result = await tRPC_Public.blueprint.readBlueprint.mutate( { blueprintId: BlueprintID } ).catch( () => {} );
+
+		if( Result ) {
+			setBlueprintData( Result );
 		}
-
-		const [ Mods, Tags, BlueprintRead ] = await Promise.all( [
-			API_QueryLib.Qustionary<IMO_Mod>( EApiQuestionary.mods, { Filter: { mod_reference: { $in: Blueprint.mods } } } ),
-			API_QueryLib.Qustionary<IMO_Tag>( EApiQuestionary.tags, { Filter: { _id: { $in: Blueprint.tags } } } ),
-			API_QueryLib.PostToAPI( EApiBlueprintUtils.readblueprint, { Id: BlueprintID } )
-		] );
-
-		setMods( Mods.Data! );
-		setTags( Tags.Data! );
-		setBlueprintData( BlueprintRead.Data! );
 	};
 
 	const Query = async() => {
-		const Result = await API_QueryLib.Qustionary<IMO_Blueprint>( EApiQuestionary.blueprints, { Filter: { _id: BlueprintID } } );
-		if ( Result.Data && Result.Data.length > 0 ) {
-			setBlueprint( Result.Data![ 0 ] );
-			await QueryModsAndTags();
+		const [ blueprintData, Result ] = await Promise.all( [
+			tRPC_Public.blueprint.readBlueprint.mutate( { blueprintId: BlueprintID } ).catch( () => {} ),
+			tRPC_Public.blueprint.getBlueprint.query( { blueprintId: BlueprintID } ).catch( () => {} )
+		] );
+		blueprintData && setBlueprintData( blueprintData );
+		if( Result ) {
+			setOwner( { id: Result.blueprintData.owner, username: Result.bpOwnerName } );
+			updateData( Result.blueprintData );
+			setBlueprint( Result.blueprintData );
 		}
 	};
 
-	const AllowToEdit = useMemo( () => {
-		if ( IsLoggedIn && BlueprintValid ) {
-			return UserData.HasPermssion( ERoles.admin ) || Blueprint.owner.trim() === UserData.Get._id.trim();
+	const allowedToEdit = useMemo( () => {
+		if( loggedIn && ( isValid || Blueprint.blacklisted ) ) {
+			return user.HasPermission( ERoles.admin ) || _.isEqual( Blueprint.owner, user.Get._id );
 		}
 		return false;
-	}, [ UserData, IsLoggedIn, Blueprint.owner, BlueprintValid ] );
+	}, [ loggedIn, isValid, Blueprint.blacklisted, Blueprint.owner, user ] );
 
 	useEffect( () => {
-		Query();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [ InitValue, BlueprintValid ] );
-
-	useEffect( () => {
-		if ( BlueprintValid ) {
-			QueryModsAndTags();
+		if( typeof InitValue === "string" || !defaultUser ) {
+			Query();
+		} else {
+			QueryBlueprintParse();
+			updateData( Blueprint );
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [ Blueprint.tags, Blueprint.mods ] );
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [ InitValue ] );
 
-	useEffect( () => {
-		const SocketIO = GetSocket( BlueprintID );
-		const OnUpdate = async( BP : IMO_Blueprint ) => {
-			setBlueprint( () => BP );
-			await QueryModsAndTags();
-		};
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	useEffect( updateData, [ InitValue, isValid ] );
 
-		SocketIO.on( "BlueprintUpdated", OnUpdate );
-		return () => {
-			SocketIO.off( "BlueprintUpdated", OnUpdate );
-			SocketIO.close();
-		};
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [] );
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	useEffect( updateData, [ Blueprint.tags, Blueprint.mods ] );
 
-	const ToggleLike = async() : Promise<void> => {
-		if ( !IsLoggedIn ) {
-			await API_QueryLib.FireSwal( "Api.error.Unauthorized" );
-			return;
+	const toggleBlacklist = async(): Promise<boolean> => {
+		if( !loggedIn ) {
+			await fireSwalFromApi( "You need to be logged in to do this!", "error" );
+			return false;
 		}
 
-		if ( !BlueprintValid ) {
-			return;
+		if( !allowedToEdit ) {
+			return false;
 		}
 
-		setDoQueryLikes( true );
-		await API_QueryLib.PostToAPI( EApiUserBlueprints.like, { Id: Blueprint._id } );
 
-		setDoQueryLikes( false );
+		if( await onConfirm( "Do you really want to remove that Blueprint?" ) ) {
+			const result = await tRPC_Auth.blueprints.toggleBlueprint.mutate( { blueprintId: BlueprintID } )
+				.then( successSwal )
+				.catch( tRPC_handleError );
+
+			return !!result;
+		}
+		return false;
 	};
 
-	const ToggleBlacklist = async() : Promise<boolean> => {
-		if ( !IsLoggedIn ) {
-			await API_QueryLib.FireSwal( "Api.error.Unauthorized" );
+	const remove = async(): Promise<boolean> => {
+		if( !loggedIn ) {
+			await fireSwalFromApi( "You need to be logged in to do this!", "error" );
 			return false;
 		}
 
-		if ( !BlueprintValid ) {
+		if( !allowedToEdit ) {
 			return false;
 		}
 
-		setDoQueryLikes( true );
-		const Result = await API_QueryLib.PostToAPI( EApiUserBlueprints.blacklist, { Id: Blueprint._id } );
-		setDoQueryLikes( false );
-		return Result.Success;
-	};
+		if( await onConfirm( "Do you really want to remove that Blueprint?" ) ) {
+			const result = await tRPC_Auth.blueprints.deleteBlueprint.mutate( { blueprintId: BlueprintID } )
+				.then( successSwal )
+				.catch( tRPC_handleError );
 
-	const Remove = async() : Promise<boolean> => {
-		if ( !IsLoggedIn ) {
-			await API_QueryLib.FireSwal( "Api.error.Unauthorized" );
-			return false;
+			return !!result;
 		}
-
-		if ( !BlueprintValid ) {
-			return false;
-		}
-
-		setDoQueryLikes( true );
-		const Result = await API_QueryLib.PostToAPI( EApiUserBlueprints.remove, { Id: Blueprint._id } );
-		setDoQueryLikes( false );
-		return Result.Success;
+		return false;
 	};
 
 	return {
-		IsOwner,
-		Remove,
-		ToggleBlacklist,
-		BlueprintData,
+		owner,
+		isOwner,
+		remove,
+		toggleBlacklist,
+		blueprintParse: blueprintData,
 		Mods,
 		Tags,
-		AllowToLike: IsLoggedIn && Blueprint.owner !== UserData.Get._id,
-		AllowToEdit,
-		BlueprintValid,
+		allowedToLike: loggedIn && Blueprint.owner !== user.Get._id,
+		allowedToEdit,
+		isValid,
 		Update: Query,
 		Blueprint,
 		BlueprintID,
 		UpdateBlueprintCache: setBlueprint,
-		ToggleLike,
 		DoQueryLikes
 	};
 }

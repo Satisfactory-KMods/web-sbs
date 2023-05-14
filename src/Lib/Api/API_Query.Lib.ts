@@ -1,134 +1,101 @@
-import {
-	IAPIResponseBase,
-	TResponse_BP_Questionary
-}                                  from "@shared/Types/API_Response";
-import {
-	EApiQuestionary,
-	TApiPath
-}                                  from "@shared/Enum/EApiPath";
-import withReactContent            from "sweetalert2-react-content";
-import Swal                        from "sweetalert2";
-import { GetApiMessage }           from "@applib/lang/lang";
-import { TRequest_BP_Questionary } from "@shared/Types/API_Request";
-import { ILang }                   from "@app/Types/lang";
+import { fireSwalFromApi, tRPC_token } from "@app/Lib/tRPC";
+import type { ErrorDataResponseFormat, SuccessDataResponseFormat } from "@kyri123/lib";
+import type { EApiBlueprintUtils } from "@shared/Enum/EApiPath";
+import superjson from 'superjson';
+import type { SuperJSONResult } from "superjson/dist/types";
+
+export function FormData_append_object( fd: FormData, obj: any, key?: string ) {
+	for( const [ i, ] of Object.entries( obj ) ) {
+		const k = key ? key + '[' + i + ']' : i;
+		if( typeof obj[ i ] == 'object' )
+			FormData_append_object( fd, obj[ i ], k );
+		else
+			fd.append( k, obj[ i ] );
+	}
+}
 
 export class API_QueryLib {
-
-	static async FireSwal( Code? : keyof ILang["ApiMessgaes"] ) {
-		const Message = GetApiMessage( Code );
-		if ( Message ) {
-			const MySwal = withReactContent( Swal );
-			MySwal.fire( Message );
-		}
-	}
-
-	static async Qustionary<T = any>(
-		Path : EApiQuestionary,
-		Data : TRequest_BP_Questionary<T>,
-		ContentType? : "application/json" | "application/x-www-form-urlencoded" | "multipart/form-data"
-	) : Promise<TResponse_BP_Questionary<T[]>> {
-		return API_QueryLib.PostToAPI<TResponse_BP_Questionary<T[]>, TRequest_BP_Questionary<T>>( Path, Data, ContentType );
-	}
-
-	static async PostToAPI<T extends IAPIResponseBase = IAPIResponseBase<any>, D = any>(
-		Path : TApiPath,
-		Data : D,
-		ContentType? : "application/json" | "application/x-www-form-urlencoded" | "multipart/form-data"
-	) : Promise<T> {
-		const Token = window.localStorage.getItem( "session" );
-		const requestOptions : RequestInit = {
+	static async PostToAPI<T, D = any>(
+		Path: EApiBlueprintUtils,
+		Data: D,
+		ContentType?: "application/json" | "application/x-www-form-urlencoded" | "multipart/form-data"
+	): Promise<T> {
+		const requestOptions: RequestInit = {
 			method: "POST",
 			headers: {
-				Authorization: "Bearer " + Token || "",
+				Authorization: "Bearer " + tRPC_token(),
 				"User-Agent": "Frontend"
 			},
 			body: Data instanceof FormData ? Data : JSON.stringify( Data )
 		};
 
-		if ( !( Data instanceof FormData ) ) {
+		if( !( Data instanceof FormData ) ) {
 			// @ts-ignore
 			requestOptions.headers[ "Content-Type" ] = ContentType || "application/json";
 		}
 
-		let Response : IAPIResponseBase<T> = {
-			Success: false,
-			Auth: false,
-			Reached: false,
-			Data: undefined,
-			MessageCode: "Api.error.NotReachable"
-		} as T;
-
 		try {
-			const Resp : Response | void = await fetch(
+			const Resp: Response = await fetch(
 				`/api/v1/${ Path }`,
 				requestOptions
-			).catch( console.error );
-			if ( Resp ) {
-				if ( Resp.ok && Resp.status === 200 ) {
-					Response = ( await Resp.json() ) as IAPIResponseBase<T>;
-					Response.Reached = true;
+			);
+			if( Resp ) {
+				const resultJson = ( await Resp.json() ) as( SuccessDataResponseFormat | { error: SuperJSONResult } );
+				if( Resp.status === 200 ) {
+					return superjson.parse( JSON.stringify( ( resultJson as SuccessDataResponseFormat ).result.data ) ) as T;
+				} else {
+					const result = superjson.parse( JSON.stringify( ( resultJson as{ error: SuperJSONResult } ).error ) ) as ErrorDataResponseFormat;
+					fireSwalFromApi( result.message || "Something goes wrong!" );
 				}
 			}
-		}
-		catch ( e ) {
+		} catch( e ) {
 			console.error( e );
 		}
 
-		await this.FireSwal( Response.MessageCode );
-
-		return Response as T;
+		throw new Error( "Request failed" );
 	}
 
-	static async GetFromAPI<T extends IAPIResponseBase = IAPIResponseBase<any>, D = any>(
-		Path : TApiPath,
-		Data : D
-	) : Promise<T> {
-		const RequestData : string[] = [];
+	static async GetFromAPI<T, D = any>(
+		Path: EApiBlueprintUtils,
+		Data: D
+	): Promise<T> {
+		const RequestData: string[] = [];
 
-		if ( Data ) {
-			if ( typeof Data === "object" && !Array.isArray( Data ) ) {
-				for ( const [ Key, Value ] of Object.entries( Data ) ) {
+		if( Data ) {
+			if( typeof Data === "object" && !Array.isArray( Data ) ) {
+				for( const [ Key, Value ] of Object.entries( Data ) ) {
 					RequestData.push( `${ Key }=${ Value }` );
 				}
 			}
 		}
 
-		const Token = window.localStorage.getItem( "session" );
-		const requestOptions : RequestInit = {
+		const requestOptions: RequestInit = {
 			method: "GET",
 			headers: {
-				Authorization: "Bearer " + Token || "",
+				Authorization: "Bearer " + tRPC_token(),
 				"User-Agent": "Frontend",
 				"Content-Type": "application/json"
 			}
 		};
 
-		let Response : IAPIResponseBase<T> = {
-			Success: false,
-			Auth: false,
-			Reached: false,
-			Data: undefined,
-			MessageCode: "Api.error.NotReachable"
-		} as T;
-
 		try {
-			const Resp : Response | void = await fetch(
+			const Resp: Response = await fetch(
 				`/api/v1/${ Path }`,
 				requestOptions
-			).catch( console.error );
-			if ( Resp ) {
-				if ( Resp.ok && Resp.status === 200 ) {
-					Response = ( await Resp.json() ) as IAPIResponseBase<T>;
-					Response.Reached = true;
+			);
+			if( Resp ) {
+				const resultJson = ( await Resp.json() ) as( SuccessDataResponseFormat | { error: SuperJSONResult } );
+				if( Resp.status === 200 ) {
+					return superjson.parse( JSON.stringify( ( resultJson as SuccessDataResponseFormat ).result.data ) ) as T;
+				} else {
+					const result = superjson.parse( JSON.stringify( ( resultJson as{ error: SuperJSONResult } ).error ) ) as ErrorDataResponseFormat;
+					fireSwalFromApi( result.message || "Something goes wrong!" );
 				}
 			}
+		} catch( e ) {
+			console.error( e );
 		}
-		catch ( e ) {
 
-		}
-
-		await this.FireSwal( Response.MessageCode );
-
-		return Response as T;
+		throw new Error( "Request failed" );
 	}
 }

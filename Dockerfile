@@ -3,14 +3,18 @@ FROM node:alpine
 WORKDIR ./
 
 # Packages
+# COPY .npmrc ./
 COPY *.json ./
 COPY *.lock ./
 RUN yarn install
 
 # Copy main configs
-COPY .eslintrc ./
 COPY *.ts ./
+COPY *.cts ./
+COPY *.mts ./
 COPY *.js ./
+COPY *.mts ./
+COPY *.cjs ./
 COPY *.html ./
 
 # Copy source folder

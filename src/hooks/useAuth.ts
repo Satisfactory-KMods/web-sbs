@@ -1,64 +1,39 @@
+import { AUTHTOKEN } from "@applib/constance";
 import {
-	useEffect,
-	useMemo
-}                          from "react";
-import { useJWT }          from "@kyri123/k-reactutils";
-import { User }            from "@shared/Class/User.Class";
-import { API_QueryLib }    from "@applib/Api/API_Query.Lib";
-import { EApiAuth }        from "@shared/Enum/EApiPath";
-import { IMO_UserAccount } from "@shared/Types/MongoDB";
+	fireSwalFromApi,
+	tRPC_Auth,
+	tRPC_handleError
+} from "@applib/tRPC";
+import AuthContext from "@context/AuthContext";
+import { useLocalStorage } from "@kyri123/k-reactutils";
+import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 
-export interface IUseAuth {
-	UpdateToken : ( Value : string ) => void;
-	UserData : User,
-	Logout : () => void,
-	IsLoggedIn : boolean,
-	Token : string
-}
+export function useAuth() {
+	const navigate = useNavigate();
+	const { Storage, SetStorage, ResetStorage } = useLocalStorage( AUTHTOKEN, "" );
+	const { loggedIn, user } = useContext( AuthContext );
 
-export function useAuth() : IUseAuth {
-	const {
-		ClearSession,
-		Token,
-		Session,
-		UpdateToken
-	} = useJWT<IMO_UserAccount>( "session" );
-
-	// eslint-disable-next-line react-hooks/exhaustive-deps
-	const UserData = useMemo( () => new User( Token ), [ Token, Session ] );
-	// eslint-disable-next-line react-hooks/exhaustive-deps
-	const IsLoggedIn = useMemo( () => UserData?.IsValid, [ UserData ] );
-
-	const Logout = () => {
-		ClearSession();
-		Promise.all( [
-			API_QueryLib.FireSwal( "Auth.success.Logout" ),
-			API_QueryLib.PostToAPI( EApiAuth.logout, { Token } )
-		] ).then();
+	const logout = async( preventSwal?: boolean ) => {
+		return tRPC_Auth.logout.mutate().then( async msg => {
+			ResetStorage();
+			if( !preventSwal ) {
+				await fireSwalFromApi( msg, true );
+				navigate( 0 );
+			}
+		} ).catch( tRPC_handleError );
 	};
 
-	useEffect( () => {
-		if ( Token.trim() === "" ) {
-			return;
-		}
-
-		const Response = async() => {
-			return await API_QueryLib.PostToAPI( EApiAuth.validate, { Token } );
-		};
-
-		Response().then( Result => {
-			if ( !Result.Auth && Result.Reached ) {
-				ClearSession();
-			}
-		} );
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [ Token ] );
+	const setToken = ( token: string ) => {
+		SetStorage( token );
+		navigate( 0 );
+	};
 
 	return {
-		UpdateToken,
-		IsLoggedIn,
-		Logout: Logout,
-		UserData,
-		Token
+		token: Storage,
+		setToken,
+		loggedIn,
+		logout,
+		user
 	};
 }

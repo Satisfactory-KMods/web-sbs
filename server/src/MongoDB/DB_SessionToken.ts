@@ -1,11 +1,20 @@
-import * as mongoose            from "mongoose";
-import { IMO_UserAccountToken } from "@shared/Types/MongoDB";
+import type { MongoBase } from "@server/Types/mongo";
+import * as mongoose from "mongoose";
+import { z } from "zod";
 
-const UserAccountSchema = new mongoose.Schema<IMO_UserAccountToken>( {
+const ZodSessionTokenSchema = z.object( {
+	userid: z.string(),
+	token: z.string(),
+	expire: z.date().or( z.string() )
+} );
+
+const SessionTokenSchema = new mongoose.Schema( {
 	userid: { type: String, required: true },
 	token: { type: String, required: true },
 	expire: { type: Date, required: true }
 }, { timestamps: true } );
 
-export default mongoose.model<IMO_UserAccountToken>( "SBS_UserAccountToken", UserAccountSchema );
-export { UserAccountSchema };
+export type SessionToken = z.infer<typeof ZodSessionTokenSchema> & MongoBase;
+
+export default mongoose.model<SessionToken>( "SBS_UserAccountToken", SessionTokenSchema );
+export { SessionTokenSchema };

@@ -1,35 +1,34 @@
-import { IMO_UserAccount } from "@shared/Types/MongoDB";
-import { JwtPayload }      from "jsonwebtoken";
-import jwt                 from "jwt-decode";
-import { ERoles }          from "@shared/Enum/ERoles";
-import { DefaultUser }     from "@shared/Default/Auth.Default";
+import type { UserSession } from "@server/Lib/Session.Lib";
+import type { UserAccount } from "@server/MongoDB/DB_UserAccount";
+import { DefaultUser } from "@shared/Default/Auth.Default";
+import type { ERoles } from "@shared/Enum/ERoles";
+import jwt from "jwt-decode";
 
 export class User {
-	private JsonWebToken;
-	private UserData : IMO_UserAccount & Partial<JwtPayload>;
+	public JsonWebToken;
+	private user: UserSession;
 
-	constructor( JsonWebToken : string ) {
+	constructor( JsonWebToken: string ) {
 		this.JsonWebToken = JsonWebToken;
 		try {
-			this.UserData = jwt( JsonWebToken );
-		}
-		catch ( e ) {
-			this.UserData = {
+			this.user = jwt( JsonWebToken );
+		} catch( e ) {
+			this.user = {
 				...DefaultUser
 			};
 		}
 	}
 
-	public setUserData( Data : IMO_UserAccount ) {
-		this.UserData = {
-			...this.UserData,
+	public setuser( Data: UserAccount ) {
+		this.user = {
+			...this.user,
 			...Data
 		};
 	}
 
 	public GetTimeLeft() {
-		if ( this.UserData?.exp ) {
-			return Math.max( this.UserData.exp - Date.now() / 1000, 0 );
+		if( this.user?.exp ) {
+			return Math.max( this.user.exp - Date.now() / 1000, 0 );
 		}
 		return 0;
 	}
@@ -39,14 +38,14 @@ export class User {
 	}
 
 	public get Get() {
-		return this.UserData;
+		return this.user;
 	}
 
-	public GetUserImage() {
+	public get GetUserImage() {
 		return this.IsValid ? "/images/default/unknown.png" : "/images/default/unknown.png";
 	}
 
-	public HasPermssion( Permssion : ERoles ) {
-		return this.UserData.role >= Permssion && this.IsValid;
+	public HasPermission( Permssion: ERoles ) {
+		return this.user.role >= Permssion && this.IsValid;
 	}
 }

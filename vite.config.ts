@@ -1,30 +1,22 @@
 /** @type {import("vite").UserConfig} */
 
+import type { Alias } from "vite";
 import {
-	Alias,
 	defineConfig,
 	loadEnv
-}             from "vite";
-import react  from "@vitejs/plugin-react";
-import eslint from "vite-plugin-eslint";
+}                     from "vite";
+import reactvite      from "@vitejs/plugin-react";
+import eslint         from "vite-plugin-eslint";
 import {
 	join,
 	resolve
-}             from "path";
-import fs     from "fs";
+}                     from "path";
+import fs             from "fs";
 
-const vendor = [ "react-bootstrap", "react-icons", "react", "react-markdown", "react-select", "react-router-dom", "react-dom" ];
-
-function renderChunks( deps : Record<string, string> ) {
-	const chunks : any = {};
-	Object.keys( deps ).forEach( ( key ) => {
-		if ( vendor.includes( key ) ) {
-			return;
-		}
-		chunks[ key ] = [ key ];
-	} );
-	return chunks;
-}
+const react = [ "react", "react-router-dom", "react-dom" ];
+const icons = [ "react-icons" ];
+const addons = [ "react-markdown", "react-select", "lodash" ];
+const sweetalert = [ "sweetalert2", "sweetalert2-react-content" ];
 
 export default defineConfig( ( { command, mode, ssrBuild } ) => {
 	const Paths : Record<string, string[]> = JSON.parse( fs.readFileSync( resolve( __dirname, "tsconfig.json" ), "utf-8" ).toString() ).compilerOptions.paths;
@@ -57,23 +49,24 @@ export default defineConfig( ( { command, mode, ssrBuild } ) => {
 			}
 		},
 		build: {
+			target: [ "chrome88", "edge89", "es2021", "firefox79", "safari15" ],
 			manifest: true,
 			sourcemap: false,
 			outDir: "build",
 			rollupOptions: {
 				output: {
-					entryFileNames: `entry/[name].js`,
-					chunkFileNames: `chunk/[name].js`,
-					assetFileNames: `asset/[name].[ext]`,
+					entryFileNames: `entry/[name].[hash].js`,
+					chunkFileNames: `chunk/[name].[hash].js`,
+					assetFileNames: `asset/[name].[hash].[ext]`,
 					manualChunks: {
-						vendor//,
+						react, icons, addons, sweetalert
 						//...renderChunks( dependencies )
 					}
 				}
 			}
 		},
 		plugins: [
-			react( {
+			reactvite( {
 				include: "{**/*,*}.{js,ts,jsx,tsx}",
 				babel: {
 					parserOpts: {

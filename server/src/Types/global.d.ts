@@ -1,28 +1,21 @@
-import { Server }           from "socket.io";
-import * as http            from "http";
-import core                 from "express";
-import {
-	IEmitEvents,
-	IListenEvents
-}                           from "@shared/Types/SocketIO";
-import { SystemLib_Class }  from "@server/Lib/System.Lib";
-import { TaskManagerClass } from "@server/Tasks/TaskManager";
+import type { SystemLib_Class } from "@server/Lib/System.Lib";
+import type { TaskManagerClass } from "@server/Tasks/TaskManager";
+import type core from "express";
+import type * as http from "http";
 
 export declare global {
-	var DownloadIPCached : { ip : string, id : string }[];
-	var SystemLib : SystemLib_Class;
-	var Api : core.Express;
-	var Router : core.Router;
-	var HttpServer : http.Server<
+	var DownloadIPCached: { ip: string, id: string }[];
+	var SystemLib: SystemLib_Class;
+	var Api: core.Express;
+	var Router: core.Router;
+	var HttpServer: http.Server<
 		typeof http.IncomingMessage,
 		typeof http.ServerResponse
 	>;
-	var SocketIO : Server<IListenEvents, IEmitEvents>;
-	var TaskManager : TaskManagerClass;
+	var TaskManager: TaskManagerClass;
 
-	var __BaseDir : string;
-	var __MountDir : string;
-	var __LogFile : string;
-	var __BlueprintDir : string;
-
+	var __BaseDir: string;
+	var __MountDir: string;
+	var __LogFile: string;
+	var __BlueprintDir: string;
 }

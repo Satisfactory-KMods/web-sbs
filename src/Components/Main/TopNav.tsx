@@ -1,158 +1,109 @@
+import NavigationContainer from "@app/Components/navigation/NavigationContainer";
+import NavigationDropdown from "@comp/navigation/NavigationDropdown";
+import NavigationDropdownItem from "@comp/navigation/NavigationDropdownItem";
+import NavigationLink from "@comp/navigation/NavigationLink";
+import { useAuth } from "@hooks/useAuth";
+import { ERoles } from "@shared/Enum/ERoles";
+import type { FunctionComponent } from "react";
+import { useRef } from "react";
 import {
-	FunctionComponent,
-	PropsWithChildren,
-	useContext
-}                       from "react";
-import {
-	Link,
-	useLocation
-}                       from "react-router-dom";
-import { LangReadable } from "@app/Lib/lang/lang";
-import LangContext      from "@context/LangContext";
-import AuthContext      from "@context/AuthContext";
-import { ERoles }       from "@shared/Enum/ERoles";
-import {
-	FaDiscord,
-	FaGithubSquare,
-	FaPatreon
-}                       from "react-icons/all";
+	CgAdd,
+	CgLogIn,
+	HiBars3,
+	RiDoorOpenLine
+} from "react-icons/all";
 
-interface ITopNavProps extends PropsWithChildren {
-	href : string;
-	SessionRole? : ERoles;
-}
+const TopNav: FunctionComponent = () => {
+	const { user, loggedIn, logout } = useAuth();
+	const divRef = useRef<HTMLDivElement>( null );
 
-export const TopNavLink : FunctionComponent<ITopNavProps> = ( { SessionRole, href, children } ) => {
-	const { pathname } = useLocation();
-	const { UserData } = useContext( AuthContext );
-
-	if ( SessionRole !== undefined && !UserData.HasPermssion( SessionRole ) ) {
-		return null;
-	}
+	const Nav = ( <>
+		<NavigationContainer path="/blueprint" label="Blueprints" >
+			<NavigationLink label="Browse blueprints" to="/blueprint/list">Browse all blueprints!</NavigationLink>
+			{ loggedIn && ( <>
+				<NavigationLink label="Create a blueprint" to="/blueprint/create">Add you own blueprint</NavigationLink>
+				<NavigationLink label="My blueprints" to="/blueprint/my">Show all of your blueprints</NavigationLink>
+			</> ) }
+		</NavigationContainer>
+		{ user.HasPermission( ERoles.admin ) && (
+			<NavigationContainer path="/admin" label="Admin" >
+				<NavigationLink label="Users" to="/admin/users">Manage all Users</NavigationLink>
+				<NavigationLink label="Blueprints" to="/admin/blueprint/blacklisted">Manage all blacklisted blueprints</NavigationLink>
+				<NavigationLink label="Tags" to="/admin/tags">Manage all Tags</NavigationLink>
+			</NavigationContainer>
+		) }
+	</> );
 
 	return (
-		<li>
-			<Link to={ href }
-				  className={ `nav-link px-2 link-secondary ${ pathname === href ? "text-light" : "" }` }>{ children }</Link>
-		</li>
-	);
-};
-
-
-const TopNav : FunctionComponent = () => {
-	const { UserData, IsLoggedIn, Logout } = useContext( AuthContext );
-	const { Lang, setLang, Code, AllCodes } = useContext( LangContext );
-
-	return (
-		<header className="p-3 border-bottom flex-grow-0 bg-gray-800">
-			<div className="container">
-				<div
-					className="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-					<Link to="/"
-						  className="d-flex align-items-center mb-2 mb-lg-0 link-body-emphasis text-decoration-none">
-						<img src={ "/images/logo.png" } alt="logo" className="w-10"/>
-					</Link>
-
-					<ul className="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0 ms-4">
-						<TopNavLink href="/">{ Lang.Navigation.Home }</TopNavLink>
-						<TopNavLink SessionRole={ ERoles.member }
-									href="/blueprint/create">{ Lang.Navigation.AddBlueprint }</TopNavLink>
-						<TopNavLink SessionRole={ ERoles.member }
-									href="/blueprint/my">{ Lang.Navigation.MyBlueprints }</TopNavLink>
-						<TopNavLink
-							href="/terms/private">{ Lang.Navigation.Privacy }</TopNavLink>
-					</ul>
-
-
-					<Link to="https://github.com/Kyri123/SBS" target="_blank" className="d-block link-light">
-						<FaGithubSquare className={ "text-3xl me-3" }/>
-					</Link>
-
-					<Link to="https://discord.gg/ySh7RGJmuV" target="_blank" className="d-block link-light">
-						<FaDiscord className={ "text-3xl me-3" }/>
-					</Link>
-
-					<Link to="https://www.patreon.com/kmods" target="_blank" className="d-block link-light">
-						<FaPatreon className={ "text-2xl me-3" }/>
-					</Link>
-
-					<Link to="https://ficsit.app/user/9uvZtCA4cM6H4q" target="_blank" className="d-block link-light">
-						<img src="https://ficsit.app/assets/favicon.ico" alt="ficsit.app logo"/>
-					</Link>
-
-					<div className="dropdown text-end me-2">
-						<Link to="#" className="d-block link-dark text-decoration-none dropdown-toggle"
-							  data-bs-toggle="dropdown" aria-expanded="false">
-							<img alt="flag" src={ `/images/lang/${ Code }.png` }
-								 width={ 45 } className={ "ps-2" }/>
-						</Link>
-						<ul className="dropdown-menu text-small">
-							<li>
-								{ AllCodes.map( ( code ) => (
-									<Link key={ code } className="dropdown-item" to="#" onClick={ E => {
-										E.preventDefault();
-										setLang( code );
-									} }>
-										<img alt="flag" src={ `/images/lang/${ code }.png` }
-											 width={ 30 } className={ " pb-1" }/> { LangReadable[ code ] }
-									</Link>
-								) ) }
-							</li>
-						</ul>
-					</div>
-
-					<div className="dropdown text-end">
-						<Link to="#" className="d-block link-dark text-decoration-none dropdown-toggle text-light"
-							  data-bs-toggle="dropdown" aria-expanded="false">
-							<img src={ UserData.GetUserImage() } alt="" width="40"
-								 className="rounded-circle me-2"/>
-							{ IsLoggedIn ? UserData.Get.username : Lang.Auth.SignUpIn }
-						</Link>
-						<ul className="dropdown-menu text-small">
-							{ UserData.IsValid ? (
-								<>
-									{ UserData.HasPermssion( ERoles.admin ) && (
+		<nav className="bg-gray-800 border-b border-gray-700">
+			<div className="container mx-auto">
+				<div className="px-2 sm:px-6 lg:px-8">
+					<div className="relative flex h-16 items-center justify-between">
+						<div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
+							<button type="button" onClick={ () => divRef.current?.classList.toggle( "hidden" ) }
+							        className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+							        aria-controls="mobile-menu" aria-expanded="false">
+								<HiBars3 size={ 30 } />
+							</button>
+						</div>
+						<div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
+							<div className="flex flex-shrink-0 items-center">
+								<img className="block h-8 w-auto"
+								     src="/images/logo.png"
+								     alt="Kmods" />
+							</div>
+							<div className="hidden sm:ml-6 sm:block">
+								<div className="flex space-x-4">
+									{ Nav }
+								</div>
+							</div>
+						</div>
+						<div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+							<div className="relative m-1 mt-2 ml-3">
+								<NavigationDropdown text={ loggedIn ? user.Get.username : "Sign In/Up" }>
+									{ !loggedIn && (
 										<>
-											<li>
-												<Link className="dropdown-item"
-													  to="/admin/tags">{ Lang.Navigation.Admin_Tags }</Link>
-											</li>
-											<li>
-												<Link className="dropdown-item"
-													  to="/admin/users">{ Lang.Navigation.Admin_Users }</Link>
-											</li>
-											<li>
-												<Link className="dropdown-item"
-													  to="/admin/blueprints/blacklisted">{ Lang.Navigation.Admin_BlacklistedBlueprints }</Link>
-											</li>
-											<li>
-												<hr className="dropdown-divider"/>
-											</li>
+											<NavigationDropdownItem to="/account/signin">
+												<CgLogIn size={ 20 } />
+												<span className="px-2">
+										Sign In
+												</span>
+											</NavigationDropdownItem>
+											<NavigationDropdownItem to="/account/signup">
+												<CgAdd size={ 20 } />
+												<span className="px-2">
+								Sign Up
+												</span>
+											</NavigationDropdownItem>
 										</>
 									) }
-									<li>
-										<Link className="dropdown-item"
-											  to="/account/settings">{ Lang.Auth.AccSettings }</Link></li>
-									<li>
-										<hr className="dropdown-divider"/>
-									</li>
-									<li>
-										<Link className="dropdown-item text-danger" to="#"
-											  onClick={ Logout }>{ Lang.Auth.Logout }</Link></li>
-								</>
-							) : (
-								<>
-									<li><Link className="dropdown-item" to="/account/signin">{ Lang.Auth.Signin }</Link>
-									</li>
-									<li><Link className="dropdown-item" to="/account/signup">{ Lang.Auth.Signup }</Link>
-									</li>
-								</>
-							) }
-						</ul>
+
+									{ loggedIn && ( <>
+										<NavigationDropdownItem permission={ ERoles.member }
+										                        to="/account/settings">Account
+											Settings</NavigationDropdownItem>
+										<NavigationDropdownItem to="#" onClick={ () => logout() }
+										                        permission={ ERoles.member }
+										                        className="text-red-600">
+											<RiDoorOpenLine size={ 20 } />
+											<span className="px-2">
+												Logout
+											</span>
+										</NavigationDropdownItem>
+									</> ) }
+								</NavigationDropdown>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div className="hidden sm:hidden" id="mobile-menu" ref={ divRef }>
+					<div className="space-y-1 px-2 pb-3 pt-2">
+						{ Nav }
 					</div>
 				</div>
 			</div>
-		</header>
+		</nav>
 	);
 };
 

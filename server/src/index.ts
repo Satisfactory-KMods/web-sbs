@@ -1,23 +1,18 @@
-import * as path            from "path";
-import { Server }           from "socket.io";
-import {
-	IEmitEvents,
-	IListenEvents
-}                           from "@shared/Types/SocketIO";
-import http                 from "http";
-import express              from "express";
-import { InstallRoutings }  from "./Routings/InitRouter";
-import process              from "process";
-import * as mongoose        from "mongoose";
 import "@kyri123/k-javascript-utils/lib/useAddons";
-import fs                   from "fs";
+import { ERoles } from "@shared/Enum/ERoles";
+import bodyParser from "body-parser";
+import express from "express";
+import fs from "fs";
+import http from "http";
+import * as mongoose from "mongoose";
+import * as path from "path";
+import process from "process";
 import {
 	BC,
 	SystemLib_Class
-}                           from "./Lib/System.Lib";
-import DB_UserAccount       from "./MongoDB/DB_UserAccount";
-import { ERoles }           from "@shared/Enum/ERoles";
-import fileUpload           from "express-fileupload";
+} from "./Lib/System.Lib";
+import DB_UserAccount from "./MongoDB/DB_UserAccount";
+import { InstallRoutings } from "./Routings/InitRouter";
 import { TaskManagerClass } from "./Tasks/TaskManager";
 
 global.__BaseDir = __dirname;
@@ -32,21 +27,8 @@ global.SystemLib = new SystemLib_Class();
 global.Api = express();
 global.HttpServer = http.createServer( global.Api );
 
-global.SocketIO = new Server<IListenEvents, IEmitEvents>( global.HttpServer, {
-	path: "/api/v1/io/",
-	cors: {
-		origin: "*",
-		methods: [ "GET", "POST", "PUT", "PATCH", "DELETE" ],
-		credentials: false
-	}
-} );
-
-Api.use( express.json() );
-Api.use( express.urlencoded( { extended: true } ) );
-Api.use( fileUpload( {
-	useTempFiles: true,
-	tempFileDir: "/tmp/"
-} ) );
+Api.use( bodyParser.json() );
+Api.use( bodyParser.urlencoded( { extended: true } ) );
 Api.use( express.static( path.join( __BaseDir, "../..", "build" ), { extensions: [ "js" ] } ) );
 
 Api.use( function( req, res, next ) {
@@ -71,13 +53,14 @@ mongoose
 	)
 	.then( async() => {
 		SystemLib.Log( "start", "Connected to mongodb..." );
+		await import( "@server/trpc/server" );
 		SystemLib.Log( "Revalidate", "MongoDB" );
-		for ( const DB of fs.readdirSync( path.join( __BaseDir, "MongoDB" ) ) ) {
+		for( const DB of fs.readdirSync( path.join( __BaseDir, "MongoDB" ) ) ) {
 			const File = path.join( __BaseDir, "MongoDB", DB );
 			const Stats = fs.statSync( File );
-			if ( Stats.isFile() && DB !== "DB_UserAccount.ts" ) {
+			if( Stats.isFile() && DB !== "DB_UserAccount.ts" ) {
 				const DBImport = await import( File );
-				if ( DBImport.Revalidate ) {
+				if( DBImport.Revalidate ) {
 					SystemLib.Log( "Revalidate", `Schema for${ BC( "Cyan" ) }`, DB.toString().replace( ".ts", "" ) );
 					await DBImport.Revalidate();
 				}
@@ -85,16 +68,6 @@ mongoose
 		}
 
 		global.DownloadIPCached = [];
-		// Sockets need to connect on a room otherwise we will not be able to send messages
-		SocketIO.on( "connection", function( socket ) {
-			const query = socket.handshake.query;
-			const roomName = query.roomName;
-			if ( !roomName || Array.isArray( roomName ) ) {
-				socket.disconnect( true );
-				return;
-			}
-			socket.join( roomName as string );
-		} );
 
 		SystemLib.Log( "start", "Connected... Start API and SOCKETIO" );
 
@@ -106,20 +79,20 @@ mongoose
 			res.sendFile( path.join( __BaseDir, "../..", "build", "index.html" ) );
 		} );
 
-		if ( !await DB_UserAccount.findOne() ) {
+		if( !await DB_UserAccount.findOne() ) {
 			const NewUser = new DB_UserAccount();
 			NewUser.email = "admin@kmods.de";
 			NewUser.username = "Kyrium";
 			NewUser.role = ERoles.admin;
-			NewUser.setPassword( "123456" );
-			SystemLib.LogWarning( "start", " Default user was created. Kyrium | 23456 | admin@kmods.de" );
+			NewUser.setPassword( "12345678" );
+			SystemLib.LogWarning( "start", " Default user was created. Kyrium | 12345678 | admin@kmods.de" );
 			await NewUser.save();
 		}
 
 		global.TaskManager = new TaskManagerClass();
 		await TaskManager.Init();
 
-		HttpServer.listen( parseInt( process.env.HTTPPORT! ), async() =>
+		HttpServer.listen( parseInt( process.env.HTTPPORT as string ), async() =>
 			SystemLib.Log( "start",
 				"API listen on port",
 				process.env.HTTPPORT

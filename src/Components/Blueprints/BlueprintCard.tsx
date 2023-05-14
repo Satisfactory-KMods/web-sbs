@@ -1,116 +1,82 @@
-import { IMO_Blueprint } from "@shared/Types/MongoDB";
-import {
-	FunctionComponent,
-	useContext
-}                        from "react";
-import {
-	Badge,
-	Button,
-	ButtonGroup,
-	Card,
-	Col
-}                        from "react-bootstrap";
-import { useLang }       from "@hooks/useLang";
-import { Link }          from "react-router-dom";
-import * as Icon         from "react-icons/bs";
-import AuthContext       from "@context/AuthContext";
-import { useBlueprint }  from "@hooks/useBlueprint";
-import Ribbon            from "@comp/General/Ribbon";
-import ReactMarkdown     from "react-markdown";
-import { ERoles }        from "@shared/Enum/ERoles";
+import { mdxComponents } from "@app/Page/terms/private/Page";
+import { useBlueprint } from "@app/hooks/useBlueprint";
+import type { BlueprintData } from "@server/MongoDB/DB_Blueprints";
+import { Button } from "flowbite-react";
+import { useId, type FunctionComponent } from "react";
+import { HiCog, HiDownload, HiTrash } from "react-icons/hi";
+import { ReactMarkdown } from "react-markdown/lib/react-markdown";
+import { Link } from "react-router-dom";
+import BlueprintRating from "./BlueprintRating";
 
 interface IBlueprintCardProps {
-	Data : IMO_Blueprint;
-	onToggled? : () => void;
+	Data: BlueprintData;
+	onToggled: () => Promise<void>;
 }
 
-const BlueprintCard : FunctionComponent<IBlueprintCardProps> = ( { Data, onToggled } ) => {
+const BlueprintCard: FunctionComponent<IBlueprintCardProps> = ( { Data, onToggled } ) => {
+	const id = useId();
+	const bpHook = useBlueprint( Data );
 	const {
+		owner,
 		Blueprint,
-		ToggleLike,
-		AllowToLike,
-		AllowToEdit,
-		Mods,
-		Tags,
-		ToggleBlacklist,
-		IsOwner
-	} = useBlueprint( Data );
-	const { IsLoggedIn, UserData } = useContext( AuthContext );
-	const { Lang } = useLang();
-	const ModList = [ ...Mods ];
-	const SpliceMods = ModList.splice( 0, 3 );
-	const MoreCount = ModList.length;
-	const DisplayMods = SpliceMods.map( R =>
-		<Link key={ R._id } to={ `https://ficsit.app/mod/${ R.mod_reference }` }
-			  target={ "_blank" }
-			  className={ " m-1 p-0" }>{ R.name }</Link> );
+		allowedToEdit,
+		toggleBlacklist,
+		Tags
+	} = bpHook;
+
+	const doBlacklist = async() => {
+		await toggleBlacklist(  );
+		await onToggled();
+	};
 
 	return (
-		<Col sm={ 12 } md={ 6 } className={ "mb-3 ps-0" }>
-			<Card className={ "h-100" }>
-				<Card.Header className={ "d-flex p-0" }>
-					<h4 className={ "py-1 pt-2 px-3 flex-1" }>{ Blueprint.name }</h4>
-					<Ribbon
-						innerClassName={ Blueprint.mods.length >= 1 ? "text-bg-danger" : "text-bg-success" }>{ Blueprint.mods.length >= 1 ? Lang.General.IsModded : Lang.General.IsVanilla }</Ribbon>
-				</Card.Header>
-
-				<Card.Header style={ {
-					backgroundImage: `url('/api/v1/image/${ Blueprint._id }')`,
-					backgroundRepeat: "no-repeat",
-					backgroundSize: "cover",
-					height: 200,
-					backgroundPosition: "center"
-				} }></Card.Header>
-
-				<Card.Body className={ "pb-0" }>
-					<ReactMarkdown>{ Blueprint.description.length > 200 ? Blueprint.description.slice( 0, 200 ) + "..." : Blueprint.description }</ReactMarkdown>
-				</Card.Body>
-
-				{ Mods.length >= 1 && <Card.Footer>
-					<b>{ Lang.CreateBlueprint.Mods }:</b> { Mods.length >= 4 ? <>{ DisplayMods.map( R => R ) } [...{ MoreCount }]</> : DisplayMods }
-				</Card.Footer> }
-
-				{ Tags.length >= 1 && <Card.Footer>
-					{ Tags.map( R => <Badge key={ R._id } bg="secondary" className="me-2">{ R.DisplayName }</Badge> ) }
-				</Card.Footer> }
-
-				<Card.Footer className={ "p-0" }>
-					<ButtonGroup className={ "h-100 w-100" }>
-						<Link to={ `/blueprint/${ Blueprint._id }` } className={ "btn rounded-top-0 btn-dark" }>
-							<Icon.BsEyeFill/>
-						</Link>
-						{ AllowToEdit &&
-							<Link to={ `/blueprint/edit/${ Blueprint._id }` }
-								  className={ "btn rounded-top-0 btn-dark" }>
-								<Icon.BsGearFill/>
-							</Link>
-						}
-						<Link to={ `/api/v1/download/${ Blueprint._id }` } target={ "_blank" }
-							  className={ "btn rounded-top-0 btn-dark" }>
-							<Icon.BsDownload/> { Blueprint.downloads }
-						</Link>
-						{ ( UserData.HasPermssion( ERoles.moderator ) || IsOwner ) &&
-							<Button variant="danger" onClick={ async() => {
-								if ( await ToggleBlacklist() && onToggled !== undefined ) {
-									onToggled();
-								}
-							} }
-									className={ "rounded-top-0" }>
-								<Icon.BsTrashFill/>
-							</Button>
-						}
-						<Button disabled={ !AllowToLike }
-								variant={ IsLoggedIn ? ( !Blueprint.likes.includes( UserData.Get._id ) ? "danger" : "success" ) : "dark" }
-								onClick={ ToggleLike } type={ "button" }
-								className={ "rounded-top-0" }>
-							{ !Blueprint.likes.includes( UserData.Get._id ) ?
-								<Icon.BsFillHeartbreakFill className={ "me-2" }/> :
-								<Icon.BsFillHeartFill className={ "me-2" }/> } { Blueprint.likes.length }
+		<div className="flex flex-col w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+			<Link to={ `/blueprint/${ Blueprint._id }` } className="flex-1 flex flex-col">
+				<div className="p-3 border-b bg-gray-700 border-gray-700 text-neutral-200 truncate text-ellipsis overflow-hidden">
+					<span className="text-2xl">
+						{ Blueprint.name }
+					</span>
+					<span className="text-xs text-gray-400 block">
+						Creator: <b>{ owner.username }</b>
+					</span>
+				</div>
+				<div className="relative aspect-video">
+					<div className="absolute inset-0 flex items-center justify-center w-full h-full">
+						<img className="w-full h-full object-cover" src={ `/api/v1/image/${ Blueprint._id }/${ Blueprint.images[ 0 ] }` } alt="BlueprintLogo" />
+					</div>
+					<div className="absolute top-0 right-0 m-3">
+						<div className="bg-orange-800 p-1 px-5 rounded-lg border border-orange-700 text-white">
+							{ Blueprint.mods.length ? "Modded" : "Vanilla" }
+						</div>
+					</div>
+				</div>
+				<ReactMarkdown components={ mdxComponents } className="text-neutral-200 flex-1 p-3 border-t-1 border-gray-700">
+					{ `${ Blueprint.description.substring( 0, 200 ) } ...` }
+				</ReactMarkdown>
+			</Link>
+			<div className="p-3 border-t bg-gray-700 border-gray-700 flex">
+				<BlueprintRating className="flex-1" blueprintHook={ bpHook } />
+				<div className="flex flex-0">
+					{ allowedToEdit && <>
+						<Button onClick={ doBlacklist } color="red" size="small" className="p-1 px-3">
+							&nbsp;<HiTrash /> &nbsp;
 						</Button>
-					</ButtonGroup>
-				</Card.Footer>
-			</Card>
-		</Col>
+						<Link to={ `/blueprint/edit/${ Blueprint._id }` } className="text-gray-900 bg-white border border-gray-200 hover:bg-gray-100 hover:text-blue-700 disabled:hover:bg-white focus:ring-blue-700 focus:text-blue-700 dark:bg-transparent dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 focus:ring-2 dark:disabled:hover:bg-gray-800 group flex h-min items-center justify-centertext-center font-medium focus:z-10 rounded-lg p-1 ms-2 px-3">
+							&nbsp;<HiCog /> &nbsp;
+						</Link>
+					</> }
+
+					<Button href={ `/api/v1/download/${ Blueprint._id }` } target="_blank" color="gray" size="small" className="p-1 px-3 ms-2">
+						<HiDownload className="text-sm me-2" /> { Blueprint.downloads }
+					</Button>
+				</div>
+			</div>
+			{ !!Blueprint.tags.length && <div className="flex flex-wrap p-3 pt-0 border-t bg-gray-700 border-gray-700 text-neutral-200 text-xs">
+				{ Tags.map( e => (
+					<div key={ id + e._id } className="bg-gray-900 p-1 px-3 rounded-lg border border-gray-800 shadow">{ e.DisplayName }</div>
+				) ) }
+			</div> }
+		</div>
 	);
 };
 

@@ -1,30 +1,45 @@
-import * as mongoose       from "mongoose";
-import { Model }           from "mongoose";
-import { IMO_UserAccount } from "@shared/Types/MongoDB";
-import * as crypto         from "crypto";
+/** @type {import("mongoose").Model} */
+import type { MongoBase } from "@server/Types/mongo";
+import { ERoles }         from "@shared/Enum/ERoles";
+import * as crypto        from "crypto";
+import * as mongoose      from "mongoose";
+import { z }              from "zod";
 
-export interface IUserAccountMethods {
-	setPassword : ( password : string ) => void;
-	validPassword : ( password : string ) => boolean;
+const ZodUserAccountSchema = z.object( {
+	role: z.nativeEnum( ERoles ),
+	username: z.string(),
+	email: z.string(),
+	hash: z.string(),
+	salt: z.string()
+} );
+
+export interface UserAccountMethods {
+	setPassword: ( password: string ) => void;
+	validPassword: ( password: string ) => boolean;
 }
 
-const UserAccountSchema = new mongoose.Schema<IMO_UserAccount>( {
+const UserAccountSchema = new mongoose.Schema( {
 	username: { type: String, required: true },
 	email: { type: String, required: true },
 	role: { type: Number, required: true },
 	hash: { type: String, required: true },
 	salt: { type: String, required: true }
-}, { timestamps: true } );
+}, {
+	timestamps: true, methods: {
+		setPassword: function( password ) {
+			this.salt = crypto.randomBytes( 16 ).toString( "hex" );
+			this.hash = crypto.pbkdf2Sync( password, this.salt, 1000, 256, `sha512` ).toString( `hex` );
+		},
+		validPassword: function( password ) {
+			const hash = crypto.pbkdf2Sync( password, this.salt!, 1000, 256, `sha512` ).toString( `hex` );
+			return this.hash === hash;
+		}
+	}
+} );
 
-UserAccountSchema.methods.setPassword = function( password ) {
-	this.salt = crypto.randomBytes( 16 ).toString( "hex" );
-	this.hash = crypto.pbkdf2Sync( password, this.salt, 1000, 256, `sha512` ).toString( `hex` );
-};
+export type UserAccount = z.infer<typeof ZodUserAccountSchema> & MongoBase;
+export type ClientUserAccount = Omit<UserAccount, "hash" | "salt" | "__v">;
 
-UserAccountSchema.methods.validPassword = function( password ) {
-	const hash = crypto.pbkdf2Sync( password, this.salt, 1000, 256, `sha512` ).toString( `hex` );
-	return this.hash === hash;
-};
-
-export default mongoose.model<IMO_UserAccount, Model<IMO_UserAccount, any, IUserAccountMethods>>( "SBS_UserAccount", UserAccountSchema );
+export default mongoose.model<UserAccount, mongoose.Model<UserAccount, unknown, UserAccountMethods>>( "SBS_UserAccount", UserAccountSchema );
 export { UserAccountSchema };
+
