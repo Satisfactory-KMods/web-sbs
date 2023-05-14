@@ -1,5 +1,4 @@
 import { tRPC_Public } from "@app/Lib/tRPC";
-import type { IndexLoaderData } from "@app/Page/blueprint/[blueprintId]Loader";
 import type { LoaderBlueprintBase } from "@app/Types/loader";
 import { validateBlueprint } from "@applib/loaderHelper";
 import type { Blueprint } from "@etothepii/satisfactory-file-parser";
@@ -22,7 +21,7 @@ const blueprintIdLoader: LoaderFunction = async( { params, request } ) => {
 		tRPC_Public.blueprint.readBlueprint.mutate( { blueprintId: blueprintId! } ).catch( () => null )
 	] );
 
-	if( !blueprint ) {
+	if( !blueprint || result.blueprintData.blacklisted ) {
 		return redirect( "/error/404" );
 	}
 

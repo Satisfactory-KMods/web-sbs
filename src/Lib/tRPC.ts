@@ -25,12 +25,13 @@ export async function onConfirm<PreConfirmResult = any>( msg: string, moreOption
 	return !!accept?.isConfirmed;
 }
 
-export function successSwal( msg: string, toast?: boolean ): void {
+export function successSwal( msg: string, toast?: boolean ) {
 	if( toast ) {
 		fireToastFromApi( msg, "success" );
-		return;
+		return msg;
 	}
 	fireSwalFromApi( msg, "success" );
+	return msg;
 }
 
 export function successSwalAwait( msg: string, toast?: boolean ) {

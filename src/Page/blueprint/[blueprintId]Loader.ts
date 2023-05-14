@@ -1,9 +1,8 @@
-import type { LoaderBlueprintBase, LoaderDataBase } from "@app/Types/loader";
-import { validateBlueprint, validateLogin } from "@applib/loaderHelper";
+import { tRPC_Public } from "@app/Lib/tRPC";
+import type { BlueprintIdLoader } from "@app/Page/blueprint/edit/[blueprintId]Loader";
+import { validateBlueprint } from "@applib/loaderHelper";
 import type { LoaderFunction } from "react-router-dom";
-import { json } from "react-router-dom";
-
-export type IndexLoaderData = LoaderDataBase;
+import { json, redirect } from "react-router-dom";
 
 const loader: LoaderFunction = async( { params, request } ) => {
 	const result = await validateBlueprint( { params, request }, "/error/404" );
@@ -11,7 +10,17 @@ const loader: LoaderFunction = async( { params, request } ) => {
 		return result;
 	}
 
-	return json<LoaderBlueprintBase>( result );
+	const { blueprintId } = params;
+
+	const [ blueprint ] = await Promise.all( [
+		tRPC_Public.blueprint.readBlueprint.mutate( { blueprintId: blueprintId! } ).catch( () => null )
+	] );
+
+	if( !blueprint || result.blueprintData.blacklisted ) {
+		return redirect( "/error/404" );
+	}
+
+	return json<BlueprintIdLoader>( { ...result, blueprint } );
 };
 
 export { loader };

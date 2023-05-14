@@ -1,6 +1,6 @@
 import BlueprintRating from "@app/Components/Blueprints/BlueprintRating";
+import type { BlueprintIdLoader } from "@app/Page/blueprint/edit/[blueprintId]Loader";
 import { mdxComponents } from "@app/Page/terms/private/Page";
-import type { LoaderBlueprintBase } from "@app/Types/loader";
 import type { SaveComponent, SaveEntity } from "@etothepii/satisfactory-file-parser";
 import { useBlueprint } from "@hooks/useBlueprint";
 import { Button, Carousel } from "flowbite-react";
@@ -19,8 +19,8 @@ import {
 
 const Component: FunctionComponent = () => {
 	const id = useId();
-	const { blueprintData, blueprintOwner } = useLoaderData() as LoaderBlueprintBase;
-	const bpHook = useBlueprint( blueprintData, blueprintOwner );
+	const { blueprintData, blueprintOwner, blueprint } = useLoaderData() as BlueprintIdLoader;
+	const bpHook = useBlueprint( blueprintData, blueprintOwner, { blueprint } );
 	const {
 		owner,
 		Blueprint,

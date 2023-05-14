@@ -1,5 +1,5 @@
 import DataContext from "@app/Context/DataContext";
-import { fireSwalFromApi, tRPC_Public } from "@app/Lib/tRPC";
+import { fireSwalFromApi, successSwal, tRPC_Auth, tRPC_Public, tRPC_handleError } from "@app/Lib/tRPC";
 import type { Blueprint } from "@etothepii/satisfactory-file-parser";
 import { useAuth } from "@hooks/useAuth";
 import type { Mod } from "@kyri123/lib";
@@ -16,6 +16,7 @@ import {
 
 export interface IBlueprintHookConfig {
 	IgnoreBlacklisted: boolean;
+	blueprint: Blueprint;
 }
 
 export function useBlueprint( InitValue: string | BlueprintData, defaultUser?: { id: string, username: string }, Config?: Partial<IBlueprintHookConfig> ) {
@@ -38,7 +39,7 @@ export function useBlueprint( InitValue: string | BlueprintData, defaultUser?: {
 	} );
 	const { loggedIn, user } = useAuth();
 	const [ DoQueryLikes, setDoQueryLikes ] = useState<boolean>( false );
-	const [ blueprintData, setBlueprintData ] = useState<Blueprint | undefined>( undefined );
+	const [ blueprintData, setBlueprintData ] = useState<Blueprint | undefined>( Config?.blueprint );
 	const [ Tags, setTags ] = useState<Tag[]>( [] );
 	const [ Mods, setMods ] = useState<Mod[]>( [] );
 	const [ owner, setOwner ] = useState<{ id: string, username: string }>( () => defaultUser || { id: "", username: "" } );
@@ -121,8 +122,11 @@ export function useBlueprint( InitValue: string | BlueprintData, defaultUser?: {
 			return false;
 		}
 
-		// todo: need rework
-		return false;
+		const result = await tRPC_Auth.blueprints.toggleBlueprint.mutate( { blueprintId: BlueprintID } )
+			.then( successSwal )
+			.catch( tRPC_handleError );
+
+		return !!result;
 	};
 
 	const remove = async(): Promise<boolean> => {
@@ -135,8 +139,11 @@ export function useBlueprint( InitValue: string | BlueprintData, defaultUser?: {
 			return false;
 		}
 
-		// todo: need rework
-		return false;
+		const result = await tRPC_Auth.blueprints.deleteBlueprint.mutate( { blueprintId: BlueprintID } )
+			.then( successSwal )
+			.catch( tRPC_handleError );
+
+		return !!result;
 	};
 
 	return {
