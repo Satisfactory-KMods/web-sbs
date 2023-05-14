@@ -37,7 +37,7 @@ const Component: FunctionComponent = () => {
 	return (
 		<div className="flex flex-col">
 			<BlueprintFilter filterSchema={ [ filter, setFilter ] } isFetching={ isFetching } doFetch={ doFetch } >
-				My Blueprints ({ TotalBlueprints })
+				Blacklisted Blueprints ({ TotalBlueprints })
 			</BlueprintFilter>
 			<PageManager MaxPage={ maxPage } Page={ currentPage } OnPageChange={ setPage } />
 

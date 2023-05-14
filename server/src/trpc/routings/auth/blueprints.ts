@@ -9,7 +9,9 @@ import {
 	router
 } from "@server/trpc/trpc";
 import { TRPCError } from "@trpc/server";
+import fs from 'fs';
 import _ from "lodash";
+import path from 'path';
 import { z } from "zod";
 import { buildFilter, filterSchema } from "../public/blueprint";
 import { adminProcedure } from './../../trpc';
@@ -62,7 +64,10 @@ export const auth_blueprints = router( {
 		try {
 			const bpDocument = await blueprint.getDocument();
 			if( bpDocument ) {
-				await bpDocument.deleteOne();
+				const id = bpDocument._id.toString();
+				if( await bpDocument.deleteOne() && fs.existsSync( path.join( __BlueprintDir, id ) ) ) {
+					fs.rmSync( path.join( __BlueprintDir, id ), { recursive: true } );
+				}
 				return "Blueprint deleted!";
 			}
 		} catch( e ) {
@@ -80,7 +85,7 @@ export const auth_blueprints = router( {
 		const { userClass } = ctx;
 		try {
 			const { filter, options } = buildFilter( filterOptions );
-			const totalBlueprints = await DB_Blueprints.count( filter );
+			const totalBlueprints = await DB_Blueprints.count( { ...filter, blacklisted: { $ne : true }, owner: userClass.Get._id } );
 			const blueprints = await DB_Blueprints.find<BlueprintData>( { ...filter, blacklisted: { $ne : true }, owner: userClass.Get._id }, null, { ...options, limit, skip } );
 			return { blueprints, totalBlueprints };
 		} catch( e ) {
@@ -97,7 +102,7 @@ export const auth_blueprints = router( {
 		const { limit, filterOptions, skip } = input;
 		try {
 			const { filter, options } = buildFilter( filterOptions );
-			const totalBlueprints = await DB_Blueprints.count( filter );
+			const totalBlueprints = await DB_Blueprints.count( { ...filter, blacklisted: true } );
 			const blueprints = await DB_Blueprints.find<BlueprintData>( { ...filter, blacklisted: true }, null, { ...options, limit, skip } );
 			return { blueprints, totalBlueprints };
 		} catch( e ) {

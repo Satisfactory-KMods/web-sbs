@@ -2,7 +2,7 @@ import BlueprintRating from "@app/Components/Blueprints/BlueprintRating";
 import { useBlueprint } from "@app/hooks/useBlueprint";
 import type { BlueprintData } from "@server/MongoDB/DB_Blueprints";
 import { Button } from "flowbite-react";
-import { useId, type FunctionComponent } from "react";
+import type { FunctionComponent } from "react";
 import { FaEye } from "react-icons/fa";
 import { HiCog, HiDownload, HiTrash } from "react-icons/hi";
 import { Link } from "react-router-dom";
@@ -13,18 +13,20 @@ interface IBlueprintRowProps {
 }
 
 const BlueprintRow: FunctionComponent<IBlueprintRowProps> = ( { Data, onToggled } ) => {
-	const id = useId();
 	const bpHook = useBlueprint( Data );
 	const {
-		owner,
 		Blueprint,
 		allowedToEdit,
 		toggleBlacklist,
-		Tags
+		remove
 	} = bpHook;
 
 	const doBlacklist = async() => {
-		await toggleBlacklist();
+		if( Data.blacklisted ) {
+			await remove();
+		} else {
+			await toggleBlacklist();
+		}
 		await onToggled();
 	};
 

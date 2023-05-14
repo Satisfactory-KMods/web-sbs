@@ -7,6 +7,7 @@ import type { BlueprintData } from "@server/MongoDB/DB_Blueprints";
 import type { Tag } from "@server/MongoDB/DB_Tags";
 import { EDesignerSize } from "@shared/Enum/EDesignerSize";
 import { ERoles } from "@shared/Enum/ERoles";
+import _ from "lodash";
 import {
 	useContext,
 	useEffect,
@@ -90,11 +91,11 @@ export function useBlueprint( InitValue: string | BlueprintData, defaultUser?: {
 	};
 
 	const allowedToEdit = useMemo( () => {
-		if( loggedIn && isValid ) {
-			return user.HasPermission( ERoles.admin ) || Blueprint.owner.trim() === user.Get._id.trim();
+		if( loggedIn && ( isValid || Blueprint.blacklisted ) ) {
+			return user.HasPermission( ERoles.admin ) || _.isEqual( Blueprint.owner, user.Get._id );
 		}
 		return false;
-	}, [ user, loggedIn, Blueprint.owner, isValid ] );
+	}, [ loggedIn, isValid, Blueprint.blacklisted, Blueprint.owner, user ] );
 
 	useEffect( () => {
 		if( typeof InitValue === "string" || !defaultUser ) {
@@ -118,7 +119,7 @@ export function useBlueprint( InitValue: string | BlueprintData, defaultUser?: {
 			return false;
 		}
 
-		if( !isValid ) {
+		if( !allowedToEdit ) {
 			return false;
 		}
 
@@ -139,7 +140,7 @@ export function useBlueprint( InitValue: string | BlueprintData, defaultUser?: {
 			return false;
 		}
 
-		if( !isValid ) {
+		if( !allowedToEdit ) {
 			return false;
 		}
 
