@@ -148,8 +148,8 @@ export default function() {
 				fs.mkdirSync( blueprintDir, { recursive: true } );
 
 				if( req.files.sbp && req.files.sbpcfg ) {
-					fs.rmSync( path.join( blueprintDir, `${ id }.sbp` ), { recursive: true } );
-					fs.rmSync( path.join( blueprintDir, `${ id }.sbpcfg` ), { recursive: true } );
+					fs.existsSync( path.join( blueprintDir, `${ id }.sbp` ) ) && fs.rmSync( path.join( blueprintDir, `${ id }.sbp` ), { recursive: true } );
+					fs.existsSync( path.join( blueprintDir, `${ id }.sbp` ) ) && fs.rmSync( path.join( blueprintDir, `${ id }.sbpcfg` ), { recursive: true } );
 					blueprint.originalName = req.files.sbp[ 0 ].originalname.replace( ".sbp", "" );
 					blueprint.markModified( "originalName" );
 					fs.renameSync( req.files.sbp[ 0 ].path, path.join( blueprintDir, `${ id }.sbp` ) );
