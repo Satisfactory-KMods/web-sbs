@@ -1,4 +1,5 @@
 import type { BlueprintClass } from "@/server/src/Lib/Blueprint.Class";
+import type { User } from "@/src/Shared/Class/User.Class";
 import { dataResponse, errorResponse } from "@kyri123/lib";
 import { BlueprintParser } from "@server/Lib/BlueprintParser";
 import {
@@ -7,6 +8,7 @@ import {
 	upload
 } from "@server/Lib/Express.Lib";
 import type { BlueprintData } from "@server/MongoDB/DB_Blueprints";
+import DB_Blueprints from "@server/MongoDB/DB_Blueprints";
 import type { ExpressRequest } from "@server/Types/express";
 import { EApiBlueprintUtils } from "@shared/Enum/EApiPath";
 import type {
@@ -54,62 +56,59 @@ export default function() {
 
 
 	Router.post( ApiUrl( EApiBlueprintUtils.create ), upload.fields( [ { name: 'sbp', maxCount: 1 }, { name: 'sbpcfg', maxCount: 1 }, { name: 'images', maxCount: 5 } ] ), MW_Auth, async( req: ExpressRequest<{
-		blueprint: Omit<BlueprintData, "_id" | "__v">,
-		blueprintName: string
+		blueprint: Omit<BlueprintData, "_id" | "__v"> | string,
+		UserClass: User
 	}>, res: Response ) => {
-		/*
-		const Response: TResponse_BPUser_Create = {
-			...DefaultResponseFailed
-		};
-
-		const Request = req.body;
-		const Files = req.files as TRequest_BPUser_Create_Files;
-
 		try {
-			if( Request.BlueprintName && Request.BlueprintDesc && Request.UserClass && Request.DesignerSize ) {
-				if( Files.SBP && Files.SBPCFG && Files.Image ) {
-					const Blueprint = new DB_Blueprints();
-					Blueprint.description = Request.BlueprintDesc;
-					Blueprint.name = Request.BlueprintName;
-					Blueprint.tags = Request.BlueprintTags || [];
-					Blueprint.mods = Request.BlueprintMods || [];
-					Blueprint.owner = Request.UserClass.Get._id;
-					Blueprint.DesignerSize = Request.DesignerSize;
-					const ID = Blueprint._id.toString();
+			if( typeof req.body.blueprint === "string" ) {
+				req.body.blueprint = JSON.parse( req.body.blueprint );
+			}
+			const blueprint = new DB_Blueprints( req.body.blueprint );
+			blueprint.totalRating = 0;
+			blueprint.downloads = 0;
+			blueprint.totalRatingCount = 0;
+			blueprint.rating = [];
+			blueprint.images = [];
+			blueprint.blacklisted = false;
 
-					if( await Blueprint.save() ) {
-						for( const [ Key, File ] of Object.entries( Files ) ) {
-							fs.mkdirSync( path.join( __BlueprintDir, ID ), { recursive: true } );
-							switch ( Key ) {
-								case "SBP":
-									await File.mv( path.join( __BlueprintDir, ID, `${ ID }.sbp` ) );
-									break;
-								case "SBPCFG":
-									await File.mv( path.join( __BlueprintDir, ID, `${ ID }.sbpcfg` ) );
-									break;
-								case "Image":
-									await File.mv( path.join( __BlueprintDir, ID, `img_${ ID }.jpg` ) );
-									break;
-								default:
-									break;
-							}
-						}
-
-						Response.Data = ID;
-						Response.Success = true;
-						Response.MessageCode = "Blueprint.success.Created";
+			if( req.files && !Array.isArray( req.files ) ) {
+				const id = blueprint._id.toString();
+				const blueprintDir = path.join( __BlueprintDir, id );
+				fs.mkdirSync( blueprintDir, { recursive: true } );
+				blueprint.originalName = req.files.sbp[ 0 ].originalname.replace( ".sbp", "" );
+				fs.renameSync( req.files.sbp[ 0 ].path, path.join( blueprintDir, `${ id }.sbp` ) );
+				fs.renameSync( req.files.sbpcfg[ 0 ].path, path.join( blueprintDir, `${ id }.sbpcfg` ) );
+				let idx = 0;
+				for( const file of req.files.images ) {
+					if( file.mimetype && file.mimetype.split( "/" )[ 0 ] === "image" && file.mimetype.split( "/" )[ 1 ] ) {
+						const newName = `image_${ id }_${ idx }.${ file.mimetype.split( "/" )[ 1 ] }`;
+						console.log( `Renaming ${ file.originalname } to ${ newName }` );
+						fs.renameSync( file.path, path.join( blueprintDir, newName ) );
+						blueprint.images.push( newName );
+						idx++;
 					}
+				}
+
+				if( await DB_Blueprints.exists( { originalName: blueprint.originalName } ) ) {
+					fs.rmSync( blueprintDir, { recursive: true } );
+					res.status( 500 ).json( errorResponse( "Blueprint with this name is allready in our Database. Please use a other filename!", res ) );
+				}
+
+				if( await blueprint.save() ) {
+					return res.status( 200 ).json( dataResponse( {
+						msg: "Blueprint created successfully",
+						blueprintId: id
+					} ) );
 				}
 			}
 		} catch( e ) {
 			if( e instanceof Error ) {
-				SystemLib.LogError( "api", e.message );
+				SystemLib.LogError( e.message );
+				console.log( e );
 			}
 		}
 
-		res.json( {
-			...Response
-		} );*/
+		res.status( 500 ).json( errorResponse( "Something goes wrong!", res ) );
 	} );
 
 	Router.post( ApiUrl( EApiBlueprintUtils.edit ), MW_Auth, async( req: ExpressRequest<{
@@ -117,57 +116,50 @@ export default function() {
 		blueprintName: string,
 		blueprintId: BlueprintClass<true>
 	}>, res: Response ) => {
-		/*const Response: TResponse_BPUser_Edit = {
-			...DefaultResponseFailed
-		};
-
-		const Request: TRequest_BPUser_Edit = req.body;
-		const Files = req.files as TRequest_BPUser_Edit_Files;
-
 		try {
-			if( Request.BlueprintName && Request.BlueprintDesc && Request.UserClass && Request.DesignerSize ) {
-				const Blueprint = await DB_Blueprints.findById( Request.BlueprintId );
-				if( Blueprint ) {
-					Blueprint.description = Request.BlueprintDesc;
-					Blueprint.name = Request.BlueprintName;
-					Blueprint.tags = Request.BlueprintTags || [];
-					Blueprint.mods = Request.BlueprintMods || [];
-					Blueprint.owner = Request.UserClass.Get._id;
-					Blueprint.DesignerSize = Request.DesignerSize;
-					const ID = Blueprint._id.toString();
+			if( typeof req.body.blueprint === "string" ) {
+				req.body.blueprint = JSON.parse( req.body.blueprint );
+			}
+			const blueprint = new DB_Blueprints( req.body.blueprint );
+			blueprint.totalRating = 0;
+			blueprint.downloads = 0;
+			blueprint.totalRatingCount = 0;
+			blueprint.rating = [];
+			blueprint.images = [];
+			blueprint.blacklisted = false;
 
-					if( await Blueprint.save() ) {
-						if( Files?.Image ) {
-							for( const [ Key, File ] of Object.entries( Files ) ) {
-								fs.mkdirSync( path.join( __BlueprintDir, ID ), { recursive: true } );
-								switch ( Key ) {
-									case "Image":
-										// eslint-disable-next-line no-case-declarations
-										const ImgPath = path.join( __BlueprintDir, ID, `img_${ ID }.jpg` );
-										fs.existsSync( ImgPath ) && fs.rmSync( ImgPath );
-										await File.mv( ImgPath );
-										break;
-									default:
-										break;
-								}
-							}
-						}
-
-						Response.Data = ID;
-						Response.Success = true;
-						Response.MessageCode = "Blueprint.success.Edited";
-
+			if( req.files && !Array.isArray( req.files ) ) {
+				const id = blueprint._id.toString();
+				const blueprintDir = path.join( __BlueprintDir, id );
+				fs.mkdirSync( blueprintDir, { recursive: true } );
+				blueprint.originalName = req.files.sbp[ 0 ].originalname.replace( ".sbp", "" );
+				fs.renameSync( req.files.sbp[ 0 ].path, path.join( blueprintDir, `${ id }.sbp` ) );
+				fs.renameSync( req.files.sbpcfg[ 0 ].path, path.join( blueprintDir, `${ id }.sbpcfg` ) );
+				let idx = 0;
+				for( const file of req.files.images ) {
+					if( file.mimetype && file.mimetype.split( "/" )[ 0 ] === "image" && file.mimetype.split( "/" )[ 1 ] ) {
+						const newName = `image_${ id }_${ idx }.${ file.mimetype.split( "/" )[ 1 ] }`;
+						console.log( `Renaming ${ file.originalname } to ${ newName }` );
+						fs.renameSync( file.path, path.join( blueprintDir, newName ) );
+						blueprint.images.push( newName );
+						idx++;
 					}
+				}
+
+				if( await blueprint.save() ) {
+					return res.status( 200 ).json( dataResponse( {
+						msg: "Blueprint created successfully",
+						blueprintId: id
+					} ) );
 				}
 			}
 		} catch( e ) {
 			if( e instanceof Error ) {
-				SystemLib.LogError( "api", e.message );
+				SystemLib.LogError( e.message );
+				console.log( e );
 			}
 		}
 
-		res.json( {
-			...Response
-		} );*/
+		res.status( 500 ).json( errorResponse( "Something goes wrong!", res ) );
 	} );
 }

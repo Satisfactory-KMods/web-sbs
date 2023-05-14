@@ -26,7 +26,7 @@ export default function() {
 				return res.status( 404 ).json( { error: "Blueprint not found" } );
 			}
 
-			const BPName = blueprint.name.replace( /[^a-z0-9]/gi, "_" ).toLowerCase();
+			const BPName = blueprint.originalName;
 			const ZipFile = path.join( __MountDir, "Zips", id, `${ BPName }.zip` );
 
 			if( !DownloadIPCached.find( R => R.id === blueprint._id.toString() && R.ip === req.ip ) ) {
@@ -148,8 +148,10 @@ export default function() {
 		}
 	} );
 
-	Router.get( ApiUrl( "image/:id" ), async( req: Request, res: Response ) => {
-		let File = path.join( __BlueprintDir, req.params.id, `img_${ req.params.id }.jpg` );
+	Router.get( ApiUrl( "image/:id/:image" ), async( req: Request, res: Response ) => {
+		const { id, image } = req.params;
+		console.log( { id, image } );
+		let File = path.join( __BlueprintDir, id, image );
 		if( !fs.existsSync( File ) ) {
 			File = path.join( __BaseDir, "../..", "public/images/default/unknown.png" );
 		}

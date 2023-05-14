@@ -1,5 +1,6 @@
 import "@kyri123/k-javascript-utils/lib/useAddons";
 import { ERoles } from "@shared/Enum/ERoles";
+import bodyParser from "body-parser";
 import express from "express";
 import fs from "fs";
 import http from "http";
@@ -26,8 +27,8 @@ global.SystemLib = new SystemLib_Class();
 global.Api = express();
 global.HttpServer = http.createServer( global.Api );
 
-Api.use( express.json() );
-Api.use( express.urlencoded( { extended: true } ) );
+Api.use( bodyParser.urlencoded( { extended: true } ) );
+Api.use( bodyParser.json() );
 Api.use( express.static( path.join( __BaseDir, "../..", "build" ), { extensions: [ "js" ] } ) );
 
 Api.use( function( req, res, next ) {

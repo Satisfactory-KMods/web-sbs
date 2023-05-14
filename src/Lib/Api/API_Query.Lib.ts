@@ -4,6 +4,16 @@ import type { EApiBlueprintUtils } from "@shared/Enum/EApiPath";
 import superjson from 'superjson';
 import type { SuperJSONResult } from "superjson/dist/types";
 
+export function FormData_append_object( fd: FormData, obj: any, key?: string ) {
+	for( const [ i, ] of Object.entries( obj ) ) {
+		const k = key ? key + '[' + i + ']' : i;
+		if( typeof obj[ i ] == 'object' )
+			FormData_append_object( fd, obj[ i ], k );
+		else
+			fd.append( k, obj[ i ] );
+	}
+}
+
 export class API_QueryLib {
 	static async PostToAPI<T, D = any>(
 		Path: EApiBlueprintUtils,
@@ -28,7 +38,7 @@ export class API_QueryLib {
 			const Resp: Response = await fetch(
 				`/api/v1/${ Path }`,
 				requestOptions
-			).catch( console.error );
+			);
 			if( Resp ) {
 				const resultJson = ( await Resp.json() ) as( SuccessDataResponseFormat | { error: SuperJSONResult } );
 				if( Resp.status === 200 ) {
@@ -69,10 +79,10 @@ export class API_QueryLib {
 		};
 
 		try {
-			const Resp: Response | void = await fetch(
+			const Resp: Response = await fetch(
 				`/api/v1/${ Path }`,
 				requestOptions
-			).catch( console.error );
+			);
 			if( Resp ) {
 				const resultJson = ( await Resp.json() ) as( SuccessDataResponseFormat | { error: SuperJSONResult } );
 				if( Resp.status === 200 ) {

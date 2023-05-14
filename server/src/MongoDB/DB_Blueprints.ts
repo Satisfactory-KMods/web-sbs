@@ -18,10 +18,12 @@ const ZodBlueprintSchema = z.object( {
 	mods: z.array( z.string() ),
 	rating: z.array( ZodRating ),
 	totalRating: z.number(),
+	totalRatingCount: z.number(),
 	tags: z.array( z.string() ),
 	images: z.array( z.string() ),
 	downloads: z.number(),
-	blacklisted: z.boolean()
+	blacklisted: z.boolean(),
+	originalName: z.string()
 } );
 
 export interface BlueprintSchemaMethods {
@@ -32,18 +34,20 @@ export interface BlueprintSchemaMethods {
 const BlueprintSchema = new mongoose.Schema( {
 	name: { type: String, required: true },
 	description: { type: String, required: true },
-	mods: { type: [ String ], required: true },
-	likes: { type: [ String ], required: true },
+	mods: { type: [ String ], required: true, default: [] },
+	tags: { type: [ String ], required: true, default: [] },
 	rating: { type: [ {
 		userid: { type: String, required: true },
 		rating: { type: Number, required: true },
 	} ], required: true },
 	totalRating: { type: Number, required: true },
+	totalRatingCount: { type: Number, required: true },
 	DesignerSize: { type: String, required: true },
 	owner: { type: String, required: true },
 	downloads: { type: Number, required: true, default: 0 },
 	blacklisted: { type: Boolean, required: false, default: false },
 	images: { type: [ String ], required: true },
+	originalName: { type: String, required: true, unique: true },
 }, { timestamps: true, methods: {
 	updateRating: async function() {
 		const findRating = () => {
@@ -53,9 +57,11 @@ const BlueprintSchema = new mongoose.Schema( {
 			return !isNaN( currRating ) ? currRating : 0;
 		};
 		this.totalRating = findRating();
+		this.totalRatingCount = this.rating.length;
 		try {
 			this.markModified( "rating" );
-			this.markModified( "totalRation" );
+			this.markModified( "totalRating" );
+			this.markModified( "totalRatingCount" );
 			await this.save();
 			return true;
 		} catch( e ) {

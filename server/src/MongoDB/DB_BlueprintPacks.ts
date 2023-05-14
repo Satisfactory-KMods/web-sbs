@@ -10,6 +10,7 @@ const ZodBlueprintPackSchema = z.object( {
 	mods: z.array( z.string() ),
 	rating: z.array( ZodRating ),
 	totalRating: z.number(),
+	totalRatingCount: z.number(),
 	tags: z.array( z.string() ),
 	downloads: z.number(),
 	blacklisted: z.boolean(),
@@ -32,6 +33,7 @@ const BlueprintPackSchema = new mongoose.Schema( {
 		rating: { type: Number, required: true },
 	} ], required: true },
 	totalRating: { type: Number, required: true },
+	totalRatingCount: { type: Number, required: true },
 	tags: { type: [ String ], required: true },
 	owner: { type: String, required: true },
 	downloads: { type: Number, required: true, default: 0 },
@@ -46,9 +48,11 @@ const BlueprintPackSchema = new mongoose.Schema( {
 			return !isNaN( currRating ) ? currRating : 0;
 		};
 		this.totalRating = findRating();
+		this.totalRatingCount = this.rating.length;
 		try {
 			this.markModified( "rating" );
-			this.markModified( "totalRation" );
+			this.markModified( "totalRating" );
+			this.markModified( "totalRatingCount" );
 			await this.save();
 			return true;
 		} catch( e ) {

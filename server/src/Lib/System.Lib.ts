@@ -142,11 +142,11 @@ export class SystemLib_Class {
 
 	public LogError( Prefix: string, ...data: any[] ) {
 		data.addAtIndex(
-			this.ToBashColor( "Light Red" ) +
-			`[${ new Date().toUTCString() }][ERROR]\x1B[0m`
+			`${ this.ToBashColor( "Red" ) }[${ Prefix.toUpperCase() }]\x1B[0m`
 		);
 		data.addAtIndex(
-			`${ this.ToBashColor( "Red" ) }[${ Prefix.toUpperCase() }]\x1B[0m`
+			this.ToBashColor( "Light Red" ) +
+			`[${ new Date().toUTCString() }][ERROR]\x1B[0m`
 		);
 		console.error( ...data );
 		this.WriteStringToLog( ...data );

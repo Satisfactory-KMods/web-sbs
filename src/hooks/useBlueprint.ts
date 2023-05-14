@@ -96,7 +96,7 @@ export function useBlueprint( InitValue: string | BlueprintData, defaultUser?: {
 	}, [ user, loggedIn, Blueprint.owner, isValid ] );
 
 	useEffect( () => {
-		if( typeof InitValue === "string" ) {
+		if( typeof InitValue === "string" || !defaultUser ) {
 			Query();
 		} else {
 			QueryBlueprintParse();

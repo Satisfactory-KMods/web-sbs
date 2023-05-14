@@ -33,6 +33,13 @@ export function successSwal( msg: string, toast?: boolean ): void {
 	fireSwalFromApi( msg, "success" );
 }
 
+export function successSwalAwait( msg: string, toast?: boolean ) {
+	if( toast ) {
+		return fireToastFromApi( msg, "success" );
+	}
+	return fireSwalFromApi( msg, "success" );
+}
+
 export function fireSwalFromApi<PreConfirmResult = any>( message: string[] | string | undefined, success?: boolean | SweetAlertIcon, moreOptions?: SweetAlertOptions<PreConfirmResult> ) {
 	if( message && message.length >= 0 ) {
 		return Swal.fire<PreConfirmResult>( {

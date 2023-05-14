@@ -1,3 +1,4 @@
+import { EDesignerSize } from "@app/Shared/Enum/EDesignerSize";
 import DataContext from "@context/DataContext";
 import type { FilterSchema } from "@server/trpc/routings/public/blueprint";
 import type { SelectOptionStruct } from "@shared/Types/SelectOptions";
@@ -29,6 +30,14 @@ export function useSelectOptions() {
 		{ value: { by: "likes", up: false }, label: "Fewest likes" }
 	], [] );
 
+	const designerSizeOptions: MultiValue<SelectOptionStruct<EDesignerSize>> = useMemo( () => [
+		{ value: EDesignerSize.mk1, label: EDesignerSize.mk1 },
+		{ value: EDesignerSize.mk2, label: EDesignerSize.mk2 },
+		{ value: EDesignerSize.mk3, label: EDesignerSize.mk3 },
+		{ value: EDesignerSize.mk4, label: EDesignerSize.mk4 },
+		{ value: EDesignerSize.mk5, label: EDesignerSize.mk5 }
+	], [] );
+
 	const tagsSelectOptions: MultiValue<SelectOptionStruct<string>> = useMemo( () => tags.map( R => ( {
 		label: R.DisplayName,
 		value: R._id
@@ -55,14 +64,20 @@ export function useSelectOptions() {
 		return tagsSelectOptions.find( m => _.isEqual( tag, m.value ) ) || null;
 	}, [ tagsSelectOptions ] );
 
+	const designerSize_Single: ( designerSize: EDesignerSize ) => SingleValue<SelectOptionStruct<EDesignerSize>> = useCallback( ( designerSize ) => {
+		return designerSizeOptions.find( m => _.isEqual( designerSize, m.value ) ) || null;
+	}, [ designerSizeOptions ] );
+
 	return {
 		modSelected_Multi,
 		modSelected_Single,
 		tagSelected_Multi,
 		tagSelected_Single,
+		designerSize_Single,
 		modSelectOptions,
 		tagsSelectOptions,
 		vanillaSelectOptions,
-		sortSelectOptions
+		sortSelectOptions,
+		designerSizeOptions
 	};
 }

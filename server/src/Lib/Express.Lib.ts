@@ -85,5 +85,5 @@ export async function MW_Rest( req: Request, res: Response, next: NextFunction )
 }
 
 export const upload = multer( {
-	dest: path.join( __BaseDir, "tmp" ),
+	dest: path.join( process.cwd(), "tmp" ),
 } );

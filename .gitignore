@@ -32,3 +32,4 @@ buildserver
 .env
 mount
 .npmrc
+tmp

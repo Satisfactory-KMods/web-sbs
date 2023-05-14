@@ -61,10 +61,10 @@ const Component: FunctionComponent = () => {
 						{ Blueprint.images.length > 1 ?
 							( <Carousel>
 								{ Blueprint.images.map( e => (
-									<img className="w-full h-full object-cover" src={ "/api/v1/image/" + e } key={ id + e } alt="BlueprintLogo" />
+									<img className="w-full h-full object-cover" src={ `/api/v1/image/${ Blueprint._id }/${ e }` } key={ id + e } alt="BlueprintLogo" />
 								) ) }
 							</Carousel> )
-							: ( <img className="w-full h-full object-cover" src={ "/api/v1/image/" + Blueprint.images[ 0 ] } alt="BlueprintLogo" /> ) }
+							: ( <img className="w-full h-full object-cover" src={ `/api/v1/image/${ Blueprint._id }/${ Blueprint.images[ 0 ] }` } alt="BlueprintLogo" /> ) }
 					</div>
 					<div className="absolute top-0 right-0 m-3">
 						<div className="bg-orange-800 p-1 px-5 rounded-lg border border-orange-700 text-white">
