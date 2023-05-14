@@ -2,6 +2,10 @@ name: Build and Deploy
 
 on: [ push, pull_request ]
 
+env:
+  CI: true
+  GITHUB_TOKEN: ${{ secrets.TOKEN }}
+
 jobs:
   test-docker:
     name: 🔨 Build as Docker
