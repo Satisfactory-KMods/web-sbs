@@ -150,7 +150,6 @@ export default function() {
 
 	Router.get( ApiUrl( "image/:id/:image" ), async( req: Request, res: Response ) => {
 		const { id, image } = req.params;
-		console.log( { id, image } );
 		let File = path.join( __BlueprintDir, id, image );
 		if( !fs.existsSync( File ) ) {
 			File = path.join( __BaseDir, "../..", "public/images/default/unknown.png" );
