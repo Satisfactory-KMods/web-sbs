@@ -84,7 +84,6 @@ export default function() {
 				for( const file of req.files.images ) {
 					if( file.mimetype && file.mimetype.split( "/" )[ 0 ] === "image" && file.mimetype.split( "/" )[ 1 ] ) {
 						const newName = `image_${ id }_${ idx }.${ file.mimetype.split( "/" )[ 1 ] }`;
-						console.log( `Renaming ${ file.originalname } to ${ newName }` );
 						fs.renameSync( file.path, path.join( blueprintDir, newName ) );
 						blueprint.images.push( newName );
 						idx++;
@@ -166,7 +165,6 @@ export default function() {
 					for( const file of req.files.images ) {
 						if( file.mimetype && file.mimetype.split( "/" )[ 0 ] === "image" && file.mimetype.split( "/" )[ 1 ] ) {
 							const newName = `image_${ id }_${ idx }.${ file.mimetype.split( "/" )[ 1 ] }`;
-							console.log( `Renaming ${ file.originalname } to ${ newName }` );
 							fs.renameSync( file.path, path.join( blueprintDir, newName ) );
 							blueprint.images.push( newName );
 							idx++;
@@ -185,7 +183,6 @@ export default function() {
 		} catch( e ) {
 			if( e instanceof Error ) {
 				SystemLib.LogError( e.message );
-				console.log( e );
 			}
 		}
 

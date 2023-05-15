@@ -169,11 +169,6 @@ const BlueprintEditor: FunctionComponent<BlueprintEditorProps> = ( { defaultData
 		if( isEditing ) {
 			const data: FormData = new FormData();
 
-			if( data instanceof FormData ) {
-				for( var pair of data.entries() ) {
-					console.log( pair[ 0 ] + ', ' + pair[ 1 ] );
-				}
-			}
 			if( checkList[ 2 ] && sbpFile && sbpcfgFile ) {
 				data.append( "sbp", sbpFile );
 				data.append( "sbpcfg", sbpcfgFile );

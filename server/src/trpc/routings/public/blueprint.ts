@@ -57,7 +57,7 @@ export function buildFilter<T extends BlueprintData | BlueprintPack>( filter?: F
 		}
 		if( filter.onlyVanilla !== undefined ) {
 			// @ts-ignore because this key is fine here!
-			result.filter[ "mods.1" ] = { $exists: !filter.onlyVanilla };
+			result.filter[ "mods.0" ] = { $exists: !filter.onlyVanilla };
 		}
 	} else {
 		result.options.sort = { createdAt: -1 };

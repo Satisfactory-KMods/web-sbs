@@ -53,7 +53,6 @@ const BlueprintFilter: FunctionComponent<BlueprintFilterProps> = ( { isFetching,
 	useEffect( () => {
 		if( dirtyRef.current ) {
 			dirtyRef.current = false;
-			console.log( "fetch" );
 			doFetch();
 		}
 	// eslint-disable-next-line react-hooks/exhaustive-deps
