@@ -1,21 +1,41 @@
-import BlueprintRating from "@app/Components/Blueprints/BlueprintRating";
-import type { BlueprintIdLoader } from "@app/Page/blueprint/edit/[blueprintId]Loader";
-import { mdxComponents } from "@app/Page/terms/private/Page";
-import type { SaveComponent, SaveEntity } from "@etothepii/satisfactory-file-parser";
-import { useBlueprint } from "@hooks/useBlueprint";
-import { Button, Carousel } from "flowbite-react";
-import type { FunctionComponent } from "react";
-import { useId, useMemo } from "react";
-import { BiUser, BiWrench } from "react-icons/bi";
-import { BsBox, BsBoxes, BsHouseAdd } from "react-icons/bs";
-import { FaClock } from "react-icons/fa";
-import { HiCog, HiDownload, HiTrash } from "react-icons/hi";
+import BlueprintRating                   from "@app/Components/Blueprints/BlueprintRating";
+import type { BlueprintIdLoader }        from "@app/Page/blueprint/edit/[blueprintId]Loader";
+import { mdxComponents }                 from "@app/Page/terms/private/Page";
+import type {
+	SaveComponent,
+	SaveEntity
+}                                        from "@etothepii/satisfactory-file-parser";
+import { useBlueprint }                  from "@hooks/useBlueprint";
+import {
+	Button,
+	Carousel
+}                                        from "flowbite-react";
+import type { FunctionComponent }        from "react";
+import {
+	useId,
+	useMemo
+}                                        from "react";
+import {
+	BiUser,
+	BiWrench
+}                                        from "react-icons/bi";
+import {
+	BsBox,
+	BsBoxes,
+	BsHouseAdd
+}                                        from "react-icons/bs";
+import { FaClock }                       from "react-icons/fa";
+import {
+	HiCog,
+	HiDownload,
+	HiTrash
+}                                        from "react-icons/hi";
 import { MdOutlinePhotoSizeSelectSmall } from "react-icons/md";
-import ReactMarkdown from "react-markdown";
+import ReactMarkdown                     from "react-markdown";
 import {
 	Link,
 	useLoaderData
-} from "react-router-dom";
+}                                        from "react-router-dom";
 
 const Component: FunctionComponent = () => {
 	const id = useId();
@@ -41,7 +61,7 @@ const Component: FunctionComponent = () => {
 	}, [ blueprintParse?.objects ] );
 
 	const totalItemCost = useMemo( () => {
-		const itemCosts: [string, number][] = blueprintParse?.header.itemCosts || [];
+		const itemCosts: [ string, number ][] = blueprintParse?.header.itemCosts || [];
 		return itemCosts.reduce( ( total, cost ) => total + cost[ 1 ], 0 );
 	}, [ blueprintParse?.header.itemCosts ] );
 
@@ -61,10 +81,14 @@ const Component: FunctionComponent = () => {
 						{ Blueprint.images.length > 1 ?
 							( <Carousel>
 								{ Blueprint.images.map( e => (
-									<img className="w-full h-full object-cover" src={ `/api/v1/image/${ Blueprint._id }/${ e }` } key={ id + e } alt="BlueprintLogo" />
+									<img className="w-full h-full object-cover"
+									     src={ `/api/v1/image/${ Blueprint._id }/${ e }` } key={ id + e }
+									     alt="BlueprintLogo" />
 								) ) }
 							</Carousel> )
-							: ( <img className="w-full h-full object-cover" src={ `/api/v1/image/${ Blueprint._id }/${ Blueprint.images[ 0 ] }` } alt="BlueprintLogo" /> ) }
+							: ( <img className="w-full h-full object-cover"
+							         src={ `/api/v1/image/${ Blueprint._id }/${ Blueprint.images[ 0 ] }` }
+							         alt="BlueprintLogo" /> ) }
 					</div>
 					<div className="absolute top-0 right-0 m-3">
 						<div className="bg-orange-800 p-1 px-5 rounded-lg border border-orange-700 text-white">
@@ -72,7 +96,8 @@ const Component: FunctionComponent = () => {
 						</div>
 					</div>
 				</div>
-				<ReactMarkdown components={ mdxComponents } className="text-neutral-200 flex-1 p-3 border-t-1 border-gray-700">
+				<ReactMarkdown components={ mdxComponents }
+				               className="text-neutral-200 flex-1 p-3 border-t-1 border-gray-700">
 					{ Blueprint.description }
 				</ReactMarkdown>
 				<div className=" p-3 border-t bg-gray-700 border-gray-700 flex">
@@ -80,7 +105,8 @@ const Component: FunctionComponent = () => {
 				</div>
 				{ !!Blueprint.tags.length && <div className="flex flex-wrap p-3 pt-0 border-t bg-gray-700 border-gray-700 text-neutral-200 text-xs">
 					{ Tags.map( e => (
-						<div key={ id + e._id } className="bg-gray-900 p-1 px-3 rounded-lg border border-gray-800 shadow">{ e.DisplayName }</div>
+						<div key={ id + e._id }
+						     className="bg-gray-900 p-1 px-3 rounded-lg border border-gray-800 shadow">{ e.DisplayName }</div>
 					) ) }
 				</div> }
 			</div>
@@ -91,7 +117,8 @@ const Component: FunctionComponent = () => {
 						<BiUser className="inline me-1 text-xl pb-1" /> <b>Creator:</b> <span className="text-neutral-100">{ owner.username }</span>
 					</div>
 					<div className="p-3 border-b bg-gray-900 border-gray-700 text-neutral-300">
-						<MdOutlinePhotoSizeSelectSmall className="inline me-1 text-xl pb-1" /> <b>Designer Size:</b> <span className="text-neutral-100">{ Blueprint.DesignerSize }</span>
+						<MdOutlinePhotoSizeSelectSmall className="inline me-1 text-xl pb-1" /> <b>Designer Size:</b>
+						<span className="text-neutral-100">{ Blueprint.DesignerSize }</span>
 					</div>
 					<div className="p-3 border-b bg-gray-900 border-gray-700 text-neutral-300">
 						<BsHouseAdd className="inline me-1 text-xl pb-1" /> <b>Buildings:</b> <span className="text-neutral-100">{ buildingCount }</span>
@@ -115,7 +142,8 @@ const Component: FunctionComponent = () => {
 						<BiWrench className="inline me-1 text-xl pb-1" /> <b>Used Mods:</b>
 						{ Mods.map( e => {
 							return (
-								<Link to={ `https://ficsit.app/mod/${ e.id }` } target="_blank" key={ id + e.id } className="mt-2 flex hover:bg-gray-700 bg-gray-600 p-0 rounded-lg border border-gray-700 shadow">
+								<Link to={ `https://ficsit.app/mod/${ e.id }` } target="_blank" key={ id + e.id }
+								      className="mt-2 flex hover:bg-gray-700 bg-gray-600 p-0 rounded-lg border border-gray-700 shadow">
 									<img onError={ e => {
 										e.currentTarget.src = "/images/default/unknown.png";
 									} } src={ e.logo } alt={ e.name } className="h-8 w-8 rounded-l-lg" />
@@ -131,12 +159,14 @@ const Component: FunctionComponent = () => {
 						<Button onClick={ doBlacklist } color="red" size="small" className="p-1 px-3">
 							<HiTrash className="text-sm me-2" /> Delete
 						</Button>
-						<Link to={ `/blueprint/edit/${ Blueprint._id }` } className="text-gray-900 bg-white border border-gray-200 hover:bg-gray-100 hover:text-blue-700 disabled:hover:bg-white focus:ring-blue-700 focus:text-blue-700 dark:bg-transparent dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 focus:ring-2 dark:disabled:hover:bg-gray-800 group flex h-min items-center justify-centertext-center font-medium focus:z-10 rounded-lg p-1 ms-2 px-3">
+						<Link to={ `/blueprint/edit/${ Blueprint._id }` }
+						      className="text-gray-900 bg-white border border-gray-200 hover:bg-gray-100 hover:text-blue-700 disabled:hover:bg-white focus:ring-blue-700 focus:text-blue-700 dark:bg-transparent dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 focus:ring-2 dark:disabled:hover:bg-gray-800 group flex h-min items-center justify-centertext-center font-medium focus:z-10 rounded-lg p-1 ms-2 px-3">
 							<HiCog className="text-sm me-2" /> Edit Blueprint
 						</Link>
 					</> }
 
-					<Button href={ `/api/v1/download/${ Blueprint._id }` } target="_blank" color="gray" size="small" className="p-1 px-3 ms-2">
+					<Button href={ `/api/v1/download/${ Blueprint._id }` } target="_blank" color="gray" size="small"
+					        className="p-1 px-3 ms-2">
 						<HiDownload className="text-sm me-2" /> Download ({ Blueprint.downloads })
 					</Button>
 				</div>

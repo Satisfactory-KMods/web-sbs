@@ -37,7 +37,7 @@ export default function() {
 				}
 				blueprints.push( copy );
 			}
-			return { blueprints, totalBlueprints };
+			return res.json( { blueprints, totalBlueprints } );
 		} catch( e ) {
 			if( e instanceof Error ) {
 				SystemLib.LogError( e.message );
