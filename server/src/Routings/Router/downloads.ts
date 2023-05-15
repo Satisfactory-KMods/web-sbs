@@ -10,9 +10,9 @@ import { default as FS, default as fs } from "fs";
 import path from "path";
 
 export default function() {
-	Router.get( ApiUrl( "download/:id" ), async( req: Request, res: Response ) => {
+	Router.get( ApiUrl( "download/:id/:only?" ), async( req: Request, res: Response ) => {
 		try {
-			const { id } = req.params;
+			const { id, only } = req.params;
 			const blueprint = await DB_Blueprints.findOne( { _id: id, blacklisted: { $ne: true } } );
 			if( !blueprint ) {
 				return res.status( 404 ).json( { error: "Blueprint not found" } );
@@ -28,6 +28,7 @@ export default function() {
 
 			const BPName = blueprint.originalName;
 			const ZipFile = path.join( __MountDir, "Zips", id, `${ BPName }.zip` );
+			const AsOnly = path.join( __MountDir, "Zips", id, `${ BPName }.${ only }` );
 
 			if( !DownloadIPCached.find( R => R.id === blueprint._id.toString() && R.ip === req.ip ) ) {
 				if( !blueprint.downloads ) {
@@ -40,9 +41,15 @@ export default function() {
 			}
 
 			if( fs.existsSync( ZipFile ) ) {
+				if( only && fs.existsSync( AsOnly ) ) {
+					return res.download( AsOnly );
+				}
+
 				return res.download( ZipFile, `${ BPName }.zip` );
 			}
 
+			const SBPCFGFILE = path.join( __MountDir, "Zips", id, `${ BPName }.sbpcfg` );
+			const SBPFILE = path.join( __MountDir, "Zips", id, `${ BPName }.sbp` );
 			const ZipStream = new Compress.zip.Stream();
 
 			fs.mkdirSync( ZipTempDir, { recursive: true } );
@@ -58,10 +65,16 @@ export default function() {
 
 			const destStream = FS.createWriteStream( ZipFile );
 			ZipStream.pipe( destStream ).on( "finish", () => {
-				fs.rmSync( CopiedFileSBP );
-				fs.rmSync( CopiedFileSBPCFG );
+				fs.renameSync( CopiedFileSBP, SBPFILE );
+				fs.renameSync( CopiedFileSBPCFG, SBPCFGFILE );
+
 				fs.writeFileSync( path.join( ZipTempDir, `created.log` ), Date.now().toString() );
 				SystemLib.Log( "api", "Blueprint Download Created: " + ZipFile );
+
+				if( only && fs.existsSync( AsOnly ) ) {
+					return res.download( AsOnly );
+				}
+
 				return res.download( ZipFile, `${ BPName }.zip` );
 			} ).on( "error", ( err ) => {
 				return res.status( 404 ).json( { error: "Blueprint not found" } );

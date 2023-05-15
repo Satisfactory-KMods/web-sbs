@@ -15,33 +15,32 @@ export default function() {
 		limit: number,
 		filterOptions: z.infer<typeof filterSchema>
 	}>, res: Response ) => {
-		if( req.files && Array.isArray( req.files ) && Number( req.files.length ) === 2 ) {
-			try {
-				z.number().optional().parse( req.body.skip );
-				z.number().parse( req.body.limit );
+		try {
+			z.number().optional().parse( req.body.skip );
+			z.number().parse( req.body.limit );
 		        filterSchema.optional().parse( req.body.filterOptions );
 
-				const { skip, limit, filterOptions } = req.body;
+			const { skip, limit, filterOptions } = req.body;
 
-				const { filter, options } = buildFilter( filterOptions );
-				const totalBlueprints = await DB_Blueprints.count( filter );
-				const blueprints: BlueprintData[] = [];
-				for await ( const blueprint of DB_Blueprints.find( filter, { skip, limit, options } ) ) {
-					const copy: BlueprintData = _.cloneDeep( blueprint.toJSON() );
-					const owner = await DB_UserAccount.findById( blueprint.owner );
-					if( owner ) {
-						copy.owner = owner.username || "Unknown User";
-					}
-					if( copy.tags.length > 0 ) {
-						const tags = await DB_Tags.find( { _id: { $in: copy.tags } } );
-						copy.tags = tags.map( e => e.DisplayName );
-					}
+			const { filter, options } = buildFilter( filterOptions );
+			const totalBlueprints = await DB_Blueprints.count( filter );
+			const blueprints: BlueprintData[] = [];
+			for await ( const blueprint of DB_Blueprints.find( filter, { description: 0 }, { skip, limit, options } ) ) {
+				const copy: BlueprintData = _.cloneDeep( blueprint.toJSON() );
+				const owner = await DB_UserAccount.findById( blueprint.owner );
+				if( owner ) {
+					copy.owner = owner.username || "Unknown User";
 				}
-				return { blueprints, totalBlueprints };
-			} catch( e ) {
-				if( e instanceof Error ) {
-					SystemLib.LogError( e.message );
+				if( copy.tags.length > 0 ) {
+					const tags = await DB_Tags.find( { _id: { $in: copy.tags } } );
+					copy.tags = tags.map( e => e.DisplayName );
 				}
+				blueprints.push( copy );
+			}
+			return { blueprints, totalBlueprints };
+		} catch( e ) {
+			if( e instanceof Error ) {
+				SystemLib.LogError( e.message );
 			}
 		}
 

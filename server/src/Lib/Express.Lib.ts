@@ -75,7 +75,6 @@ export async function MW_Blueprint( req: ExpressRequest<{
 }
 
 export async function MW_Rest( req: Request, res: Response, next: NextFunction ) {
-	console.log( req, req.headers );
 	const apiKey = req.header( 'x-api-key' );
 	if( _.isEqual( apiKey, process.env.APIKey ) && process.env.APIKey ) {
 		return next();
