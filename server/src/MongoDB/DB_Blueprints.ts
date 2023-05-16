@@ -38,7 +38,7 @@ const ZodBlueprintSchema = z.object( {
 	downloads: z.number(),
 	blacklisted: z.boolean(),
 	originalName: z.string(),
-	iconData: ZodIconData
+	iconData: ZodIconData.optional()
 } );
 
 export interface BlueprintSchemaMethods {
@@ -66,13 +66,13 @@ const BlueprintSchema = new mongoose.Schema( {
 	originalName: { type: String, required: true, unique: true },
 	iconData: { type: {
 		color: { type: {
-			r: { type: Number, required: true },
-			g: { type: Number, required: true },
-			b: { type: Number, required: true },
-			a: { type: Number, required: true },
-		}, required: true },
-		iconID: { type: Number, required: true },
-	}, required: true },
+			r: { type: Number, required: false },
+			g: { type: Number, required: false },
+			b: { type: Number, required: false },
+			a: { type: Number, required: false },
+		}, required: false },
+		iconID: { type: Number, required: false },
+	}, required: false },
 }, { timestamps: true, methods: {
 	updateRating: async function() {
 		const findRating = () => {
