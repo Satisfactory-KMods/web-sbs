@@ -33,10 +33,12 @@ export default function() {
 				}
 				if( copy.tags.length > 0 ) {
 					const tags = await DB_Tags.find( { _id: { $in: copy.tags } } );
-					copy.tags = tags.map( e => e.DisplayName );
+					// @ts-ignore
+					copy.tags = tags.map( e => ( { DisplayName: e.DisplayName, _id: e._id.toString() } ) );
 				}
 				blueprints.push( copy );
 			}
+
 			return res.json( { blueprints, totalBlueprints } );
 		} catch( e ) {
 			if( e instanceof Error ) {
