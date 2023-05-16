@@ -3,6 +3,7 @@ import DB_UserAccount from "@/server/src/MongoDB/DB_UserAccount";
 import { ERoles } from "@/src/Shared/Enum/ERoles";
 import {
 	adminProcedure,
+	authProcedure,
 	handleTRCPErr,
 	router
 } from "@server/trpc/trpc";
@@ -20,6 +21,19 @@ export const admin_users = router( {
 			const data = await DB_UserAccount.find( {}, { salt:0, hash:0, email:0 }, { sort: { cratedAt: -1 }, limit, skip } ) as ClientUserAccount[];
 			const count = await DB_UserAccount.count( {} );
 			return { data, count };
+		} catch( e ) {
+			handleTRCPErr( e );
+		}
+		throw new TRPCError( { message: "Something goes wrong!", code: "INTERNAL_SERVER_ERROR" } );
+	} ),
+
+	getApiKey: authProcedure.query( async( { ctx } ) => {
+		const { userClass } = ctx;
+		try {
+			const userDocument = await DB_UserAccount.findById( userClass.Get._id );
+			if( userDocument ) {
+				return await userDocument.createKey();
+			}
 		} catch( e ) {
 			handleTRCPErr( e );
 		}

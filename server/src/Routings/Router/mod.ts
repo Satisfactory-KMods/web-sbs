@@ -1,4 +1,4 @@
-import { ApiUrl, MW_Rest } from "@/server/src/Lib/Express.Lib";
+import { ApiUrl, MW_Rest, MW_Rest_USER } from "@/server/src/Lib/Express.Lib";
 import type { BlueprintData } from "@/server/src/MongoDB/DB_Blueprints";
 import DB_Blueprints from "@/server/src/MongoDB/DB_Blueprints";
 import DB_Tags from "@/server/src/MongoDB/DB_Tags";
@@ -39,6 +39,7 @@ export default function() {
 				blueprints.push( copy );
 			}
 
+			console.log( blueprints );
 			return res.json( { blueprints, totalBlueprints } );
 		} catch( e ) {
 			if( e instanceof Error ) {
@@ -48,4 +49,10 @@ export default function() {
 
 		return res.sendStatus( 500 );
 	} );
+
+
+	Router.post( ApiUrl( "mod/authcheck" ), MW_Rest, MW_Rest_USER, async( req: ExpressRequest, res: Response ) => {
+		return res.status( 200 ).json( { success: true } );
+	} );
 }
+

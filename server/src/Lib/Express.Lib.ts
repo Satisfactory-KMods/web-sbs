@@ -1,5 +1,6 @@
 import { BlueprintClass } from "@/server/src/Lib/Blueprint.Class";
 import type { BlueprintData } from "@/server/src/MongoDB/DB_Blueprints";
+import DB_UserAccount from '@/server/src/MongoDB/DB_UserAccount';
 import type { ExpressRequest } from "@/server/src/Types/express";
 import type { EApiBlueprintUtils } from "@/src/Shared/Enum/EApiPath";
 import { errorResponse } from "@kyri123/lib";
@@ -81,7 +82,18 @@ export async function MW_Rest( req: Request, res: Response, next: NextFunction )
 	} else if( !process.env.APIKey ) {
 		SystemLib.LogFatal( "MOD", "No API Key provided" );
 	}
-	return res.status( 401 ).json( errorResponse( "Unauthorized", res ) );
+	return res.status( 401 ).json( { error: "Unauthorized" } );
+}
+
+export async function MW_Rest_USER( req: Request, res: Response, next: NextFunction ) {
+	const apiKey = req.header( 'x-account-key' );
+	if( apiKey ) {
+		const userDoc = await DB_UserAccount.findOne( { apiKey } );
+		if( userDoc ) {
+			return next();
+		}
+	}
+	return res.status( 401 ).json( { error: "Unauthorized" } );
 }
 
 export const upload = multer( {
