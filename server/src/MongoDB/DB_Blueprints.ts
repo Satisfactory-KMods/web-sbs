@@ -1,5 +1,7 @@
+import { BlueprintClass } from "@/server/src/Lib/Blueprint.Class";
 import { parseBlueprintById } from "@/server/src/Lib/BlueprintParser";
 import { findModsFromBlueprint } from "@/src/Shared/blueprintReadingHelper";
+import type { BlueprintConfig } from "@etothepii/satisfactory-file-parser";
 import type { MongoBase } from "@server/Types/mongo";
 import { EDesignerSize } from "@shared/Enum/EDesignerSize";
 import * as mongoose from "mongoose";
@@ -8,6 +10,18 @@ import { z } from "zod";
 const ZodRating = z.object( {
 	userid: z.string(),
 	rating: z.number().min( 1 ).max( 5 ),
+} );
+
+const ZodColorData = z.object( {
+	r: z.number(),
+	g: z.number(),
+	b: z.number(),
+	a: z.number(),
+} );
+
+const ZodIconData = z.object( {
+	color: ZodColorData,
+	iconID: z.number(),
 } );
 
 const ZodBlueprintSchema = z.object( {
@@ -23,12 +37,14 @@ const ZodBlueprintSchema = z.object( {
 	images: z.array( z.string() ),
 	downloads: z.number(),
 	blacklisted: z.boolean(),
-	originalName: z.string()
+	originalName: z.string(),
+	iconData: ZodIconData
 } );
 
 export interface BlueprintSchemaMethods {
 	updateRating: () => Promise<boolean>;
 	updateModRefs: ( save?: boolean ) => Promise<void>;
+	updateBlueprintData: ( save?: boolean ) => Promise<void>;
 }
 
 const BlueprintSchema = new mongoose.Schema( {
@@ -48,6 +64,15 @@ const BlueprintSchema = new mongoose.Schema( {
 	blacklisted: { type: Boolean, required: false, default: false },
 	images: { type: [ String ], required: true },
 	originalName: { type: String, required: true, unique: true },
+	iconData: { type: {
+		color: { type: {
+			r: { type: Number, required: true },
+			g: { type: Number, required: true },
+			b: { type: Number, required: true },
+			a: { type: Number, required: true },
+		}, required: true },
+		iconID: { type: Number, required: true },
+	}, required: true },
 }, { timestamps: true, methods: {
 	updateRating: async function() {
 		const findRating = () => {
@@ -80,6 +105,27 @@ const BlueprintSchema = new mongoose.Schema( {
 				this.save();
 			}
 		}
+	},
+	updateBlueprintData: async function( save = true ) {
+		try {
+			const bp = await BlueprintClass.createClass( this._id.toString() );
+			if( bp ) {
+				const blueprint = await bp.parseBlueprint();
+				if( blueprint ) {
+					const partic: Partial<BlueprintConfig> = blueprint.config;
+					delete partic.description;
+					this.iconData = partic as IconData;
+					this.markModified( "iconData" );
+					if( save ) {
+						await this.save();
+					}
+				}
+			}
+		} catch( e ) {
+			if( e instanceof Error ) {
+				SystemLib.LogError( e.message );
+			}
+		}
 	}
 } } );
 
@@ -89,7 +135,17 @@ interface BPInterface extends z.infer<typeof ZodBlueprintSchema> {
 
 export type BlueprintData = BPInterface & MongoBase;
 export type BlueprintRating = z.infer<typeof ZodRating>;
+export type IconData = z.infer<typeof ZodIconData>;
 
-export default mongoose.model<BlueprintData, mongoose.Model<BlueprintData, unknown, BlueprintSchemaMethods>>( "SBS_Blueprints", BlueprintSchema );
-export { BlueprintSchema, ZodBlueprintSchema, ZodRating };
+const Model = mongoose.model<BlueprintData, mongoose.Model<BlueprintData, unknown, BlueprintSchemaMethods>>( "SBS_Blueprints", BlueprintSchema );
+
+export const Revalidate = async() => {
+	for await ( const bpDoc of Model.find( { iconData: { $exists: false } } ) ) {
+		await bpDoc.updateBlueprintData();
+	}
+};
+
+export default Model;
+
+export { BlueprintSchema, ZodBlueprintSchema, ZodRating, ZodIconData };
 

@@ -1,5 +1,9 @@
+import { BlueprintParser } from "@/server/src/Lib/BlueprintParser";
+import type { Blueprint } from "@etothepii/satisfactory-file-parser";
 import type { IfClass } from "@shared/Types/helper";
+import fs from 'fs';
 import _ from "lodash";
+import path from "path";
 import type { BlueprintData } from "../MongoDB/DB_Blueprints";
 import DB_Blueprints from "../MongoDB/DB_Blueprints";
 
@@ -32,6 +36,27 @@ export class BlueprintClass<T extends boolean = false> {
 
 	public async getDocument() {
 		return await DB_Blueprints.findById( this.data?._id  ).catch( () => {} );
+	}
+
+	public async parseBlueprint(): Promise<Blueprint | undefined> {
+		if( this instanceof BlueprintClass<true> ) {
+			const doc = await this.getDocument();
+			if( doc ) {
+				const sbp = path.join( __BlueprintDir, doc._id.toString(), `${ doc._id.toString() }.sbp` );
+				const sbpcfg = path.join( __BlueprintDir, doc._id.toString(), `${ doc._id.toString() }.sbpcfg` );
+				try {
+					const blueprint = new BlueprintParser( doc.originalName, fs.readFileSync( sbp ), fs.readFileSync( sbpcfg ) );
+					if( blueprint.Success ) {
+						return blueprint.Get;
+					}
+				} catch( e ) {
+					if( e instanceof Error ) {
+						SystemLib.LogError( e.message );
+					}
+				}
+			}
+		}
+		return undefined;
 	}
 
 	public isValid(): this is BlueprintClass<true> {

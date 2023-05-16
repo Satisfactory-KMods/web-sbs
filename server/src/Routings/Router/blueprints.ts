@@ -16,7 +16,6 @@ import type {
 } from "express";
 import fs from "fs";
 import _ from "lodash";
-import type { HydratedDocument } from "mongoose";
 import path from "path";
 import { z } from "zod";
 
@@ -96,6 +95,7 @@ export default function() {
 				}
 
 				if( await blueprint.save() ) {
+					await blueprint.updateBlueprintData();
 					return res.status( 200 ).json( dataResponse( {
 						msg: "Blueprint created successfully",
 						blueprintId: id
@@ -121,7 +121,7 @@ export default function() {
 			if( typeof req.body.blueprint === "string" ) {
 				req.body.blueprint = JSON.parse( req.body.blueprint );
 			}
-			const blueprint = await DB_Blueprints.findById<HydratedDocument<BlueprintData>>( req.body.blueprintId );
+			const blueprint = await DB_Blueprints.findById( req.body.blueprintId );
 			if( !blueprint ) {
 				return res.status( 404 ).json( errorResponse( "Blueprint not found!", res ) );
 			}
@@ -175,6 +175,7 @@ export default function() {
 			}
 
 			if( await blueprint.save() ) {
+				await blueprint.updateBlueprintData();
 				return res.status( 200 ).json( dataResponse( {
 					msg: "Blueprint edited successfully",
 					blueprintId: blueprint._id.toString()
