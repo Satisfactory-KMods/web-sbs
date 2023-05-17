@@ -1,7 +1,7 @@
 import BlueprintEditorCheckList from "@app/Components/Blueprints/BlueprintEditorCheckList";
 import { SBSInput, SBSSelect } from "@app/Components/elements/Inputs";
 import DataContext from "@app/Context/DataContext";
-import { API_QueryLib } from "@app/Lib/Api/API_Query.Lib";
+import { apiQueryLib } from "@app/Lib/Api/API_Query.Lib";
 import { successSwalAwait } from "@app/Lib/tRPC";
 import { mdxComponents } from "@app/Page/terms/private/Page";
 import { EApiBlueprintUtils } from "@app/Shared/Enum/EApiPath";
@@ -13,8 +13,8 @@ import { useSelectOptions } from "@app/hooks/useSelectOptions";
 import { LoadingButton } from "@comp/elements/Buttons";
 import type { Blueprint, SaveComponent, SaveEntity } from "@etothepii/satisfactory-file-parser";
 import type { Mod } from "@kyri123/lib";
-import type { BlueprintData } from "@server/MongoDB/DB_Blueprints";
-import type { Tag } from "@server/MongoDB/DB_Tags";
+import type { BlueprintData } from "@server/MongoDB/MongoBlueprints";
+import type { Tag } from "@server/MongoDB/MongoTags";
 import { Button, Label, Textarea } from "flowbite-react";
 import _ from "lodash";
 import type { ChangeEventHandler, FunctionComponent } from "react";
@@ -27,6 +27,7 @@ import { Link, useNavigate } from "react-router-dom";
 import type { MultiValue, SingleValue } from "react-select";
 import Select from "react-select";
 
+
 interface BlueprintEditorProps {
 	defaultData?: BlueprintData
 	defaultBlueprintData?: Blueprint
@@ -37,7 +38,7 @@ const BlueprintEditor: FunctionComponent<BlueprintEditorProps> = ( { defaultData
 	const navigate = useNavigate();
 	const { user } = useAuth();
 	const { mods, tags } = useContext( DataContext );
-	const { tagsSelectOptions, tagSelected_Multi, designerSizeOptions, designerSize_Single } = useSelectOptions();
+	const { tagsSelectOptions, tagSelectedMulti, designerSizeOptions, designerSizeSingle } = useSelectOptions();
 	const [ form, setForm ] = useState<Omit<BlueprintData, "__v" | "_id" | "createdAt" | "updatedAt">>( () => {
 		const defaultCopy: Partial<BlueprintData> | undefined = _.cloneDeep( defaultData );
 		if( defaultCopy ) {
@@ -66,19 +67,17 @@ const BlueprintEditor: FunctionComponent<BlueprintEditorProps> = ( { defaultData
 	const [ sbpFile, setSbpFile ] = useState<File | null>( () => null );
 	const [ sbpcfgFile, setSbpcfgFile ] = useState<File | null>( () => null );
 	const [ images, setImages ] = useState<FileList | null>( () => null );
-	const [ DesignerSize, setDesignerSize ] = useState<SingleValue<SelectOptionStruct<EDesignerSize>>>( designerSize_Single( defaultData?.DesignerSize || EDesignerSize.mk1 ) );
-	const [ formTags, setTags ] = useState<MultiValue<SelectOptionStruct>>( tagSelected_Multi( defaultData?.tags || [] ) );
+	const [ DesignerSize, setDesignerSize ] = useState<SingleValue<SelectOptionStruct<EDesignerSize>>>( designerSizeSingle( defaultData?.DesignerSize || EDesignerSize.mk1 ) );
+	const [ formTags, setTags ] = useState<MultiValue<SelectOptionStruct>>( tagSelectedMulti( defaultData?.tags || [] ) );
 
 	const isEditing = !!defaultData;
 
 	const Mods: Mod[] = useMemo( () => {
 		const modRefs = findModsFromBlueprint( blueprintParse?.objects );
 		return mods.filter( e => modRefs.includes( e.mod_reference ) );
-	}, [ blueprintParse?.objects, mods ] ) ;
+	}, [ blueprintParse?.objects, mods ] );
 
-	const Tags: Tag[] = useMemo( () => {
-		return tags.filter( e => form.tags.includes( e._id ) );
-	}, [ form.tags, tags ] ) ;
+	const Tags: Tag[] = useMemo( () => tags.filter( e => form.tags.includes( e._id ) ), [ form.tags, tags ] );
 
 	const buildingCount = useMemo( () => {
 		const objects: ( SaveEntity | SaveComponent )[] = blueprintParse?.objects || [];
@@ -98,7 +97,7 @@ const BlueprintEditor: FunctionComponent<BlueprintEditorProps> = ( { defaultData
 		} ) );
 	}
 
-	const handleFileSelect: ChangeEventHandler<HTMLInputElement> = ( e ) => {
+	const handleFileSelect: ChangeEventHandler<HTMLInputElement> = e => {
 		switch ( e.target.name ) {
 			case "sbp":
 				if( !e.target.files || !e.target.files[ 0 ].name.endsWith( ".sbp" ) ) {
@@ -137,7 +136,7 @@ const BlueprintEditor: FunctionComponent<BlueprintEditorProps> = ( { defaultData
 			formData.append( "blueprint", sbpFile );
 			formData.append( "blueprint", sbpcfgFile );
 			formData.append( "blueprintName", sbpFile.name.replace( ".sbp", "" ) );
-			API_QueryLib.PostToAPI<Blueprint>( EApiBlueprintUtils.parseblueprint, formData )
+			apiQueryLib.PostToAPI<Blueprint>( EApiBlueprintUtils.parseblueprint, formData )
 				.then( e => {
 					setBlueprintParse( e );
 					setKey( "mods", findModsFromBlueprint( e.objects ) );
@@ -182,7 +181,7 @@ const BlueprintEditor: FunctionComponent<BlueprintEditorProps> = ( { defaultData
 			data.append( "blueprint", JSON.stringify( form ) );
 
 			//FormData_append_object( data, form, "blueprint" );
-			await API_QueryLib.PostToAPI<{ msg: string, blueprintId: string }>( EApiBlueprintUtils.edit, data, data instanceof FormData ? "multipart/form-data" : "application/json" )
+			await apiQueryLib.PostToAPI<{ msg: string, blueprintId: string }>( EApiBlueprintUtils.edit, data, data instanceof FormData ? "multipart/form-data" : "application/json" )
 				.then( async response => {
 					await successSwalAwait( response.msg );
 					navigate( `/blueprint/${ response.blueprintId }` );
@@ -197,8 +196,7 @@ const BlueprintEditor: FunctionComponent<BlueprintEditorProps> = ( { defaultData
 					data.append( "images", file );
 				}
 				data.append( "blueprint", JSON.stringify( form ) );
-				//FormData_append_object( data, form, "blueprint" );
-				await API_QueryLib.PostToAPI<{ msg: string, blueprintId: string }>( EApiBlueprintUtils.create, data )
+				await apiQueryLib.PostToAPI<{ msg: string, blueprintId: string }>( EApiBlueprintUtils.create, data )
 					.then( async response => {
 						await successSwalAwait( response.msg );
 						navigate( `/blueprint/${ response.blueprintId }` );
@@ -213,7 +211,7 @@ const BlueprintEditor: FunctionComponent<BlueprintEditorProps> = ( { defaultData
 		<>
 			<div className="grid grid-cols-1 xl:grid-cols-5 gap-3">
 				<div className="xl:col-span-3 flex flex-col w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-					<div className="relative p-3 border-b bg-gray-700 border-gray-700 text-neutral-200 truncate text-ellipsis overflow-hidden">
+					<div className="relative p-3 border-b bg-gray-700 border-gray-700 rounded-t-lg text-neutral-200 truncate text-ellipsis overflow-hidden">
 						<span className="text-2xl">
 							{ isEditing ? "Edit Blueprint" : "New Blueprint" }
 						</span>
@@ -293,16 +291,14 @@ const BlueprintEditor: FunctionComponent<BlueprintEditorProps> = ( { defaultData
 						</div>
 						{ !!Mods.length && <div className="p-3 border-b bg-gray-900 border-gray-700 text-neutral-300">
 							<BiWrench className="inline me-1 text-xl pb-1" /> <b>Used Mods:</b>
-							{ Mods.map( e => {
-								return (
-									<Link to={ `https://ficsit.app/mod/${ e.id }` } target="_blank" key={ id + e.id } className="mt-2 flex hover:bg-gray-700 bg-gray-600 p-0 rounded-lg border border-gray-700 shadow">
-										<img onError={ e => {
-											e.currentTarget.src = "/images/default/unknown.png";
-										} } src={ e.logo } alt={ e.name } className="h-8 w-8 rounded-l-lg" />
-										<span className="px-2 py-1">{ e.name }</span>
-									</Link>
-								);
-							} ) }
+							{ Mods.map( e => (
+								<Link to={ `https://ficsit.app/mod/${ e.id }` } target="_blank" key={ id + e.id } className="mt-2 flex hover:bg-gray-700 bg-gray-600 p-0 rounded-lg border border-gray-700 shadow">
+									<img onError={ e => {
+										e.currentTarget.src = "/images/default/unknown.png";
+									} } src={ e.logo } alt={ e.name } className="h-8 w-8 rounded-l-lg" />
+									<span className="px-2 py-1">{ e.name }</span>
+								</Link>
+							) ) }
 						</div> }
 					</div>
 
@@ -328,7 +324,7 @@ const BlueprintEditor: FunctionComponent<BlueprintEditorProps> = ( { defaultData
 				</div>
 			</div>
 			<div className="mt-3 flex flex-col w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-				<div className="relative p-3 border-b bg-gray-700 border-gray-700 text-neutral-200 truncate text-ellipsis overflow-hidden">
+				<div className="relative p-3 border-b bg-gray-700 border-gray-700 rounded-t-lg text-neutral-200 truncate text-ellipsis overflow-hidden">
 					<span className="text-2xl">
 						Description Preview
 					</span>

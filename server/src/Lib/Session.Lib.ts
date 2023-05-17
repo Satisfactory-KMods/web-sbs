@@ -1,10 +1,11 @@
-import DB_SessionToken from "@server/MongoDB/DB_SessionToken";
+import MongoSessionToken from "@server/MongoDB/MongoSessionToken";
 import type {
 	ClientUserAccount,
 	UserAccount
-} from "@server/MongoDB/DB_UserAccount";
+} from "@server/MongoDB/MongoUserAccount";
 import type { JwtPayload } from "jsonwebtoken";
 import * as jwt from "jsonwebtoken";
+
 
 export type UserSession = ClientUserAccount & Partial<JwtPayload>;
 
@@ -17,8 +18,8 @@ export async function CreateSession( User: Partial<UserAccount>, stayLoggedIn = 
 		} );
 		const Decoded = jwt.verify( Token, process.env.JWTToken || "" ) as jwt.JwtPayload;
 		if( Decoded ) {
-			await DB_SessionToken.deleteMany( { expire: { $lte: new Date() } } );
-			const session = await DB_SessionToken.create( {
+			await MongoSessionToken.deleteMany( { expire: { $lte: new Date() } } );
+			const session = await MongoSessionToken.create( {
 				token: Token,
 				userid: User._id,
 				expire: new Date( ( Decoded.exp || 0 ) * 1000 )

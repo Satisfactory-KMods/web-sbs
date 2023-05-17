@@ -1,11 +1,12 @@
 import BlueprintRating from "@app/Components/Blueprints/BlueprintRating";
 import { useBlueprint } from "@app/hooks/useBlueprint";
-import type { BlueprintData } from "@server/MongoDB/DB_Blueprints";
+import type { BlueprintData } from "@server/MongoDB/MongoBlueprints";
 import { Button } from "flowbite-react";
 import type { FunctionComponent } from "react";
 import { FaEye } from "react-icons/fa";
 import { HiCog, HiDownload, HiTrash } from "react-icons/hi";
 import { Link } from "react-router-dom";
+
 
 interface IBlueprintRowProps {
 	Data: BlueprintData;

@@ -1,6 +1,6 @@
 import PageManager from "@app/Components/Main/PageManager";
 import UserRow from "@app/Components/admin/UserRow";
-import { tRPC_Auth, tRPC_handleError } from "@app/Lib/tRPC";
+import { tRPCAuth, tRPCHandleError } from "@app/Lib/tRPC";
 import type { UserAdminLoaderData } from "@app/Page/admin/users/Loader";
 import { useRawPageHandler } from "@app/hooks/useRawPageHandler";
 import { usePageTitle } from "@kyri123/k-reactutils";
@@ -9,6 +9,7 @@ import type { FunctionComponent } from "react";
 import { useState } from "react";
 import { useLoaderData } from "react-router-dom";
 
+
 const Component: FunctionComponent = () => {
 	usePageTitle( `SBS - Admin: Users` );
 	const { users, totalTags } = useLoaderData() as UserAdminLoaderData;
@@ -16,20 +17,21 @@ const Component: FunctionComponent = () => {
 	const [ total, setTotal ] = useState( () => totalTags );
 	const [ data, setData ] = useState( () => users );
 
-	const onPageChange: Parameters<typeof useRawPageHandler>[1] = async( options ) => {
-		const response = await tRPC_Auth.adminUsers.listUsers.query( options ).catch( tRPC_handleError );
+	const onPageChange: Parameters<typeof useRawPageHandler>[1] = async options => {
+		const response = await tRPCAuth.adminUsers.listUsers.query( options ).catch( tRPCHandleError );
 		if( response ) {
 			setData( response.data );
 			setTotal( response.count );
 		}
 	};
+
 	const { setPage, currentPage, maxPage, filterOption } = useRawPageHandler( total, onPageChange, 20 );
 	const doFetch = async() => onPageChange( filterOption );
 
 	return (
 		<div className="flex flex-col">
 			<div className="w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-				<div className="bg-gray-700 p-3 text-2xl font-semibold text-neutral-300 border-b border-gray-600">
+				<div className="bg-gray-700 p-3 text-2xl font-semibold rounded-t-lg text-neutral-300 border-b border-gray-600">
 					Admin: Users
 				</div>
 			</div>
@@ -42,7 +44,7 @@ const Component: FunctionComponent = () => {
 						<Table.HeadCell className="w-0">
     					  	Id
 						</Table.HeadCell>
-						<Table.HeadCell className="w-0">
+						<Table.HeadCell>
       						User Name
 						</Table.HeadCell>
 						<Table.HeadCell>

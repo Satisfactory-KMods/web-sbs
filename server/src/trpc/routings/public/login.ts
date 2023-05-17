@@ -1,5 +1,5 @@
 import { CreateSession } from "@server/Lib/Session.Lib";
-import DB_UserAccount from "@server/MongoDB/DB_UserAccount";
+import MongoUserAccount from "@server/MongoDB/MongoUserAccount";
 import {
 	handleTRCPErr,
 	publicProcedure
@@ -7,7 +7,8 @@ import {
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-export const public_login = publicProcedure.input( z.object( {
+
+export const publicLogin = publicProcedure.input( z.object( {
 	login: z.string().min( 6, { message: "Username is to short." } ),
 	password: z.string().min( 8, { message: "Password is to short." } ),
 	stayLoggedIn: z.boolean()
@@ -19,7 +20,7 @@ export const public_login = publicProcedure.input( z.object( {
 
 	try {
 		if( password.length >= 8 && login.length >= 6 ) {
-			const userDocument = await DB_UserAccount.findOne( {
+			const userDocument = await MongoUserAccount.findOne( {
 				$or: [
 					{ email: login },
 					{ username: login }

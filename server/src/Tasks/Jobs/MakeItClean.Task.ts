@@ -2,6 +2,7 @@ import { JobTask } from "@server/Tasks/TaskManager";
 import fs from "fs";
 import path from "path";
 
+
 export default new JobTask(
 	1800000 * 2,
 	"MakeItClean",

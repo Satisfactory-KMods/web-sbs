@@ -1,41 +1,42 @@
-import BlueprintRating                   from "@app/Components/Blueprints/BlueprintRating";
-import type { BlueprintIdLoader }        from "@app/Page/blueprint/edit/[blueprintId]Loader";
-import { mdxComponents }                 from "@app/Page/terms/private/Page";
+import BlueprintRating from "@app/Components/Blueprints/BlueprintRating";
+import type { BlueprintIdLoader } from "@app/Page/blueprint/edit/[blueprintId]Loader";
+import { mdxComponents } from "@app/Page/terms/private/Page";
 import type {
-	SaveComponent,
-	SaveEntity
-}                                        from "@etothepii/satisfactory-file-parser";
-import { useBlueprint }                  from "@hooks/useBlueprint";
+    SaveComponent,
+    SaveEntity
+} from "@etothepii/satisfactory-file-parser";
+import { useBlueprint } from "@hooks/useBlueprint";
 import {
-	Button,
-	Carousel
-}                                        from "flowbite-react";
-import type { FunctionComponent }        from "react";
+    Button,
+    Carousel
+} from "flowbite-react";
+import type { FunctionComponent } from "react";
 import {
-	useId,
-	useMemo
-}                                        from "react";
+    useId,
+    useMemo
+} from "react";
 import {
-	BiUser,
-	BiWrench
-}                                        from "react-icons/bi";
+    BiUser,
+    BiWrench
+} from "react-icons/bi";
 import {
-	BsBox,
-	BsBoxes,
-	BsHouseAdd
-}                                        from "react-icons/bs";
-import { FaClock }                       from "react-icons/fa";
+    BsBox,
+    BsBoxes,
+    BsHouseAdd
+} from "react-icons/bs";
+import { FaClock } from "react-icons/fa";
 import {
-	HiCog,
-	HiDownload,
-	HiTrash
-}                                        from "react-icons/hi";
+    HiCog,
+    HiDownload,
+    HiTrash
+} from "react-icons/hi";
 import { MdOutlinePhotoSizeSelectSmall } from "react-icons/md";
-import ReactMarkdown                     from "react-markdown";
+import ReactMarkdown from "react-markdown";
 import {
-	Link,
-	useLoaderData
-}                                        from "react-router-dom";
+    Link,
+    useLoaderData
+} from "react-router-dom";
+
 
 const Component: FunctionComponent = () => {
 	const id = useId();
@@ -68,7 +69,7 @@ const Component: FunctionComponent = () => {
 	return (
 		<div className="grid grid-cols-1 xl:grid-cols-5 gap-3">
 			<div className="xl:col-span-3 flex flex-col w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-				<div className="p-3 border-b bg-gray-700 border-gray-700 text-neutral-200 truncate text-ellipsis overflow-hidden">
+				<div className="p-3 border-b bg-gray-700 border-gray-700 rounded-t-lg text-neutral-200 truncate text-ellipsis overflow-hidden">
 					<span className="text-2xl">
 						{ Blueprint.name }
 					</span>
@@ -103,7 +104,7 @@ const Component: FunctionComponent = () => {
 				<div className=" p-3 border-t bg-gray-700 border-gray-700 flex">
 					<BlueprintRating className="flex-1" blueprintHook={ bpHook } />
 				</div>
-				{ !!Blueprint.tags.length && <div className="flex flex-wrap p-3 pt-0 border-t bg-gray-700 border-gray-700 text-neutral-200 text-xs">
+				{ !!Blueprint.tags.length && <div className="flex flex-wrap p-3 pt-0 border-t bg-gray-700 border-gray-700 text-neutral-200 text-xs rounded-b-lg">
 					{ Tags.map( e => (
 						<div key={ id + e._id }
 						     className="bg-gray-900 p-1 px-3 rounded-lg border border-gray-800 shadow">{ e.DisplayName }</div>
@@ -140,17 +141,15 @@ const Component: FunctionComponent = () => {
 					</div>
 					{ !!Mods.length && <div className="p-3 border-b bg-gray-900 border-gray-700 text-neutral-300">
 						<BiWrench className="inline me-1 text-xl pb-1" /> <b>Used Mods:</b>
-						{ Mods.map( e => {
-							return (
-								<Link to={ `https://ficsit.app/mod/${ e.id }` } target="_blank" key={ id + e.id }
+						{ Mods.map( e => (
+							<Link to={ `https://ficsit.app/mod/${ e.id }` } target="_blank" key={ id + e.id }
 								      className="mt-2 flex hover:bg-gray-700 bg-gray-600 p-0 rounded-lg border border-gray-700 shadow">
-									<img onError={ e => {
-										e.currentTarget.src = "/images/default/unknown.png";
-									} } src={ e.logo } alt={ e.name } className="h-8 w-8 rounded-l-lg" />
-									<span className="px-2 py-1">{ e.name }</span>
-								</Link>
-							);
-						} ) }
+								<img onError={ e => {
+									e.currentTarget.src = "/images/default/unknown.png";
+								} } src={ e.logo } alt={ e.name } className="h-8 w-8 rounded-l-lg" />
+								<span className="px-2 py-1">{ e.name }</span>
+							</Link>
+						) ) }
 					</div> }
 				</div>
 
@@ -176,6 +175,6 @@ const Component: FunctionComponent = () => {
 };
 
 export {
-	Component
+    Component
 };
 

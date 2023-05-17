@@ -2,6 +2,7 @@ import type { MongoBase } from "@server/Types/mongo";
 import * as mongoose from "mongoose";
 import { z } from "zod";
 
+
 const ZodSessionTokenSchema = z.object( {
 	userid: z.string(),
 	token: z.string(),

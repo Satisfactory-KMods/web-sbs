@@ -2,6 +2,7 @@ import { Pagination } from "flowbite-react";
 import type { FunctionComponent } from "react";
 import { useEffect } from "react";
 
+
 interface IPageManagerProps {
 	MaxPage: number,
 	OnPageChange: ( Page: number ) => void,

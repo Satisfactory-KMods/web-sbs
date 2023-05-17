@@ -10,8 +10,8 @@ services:
       - HTTPPORT=${DOCKER_PORT}
       - MONGODB_PORT=${DOCKER_MONGODB_PORT}
       - MONGODB_HOST=mongodb
-      - MONGODB_USER=${DOCKER_MOGNODB_USERNAME}
-      - MONGODB_PASSWD=${DOCKER_MOGNODB_PASSWORD}
+      - MONGODB_USER=${DOCKER_MONGODB_USERNAME}
+      - MONGODB_PASSWD=${DOCKER_MONGODB_PASSWORD}
       - MONGODB_DATABASE=${DOCKER_DATABASE}
     volumes:
       # config for the cashboard if you want to edit that copy to a other path and mount it to here.

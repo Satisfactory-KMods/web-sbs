@@ -1,8 +1,10 @@
 import * as console from "console";
 import * as dotenv from "dotenv";
 import fs from "fs";
+import path from "path";
 import process from "process";
 import Util from "util";
+
 
 export type BashColorString =
 	| "Default"
@@ -22,24 +24,19 @@ export type BashColorString =
 	| "Light Cyan"
 	| "White";
 
-export class SystemLib_Class {
+export class systemLibClass {
 	public readonly IsDevMode: boolean;
-	private readonly UseDebug: boolean;
 
 	static IsDev(): boolean {
 		return process.env.NODE_ENV !== "production";
 	}
 
 	constructor() {
-		this.IsDevMode = process.argv[ 2 ] === "true";
-		this.UseDebug =
-			process.argv[ 2 ] === "true" ||
-			process.argv[ 2 ] === "Debug" ||
-			process.argv[ 2 ] === "development";
+		this.IsDevMode = systemLibClass.IsDev();
 
 		this.DebugLog( "SYSTEM", "Try to load:", ".env" );
 		dotenv.config();
-		if( SystemLib_Class.IsDev() ) {
+		if( this.IsDevMode ) {
 			this.DebugLog( "SYSTEM", "Try to load:", ".env.dev" );
 			dotenv.config( {
 				path: ".env.dev"
@@ -50,10 +47,24 @@ export class SystemLib_Class {
 				path: ".env.local"
 			} );
 		}
+
+		const MaxFiles = 10;
+		let counter = 0;
+		for( const file of fs.readdirSync( path.join( __MountDir, "Logs" ) ).sort( ( a, b ) => {
+			const A = parseInt( a.replace( ".log", "" ) );
+			const B = parseInt( b.replace( ".log", "" ) );
+			return B - A;
+		} ) ) {
+			counter++;
+			if( MaxFiles <= counter ) {
+				fs.rmSync( path.join( __MountDir, "Logs", file ), { recursive: true } );
+				this.LogWarning( "SYSTEM", "Remove old log file:", path.join( __MountDir, "Logs", file ) );
+			}
+		}
 	}
 
 	public DebugMode(): boolean {
-		return this.UseDebug;
+		return this.IsDevMode;
 	}
 
 	static TBC( String: BashColorString ) {
@@ -94,7 +105,7 @@ export class SystemLib_Class {
 	}
 
 	public ToBashColor( String: BashColorString ) {
-		return SystemLib_Class.TBC( String );
+		return systemLibClass.TBC( String );
 	}
 
 	public ClearANSI( Log: string ): string {
@@ -192,4 +203,4 @@ export class SystemLib_Class {
 	}
 }
 
-export const BC = SystemLib_Class.TBC;
+export const BC = systemLibClass.TBC;

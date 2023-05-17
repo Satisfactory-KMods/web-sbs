@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 
+
 export async function InstallRoutings( Dir: string ) {
 	for( const File of fs.readdirSync( Dir ) ) {
 		const DirTarget = path.join( Dir, File );
@@ -9,7 +10,7 @@ export async function InstallRoutings( Dir: string ) {
 			await InstallRoutings( DirTarget );
 		} else {
 			await import( DirTarget ).then(
-				( Module ) => Module.default()
+				Module => Module.default()
 			);
 		}
 	}

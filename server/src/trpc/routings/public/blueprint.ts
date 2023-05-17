@@ -1,9 +1,8 @@
 
 import { parseBlueprintById } from "@/server/src/Lib/BlueprintParser";
-import DB_UserAccount from "@/server/src/MongoDB/DB_UserAccount";
-import type { BlueprintPack } from "@server/MongoDB/DB_BlueprintPacks";
-import type { BlueprintData } from "@server/MongoDB/DB_Blueprints";
-import DB_Blueprints from "@server/MongoDB/DB_Blueprints";
+import MongoUserAccount from "@/server/src/MongoDB/MongoUserAccount";
+import type { BlueprintData, BlueprintPack } from "@server/MongoDB/MongoBlueprints";
+import MongoBlueprints from "@server/MongoDB/MongoBlueprints";
 import {
 	handleTRCPErr,
 	publicProcedure,
@@ -15,6 +14,7 @@ import type {
 	QueryOptions
 } from "mongoose";
 import { z } from "zod";
+
 
 export const filterSchema = z.object( {
 	name: z.string().optional(),
@@ -66,13 +66,13 @@ export function buildFilter<T extends BlueprintData | BlueprintPack>( filter?: F
 	return result;
 }
 
-export const public_blueprint = router( {
+export const publicBlueprint = router( {
 	readBlueprint: publicProcedure.input( z.object( {
 		blueprintId: z.string().min( 5 )
 	} ) ).mutation( async( { input } ) => {
 		const { blueprintId } = input;
 		try {
-			const BP = ( await DB_Blueprints.findById( blueprintId ) )!;
+			const BP = ( await MongoBlueprints.findById( blueprintId ) )!;
 			const parse = parseBlueprintById( BP._id.toString(), BP.name );
 			if( parse ) {
 				return parse;
@@ -89,9 +89,9 @@ export const public_blueprint = router( {
 	} ) ).query( async( { input } ) => {
 		const { blueprintId } = input;
 		try {
-			const blueprint = await DB_Blueprints.findById( blueprintId );
+			const blueprint = await MongoBlueprints.findById( blueprintId );
 			if( blueprint ) {
-				const owner = await DB_UserAccount.findById( blueprint.owner );
+				const owner = await MongoUserAccount.findById( blueprint.owner );
 				const bpOwnerName: string = owner?.username || "Deleted User";
 				if( blueprint ) {
 					return { blueprintData: blueprint.toJSON() as BlueprintData, bpOwnerName };
@@ -111,8 +111,8 @@ export const public_blueprint = router( {
 		const { limit, filterOptions, skip } = input;
 		try {
 			const { filter, options } = buildFilter( filterOptions );
-			const totalBlueprints = await DB_Blueprints.count( filter );
-			const blueprints = await DB_Blueprints.find<BlueprintData>( filter, null, { ...options, limit, skip } );
+			const totalBlueprints = await MongoBlueprints.count( filter );
+			const blueprints = await MongoBlueprints.find<BlueprintData>( filter, null, { ...options, limit, skip } );
 			return { blueprints, totalBlueprints };
 		} catch( e ) {
 			handleTRCPErr( e );

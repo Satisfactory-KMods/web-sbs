@@ -1,12 +1,13 @@
 import { LoadingButton } from "@app/Components/elements/Buttons";
 import { SBSInput } from "@app/Components/elements/Inputs";
-import { onConfirm, successSwal, tRPC_Auth, tRPC_handleError } from "@app/Lib/tRPC";
-import type { Tag } from "@server/MongoDB/DB_Tags";
+import { onConfirm, successSwal, tRPCAuth, tRPCHandleError } from "@app/Lib/tRPC";
+import type { Tag } from "@server/MongoDB/MongoTags";
 import { Table } from "flowbite-react";
 import _ from "lodash";
 import type { FunctionComponent } from "react";
 import { useState } from "react";
 import { BiSave, BiTrash } from "react-icons/bi";
+
 
 interface TagRowProps {
 	data: Tag,
@@ -18,17 +19,17 @@ const TagRow: FunctionComponent<TagRowProps> = ( { data, doFetch } ) => {
 
 	const deleteTag = async() => {
 		if( await onConfirm( "Tag wirklich löschen?" ) ) {
-			await tRPC_Auth.adminTags.delete.mutate( { id: data._id } )
+			await tRPCAuth.adminTags.delete.mutate( { id: data._id } )
 				.then( successSwal )
-				.catch( tRPC_handleError );
+				.catch( tRPCHandleError );
 			await doFetch();
 		}
 	};
 
 	const editTag = async() => {
-		await tRPC_Auth.adminTags.edit.mutate( { id: data._id, DisplayName } )
+		await tRPCAuth.adminTags.edit.mutate( { id: data._id, DisplayName } )
 			.then( successSwal )
-			.catch( tRPC_handleError );
+			.catch( tRPCHandleError );
 	};
 
 	return (

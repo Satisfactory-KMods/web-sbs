@@ -1,6 +1,7 @@
 import type { Mod } from "@kyri123/lib";
 import * as mongoose from "mongoose";
 
+
 const ModSchema = new mongoose.Schema<Mod>( {
 	versions: {
 		type: [
@@ -13,7 +14,8 @@ const ModSchema = new mongoose.Schema<Mod>( {
 				sml_version: { type: String, required: true },
 				id: { type: String, required: true }
 			}
-		], required: true
+		],
+		required: true
 	},
 	id: { type: String, required: true, unique: true },
 	mod_reference: { type: String, required: true },
@@ -38,10 +40,12 @@ const ModSchema = new mongoose.Schema<Mod>( {
 					type: {
 						id: { type: String, required: true },
 						username: { type: String, required: true }
-					}, required: true
+					},
+					required: true
 				}
 			}
-		], required: true
+		],
+		required: true
 	},
 	latestVersions: {
 		type: {
@@ -54,7 +58,8 @@ const ModSchema = new mongoose.Schema<Mod>( {
 					version: { type: String, required: true },
 					sml_version: { type: String, required: true },
 					id: { type: String, required: true }
-				}, required: true
+				},
+				required: true
 			},
 			beta: {
 				type: {
@@ -65,7 +70,8 @@ const ModSchema = new mongoose.Schema<Mod>( {
 					version: { type: String, required: true },
 					sml_version: { type: String, required: true },
 					id: { type: String, required: true }
-				}, required: true
+				},
+				required: true
 			},
 			release: {
 				type: {
@@ -76,9 +82,11 @@ const ModSchema = new mongoose.Schema<Mod>( {
 					version: { type: String, required: true },
 					sml_version: { type: String, required: true },
 					id: { type: String, required: true }
-				}, required: true
+				},
+				required: true
 			}
-		}, required: true
+		},
+		required: true
 	}
 }, { timestamps: true, strict: false } );
 

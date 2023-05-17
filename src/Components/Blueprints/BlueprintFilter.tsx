@@ -10,6 +10,7 @@ import { HiSearch } from "react-icons/hi";
 import type { MultiValue, SingleValue } from "react-select";
 import Select from "react-select";
 
+
 interface BlueprintFilterProps extends PropsWithChildren {
 	isFetching: boolean;
 	filterSchema: [FilterSchema, Dispatch<SetStateAction<FilterSchema>>],
@@ -21,30 +22,30 @@ const BlueprintFilter: FunctionComponent<BlueprintFilterProps> = ( { isFetching,
 	const [ filter, setFilter ] = filterSchema;
 
 	const [ BlueprintName, setBlueprintName ] = useState<string>( "" );
-	const [ Select_Sorting, setSelect_Sorting ] = useState<SingleValue<SelectOptionStruct<FilterSchema["sortBy"]>>>( null );
-	const [ Select_Vanilla, setSelect_Vanilla ] = useState<SingleValue<SelectOptionStruct<boolean>>>( null );
-	const [ Select_Mods, setSelect_Mods ] = useState<MultiValue<SelectOptionStruct>>( [] );
-	const [ Select_Tags, setSelect_Tags ] = useState<MultiValue<SelectOptionStruct>>( [] );
+	const [ SelectSorting, setSelectSorting ] = useState<SingleValue<SelectOptionStruct<FilterSchema["sortBy"]>>>( null );
+	const [ SelectVanilla, setSelectVanilla ] = useState<SingleValue<SelectOptionStruct<boolean>>>( null );
+	const [ SelectMods, setSelectMods ] = useState<MultiValue<SelectOptionStruct>>( [] );
+	const [ SelectTags, setSelectTags ] = useState<MultiValue<SelectOptionStruct>>( [] );
 
 	const dirtyRef = useRef( false );
 
 	const ResetSearch = async() => {
 		setBlueprintName( "" );
-		setSelect_Tags( [] );
-		setSelect_Mods( [] );
-		setSelect_Vanilla( null );
-		setSelect_Sorting( null );
+		setSelectTags( [] );
+		setSelectMods( [] );
+		setSelectVanilla( null );
+		setSelectSorting( null );
 		dirtyRef.current = true;
 		setFilter( {} );
 	};
 
 	const applyFilter = async() => {
 		const filter: FilterSchema = {
-			sortBy: Select_Sorting?.value || undefined,
+			sortBy: SelectSorting?.value || undefined,
 			name: BlueprintName !== "" ? BlueprintName : undefined,
-			onlyVanilla: Select_Vanilla?.value || undefined,
-			mods: Select_Mods.length > 0 ? Select_Mods.map( e => e.value ) : undefined,
-			tags: Select_Tags.length > 0 ? Select_Tags.map( e => e.value ) : undefined
+			onlyVanilla: SelectVanilla?.value || undefined,
+			mods: SelectMods.length > 0 ? SelectMods.map( e => e.value ) : undefined,
+			tags: SelectTags.length > 0 ? SelectTags.map( e => e.value ) : undefined
 		};
 		dirtyRef.current = true;
 		setFilter( filter );
@@ -60,7 +61,7 @@ const BlueprintFilter: FunctionComponent<BlueprintFilterProps> = ( { isFetching,
 
 	return (
 		<div className="w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-			<div className="bg-gray-700 p-3 text-2xl font-semibold text-neutral-300 border-b border-gray-600">
+			<div className="bg-gray-700 p-3 text-2xl font-semibold rounded-t-lg text-neutral-300 border-b border-gray-600">
 				{ children }
 			</div>
 			<div className="p-5 grid grid-cols-1 text-neutral-200 md:grid-cols-2 lg:grid-cols-3 gap-2">
@@ -70,27 +71,27 @@ const BlueprintFilter: FunctionComponent<BlueprintFilterProps> = ( { isFetching,
 				</SBSInput>
 				<SBSSelect label="Sort By">
 					<Select options={ sortSelectOptions } className="gray-select flex-1"
-						        classNamePrefix="my-react-select" isMulti={ false } value={ Select_Sorting }
-						        onChange={ setSelect_Sorting } />
+						        classNamePrefix="my-react-select" isMulti={ false } value={ SelectSorting }
+						        onChange={ setSelectSorting } />
 				</SBSSelect>
 
 				<SBSSelect label="Filter Modded">
 					<Select options={ vanillaSelectOptions }
 						className="gray-select flex-1"
-						value={ Select_Vanilla } isClearable={ true }
-						classNamePrefix="my-react-select" onChange={ setSelect_Vanilla } />
+						value={ SelectVanilla } isClearable={ true }
+						classNamePrefix="my-react-select" onChange={ setSelectVanilla } />
 				</SBSSelect>
 
-				{ Select_Vanilla?.value !== true && <SBSSelect label="Mods">
+				{ SelectVanilla?.value !== true && <SBSSelect label="Mods">
 					<Select options={ modSelectOptions } className="gray-select flex-1"
-						value={ Select_Mods } isDisabled={ !!Select_Vanilla?.value }
-						classNamePrefix="my-react-select" isMulti={ true } onChange={ setSelect_Mods } />
+						value={ SelectMods } isDisabled={ !!SelectVanilla?.value }
+						classNamePrefix="my-react-select" isMulti={ true } onChange={ setSelectMods } />
 				</SBSSelect> }
 
 				<SBSSelect label="Tags">
 					<Select options={ tagsSelectOptions } className="gray-select flex-1"
-						value={ Select_Tags }
-						classNamePrefix="my-react-select" isMulti={ true } onChange={ setSelect_Tags } />
+						value={ SelectTags }
+						classNamePrefix="my-react-select" isMulti={ true } onChange={ setSelectTags } />
 				</SBSSelect>
 
 				<div className="mt-2 md:mt-0 flex gap-2">

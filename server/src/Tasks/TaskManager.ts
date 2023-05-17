@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 
+
 export type TTasksRunner = "FicsitQuery" | "MakeItClean";
 
 export class JobTask {
@@ -21,8 +22,7 @@ export class JobTask {
 		this.Interval = Interval;
 		this.TaskFunction = Task;
 		this.Task = setInterval( this.Tick.bind( this ), this.Interval );
-		this.Tick().then( () =>
-			SystemLib.Log( "start", `Init run job:`, SystemLib.ToBashColor( "Red" ), this.JobName )
+		this.Tick().then( () => SystemLib.Log( "start", `Init run job:`, SystemLib.ToBashColor( "Red" ), this.JobName )
 		);
 	}
 

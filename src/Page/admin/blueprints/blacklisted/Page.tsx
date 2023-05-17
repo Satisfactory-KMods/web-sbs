@@ -1,15 +1,16 @@
 import BlueprintFilter from "@app/Components/Blueprints/BlueprintFilter";
 import BlueprintRow from "@app/Components/Blueprints/BlueprintRow";
 import PageManager from "@app/Components/Main/PageManager";
-import { tRPC_Auth, tRPC_handleError } from "@app/Lib/tRPC";
+import { tRPCAuth, tRPCHandleError } from "@app/Lib/tRPC";
 import type { IndexLoaderData } from "@app/Page/blueprint/list/Loader";
 import { useRawPageHandler } from "@app/hooks/useRawPageHandler";
 import { usePageTitle } from "@kyri123/k-reactutils";
-import type { BlueprintData } from "@server/MongoDB/DB_Blueprints";
+import type { BlueprintData } from "@server/MongoDB/MongoBlueprints";
 import type { FilterSchema } from "@server/trpc/routings/public/blueprint";
 import type { FunctionComponent } from "react";
 import { useState } from "react";
 import { useLoaderData } from "react-router-dom";
+
 
 const Component: FunctionComponent = () => {
 	usePageTitle( `SBS - Admin: Blueprints` );
@@ -20,10 +21,10 @@ const Component: FunctionComponent = () => {
 
 	const [ filter, setFilter ] = useState<FilterSchema>( {} );
 	const [ isFetching, setIsFetching ] = useState<boolean>( false );
-	const onPageChange: Parameters<typeof useRawPageHandler>[1] = async( options ) => {
+	const onPageChange: Parameters<typeof useRawPageHandler>[1] = async options => {
 		setIsFetching( true );
 		const queryFilter = { filterOptions: filter, ...options };
-		const Blueprints = await tRPC_Auth.blueprints.adminBlueprints.query( queryFilter ).catch( tRPC_handleError );
+		const Blueprints = await tRPCAuth.blueprints.adminBlueprints.query( queryFilter ).catch( tRPCHandleError );
 		if( Blueprints ) {
 			setBlueprints( Blueprints.blueprints );
 			setTotalBlueprints( Blueprints.totalBlueprints );

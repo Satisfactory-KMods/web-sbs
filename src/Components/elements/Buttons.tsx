@@ -4,6 +4,7 @@ import { forwardRef } from "react";
 import { CgSpinner } from "react-icons/all";
 import type { IconType } from "react-icons/lib";
 
+
 interface LoadingButtonsProps extends ButtonProps {
 	isLoading?: boolean;
 	Icon: IconType;

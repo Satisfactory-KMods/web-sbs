@@ -2,7 +2,7 @@ import PageManager from "@app/Components/Main/PageManager";
 import TagRow from "@app/Components/admin/TagRow";
 import { LoadingButton } from "@app/Components/elements/Buttons";
 import { SBSInput } from "@app/Components/elements/Inputs";
-import { successSwal, tRPC_Auth, tRPC_handleError } from "@app/Lib/tRPC";
+import { successSwal, tRPCAuth, tRPCHandleError } from "@app/Lib/tRPC";
 import type { TagAdminLoaderData } from "@app/Page/admin/tags/Loader";
 import { useRawPageHandler } from "@app/hooks/useRawPageHandler";
 import { usePageTitle } from "@kyri123/k-reactutils";
@@ -11,6 +11,7 @@ import type { FunctionComponent } from "react";
 import { useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { useLoaderData } from "react-router-dom";
+
 
 const Component: FunctionComponent = () => {
 	usePageTitle( `SBS - Admin: Tags` );
@@ -21,8 +22,8 @@ const Component: FunctionComponent = () => {
 	const [ DisplayName, setDisplayName ] = useState( "" );
 	const [ isFetching, setIsFetching ] = useState( false );
 
-	const onPageChange: Parameters<typeof useRawPageHandler>[1] = async( options ) => {
-		const response = await tRPC_Auth.adminTags.list.query( options ).catch( tRPC_handleError );
+	const onPageChange: Parameters<typeof useRawPageHandler>[1] = async options => {
+		const response = await tRPCAuth.adminTags.list.query( options ).catch( tRPCHandleError );
 		if( response ) {
 			setData( response.data );
 			setTotal( response.count );
@@ -33,9 +34,9 @@ const Component: FunctionComponent = () => {
 
 	const createTag = async() => {
 		setIsFetching( true );
-		await tRPC_Auth.adminTags.create.mutate( { DisplayName } )
+		await tRPCAuth.adminTags.create.mutate( { DisplayName } )
 			.then( successSwal )
-			.catch( tRPC_handleError );
+			.catch( tRPCHandleError );
 		await doFetch();
 		setIsFetching( false );
 	};
@@ -43,7 +44,7 @@ const Component: FunctionComponent = () => {
 	return (
 		<div className="flex flex-col">
 			<div className="w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-				<div className="bg-gray-700 p-3 text-2xl font-semibold text-neutral-300 border-b border-gray-600">
+				<div className="bg-gray-700 p-3 text-2xl font-semibold rounded-t-lg text-neutral-300 border-b border-gray-600">
 					Admin: Tags
 				</div>
 				<div className="flex gap-2 p-3">
@@ -78,6 +79,6 @@ const Component: FunctionComponent = () => {
 };
 
 export {
-	Component
+    Component
 };
 

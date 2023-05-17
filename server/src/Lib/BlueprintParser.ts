@@ -7,6 +7,7 @@ import {
 import * as fs from 'fs';
 import path from 'path';
 
+
 export function parseBlueprintById( blueprintId: string, blueprintName: string ) {
 	const SBP: Buffer = fs.readFileSync( path.join( __BlueprintDir, blueprintId!, `${ blueprintId }.sbp` ) );
 	const SBPCFG: Buffer = fs.readFileSync( path.join( __BlueprintDir, blueprintId!, `${ blueprintId }.sbp` ) );
@@ -30,7 +31,7 @@ export class BlueprintParser {
 			this.Success = true;
 		} catch( e ) {
 			if( e instanceof Error ) {
-				SystemLib.LogError( "api", e.message );
+				SystemLib.LogError( "blueprintparse", e.message );
 			}
 			this.Data = undefined;
 			this.Success = false;

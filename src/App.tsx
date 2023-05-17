@@ -2,6 +2,7 @@ import { rootRouter } from "@page/Router";
 import { Spinner } from "flowbite-react";
 import { RouterProvider } from "react-router-dom";
 
+
 function App() {
 	return (
 		<>

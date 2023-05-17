@@ -14,6 +14,7 @@ import {
 } from "react-icons/all";
 import { Link } from "react-router-dom";
 
+
 const TopNav: FunctionComponent = () => {
 	const { user, loggedIn, logout } = useAuth();
 	const divRef = useRef<HTMLDivElement>( null );

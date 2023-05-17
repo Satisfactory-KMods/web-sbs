@@ -2,6 +2,7 @@
 import type { ILang } from "@app/Types/lang";
 import type { Blueprint } from "@etothepii/satisfactory-file-parser";
 
+
 type ResponseBase<T = any> = {
 	Success: boolean;
 	Auth: boolean;

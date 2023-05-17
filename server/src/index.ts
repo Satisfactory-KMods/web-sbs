@@ -9,11 +9,12 @@ import * as path from "path";
 import process from "process";
 import {
 	BC,
-	SystemLib_Class
+	systemLibClass
 } from "./Lib/System.Lib";
-import DB_UserAccount from "./MongoDB/DB_UserAccount";
+import MongoUserAccount from "./MongoDB/MongoUserAccount";
 import { InstallRoutings } from "./Routings/InitRouter";
 import { TaskManagerClass } from "./Tasks/TaskManager";
+
 
 global.__BaseDir = __dirname;
 global.__MountDir = path.join( process.cwd(), "mount" );
@@ -22,7 +23,7 @@ global.__LogFile = path.join( __MountDir, "Logs", `${ Date.now() }.log` );
 global.__BlueprintDir = path.join( __MountDir, "Blueprints" );
 ( !fs.existsSync( __BlueprintDir ) ) && fs.mkdirSync( __BlueprintDir, { recursive: true } );
 
-global.SystemLib = new SystemLib_Class();
+global.SystemLib = new systemLibClass();
 
 global.Api = express();
 global.HttpServer = http.createServer( global.Api );
@@ -31,7 +32,8 @@ Api.use( bodyParser.json() );
 Api.use( bodyParser.urlencoded( { extended: true } ) );
 Api.use( express.static( path.join( __BaseDir, "../..", "build" ), { extensions: [ "js" ] } ) );
 
-Api.use( function( req, res, next ) {
+Api.use( ( req, res, next ) => {
+	SystemLib.DebugLog( "routing", req.method, req.url );
 	res.setHeader( "Access-Control-Allow-Origin", "*" );
 	res.setHeader( "Access-Control-Allow-Methods", "GET, POST" );
 	res.setHeader( "Access-Control-Allow-Headers", "X-Requested-With,content-type" );
@@ -55,7 +57,7 @@ mongoose
 		for( const DB of fs.readdirSync( path.join( __BaseDir, "MongoDB" ) ) ) {
 			const File = path.join( __BaseDir, "MongoDB", DB );
 			const Stats = fs.statSync( File );
-			if( Stats.isFile() && DB !== "DB_UserAccount.ts" ) {
+			if( Stats.isFile() && DB !== "MongoUserAccount.ts" ) {
 				const DBImport = await import( File );
 				if( DBImport.Revalidate ) {
 					SystemLib.Log( "Revalidate", `Schema for${ BC( "Cyan" ) }`, DB.toString().replace( ".ts", "" ) );
@@ -72,12 +74,12 @@ mongoose
 		await InstallRoutings( path.join( __BaseDir, "Routings/Router" ) );
 
 		Api.use( Router );
-		Api.get( "*", function( req, res ) {
+		Api.get( "*", ( req, res ) => {
 			res.sendFile( path.join( __BaseDir, "../..", "build", "index.html" ) );
 		} );
 
-		if( !await DB_UserAccount.findOne() ) {
-			const NewUser = new DB_UserAccount();
+		if( !await MongoUserAccount.findOne() ) {
+			const NewUser = new MongoUserAccount();
 			NewUser.email = "admin@kmods.de";
 			NewUser.username = "Kyrium";
 			NewUser.role = ERoles.admin;
@@ -89,10 +91,9 @@ mongoose
 		global.TaskManager = new TaskManagerClass();
 		await TaskManager.Init();
 
-		HttpServer.listen( parseInt( process.env.HTTPPORT as string ), async() =>
-			SystemLib.Log( "start",
-				"API listen on port",
-				process.env.HTTPPORT
-			)
+		HttpServer.listen( parseInt( process.env.HTTPPORT as string ), async() => SystemLib.Log( "start",
+			"API listen on port",
+			process.env.HTTPPORT
+		)
 		);
 	} );

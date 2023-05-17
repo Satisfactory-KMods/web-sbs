@@ -2,6 +2,7 @@ import type { FunctionComponent, PropsWithChildren } from "react";
 import { FaCheck, FaQuestion, FaTimes } from "react-icons/fa";
 import type { ReactElement } from "react-markdown/lib/react-markdown";
 
+
 interface BlueprintEditorCheckListProps extends PropsWithChildren {
 	optional?: boolean,
 	done: boolean,
