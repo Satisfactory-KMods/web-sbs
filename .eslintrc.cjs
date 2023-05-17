@@ -49,7 +49,6 @@ module.exports = {
 		"@typescript-eslint/comma-spacing": [ "error", { "before": false, "after": true } ],
 
 		"comma-style": [ "error", "last" ],
-		"computed-property-spacing": [ "error", "always" ],
 
 		"eol-last": [ "error", "always" ],
 		"key-spacing": "off",
@@ -99,7 +98,7 @@ module.exports = {
 		"@typescript-eslint/array-type": "error",
 		"no-whitespace-before-property": "warn",
 		"no-unneeded-ternary": "warn",
-		"no-mixed-spaces-and-tabs": "warn",
+		"no-mixed-spaces-and-tabs": 0,
 		"new-parens": "error",
 		"linebreak-style": [ "error", "windows" ],
 		"@typescript-eslint/no-import-type-side-effects": "warn",
@@ -114,12 +113,7 @@ module.exports = {
 		"array-bracket-spacing": [ "warn", "always" ],
 		"computed-property-spacing": [ "warn", "always" ],
 		"@typescript-eslint/consistent-type-imports": "error",
-		"semi-style": [
-			"error",
-			"last"
-		],
 		"array-element-newline": "off",
-		"no-mixed-spaces-and-tabs": 0,
 		"prefer-const": "warn",
 		"no-control-regex": "off",
 		"no-var": "off",
