@@ -40,7 +40,6 @@ export default function() {
 				blueprints.push( copy );
 			}
 
-			console.log( blueprints );
 			return res.json( { blueprints, totalBlueprints } );
 		} catch( e ) {
 			if( e instanceof Error ) {
@@ -100,7 +99,6 @@ export default function() {
 				blueprints.push( copy );
 			}
 
-			console.log( blueprints );
 			return res.json( { blueprints, totalBlueprints } );
 		} catch( e ) {
 			if( e instanceof Error ) {

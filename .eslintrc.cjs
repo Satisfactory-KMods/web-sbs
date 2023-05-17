@@ -30,6 +30,7 @@ module.exports = {
 		"@typescript-eslint"
 	],
 	rules: {
+		"no-console": [ "warn", { allow: [ "error" ] } ],
 		"import/newline-after-import": [ "error", { "count": 2 } ],
 		"import/consistent-type-specifier-style": [ "error", "prefer-top-level" ],
 		"import/no-empty-named-blocks": "error",

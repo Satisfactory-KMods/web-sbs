@@ -5,6 +5,7 @@
   "scripts": {
     "production": "NODE_ENV=production yarn server",
     "server": "ts-node --project ./server/tsconfig.json -r tsconfig-paths/register server/src/index.ts",
+    "tstest": "ts-node --project ./server/tsconfig.json -r tsconfig-paths/register server/src/test.ts",
     "preview": "vite preview",
     "dev": "concurrently -m 2 \"vite --host --port 3000\" \"nodemon\"",
     "build": "yarn build.lint && yarn build.vite",

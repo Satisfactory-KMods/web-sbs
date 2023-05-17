@@ -19,7 +19,7 @@ const validateLogin = async( {
 	request
 }: LoaderFunctionArgs, loggedInRule = LoginRule.DontCare, redirectTo = "/error/401", role?: ERoles ): Promise<LoaderDataBase | Response> => {
 	const token = window.localStorage.getItem( AUTHTOKEN ) || "";
-	const Response = await tRPCPublic.validate.query( { token } ).catch( console.warn );
+	const Response = await tRPCPublic.validate.query( { token } ).catch( console.error );
 
 	const loggedIn = !!Response?.tokenValid;
 

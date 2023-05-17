@@ -106,7 +106,6 @@ export default function() {
 		} catch( e ) {
 			if( e instanceof Error ) {
 				SystemLib.LogError( e.message );
-				console.log( e );
 			}
 		}
 
