@@ -59,8 +59,8 @@ export function useBlueprint( InitValue: string | BlueprintData, defaultUser?: {
 		if( Config?.IgnoreBlacklisted ) {
 			return Blueprint._id !== "";
 		}
-		return Blueprint._id !== "" && !Blueprint.blacklisted;
-	}, [ Blueprint._id, Blueprint.blacklisted, Config?.IgnoreBlacklisted ] );
+		return Blueprint._id !== "";
+	}, [ Blueprint._id, Config?.IgnoreBlacklisted ] );
 
 	const updateData = ( newData?: BlueprintData ) => {
 		const blueprintData = newData || Blueprint;
@@ -90,11 +90,11 @@ export function useBlueprint( InitValue: string | BlueprintData, defaultUser?: {
 	};
 
 	const allowedToEdit = useMemo( () => {
-		if( loggedIn && ( isValid || Blueprint.blacklisted ) ) {
+		if( loggedIn && ( isValid ) ) {
 			return user.HasPermission( ERoles.admin ) || _.isEqual( Blueprint.owner, user.Get._id );
 		}
 		return false;
-	}, [ loggedIn, isValid, Blueprint.blacklisted, Blueprint.owner, user ] );
+	}, [ loggedIn, isValid, Blueprint.owner, user ] );
 
 	useEffect( () => {
 		if( typeof InitValue === "string" || !defaultUser ) {

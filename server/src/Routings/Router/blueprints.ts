@@ -71,7 +71,6 @@ export default function() {
 			blueprint.totalRatingCount = 0;
 			blueprint.rating = [];
 			blueprint.images = [];
-			blueprint.blacklisted = false;
 
 			if( req.files && !Array.isArray( req.files ) ) {
 				const id = blueprint._id.toString();

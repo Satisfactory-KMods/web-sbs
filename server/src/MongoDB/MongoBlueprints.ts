@@ -27,7 +27,6 @@ const ZodIconData = z.object( {
 
 const ZodBlueprintBase = z.object( {
 	downloads: z.number(),
-	blacklisted: z.boolean(),
 	originalName: z.string(),
 	iconData: ZodIconData.optional(),
 	name: z.string(),
@@ -52,7 +51,6 @@ const ZodBlueprintPackSchema = z.object( {
 	totalRatingCount: z.number(),
 	tags: z.array( z.string() ),
 	downloads: z.number(),
-	blacklisted: z.boolean(),
 	images: z.array( z.string() ),
 	blueprints: z.array( z.string() ).or( z.array( ZodBlueprintBase ) )
 } );
@@ -88,7 +86,6 @@ const BlueprintSchema = new mongoose.Schema( {
 	DesignerSize: { type: String, required: true },
 	owner: { type: String, required: true },
 	downloads: { type: Number, required: true, default: 0 },
-	blacklisted: { type: Boolean, required: false, default: false },
 	images: { type: [ String ], required: true },
 	inPacks: { type: [ mongoose.Schema.Types.ObjectId ], ref: "SBS_BlueprintPacks", required: true },
 	originalName: { type: String, required: true, unique: true },
@@ -180,7 +177,6 @@ const BlueprintPackSchema = new mongoose.Schema( {
 	tags: { type: [ String ], required: true },
 	owner: { type: String, required: true },
 	downloads: { type: Number, required: true, default: 0 },
-	blacklisted: { type: Boolean, required: false, default: false },
 	blueprints: { type: [ mongoose.Schema.Types.ObjectId ], ref: "SBS_Blueprints", required: true }
 }, { timestamps: true,
 	methods: {

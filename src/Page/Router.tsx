@@ -43,14 +43,6 @@ const rootRouter = createBrowserRouter( [
 				}
 			},
 			{
-				path: "/admin/blueprint/blacklisted",
-				lazy: async() => await import( "@page/admin/blueprints/blacklisted/Page" ),
-				loader: async( { request, params } ) => {
-					const { loader } = await import( "@page/admin/blueprints/blacklisted/Loader" );
-					return loader( { request, params } );
-				}
-			},
-			{
 				path: "/admin/tags",
 				lazy: async() => await import( "@page/admin/tags/Page" ),
 				loader: async( { request, params } ) => {

@@ -58,8 +58,7 @@ const BlueprintEditor: FunctionComponent<BlueprintEditorProps> = ( { defaultData
 			totalRating: 0,
 			tags: [],
 			images: [],
-			downloads: 0,
-			blacklisted: false
+			downloads: 0
 		};
 	} );
 	const [ isUploading, setIsUploading ] = useState<boolean>( false );

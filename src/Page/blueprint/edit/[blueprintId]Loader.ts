@@ -22,7 +22,7 @@ const blueprintIdLoader: LoaderFunction = async( { params, request } ) => {
 		tRPCPublic.blueprint.readBlueprint.mutate( { blueprintId: blueprintId! } ).catch( () => null )
 	] );
 
-	if( !blueprint || result.blueprintData.blacklisted ) {
+	if( !blueprint ) {
 		return redirect( "/error/404" );
 	}
 

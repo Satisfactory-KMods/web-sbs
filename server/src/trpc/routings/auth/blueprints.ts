@@ -1,7 +1,6 @@
 import type { BlueprintData } from "@/server/src/MongoDB/MongoBlueprints";
 import MongoBlueprints from "@/server/src/MongoDB/MongoBlueprints";
 import {
-	adminBlueprintProcedure,
 	authProcedure,
 	blueprintModOwnerProcedure,
 	blueprintProcedure,
@@ -9,12 +8,9 @@ import {
 	router
 } from "@server/trpc/trpc";
 import { TRPCError } from "@trpc/server";
-import fs from 'fs';
 import _ from "lodash";
-import path from 'path';
 import { z } from "zod";
 import { buildFilter, filterSchema } from "../public/blueprint";
-import { adminProcedure } from './../../trpc';
 
 
 export const authBlueprints = router( {
@@ -64,25 +60,8 @@ export const authBlueprints = router( {
 		const { userClass } = ctx;
 		try {
 			const { filter, options } = buildFilter( filterOptions );
-			const totalBlueprints = await MongoBlueprints.count( { ...filter, blacklisted: { $ne: true }, owner: userClass.Get._id } );
-			const blueprints = await MongoBlueprints.find<BlueprintData>( { ...filter, blacklisted: { $ne: true }, owner: userClass.Get._id }, null, { ...options, limit, skip } );
-			return { blueprints, totalBlueprints };
-		} catch( e ) {
-			handleTRCPErr( e );
-		}
-		throw new TRPCError( { message: "Something goes wrong!", code: "INTERNAL_SERVER_ERROR" } );
-	} ),
-
-	adminBlueprints: adminProcedure.input( z.object( {
-		skip: z.number().optional(),
-		limit: z.number().optional(),
-		filterOptions: filterSchema.optional()
-	} ) ).query( async( { input } ) => {
-		const { limit, filterOptions, skip } = input;
-		try {
-			const { filter, options } = buildFilter( filterOptions );
-			const totalBlueprints = await MongoBlueprints.count( { ...filter, blacklisted: true } );
-			const blueprints = await MongoBlueprints.find<BlueprintData>( { ...filter, blacklisted: true }, null, { ...options, limit, skip } );
+			const totalBlueprints = await MongoBlueprints.count( { ...filter, owner: userClass.Get._id } );
+			const blueprints = await MongoBlueprints.find<BlueprintData>( { ...filter, owner: userClass.Get._id }, null, { ...options, limit, skip } );
 			return { blueprints, totalBlueprints };
 		} catch( e ) {
 			handleTRCPErr( e );

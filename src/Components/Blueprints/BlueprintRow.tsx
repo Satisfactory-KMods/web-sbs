@@ -22,11 +22,7 @@ const BlueprintRow: FunctionComponent<IBlueprintRowProps> = ( { Data, onToggled 
 	} = bpHook;
 
 	const doBlacklist = async() => {
-		if( Data.blacklisted ) {
-			await remove();
-		} else {
-			await remove();
-		}
+		await remove();
 		await onToggled();
 	};
 

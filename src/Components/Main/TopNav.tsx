@@ -30,7 +30,6 @@ const TopNav: FunctionComponent = () => {
 		{ user.HasPermission( ERoles.admin ) && (
 			<NavigationContainer path="/admin" label="Admin" >
 				<NavigationLink label="Users" to="/admin/users">Manage all Users</NavigationLink>
-				<NavigationLink label="Blueprints" to="/admin/blueprint/blacklisted">Manage all blacklisted blueprints</NavigationLink>
 				<NavigationLink label="Tags" to="/admin/tags">Manage all Tags</NavigationLink>
 			</NavigationContainer>
 		) }
