@@ -2,6 +2,7 @@
 /** @type {import('tailwindcss').Config} */
 const colors = require( 'tailwindcss/colors' );
 
+
 module.exports = {
 	darkMode: 'class',
 	important: true,
@@ -21,10 +22,10 @@ module.exports = {
 	],
 	fontFamily: {
 		sans: [ 'Graphik', 'sans-serif' ],
-		serif: [ 'Merriweather', 'serif' ],
+		serif: [ 'Merriweather', 'serif' ]
 	},
 	theme: {
-		extend: {},
+		extend: {}
 	},
 	plugins: [
 		require( 'flowbite/plugin' )

@@ -2,39 +2,39 @@ import BlueprintRating from "@app/Components/Blueprints/BlueprintRating";
 import type { BlueprintIdLoader } from "@app/Page/blueprint/edit/[blueprintId]Loader";
 import { mdxComponents } from "@app/Page/terms/private/Page";
 import type {
-    SaveComponent,
-    SaveEntity
+	SaveComponent,
+	SaveEntity
 } from "@etothepii/satisfactory-file-parser";
 import { useBlueprint } from "@hooks/useBlueprint";
 import {
-    Button,
-    Carousel
+	Button,
+	Carousel
 } from "flowbite-react";
 import type { FunctionComponent } from "react";
 import {
-    useId,
-    useMemo
+	useId,
+	useMemo
 } from "react";
 import {
-    BiUser,
-    BiWrench
+	BiUser,
+	BiWrench
 } from "react-icons/bi";
 import {
-    BsBox,
-    BsBoxes,
-    BsHouseAdd
+	BsBox,
+	BsBoxes,
+	BsHouseAdd
 } from "react-icons/bs";
 import { FaClock } from "react-icons/fa";
 import {
-    HiCog,
-    HiDownload,
-    HiTrash
+	HiCog,
+	HiDownload,
+	HiTrash
 } from "react-icons/hi";
 import { MdOutlinePhotoSizeSelectSmall } from "react-icons/md";
 import ReactMarkdown from "react-markdown";
 import {
-    Link,
-    useLoaderData
+	Link,
+	useLoaderData
 } from "react-router-dom";
 
 
@@ -175,6 +175,6 @@ const Component: FunctionComponent = () => {
 };
 
 export {
-    Component
+	Component
 };
 

@@ -18,7 +18,6 @@ const BlueprintRow: FunctionComponent<IBlueprintRowProps> = ( { Data, onToggled 
 	const {
 		Blueprint,
 		allowedToEdit,
-		remove,
 		remove
 	} = bpHook;
 
