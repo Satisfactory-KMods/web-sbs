@@ -1,5 +1,5 @@
 import type { UserSession } from "@server/Lib/Session.Lib";
-import type { UserAccount } from "@server/MongoDB/DB_UserAccount";
+import type { UserAccount } from "@server/MongoDB/MongoUserAccount";
 import { DefaultUser } from "@shared/Default/Auth.Default";
 import type { ERoles } from "@shared/Enum/ERoles";
 import jwt from "jwt-decode";

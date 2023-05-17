@@ -1,10 +1,10 @@
 import { BlueprintClass } from "@/server/src/Lib/Blueprint.Class";
-import type { BlueprintData } from "@/server/src/MongoDB/DB_Blueprints";
-import DB_UserAccount from '@/server/src/MongoDB/DB_UserAccount';
+import type { BlueprintData } from "@/server/src/MongoDB/MongoBlueprints";
+import MongoUserAccount from '@/server/src/MongoDB/MongoUserAccount';
 import type { ExpressRequest } from "@/server/src/Types/express";
 import type { EApiBlueprintUtils } from "@/src/Shared/Enum/EApiPath";
 import { errorResponse } from "@kyri123/lib";
-import DB_SessionToken from "@server/MongoDB/DB_SessionToken";
+import MongoSessionToken from "@server/MongoDB/MongoSessionToken";
 import { User } from "@shared/Class/User.Class";
 import type { ERoles } from "@shared/Enum/ERoles";
 import type {
@@ -23,7 +23,7 @@ export function ApiUrl( Url: EApiBlueprintUtils | string ) {
 	return EndUrl;
 }
 
-export async function MW_Auth( req: Request, res: Response, next: NextFunction ) {
+export async function MWAuth( req: Request, res: Response, next: NextFunction ) {
 	const AuthHeader = req.headers[ "authorization" ];
 	let Token: string | undefined = undefined;
 	try {
@@ -36,7 +36,7 @@ export async function MW_Auth( req: Request, res: Response, next: NextFunction )
 			const Result = jwt.verify( Token, process.env.JWTToken as string );
 			if( typeof Result === "object" ) {
 				const UserData = new User( Token );
-				const Session = await DB_SessionToken.findOne( { token: Token, userid: UserData.Get._id } );
+				const Session = await MongoSessionToken.findOne( { token: Token, userid: UserData.Get._id } );
 				if( Session ) {
 					req.body.UserClass = UserData;
 					next();
@@ -49,7 +49,7 @@ export async function MW_Auth( req: Request, res: Response, next: NextFunction )
 	return res.status( 401 ).json( errorResponse( "Unauthorized", res ) );
 }
 
-export async function MW_Permission( req: Request, res: Response, next: NextFunction, Permission: ERoles ) {
+export async function MWPermission( req: Request, res: Response, next: NextFunction, Permission: ERoles ) {
 	if( req.body.UserClass && req.body.UserClass.HasPermission( Permission ) ) {
 		next();
 		return;
@@ -57,7 +57,7 @@ export async function MW_Permission( req: Request, res: Response, next: NextFunc
 	return res.status( 401 ).json( errorResponse( "Unauthorized", res ) );
 }
 
-export async function MW_Blueprint( req: ExpressRequest<{
+export async function MWBlueprint( req: ExpressRequest<{
 	blueprint: Omit<BlueprintData, "_id" | "__v">,
 	blueprintName: string,
 	blueprintId: string | BlueprintClass<true>,
@@ -75,7 +75,7 @@ export async function MW_Blueprint( req: ExpressRequest<{
 	return res.status( 401 ).json( errorResponse( "Unauthorized", res ) );
 }
 
-export async function MW_Rest( req: Request, res: Response, next: NextFunction ) {
+export async function MWRest( req: Request, res: Response, next: NextFunction ) {
 	const apiKey = req.header( 'x-api-key' );
 	if( _.isEqual( apiKey, process.env.APIKey ) && process.env.APIKey ) {
 		return next();
@@ -85,10 +85,10 @@ export async function MW_Rest( req: Request, res: Response, next: NextFunction )
 	return res.status( 401 ).json( { error: "Unauthorized" } );
 }
 
-export async function MW_Rest_USER( req: Request, res: Response, next: NextFunction ) {
+export async function MWRestUser( req: Request, res: Response, next: NextFunction ) {
 	const apiKey = req.header( 'x-account-key' );
 	if( apiKey ) {
-		const userDoc = await DB_UserAccount.findOne( { apiKey } );
+		const userDoc = await MongoUserAccount.findOne( { apiKey } );
 		if( userDoc ) {
 			return next();
 		}

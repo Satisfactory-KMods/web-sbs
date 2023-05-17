@@ -1,4 +1,4 @@
-import { successSwal, tRPC_Auth, tRPC_handleError } from "@app/Lib/tRPC";
+import { successSwal, tRPCAuth, tRPCHandleError } from "@app/Lib/tRPC";
 import type { useBlueprint } from "@app/hooks/useBlueprint";
 import type { RatingProps } from "flowbite-react";
 import { Rating } from "flowbite-react";
@@ -23,13 +23,13 @@ const BlueprintRating: FunctionComponent<BlueprintRatingProps> = ( { blueprintHo
 		if( !allowedToLike ) {
 			return;
 		}
-		await tRPC_Auth.blueprints.rate.mutate( {
+		await tRPCAuth.blueprints.rate.mutate( {
 			blueprintId: Blueprint._id,
 			rating
 		} ).then( msg => {
 			Update();
 			successSwal( msg );
-		} ).catch( tRPC_handleError );
+		} ).catch( tRPCHandleError );
 	};
 
 	const rating = Blueprint.totalRating || 1;

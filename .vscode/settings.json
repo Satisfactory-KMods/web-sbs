@@ -1,12 +1,11 @@
 {
-  "typescript.preferences.importModuleSpecifier": "non-relative",
-  "files.autoSave": "onFocusChange",
-  "editor.codeActionsOnSave": {
-    "source.fixAll": true,
-    "editor.formatOnSave": true
-  },
-  "eslint.validate": [
-    "typescript"
-  ],
-  "typescript.tsdk": "node_modules\\typescript\\lib"
- } 
+	"typescript.preferences.importModuleSpecifier": "non-relative",
+	"files.autoSave": "onFocusChange",
+	"editor.formatOnSave": true,
+	"editor.codeActionsOnSave": {
+		"source.fixAll": true,
+		"editor.formatOnSave": true
+	},
+	"eslint.validate": ["typescript"],
+	"typescript.tsdk": "node_modules\\typescript\\lib"
+}

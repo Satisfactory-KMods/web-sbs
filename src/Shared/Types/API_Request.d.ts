@@ -1,6 +1,6 @@
-import type { BlueprintPack } from "@server/MongoDB/DB_BlueprintPacks";
-import type { Tag } from "@server/MongoDB/DB_Tags";
-import type { UserAccount } from "@server/MongoDB/DB_UserAccount";
+import type { BlueprintPack } from "@server/MongoDB/MongoBlueprintPacks";
+import type { Tag } from "@server/MongoDB/MongoTags";
+import type { UserAccount } from "@server/MongoDB/MongoUserAccount";
 import type { User } from "@shared/Class/User.Class";
 import type { EDesignerSize } from "@shared/Enum/EDesignerSize";
 import type { UploadedFile } from "express-fileupload";
@@ -26,7 +26,7 @@ export type TRequest_Auth_Modify = IRequestBody<{
 	Remove: boolean;
 	Data: Partial<UserAccount>;
 }>;
-export type TRequest_Auth_Logout = IRequestBody<{
+export type TRequest_authLogout = IRequestBody<{
 	Token: string;
 }>;
 export type TRequest_Auth_SignIn = IRequestBody<{

@@ -1,10 +1,10 @@
-import { tRPC_Auth, tRPC_handleError } from "@app/Lib/tRPC";
+import { tRPCAuth, tRPCHandleError } from "@app/Lib/tRPC";
 import { ERoles } from "@app/Shared/Enum/ERoles";
 import type { LoaderDataBase } from "@app/Types/loader";
 import { LoginRule, validateLogin } from "@applib/loaderHelper";
 import type { LoaderFunction } from "react-router-dom";
 import { json } from "react-router-dom";
-import type { Tag } from './../../../../server/src/MongoDB/DB_Tags';
+import type { Tag } from './../../../../server/src/MongoDB/MongoTags';
 
 export type TagAdminLoaderData = LoaderDataBase & {
 	tags: Tag[],
@@ -16,7 +16,7 @@ const loader: LoaderFunction = async( { params, request } ) => {
 	if( result instanceof Response ) {
 		return result;
 	}
-	const response = await tRPC_Auth.adminTags.list.query( { limit: 10 } ).catch( tRPC_handleError );
+	const response = await tRPCAuth.adminTags.list.query( { limit: 10 } ).catch( tRPCHandleError );
 	const tags: Tag[] = response?.data || [];
 	const totalTags = response?.count || 0;
 

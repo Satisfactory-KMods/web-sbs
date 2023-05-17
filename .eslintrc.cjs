@@ -30,6 +30,7 @@ module.exports = {
 		"@typescript-eslint"
 	],
 	rules: {
+		"camelcase": [ "warn", { "properties": "never" }],
 		"brace-style": "off",
 		"@typescript-eslint/brace-style": [ "warn", "1tbs", {
 			"allowSingleLine": false

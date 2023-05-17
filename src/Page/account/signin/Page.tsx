@@ -1,7 +1,7 @@
 import {
 	fireSwalFromApi,
-	tRPC_Public,
-	tRPC_handleError
+	tRPCHandleError,
+	tRPCPublic
 } from "@applib/tRPC";
 import { useAuth } from "@hooks/useAuth";
 import { usePageTitle } from "@kyri123/k-reactutils";
@@ -36,9 +36,9 @@ const Component: FunctionComponent = () => {
 		e.preventDefault();
 		setIsSending( true );
 
-		const response = await tRPC_Public.login.mutate( {
+		const response = await tRPCPublic.login.mutate( {
 			stayLoggedIn, login, password
-		} ).catch( tRPC_handleError );
+		} ).catch( tRPCHandleError );
 
 		if( response ) {
 			setToken( response.token );

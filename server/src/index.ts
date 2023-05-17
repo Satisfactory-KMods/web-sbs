@@ -9,9 +9,9 @@ import * as path from "path";
 import process from "process";
 import {
 	BC,
-	SystemLib_Class
+	systemLibClass
 } from "./Lib/System.Lib";
-import DB_UserAccount from "./MongoDB/DB_UserAccount";
+import MongoUserAccount from "./MongoDB/MongoUserAccount";
 import { InstallRoutings } from "./Routings/InitRouter";
 import { TaskManagerClass } from "./Tasks/TaskManager";
 
@@ -22,7 +22,7 @@ global.__LogFile = path.join( __MountDir, "Logs", `${ Date.now() }.log` );
 global.__BlueprintDir = path.join( __MountDir, "Blueprints" );
 ( !fs.existsSync( __BlueprintDir ) ) && fs.mkdirSync( __BlueprintDir, { recursive: true } );
 
-global.SystemLib = new SystemLib_Class();
+global.SystemLib = new systemLibClass();
 
 global.Api = express();
 global.HttpServer = http.createServer( global.Api );
@@ -41,11 +41,11 @@ Api.use( function( req, res, next ) {
 
 mongoose
 	.connect(
-		`mongodb://${ process.env.MONGODB_HOST }:${ process.env.MONGODB_PORT }`,
+		`mongodb://${ process.env.MONGOMongoHOST }:${ process.env.MONGOMongoPORT }`,
 		{
-			user: process.env.MONGODB_USER,
-			pass: process.env.MONGODB_PASSWD,
-			dbName: process.env.MONGODB_DATABASE
+			user: process.env.MONGOMongoUSER,
+			pass: process.env.MONGOMongoPASSWD,
+			dbName: process.env.MONGOMongoDATABASE
 		}
 	)
 	.then( async() => {
@@ -55,7 +55,7 @@ mongoose
 		for( const DB of fs.readdirSync( path.join( __BaseDir, "MongoDB" ) ) ) {
 			const File = path.join( __BaseDir, "MongoDB", DB );
 			const Stats = fs.statSync( File );
-			if( Stats.isFile() && DB !== "DB_UserAccount.ts" ) {
+			if( Stats.isFile() && DB !== "MongoUserAccount.ts" ) {
 				const DBImport = await import( File );
 				if( DBImport.Revalidate ) {
 					SystemLib.Log( "Revalidate", `Schema for${ BC( "Cyan" ) }`, DB.toString().replace( ".ts", "" ) );
@@ -76,8 +76,8 @@ mongoose
 			res.sendFile( path.join( __BaseDir, "../..", "build", "index.html" ) );
 		} );
 
-		if( !await DB_UserAccount.findOne() ) {
-			const NewUser = new DB_UserAccount();
+		if( !await MongoUserAccount.findOne() ) {
+			const NewUser = new MongoUserAccount();
 			NewUser.email = "admin@kmods.de";
 			NewUser.username = "Kyrium";
 			NewUser.role = ERoles.admin;

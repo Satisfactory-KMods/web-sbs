@@ -1,6 +1,6 @@
 import { mdxComponents } from "@app/Page/terms/private/Page";
 import { useBlueprint } from "@app/hooks/useBlueprint";
-import type { BlueprintData } from "@server/MongoDB/DB_Blueprints";
+import type { BlueprintData } from "@server/MongoDB/MongoBlueprints";
 import { Button } from "flowbite-react";
 import { useId, type FunctionComponent } from "react";
 import { HiCog, HiDownload, HiTrash } from "react-icons/hi";

@@ -22,7 +22,7 @@ export type BashColorString =
 	| "Light Cyan"
 	| "White";
 
-export class SystemLib_Class {
+export class systemLibClass {
 	public readonly IsDevMode: boolean;
 	private readonly UseDebug: boolean;
 
@@ -39,7 +39,7 @@ export class SystemLib_Class {
 
 		this.DebugLog( "SYSTEM", "Try to load:", ".env" );
 		dotenv.config();
-		if( SystemLib_Class.IsDev() ) {
+		if( systemLibClass.IsDev() ) {
 			this.DebugLog( "SYSTEM", "Try to load:", ".env.dev" );
 			dotenv.config( {
 				path: ".env.dev"
@@ -94,7 +94,7 @@ export class SystemLib_Class {
 	}
 
 	public ToBashColor( String: BashColorString ) {
-		return SystemLib_Class.TBC( String );
+		return systemLibClass.TBC( String );
 	}
 
 	public ClearANSI( Log: string ): string {
@@ -192,4 +192,4 @@ export class SystemLib_Class {
 	}
 }
 
-export const BC = SystemLib_Class.TBC;
+export const BC = systemLibClass.TBC;

@@ -1,11 +1,11 @@
 import type { LoaderDataBase } from "@app/Types/loader";
 import { validateLogin } from "@applib/loaderHelper";
 import {
-	tRPC_handleError,
-	tRPC_Public
+	tRPCHandleError,
+	tRPCPublic
 } from "@applib/tRPC";
-import type { Mod } from "@server/MongoDB/DB_Mods";
-import type { Tag } from "@server/MongoDB/DB_Tags";
+import type { Mod } from "@server/MongoDB/MongoMods";
+import type { Tag } from "@server/MongoDB/MongoTags";
 import type { LoaderFunction } from "react-router-dom";
 import { json } from "react-router-dom";
 
@@ -21,8 +21,8 @@ export const defaultLoader: LoaderFunction = async( { params, request } ) => {
 	}
 
 	const [ mods, tags ] = await Promise.all( [
-		tRPC_Public.mods.getMods.query().catch( tRPC_handleError ),
-		tRPC_Public.tags.getTags.query().catch( tRPC_handleError )
+		tRPCPublic.mods.getMods.query().catch( tRPCHandleError ),
+		tRPCPublic.tags.getTags.query().catch( tRPCHandleError )
 	] );
 
 	const queryResult = {

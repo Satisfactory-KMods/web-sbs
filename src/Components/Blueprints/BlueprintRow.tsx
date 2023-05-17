@@ -1,6 +1,6 @@
 import BlueprintRating from "@app/Components/Blueprints/BlueprintRating";
 import { useBlueprint } from "@app/hooks/useBlueprint";
-import type { BlueprintData } from "@server/MongoDB/DB_Blueprints";
+import type { BlueprintData } from "@server/MongoDB/MongoBlueprints";
 import { Button } from "flowbite-react";
 import type { FunctionComponent } from "react";
 import { FaEye } from "react-icons/fa";

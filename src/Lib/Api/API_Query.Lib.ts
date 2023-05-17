@@ -1,20 +1,10 @@
-import { fireSwalFromApi, tRPC_token } from "@app/Lib/tRPC";
+import { fireSwalFromApi, tRPCToken } from "@app/Lib/tRPC";
 import type { ErrorDataResponseFormat, SuccessDataResponseFormat } from "@kyri123/lib";
 import type { EApiBlueprintUtils } from "@shared/Enum/EApiPath";
 import superjson from 'superjson';
 import type { SuperJSONResult } from "superjson/dist/types";
 
-export function FormData_append_object( fd: FormData, obj: any, key?: string ) {
-	for( const [ i, ] of Object.entries( obj ) ) {
-		const k = key ? key + '[' + i + ']' : i;
-		if( typeof obj[ i ] == 'object' )
-			FormData_append_object( fd, obj[ i ], k );
-		else
-			fd.append( k, obj[ i ] );
-	}
-}
-
-export class API_QueryLib {
+export class apiQueryLib {
 	static async PostToAPI<T, D = any>(
 		Path: EApiBlueprintUtils,
 		Data: D,
@@ -23,7 +13,7 @@ export class API_QueryLib {
 		const requestOptions: RequestInit = {
 			method: "POST",
 			headers: {
-				Authorization: "Bearer " + tRPC_token(),
+				Authorization: "Bearer " + tRPCToken(),
 				"User-Agent": "Frontend"
 			},
 			body: Data instanceof FormData ? Data : JSON.stringify( Data )
@@ -72,7 +62,7 @@ export class API_QueryLib {
 		const requestOptions: RequestInit = {
 			method: "GET",
 			headers: {
-				Authorization: "Bearer " + tRPC_token(),
+				Authorization: "Bearer " + tRPCToken(),
 				"User-Agent": "Frontend",
 				"Content-Type": "application/json"
 			}

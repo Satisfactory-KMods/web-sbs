@@ -48,32 +48,32 @@ export function useSelectOptions() {
 		value: R.mod_reference
 	} ) ), [ mods ] );
 
-	const modSelected_Multi: ( mods: string[] ) => MultiValue<SelectOptionStruct<string>> = useCallback( ( mods ) => {
+	const modSelectedMulti: ( mods: string[] ) => MultiValue<SelectOptionStruct<string>> = useCallback( ( mods ) => {
 		return modSelectOptions.filter( m => mods.includes( m.value ) );
 	}, [ modSelectOptions ] );
 
-	const modSelected_Single: ( mod: string ) => SingleValue<SelectOptionStruct<string>> = useCallback( ( mod ) => {
+	const modSelectedSingle: ( mod: string ) => SingleValue<SelectOptionStruct<string>> = useCallback( ( mod ) => {
 		return modSelectOptions.find( m => _.isEqual( mod, m.value ) ) || null;
 	}, [ modSelectOptions ] );
 
-	const tagSelected_Multi: ( tags: string[] ) => MultiValue<SelectOptionStruct<string>> = useCallback( ( tags ) => {
+	const tagSelectedMulti: ( tags: string[] ) => MultiValue<SelectOptionStruct<string>> = useCallback( ( tags ) => {
 		return tagsSelectOptions.filter( m => tags.includes( m.value ) );
 	}, [ tagsSelectOptions ] );
 
-	const tagSelected_Single: ( tag: string ) => SingleValue<SelectOptionStruct<string>> = useCallback( ( tag ) => {
+	const tagSelectedSingle: ( tag: string ) => SingleValue<SelectOptionStruct<string>> = useCallback( ( tag ) => {
 		return tagsSelectOptions.find( m => _.isEqual( tag, m.value ) ) || null;
 	}, [ tagsSelectOptions ] );
 
-	const designerSize_Single: ( designerSize: EDesignerSize ) => SingleValue<SelectOptionStruct<EDesignerSize>> = useCallback( ( designerSize ) => {
+	const designerSizeSingle: ( designerSize: EDesignerSize ) => SingleValue<SelectOptionStruct<EDesignerSize>> = useCallback( ( designerSize ) => {
 		return designerSizeOptions.find( m => _.isEqual( designerSize, m.value ) ) || null;
 	}, [ designerSizeOptions ] );
 
 	return {
-		modSelected_Multi,
-		modSelected_Single,
-		tagSelected_Multi,
-		tagSelected_Single,
-		designerSize_Single,
+		modSelectedMulti,
+		modSelectedSingle,
+		tagSelectedMulti,
+		tagSelectedSingle,
+		designerSizeSingle,
 		modSelectOptions,
 		tagsSelectOptions,
 		vanillaSelectOptions,

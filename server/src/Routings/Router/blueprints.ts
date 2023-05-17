@@ -4,11 +4,11 @@ import { dataResponse, errorResponse } from "@kyri123/lib";
 import { BlueprintParser } from "@server/Lib/BlueprintParser";
 import {
 	ApiUrl,
-	MW_Auth,
+	MWAuth,
 	upload
 } from "@server/Lib/Express.Lib";
-import type { BlueprintData } from "@server/MongoDB/DB_Blueprints";
-import DB_Blueprints from "@server/MongoDB/DB_Blueprints";
+import type { BlueprintData } from "@server/MongoDB/MongoBlueprints";
+import MongoBlueprints from "@server/MongoDB/MongoBlueprints";
 import type { ExpressRequest } from "@server/Types/express";
 import { EApiBlueprintUtils } from "@shared/Enum/EApiPath";
 import type {
@@ -20,7 +20,7 @@ import path from "path";
 import { z } from "zod";
 
 export default function() {
-	Router.post( ApiUrl( EApiBlueprintUtils.parseblueprint ), upload.array( "blueprint", 2 ), MW_Auth, async( req: ExpressRequest<{
+	Router.post( ApiUrl( EApiBlueprintUtils.parseblueprint ), upload.array( "blueprint", 2 ), MWAuth, async( req: ExpressRequest<{
 		blueprintName: string
 	}>, res: Response ) => {
 		if( req.files && Array.isArray( req.files ) && Number( req.files.length ) === 2 ) {
@@ -56,7 +56,7 @@ export default function() {
 	} );
 
 
-	Router.post( ApiUrl( EApiBlueprintUtils.create ), upload.fields( [ { name: 'sbp', maxCount: 1 }, { name: 'sbpcfg', maxCount: 1 }, { name: 'images', maxCount: 5 } ] ), MW_Auth, async( req: ExpressRequest<{
+	Router.post( ApiUrl( EApiBlueprintUtils.create ), upload.fields( [ { name: 'sbp', maxCount: 1 }, { name: 'sbpcfg', maxCount: 1 }, { name: 'images', maxCount: 5 } ] ), MWAuth, async( req: ExpressRequest<{
 		blueprint: Omit<BlueprintData, "_id" | "__v"> | string,
 		UserClass: User
 	}>, res: Response ) => {
@@ -64,7 +64,7 @@ export default function() {
 			if( typeof req.body.blueprint === "string" ) {
 				req.body.blueprint = JSON.parse( req.body.blueprint );
 			}
-			const blueprint = new DB_Blueprints( req.body.blueprint );
+			const blueprint = new MongoBlueprints( req.body.blueprint );
 			blueprint.totalRating = 0;
 			blueprint.downloads = 0;
 			blueprint.totalRatingCount = 0;
@@ -89,7 +89,7 @@ export default function() {
 					}
 				}
 
-				if( await DB_Blueprints.exists( { originalName: blueprint.originalName } ) ) {
+				if( await MongoBlueprints.exists( { originalName: blueprint.originalName } ) ) {
 					fs.rmSync( blueprintDir, { recursive: true } );
 					res.status( 500 ).json( errorResponse( "Blueprint with this name is allready in our Database. Please use a other filename!", res ) );
 				}
@@ -112,7 +112,7 @@ export default function() {
 		res.status( 500 ).json( errorResponse( "Something goes wrong!", res ) );
 	} );
 
-	Router.post( ApiUrl( EApiBlueprintUtils.edit ), upload.fields( [ { name: 'sbp', maxCount: 1 }, { name: 'sbpcfg', maxCount: 1 }, { name: 'images', maxCount: 5 } ] ), MW_Auth, async( req: ExpressRequest<{
+	Router.post( ApiUrl( EApiBlueprintUtils.edit ), upload.fields( [ { name: 'sbp', maxCount: 1 }, { name: 'sbpcfg', maxCount: 1 }, { name: 'images', maxCount: 5 } ] ), MWAuth, async( req: ExpressRequest<{
 		blueprint: Omit<BlueprintData, "_id" | "__v">,
 		blueprintId: string,
 		UserClass: User
@@ -121,7 +121,7 @@ export default function() {
 			if( typeof req.body.blueprint === "string" ) {
 				req.body.blueprint = JSON.parse( req.body.blueprint );
 			}
-			const blueprint = await DB_Blueprints.findById( req.body.blueprintId );
+			const blueprint = await MongoBlueprints.findById( req.body.blueprintId );
 			if( !blueprint ) {
 				return res.status( 404 ).json( errorResponse( "Blueprint not found!", res ) );
 			}

@@ -1,5 +1,5 @@
-import type { Tag } from "@server/MongoDB/DB_Tags";
-import DB_Tags from "@server/MongoDB/DB_Tags";
+import type { Tag } from "@server/MongoDB/MongoTags";
+import MongoTags from "@server/MongoDB/MongoTags";
 import {
 	handleTRCPErr,
 	publicProcedure,
@@ -8,10 +8,10 @@ import {
 import { TRPCError } from "@trpc/server";
 
 
-export const public_tags = router( {
+export const publicTags = router( {
 	getTags: publicProcedure.query( async() => {
 		try {
-			const tags = await DB_Tags.find<Tag>();
+			const tags = await MongoTags.find<Tag>();
 			if( tags ) {
 				return tags;
 			}

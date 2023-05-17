@@ -1,15 +1,4 @@
-
-import { parseBlueprintById } from "@/server/src/Lib/BlueprintParser";
-import DB_UserAccount from "@/server/src/MongoDB/DB_UserAccount";
-import type { BlueprintPack } from "@server/MongoDB/DB_BlueprintPacks";
-import type { BlueprintData } from "@server/MongoDB/DB_Blueprints";
-import DB_Blueprints from "@server/MongoDB/DB_Blueprints";
-import {
-	handleTRCPErr,
-	publicProcedure,
-	router
-} from "@server/trpc/trpc";
-import { TRPCError } from "@trpc/server";
+import type { BlueprintData, BlueprintPack } from "@server/MongoDB/MongoBlueprints";
 import type {
 	FilterQuery,
 	QueryOptions
@@ -66,57 +55,4 @@ export function buildFilter<T extends BlueprintData | BlueprintPack>( filter?: F
 	return result;
 }
 
-export const public_blueprint = router( {
-	readBlueprint: publicProcedure.input( z.object( {
-		blueprintId: z.string().min( 5 )
-	} ) ).mutation( async( { input } ) => {
-		const { blueprintId } = input;
-		try {
-			const BP = ( await DB_Blueprints.findById( blueprintId ) )!;
-			const parse = parseBlueprintById( BP._id.toString(), BP.name );
-			if( parse ) {
-				return parse;
-			}
-			throw new TRPCError( { message: "Failed to read blueprint data!", code: "INTERNAL_SERVER_ERROR" } );
-		} catch( e ) {
-			handleTRCPErr( e );
-		}
-		throw new TRPCError( { message: "Something goes wrong!", code: "INTERNAL_SERVER_ERROR" } );
-	} ),
 
-	getBlueprint: publicProcedure.input( z.object( {
-		blueprintId: z.string()
-	} ) ).query( async( { input } ) => {
-		const { blueprintId } = input;
-		try {
-			const blueprint = await DB_Blueprints.findById( blueprintId );
-			if( blueprint ) {
-				const owner = await DB_UserAccount.findById( blueprint.owner );
-				const bpOwnerName: string = owner?.username || "Deleted User";
-				if( blueprint ) {
-					return { blueprintData: blueprint.toJSON() as BlueprintData, bpOwnerName };
-				}
-			}
-		} catch( e ) {
-			handleTRCPErr( e );
-		}
-		throw new TRPCError( { message: "Something goes wrong!", code: "INTERNAL_SERVER_ERROR" } );
-	} ),
-
-	getBlueprints: publicProcedure.input( z.object( {
-		skip: z.number().optional(),
-		limit: z.number().optional(),
-		filterOptions: filterSchema.optional()
-	} ) ).query( async( { input } ) => {
-		const { limit, filterOptions, skip } = input;
-		try {
-			const { filter, options } = buildFilter( filterOptions );
-			const totalBlueprints = await DB_Blueprints.count( filter );
-			const blueprints = await DB_Blueprints.find<BlueprintData>( filter, null, { ...options, limit, skip } );
-			return { blueprints, totalBlueprints };
-		} catch( e ) {
-			handleTRCPErr( e );
-		}
-		throw new TRPCError( { message: "Something goes wrong!", code: "INTERNAL_SERVER_ERROR" } );
-	} )
-} );

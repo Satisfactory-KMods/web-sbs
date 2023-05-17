@@ -2,10 +2,10 @@
 import type { IndexLoaderData } from "@app/Page/blueprint/list/Loader";
 import { LoginRule, validateLogin } from "@applib/loaderHelper";
 import {
-	tRPC_Auth,
-	tRPC_handleError
+	tRPCAuth,
+	tRPCHandleError
 } from "@applib/tRPC";
-import type { BlueprintData } from "@server/MongoDB/DB_Blueprints";
+import type { BlueprintData } from "@server/MongoDB/MongoBlueprints";
 import type { LoaderFunction } from "react-router-dom";
 import { json } from "react-router-dom";
 
@@ -14,7 +14,7 @@ export const loader: LoaderFunction = async( { params, request } ) => {
 	if( result instanceof Response ) {
 		return result;
 	}
-	const Blueprints = await tRPC_Auth.blueprints.myBlueprints.query( { limit: 10 } ).catch( tRPC_handleError );
+	const Blueprints = await tRPCAuth.blueprints.myBlueprints.query( { limit: 10 } ).catch( tRPCHandleError );
 	const blueprints: BlueprintData[] = Blueprints?.blueprints || [];
 	const totalBlueprints: number = Blueprints?.totalBlueprints || 0;
 

@@ -1,8 +1,8 @@
-import { tRPC_Auth, tRPC_handleError } from "@app/Lib/tRPC";
+import { tRPCAuth, tRPCHandleError } from "@app/Lib/tRPC";
 import type { IndexLoaderData } from "@app/Page/blueprint/list/Loader";
 import { ERoles } from "@app/Shared/Enum/ERoles";
 import { LoginRule, validateLogin } from "@applib/loaderHelper";
-import type { BlueprintData } from "@server/MongoDB/DB_Blueprints";
+import type { BlueprintData } from "@server/MongoDB/MongoBlueprints";
 import type { LoaderFunction } from "react-router-dom";
 import { json } from "react-router-dom";
 
@@ -11,7 +11,7 @@ const loader: LoaderFunction = async( { params, request } ) => {
 	if( result instanceof Response ) {
 		return result;
 	}
-	const Blueprints = await tRPC_Auth.blueprints.adminBlueprints.query( { limit: 10 } ).catch( tRPC_handleError );
+	const Blueprints = await tRPCAuth.blueprints.adminBlueprints.query( { limit: 10 } ).catch( tRPCHandleError );
 	let blueprints: BlueprintData[] = [];
 	let totalBlueprints = 0;
 	if( Blueprints ) {

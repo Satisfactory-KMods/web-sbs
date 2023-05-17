@@ -1,8 +1,8 @@
 import { LoadingButton } from "@app/Components/elements/Buttons";
-import { onConfirm, successSwal, tRPC_Auth, tRPC_handleError } from "@app/Lib/tRPC";
+import { onConfirm, successSwal, tRPCAuth, tRPCHandleError } from "@app/Lib/tRPC";
 import { ERoles } from "@app/Shared/Enum/ERoles";
 import { useAuth } from "@app/hooks/useAuth";
-import type { ClientUserAccount } from "@server/MongoDB/DB_UserAccount";
+import type { ClientUserAccount } from "@server/MongoDB/MongoUserAccount";
 import { Select, Table } from "flowbite-react";
 import _ from "lodash";
 import type { FunctionComponent } from "react";
@@ -19,17 +19,17 @@ const UserRow: FunctionComponent<UserRowProps> = ( { data, doFetch } ) => {
 	const id = useId();
 	const deleteUser = async() => {
 		if( await onConfirm( "User wirklich löschen?" ) ) {
-			await tRPC_Auth.adminUsers.delete.mutate( { id: data._id } )
+			await tRPCAuth.adminUsers.delete.mutate( { id: data._id } )
 				.then( successSwal )
-				.catch( tRPC_handleError );
+				.catch( tRPCHandleError );
 			await doFetch();
 		}
 	};
 
 	const modifyRole = async( newRole: number ) => {
-		await tRPC_Auth.adminUsers.setRole.mutate( { id: data._id, role: newRole as ERoles } )
+		await tRPCAuth.adminUsers.setRole.mutate( { id: data._id, role: newRole as ERoles } )
 			.then( successSwal )
-			.catch( tRPC_handleError );
+			.catch( tRPCHandleError );
 	};
 
 	return (

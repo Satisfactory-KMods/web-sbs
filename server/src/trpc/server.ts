@@ -1,37 +1,37 @@
-import { admin_users } from "@/server/src/trpc/routings/auth/users";
-import { MW_Auth } from "@server/Lib/Express.Lib";
+import { adminUsers } from "@/server/src/trpc/routings/auth/users";
+import { MWAuth } from "@server/Lib/Express.Lib";
 import { BC } from "@server/Lib/System.Lib";
-import { auth_logout } from "@server/trpc/routings/auth/logout";
-import { auth_updateAccount } from "@server/trpc/routings/auth/updateAccount";
-import { public_blueprint } from "@server/trpc/routings/public/blueprint";
-import { public_createAccount } from "@server/trpc/routings/public/createAccount";
-import { public_login } from "@server/trpc/routings/public/login";
-import { public_mods } from "@server/trpc/routings/public/mods";
-import { public_tags } from "@server/trpc/routings/public/tags";
-import { public_validate } from "@server/trpc/routings/public/validate";
+import { authLogout } from "@server/trpc/routings/auth/logout";
+import { authUpdateAccount } from "@server/trpc/routings/auth/updateAccount";
+import { publicBlueprint } from "@server/trpc/routings/public/blueprint";
+import { publicCreateAccount } from "@server/trpc/routings/public/createAccount";
+import { publicLogin } from "@server/trpc/routings/public/login";
+import { publicMods } from "@server/trpc/routings/public/mods";
+import { publicTags } from "@server/trpc/routings/public/tags";
+import { publicValidate } from "@server/trpc/routings/public/validate";
 import {
 	createContext,
 	router
 } from "@server/trpc/trpc";
 import * as trpcExpress from "@trpc/server/adapters/express";
-import { auth_blueprints } from "./routings/auth/blueprints";
-import { admin_tags } from "./routings/auth/tags";
+import { authBlueprints } from "./routings/auth/blueprints";
+import { adminTags } from "./routings/auth/tags";
 
 
 const publicRouter = router( {
-	validate: public_validate,
-	login: public_login,
-	register: public_createAccount,
-	blueprint: public_blueprint,
-	tags: public_tags,
-	mods: public_mods
+	validate: publicValidate,
+	login: publicLogin,
+	register: publicCreateAccount,
+	blueprint: publicBlueprint,
+	tags: publicTags,
+	mods: publicMods
 } );
 const authRouter = router( {
-	blueprints: auth_blueprints,
-	updateAccount: auth_updateAccount,
-	logout: auth_logout,
-	adminTags: admin_tags,
-	adminUsers: admin_users
+	blueprints: authBlueprints,
+	updateAccount: authUpdateAccount,
+	logout: authLogout,
+	adminTags: adminTags,
+	adminUsers: adminUsers
 } );
 
 
@@ -40,7 +40,7 @@ Api.use( "/api/v2/public", trpcExpress.createExpressMiddleware( {
 	router: publicRouter,
 	createContext
 } ) );
-Api.use( "/api/v2/auth", MW_Auth, trpcExpress.createExpressMiddleware( {
+Api.use( "/api/v2/auth", MWAuth, trpcExpress.createExpressMiddleware( {
 	router: authRouter,
 	createContext
 } ) );

@@ -2,13 +2,13 @@ import BlueprintCard from "@app/Components/Blueprints/BlueprintCard";
 import BlueprintFilter from "@app/Components/Blueprints/BlueprintFilter";
 import PageManager from "@app/Components/Main/PageManager";
 import {
-	tRPC_Public,
-	tRPC_handleError
+	tRPCHandleError,
+	tRPCPublic
 } from "@applib/tRPC";
 import { useRawPageHandler } from "@hooks/useRawPageHandler";
 import { usePageTitle } from "@kyri123/k-reactutils";
 import type { IndexLoaderData } from "@page/blueprint/list/Loader";
-import type { BlueprintData } from "@server/MongoDB/DB_Blueprints";
+import type { BlueprintData } from "@server/MongoDB/MongoBlueprints";
 import type { FilterSchema } from "@server/trpc/routings/public/blueprint";
 import type { FunctionComponent } from "react";
 import { useState } from "react";
@@ -27,7 +27,7 @@ const Component: FunctionComponent = () => {
 	const onPageChange: Parameters<typeof useRawPageHandler>[1] = async( options ) => {
 		setIsFetching( true );
 		const queryFilter = { filterOptions: filter, ...options };
-		const Blueprints = await tRPC_Public.blueprint.getBlueprints.query( queryFilter ).catch( tRPC_handleError );
+		const Blueprints = await tRPCPublic.blueprint.getBlueprints.query( queryFilter ).catch( tRPCHandleError );
 		if( Blueprints ) {
 			setBlueprints( Blueprints.blueprints );
 			setTotalBlueprints( Blueprints.totalBlueprints );

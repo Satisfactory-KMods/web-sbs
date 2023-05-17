@@ -1,4 +1,4 @@
-import { tRPC_Public } from "@app/Lib/tRPC";
+import { tRPCPublic } from "@app/Lib/tRPC";
 import type { BlueprintIdLoader } from "@app/Page/blueprint/edit/[blueprintId]Loader";
 import { validateBlueprint } from "@applib/loaderHelper";
 import type { LoaderFunction } from "react-router-dom";
@@ -13,7 +13,7 @@ const loader: LoaderFunction = async( { params, request } ) => {
 	const { blueprintId } = params;
 
 	const [ blueprint ] = await Promise.all( [
-		tRPC_Public.blueprint.readBlueprint.mutate( { blueprintId: blueprintId! } ).catch( () => null )
+		tRPCPublic.blueprint.readBlueprint.mutate( { blueprintId: blueprintId! } ).catch( () => null )
 	] );
 
 	if( !blueprint || result.blueprintData.blacklisted ) {

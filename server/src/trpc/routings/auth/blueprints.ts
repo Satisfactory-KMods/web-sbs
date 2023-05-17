@@ -1,5 +1,5 @@
-import type { BlueprintData } from "@/server/src/MongoDB/DB_Blueprints";
-import DB_Blueprints from "@/server/src/MongoDB/DB_Blueprints";
+import type { BlueprintData } from "@/server/src/MongoDB/MongoBlueprints";
+import MongoBlueprints from "@/server/src/MongoDB/MongoBlueprints";
 import {
 	adminBlueprintProcedure,
 	authProcedure,
@@ -16,7 +16,7 @@ import { z } from "zod";
 import { buildFilter, filterSchema } from "../public/blueprint";
 import { adminProcedure } from './../../trpc';
 
-export const auth_blueprints = router( {
+export const authBlueprints = router( {
 	rate: blueprintProcedure.input( z.object( {
 		rating: z.number().min( 1 ).max( 5 ),
 	} ) ).mutation( async( { ctx, input } ) => {
@@ -85,8 +85,8 @@ export const auth_blueprints = router( {
 		const { userClass } = ctx;
 		try {
 			const { filter, options } = buildFilter( filterOptions );
-			const totalBlueprints = await DB_Blueprints.count( { ...filter, blacklisted: { $ne : true }, owner: userClass.Get._id } );
-			const blueprints = await DB_Blueprints.find<BlueprintData>( { ...filter, blacklisted: { $ne : true }, owner: userClass.Get._id }, null, { ...options, limit, skip } );
+			const totalBlueprints = await MongoBlueprints.count( { ...filter, blacklisted: { $ne : true }, owner: userClass.Get._id } );
+			const blueprints = await MongoBlueprints.find<BlueprintData>( { ...filter, blacklisted: { $ne : true }, owner: userClass.Get._id }, null, { ...options, limit, skip } );
 			return { blueprints, totalBlueprints };
 		} catch( e ) {
 			handleTRCPErr( e );
@@ -102,8 +102,8 @@ export const auth_blueprints = router( {
 		const { limit, filterOptions, skip } = input;
 		try {
 			const { filter, options } = buildFilter( filterOptions );
-			const totalBlueprints = await DB_Blueprints.count( { ...filter, blacklisted: true } );
-			const blueprints = await DB_Blueprints.find<BlueprintData>( { ...filter, blacklisted: true }, null, { ...options, limit, skip } );
+			const totalBlueprints = await MongoBlueprints.count( { ...filter, blacklisted: true } );
+			const blueprints = await MongoBlueprints.find<BlueprintData>( { ...filter, blacklisted: true }, null, { ...options, limit, skip } );
 			return { blueprints, totalBlueprints };
 		} catch( e ) {
 			handleTRCPErr( e );

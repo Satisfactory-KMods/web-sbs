@@ -1,7 +1,7 @@
-import DB_BlueprintPacks from "@/server/src/MongoDB/DB_BlueprintPacks";
-import DB_Blueprints from "@/server/src/MongoDB/DB_Blueprints";
-import type { Tag } from "@server/MongoDB/DB_Tags";
-import DB_Tags from "@server/MongoDB/DB_Tags";
+import MongoBlueprintPacks from "@/server/src/MongoDB/MongoBlueprintPacks";
+import MongoBlueprints from "@/server/src/MongoDB/MongoBlueprints";
+import type { Tag } from "@server/MongoDB/MongoTags";
+import MongoTags from "@server/MongoDB/MongoTags";
 import {
 	adminProcedure,
 	handleTRCPErr,
@@ -11,15 +11,15 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 
-export const admin_tags = router( {
+export const adminTags = router( {
 	list: adminProcedure.input( z.object( {
 		limit: z.number().optional(),
 		skip: z.number().optional()
 	} ) ).query( async( { input } ) => {
 		const { limit, skip } = input;
 		try {
-			const data = await DB_Tags.find( {}, {}, { sort: { cratedAt: -1 }, limit, skip } ) as Tag[];
-			const count = await DB_Tags.count( {} );
+			const data = await MongoTags.find( {}, {}, { sort: { cratedAt: -1 }, limit, skip } ) as Tag[];
+			const count = await MongoTags.count( {} );
 			return { data, count };
 		} catch( e ) {
 			handleTRCPErr( e );
@@ -32,7 +32,7 @@ export const admin_tags = router( {
 	} ) ).mutation( async( { input } ) => {
 		const { DisplayName } = input;
 		try {
-			await DB_Tags.create( { DisplayName } );
+			await MongoTags.create( { DisplayName } );
 			return "Tag created";
 		} catch( e ) {
 			handleTRCPErr( e );
@@ -46,7 +46,7 @@ export const admin_tags = router( {
 	} ) ).mutation( async( { input } ) => {
 		const { DisplayName, id } = input;
 		try {
-			await DB_Tags.findByIdAndUpdate( id, { DisplayName } );
+			await MongoTags.findByIdAndUpdate( id, { DisplayName } );
 			return "Tag modified";
 		} catch( e ) {
 			handleTRCPErr( e );
@@ -59,9 +59,9 @@ export const admin_tags = router( {
 	} ) ).mutation( async( { input } ) => {
 		const { id } = input;
 		try {
-			await DB_Tags.findByIdAndDelete( id );
-			await DB_BlueprintPacks.updateMany( { tags: { $in: [ id ] } }, { $pull: { tags: id } } );
-			await DB_Blueprints.updateMany( { tags: { $in: [ id ] } }, { $pull: { tags: id } } );
+			await MongoTags.findByIdAndDelete( id );
+			await MongoBlueprintPacks.updateMany( { tags: { $in: [ id ] } }, { $pull: { tags: id } } );
+			await MongoBlueprints.updateMany( { tags: { $in: [ id ] } }, { $pull: { tags: id } } );
 			return "Tag deleted";
 		} catch( e ) {
 			handleTRCPErr( e );

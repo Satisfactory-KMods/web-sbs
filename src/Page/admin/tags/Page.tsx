@@ -2,7 +2,7 @@ import PageManager from "@app/Components/Main/PageManager";
 import TagRow from "@app/Components/admin/TagRow";
 import { LoadingButton } from "@app/Components/elements/Buttons";
 import { SBSInput } from "@app/Components/elements/Inputs";
-import { successSwal, tRPC_Auth, tRPC_handleError } from "@app/Lib/tRPC";
+import { successSwal, tRPCAuth, tRPCHandleError } from "@app/Lib/tRPC";
 import type { TagAdminLoaderData } from "@app/Page/admin/tags/Loader";
 import { useRawPageHandler } from "@app/hooks/useRawPageHandler";
 import { usePageTitle } from "@kyri123/k-reactutils";
@@ -22,7 +22,7 @@ const Component: FunctionComponent = () => {
 	const [ isFetching, setIsFetching ] = useState( false );
 
 	const onPageChange: Parameters<typeof useRawPageHandler>[1] = async( options ) => {
-		const response = await tRPC_Auth.adminTags.list.query( options ).catch( tRPC_handleError );
+		const response = await tRPCAuth.adminTags.list.query( options ).catch( tRPCHandleError );
 		if( response ) {
 			setData( response.data );
 			setTotal( response.count );
@@ -33,9 +33,9 @@ const Component: FunctionComponent = () => {
 
 	const createTag = async() => {
 		setIsFetching( true );
-		await tRPC_Auth.adminTags.create.mutate( { DisplayName } )
+		await tRPCAuth.adminTags.create.mutate( { DisplayName } )
 			.then( successSwal )
-			.catch( tRPC_handleError );
+			.catch( tRPCHandleError );
 		await doFetch();
 		setIsFetching( false );
 	};

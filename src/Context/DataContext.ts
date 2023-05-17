@@ -1,5 +1,5 @@
-import type { Mod } from "@server/MongoDB/DB_Mods";
-import type { Tag } from "@server/MongoDB/DB_Tags";
+import type { Mod } from "@server/MongoDB/MongoMods";
+import type { Tag } from "@server/MongoDB/MongoTags";
 import { createContext } from "react";
 
 export default createContext( {

@@ -1,6 +1,6 @@
 import PageManager from "@app/Components/Main/PageManager";
 import UserRow from "@app/Components/admin/UserRow";
-import { tRPC_Auth, tRPC_handleError } from "@app/Lib/tRPC";
+import { tRPCAuth, tRPCHandleError } from "@app/Lib/tRPC";
 import type { UserAdminLoaderData } from "@app/Page/admin/users/Loader";
 import { useRawPageHandler } from "@app/hooks/useRawPageHandler";
 import { usePageTitle } from "@kyri123/k-reactutils";
@@ -17,7 +17,7 @@ const Component: FunctionComponent = () => {
 	const [ data, setData ] = useState( () => users );
 
 	const onPageChange: Parameters<typeof useRawPageHandler>[1] = async( options ) => {
-		const response = await tRPC_Auth.adminUsers.listUsers.query( options ).catch( tRPC_handleError );
+		const response = await tRPCAuth.adminUsers.listUsers.query( options ).catch( tRPCHandleError );
 		if( response ) {
 			setData( response.data );
 			setTotal( response.count );

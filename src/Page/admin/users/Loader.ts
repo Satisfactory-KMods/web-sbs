@@ -1,8 +1,8 @@
-import { tRPC_Auth, tRPC_handleError } from '@app/Lib/tRPC';
+import { tRPCAuth, tRPCHandleError } from '@app/Lib/tRPC';
 import { ERoles } from "@app/Shared/Enum/ERoles";
 import type { LoaderDataBase } from '@app/Types/loader';
 import { LoginRule, validateLogin } from "@applib/loaderHelper";
-import type { ClientUserAccount } from "@server/MongoDB/DB_UserAccount";
+import type { ClientUserAccount } from "@server/MongoDB/MongoUserAccount";
 import type { LoaderFunction } from "react-router-dom";
 import { json } from "react-router-dom";
 
@@ -16,7 +16,7 @@ const loader: LoaderFunction = async( { params, request } ) => {
 	if( result instanceof Response ) {
 		return result;
 	}
-	const response = await tRPC_Auth.adminUsers.listUsers.query( { limit: 10 } ).catch( tRPC_handleError );
+	const response = await tRPCAuth.adminUsers.listUsers.query( { limit: 10 } ).catch( tRPCHandleError );
 	const users: ClientUserAccount[] = response?.data || [];
 	const totalTags = response?.count || 0;
 

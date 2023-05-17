@@ -1,5 +1,5 @@
-import DB_SessionToken from "@server/MongoDB/DB_SessionToken";
-import DB_UserAccount from "@server/MongoDB/DB_UserAccount";
+import MongoSessionToken from "@server/MongoDB/MongoSessionToken";
+import MongoUserAccount from "@server/MongoDB/MongoUserAccount";
 import {
 	handleTRCPErr,
 	publicProcedure
@@ -8,7 +8,7 @@ import { TRPCError } from "@trpc/server";
 import _ from "lodash";
 import { z } from "zod";
 
-export const auth_updateAccount =
+export const authUpdateAccount =
 	publicProcedure.input( z.object( {
 		username: z.string().min( 6, { message: "Username is to short." } ).optional(),
 		email: z.string().email( { message: "Email is invalid." } ).optional(),
@@ -17,16 +17,16 @@ export const auth_updateAccount =
 		const { userClass } = ctx;
 		const { password, email, username } = input;
 		try {
-			const userDocument = await DB_UserAccount.findById( userClass.Get._id );
+			const userDocument = await MongoUserAccount.findById( userClass.Get._id );
 			if( userDocument ) {
-				if( username && !_.isEqual( username, userClass.Get.username ) && await DB_UserAccount.exists( { username } ) ) {
+				if( username && !_.isEqual( username, userClass.Get.username ) && await MongoUserAccount.exists( { username } ) ) {
 					throw new TRPCError( {
 						message: "An account with this username already exists and cant be used.",
 						code: "BAD_REQUEST"
 					} );
 				}
 
-				if( email && !_.isEqual( email, userClass.Get.email ) && await DB_UserAccount.exists( { email } ) ) {
+				if( email && !_.isEqual( email, userClass.Get.email ) && await MongoUserAccount.exists( { email } ) ) {
 					throw new TRPCError( {
 						message: "An account with this e-mail already exists and cant be used.",
 						code: "BAD_REQUEST"
@@ -38,7 +38,7 @@ export const auth_updateAccount =
 				password && userDocument.setPassword( password );
 
 				if( await userDocument.save() ) {
-					await DB_SessionToken.deleteMany( { userid: userClass.Get._id } );
+					await MongoSessionToken.deleteMany( { userid: userClass.Get._id } );
 					return "Account created you will logged out!";
 				}
 			}

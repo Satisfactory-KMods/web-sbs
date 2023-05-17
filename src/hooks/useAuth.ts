@@ -1,8 +1,8 @@
 import { AUTHTOKEN } from "@applib/constance";
 import {
 	fireSwalFromApi,
-	tRPC_Auth,
-	tRPC_handleError
+	tRPCAuth,
+	tRPCHandleError
 } from "@applib/tRPC";
 import AuthContext from "@context/AuthContext";
 import { useLocalStorage } from "@kyri123/k-reactutils";
@@ -15,13 +15,13 @@ export function useAuth() {
 	const { loggedIn, user } = useContext( AuthContext );
 
 	const logout = async( preventSwal?: boolean ) => {
-		return tRPC_Auth.logout.mutate().then( async msg => {
+		return tRPCAuth.logout.mutate().then( async msg => {
 			ResetStorage();
 			if( !preventSwal ) {
 				await fireSwalFromApi( msg, true );
 				navigate( 0 );
 			}
-		} ).catch( tRPC_handleError );
+		} ).catch( tRPCHandleError );
 	};
 
 	const setToken = ( token: string ) => {

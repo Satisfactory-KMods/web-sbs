@@ -1,10 +1,10 @@
 import type { LoaderDataBase } from "@app/Types/loader";
 import { validateLogin } from "@applib/loaderHelper";
 import {
-	tRPC_Public,
-	tRPC_handleError
+	tRPCHandleError,
+	tRPCPublic
 } from "@applib/tRPC";
-import type { BlueprintData } from "@server/MongoDB/DB_Blueprints";
+import type { BlueprintData } from "@server/MongoDB/MongoBlueprints";
 import type { LoaderFunction } from "react-router-dom";
 import { json } from "react-router-dom";
 
@@ -18,7 +18,7 @@ export const loader: LoaderFunction = async( { params, request } ) => {
 	if( result instanceof Response ) {
 		return result;
 	}
-	const Blueprints = await tRPC_Public.blueprint.getBlueprints.query( { limit: 10 } ).catch( tRPC_handleError );
+	const Blueprints = await tRPCPublic.blueprint.getBlueprints.query( { limit: 10 } ).catch( tRPCHandleError );
 	let blueprints: BlueprintData[] = [];
 	let totalBlueprints = 0;
 	if( Blueprints ) {

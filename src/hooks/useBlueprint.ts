@@ -1,10 +1,10 @@
 import DataContext from "@app/Context/DataContext";
-import { fireSwalFromApi, onConfirm, successSwal, tRPC_Auth, tRPC_Public, tRPC_handleError } from "@app/Lib/tRPC";
+import { fireSwalFromApi, onConfirm, successSwal, tRPCAuth, tRPCHandleError, tRPCPublic } from "@app/Lib/tRPC";
 import type { Blueprint } from "@etothepii/satisfactory-file-parser";
 import { useAuth } from "@hooks/useAuth";
 import type { Mod } from "@kyri123/lib";
-import type { BlueprintData } from "@server/MongoDB/DB_Blueprints";
-import type { Tag } from "@server/MongoDB/DB_Tags";
+import type { BlueprintData } from "@server/MongoDB/MongoBlueprints";
+import type { Tag } from "@server/MongoDB/MongoTags";
 import { EDesignerSize } from "@shared/Enum/EDesignerSize";
 import { ERoles } from "@shared/Enum/ERoles";
 import _ from "lodash";
@@ -70,7 +70,7 @@ export function useBlueprint( InitValue: string | BlueprintData, defaultUser?: {
 	};
 
 	const QueryBlueprintParse = async() => {
-		const Result = await tRPC_Public.blueprint.readBlueprint.mutate( { blueprintId: BlueprintID } ).catch( () => {} );
+		const Result = await tRPCPublic.blueprint.readBlueprint.mutate( { blueprintId: BlueprintID } ).catch( () => {} );
 
 		if( Result ) {
 			setBlueprintData( Result );
@@ -79,8 +79,8 @@ export function useBlueprint( InitValue: string | BlueprintData, defaultUser?: {
 
 	const Query = async() => {
 		const [ blueprintData, Result ] = await Promise.all( [
-			tRPC_Public.blueprint.readBlueprint.mutate( { blueprintId: BlueprintID } ).catch( () => {} ),
-			tRPC_Public.blueprint.getBlueprint.query( { blueprintId: BlueprintID } ).catch( () => {} )
+			tRPCPublic.blueprint.readBlueprint.mutate( { blueprintId: BlueprintID } ).catch( () => {} ),
+			tRPCPublic.blueprint.getBlueprint.query( { blueprintId: BlueprintID } ).catch( () => {} )
 		] );
 		blueprintData && setBlueprintData( blueprintData );
 		if( Result ) {
@@ -125,9 +125,9 @@ export function useBlueprint( InitValue: string | BlueprintData, defaultUser?: {
 
 
 		if( await onConfirm( "Do you really want to remove that Blueprint?" ) ) {
-			const result = await tRPC_Auth.blueprints.toggleBlueprint.mutate( { blueprintId: BlueprintID } )
+			const result = await tRPCAuth.blueprints.toggleBlueprint.mutate( { blueprintId: BlueprintID } )
 				.then( successSwal )
-				.catch( tRPC_handleError );
+				.catch( tRPCHandleError );
 
 			return !!result;
 		}
@@ -145,9 +145,9 @@ export function useBlueprint( InitValue: string | BlueprintData, defaultUser?: {
 		}
 
 		if( await onConfirm( "Do you really want to remove that Blueprint?" ) ) {
-			const result = await tRPC_Auth.blueprints.deleteBlueprint.mutate( { blueprintId: BlueprintID } )
+			const result = await tRPCAuth.blueprints.deleteBlueprint.mutate( { blueprintId: BlueprintID } )
 				.then( successSwal )
-				.catch( tRPC_handleError );
+				.catch( tRPCHandleError );
 
 			return !!result;
 		}

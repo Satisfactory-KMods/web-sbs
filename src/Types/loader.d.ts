@@ -1,4 +1,4 @@
-import type { BlueprintData } from "@server/MongoDB/DB_Blueprints";
+import type { BlueprintData } from "@server/MongoDB/MongoBlueprints";
 import type { User } from "@shared/Class/User.Class";
 
 export interface LoaderDataBase {

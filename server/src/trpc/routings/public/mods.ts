@@ -1,5 +1,5 @@
-import type { Mod } from "@server/MongoDB/DB_Mods";
-import DB_Mods from "@server/MongoDB/DB_Mods";
+import type { Mod } from "@server/MongoDB/MongoMods";
+import MongoMods from "@server/MongoDB/MongoMods";
 import {
 	handleTRCPErr,
 	publicProcedure,
@@ -7,10 +7,10 @@ import {
 } from "@server/trpc/trpc";
 import { TRPCError } from "@trpc/server";
 
-export const public_mods = router( {
+export const publicMods = router( {
 	getMods: publicProcedure.query( async() => {
 		try {
-			const mods = await DB_Mods.find<Mod>();
+			const mods = await MongoMods.find<Mod>();
 			if( mods ) {
 				return mods;
 			}

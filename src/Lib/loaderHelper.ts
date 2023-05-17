@@ -1,6 +1,6 @@
 import type { LoaderBlueprintBase, LoaderDataBase } from "@app/Types/loader";
 import { AUTHTOKEN } from "@applib/constance";
-import { tRPC_Public } from "@applib/tRPC";
+import { tRPCPublic } from "@applib/tRPC";
 import type { LoaderFunctionArgs } from "@remix-run/router/utils";
 import { User } from "@shared/Class/User.Class";
 import { ERoles } from "@shared/Enum/ERoles";
@@ -18,7 +18,7 @@ const validateLogin = async( {
 	request
 }: LoaderFunctionArgs, loggedInRule = LoginRule.DontCare, redirectTo = "/error/401", role?: ERoles ): Promise<LoaderDataBase | Response> => {
 	const token = window.localStorage.getItem( AUTHTOKEN ) || "";
-	const Response = await tRPC_Public.validate.query( { token } ).catch( console.warn );
+	const Response = await tRPCPublic.validate.query( { token } ).catch( console.warn );
 
 	const loggedIn = !!Response?.tokenValid;
 
@@ -55,7 +55,7 @@ const validateBlueprint = async( {
 	const { blueprintId } = params;
 	const blueprintOwner = { id: "", username: "" };
 
-	const result = await tRPC_Public.blueprint.getBlueprint.query( { blueprintId: blueprintId! } );
+	const result = await tRPCPublic.blueprint.getBlueprint.query( { blueprintId: blueprintId! } );
 	if( !result ) {
 		redirect( redirectTo );
 	}

@@ -1,7 +1,7 @@
 import {
 	fireSwalFromApi,
-	tRPC_Auth,
-	tRPC_handleError
+	tRPCAuth,
+	tRPCHandleError
 } from "@applib/tRPC";
 import { useAuth } from "@hooks/useAuth";
 import { usePageTitle } from "@kyri123/k-reactutils";
@@ -52,7 +52,7 @@ const Component: FunctionComponent = () => {
 		}
 
 		setIsSending( true );
-		const response = await tRPC_Auth.updateAccount.mutate( sendData ).catch( tRPC_handleError );
+		const response = await tRPCAuth.updateAccount.mutate( sendData ).catch( tRPCHandleError );
 
 		if( response ) {
 			await logout( false );
