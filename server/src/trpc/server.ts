@@ -30,8 +30,8 @@ const authRouter = router( {
 	blueprints: authBlueprints,
 	updateAccount: authUpdateAccount,
 	logout: authLogout,
-	adminTags: adminTags,
-	adminUsers: adminUsers
+	adminTags,
+	adminUsers
 } );
 
 

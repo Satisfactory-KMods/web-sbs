@@ -9,7 +9,7 @@
     "dev": "concurrently -m 2 \"vite --host --port 3000\" \"nodemon\"",
     "build": "yarn build.lint && yarn build.vite",
     "build.lint": "concurrently -m 2 \"eslint src --fix\" \"eslint server/src --fix\"",
-    "build.vite": "concurrently -m 2 \"tsc --project ./server/tsconfig.json\" \"vite build\""
+    "build.vite": "concurrently \"tsc --project ./server/tsconfig.json\" \"vite build\""
   },
   "dependencies": {
     "@etothepii/satisfactory-file-parser": "^0.0.34",
