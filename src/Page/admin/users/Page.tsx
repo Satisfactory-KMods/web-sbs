@@ -31,7 +31,7 @@ const Component: FunctionComponent = () => {
 	return (
 		<div className="flex flex-col">
 			<div className="w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-				<div className="bg-gray-700 p-3 text-2xl font-semibold text-neutral-300 border-b border-gray-600">
+				<div className="bg-gray-700 p-3 text-2xl font-semibold rounded-t-lg text-neutral-300 border-b border-gray-600">
 					Admin: Users
 				</div>
 			</div>
