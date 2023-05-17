@@ -122,7 +122,7 @@ const BlueprintSchema = new mongoose.Schema( {
 				return true;
 			} catch( e ) {
 				if( e instanceof Error ) {
-					SystemLib.LogError( e.message );
+					SystemLib.LogError( "mongo", e.message );
 				}
 			}
 			return false;
@@ -154,7 +154,7 @@ const BlueprintSchema = new mongoose.Schema( {
 				}
 			} catch( e ) {
 				if( e instanceof Error ) {
-					SystemLib.LogError( e.message );
+					SystemLib.LogError( "mongo", e.message );
 				}
 			}
 		}
@@ -201,7 +201,7 @@ const BlueprintPackSchema = new mongoose.Schema( {
 				return true;
 			} catch( e ) {
 				if( e instanceof Error ) {
-					SystemLib.LogError( e.message );
+					SystemLib.LogError( "mongo", e.message );
 				}
 			}
 			return false;

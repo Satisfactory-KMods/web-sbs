@@ -30,7 +30,7 @@ export class BlueprintClass<T extends boolean = false> {
 			this.data =  await MongoBlueprints.findById( this.id ) as IfClass<T, BlueprintData>;
 		} catch( e ) {
 			if( e instanceof Error ) {
-				SystemLib.LogError( e.message );
+				SystemLib.LogError( "blueprint", e.message );
 			}
 		}
 	}
@@ -52,7 +52,7 @@ export class BlueprintClass<T extends boolean = false> {
 					}
 				} catch( e ) {
 					if( e instanceof Error ) {
-						SystemLib.LogError( e.message );
+						SystemLib.LogError( "blueprint", e.message );
 					}
 				}
 			}

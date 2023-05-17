@@ -33,6 +33,7 @@ Api.use( bodyParser.urlencoded( { extended: true } ) );
 Api.use( express.static( path.join( __BaseDir, "../..", "build" ), { extensions: [ "js" ] } ) );
 
 Api.use( ( req, res, next ) => {
+	SystemLib.DebugLog( "routing", req.method, req.url );
 	res.setHeader( "Access-Control-Allow-Origin", "*" );
 	res.setHeader( "Access-Control-Allow-Methods", "GET, POST" );
 	res.setHeader( "Access-Control-Allow-Headers", "X-Requested-With,content-type" );

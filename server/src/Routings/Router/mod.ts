@@ -43,7 +43,7 @@ export default function() {
 			return res.json( { blueprints, totalBlueprints } );
 		} catch( e ) {
 			if( e instanceof Error ) {
-				SystemLib.LogError( e.message );
+				SystemLib.LogError( "api", e.message );
 			}
 		}
 
@@ -57,7 +57,7 @@ export default function() {
 			return res.json( { tags: tags.map( e => ( { _id: e._id.toString(), DisplayName: e.DisplayName } ) ) } );
 		} catch( e ) {
 			if( e instanceof Error ) {
-				SystemLib.LogError( e.message );
+				SystemLib.LogError( "api", e.message );
 			}
 		}
 
@@ -102,7 +102,7 @@ export default function() {
 			return res.json( { blueprints, totalBlueprints } );
 		} catch( e ) {
 			if( e instanceof Error ) {
-				SystemLib.LogError( e.message );
+				SystemLib.LogError( "api", e.message );
 			}
 		}
 

@@ -1,6 +1,7 @@
 import * as console from "console";
 import * as dotenv from "dotenv";
 import fs from "fs";
+import path from "path";
 import process from "process";
 import Util from "util";
 
@@ -45,6 +46,20 @@ export class systemLibClass {
 			dotenv.config( {
 				path: ".env.local"
 			} );
+		}
+
+		const MaxFiles = 10;
+		let counter = 0;
+		for( const file of fs.readdirSync( path.join( __MountDir, "Logs" ) ).sort( ( a, b ) => {
+			const A = parseInt( a.replace( ".log", "" ) );
+			const B = parseInt( b.replace( ".log", "" ) );
+			return B - A;
+		} ) ) {
+			counter++;
+			if( MaxFiles <= counter ) {
+				fs.rmSync( path.join( __MountDir, "Logs", file ), { recursive: true } );
+				this.LogWarning( "SYSTEM", "Remove old log file:", path.join( __MountDir, "Logs", file ) );
+			}
 		}
 	}
 

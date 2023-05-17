@@ -48,7 +48,7 @@ export default function() {
 				}
 			} catch( e ) {
 				if( e instanceof Error ) {
-					SystemLib.LogError( e.message );
+					SystemLib.LogError( "api", e.message );
 				}
 			}
 		}
@@ -92,7 +92,7 @@ export default function() {
 
 				if( await MongoBlueprints.exists( { originalName: blueprint.originalName } ) ) {
 					fs.rmSync( blueprintDir, { recursive: true } );
-					res.status( 500 ).json( errorResponse( "Blueprint with this name is allready in our Database. Please use a other filename!", res ) );
+					return res.status( 500 ).json( errorResponse( "Blueprint with this name is allready in our Database. Please use a other filename!", res ) );
 				}
 
 				if( await blueprint.save() ) {
@@ -105,11 +105,11 @@ export default function() {
 			}
 		} catch( e ) {
 			if( e instanceof Error ) {
-				SystemLib.LogError( e.message );
+				SystemLib.LogError( "api", e.message );
 			}
 		}
 
-		res.status( 500 ).json( errorResponse( "Something goes wrong!", res ) );
+		return res.status( 500 ).json( errorResponse( "Something goes wrong!", res ) );
 	} );
 
 	Router.post( ApiUrl( EApiBlueprintUtils.edit ), upload.fields( [ { name: 'sbp', maxCount: 1 }, { name: 'sbpcfg', maxCount: 1 }, { name: 'images', maxCount: 5 } ] ), MWAuth, async( req: ExpressRequest<{
@@ -183,10 +183,10 @@ export default function() {
 			}
 		} catch( e ) {
 			if( e instanceof Error ) {
-				SystemLib.LogError( e.message );
+				SystemLib.LogError( "api", e.message );
 			}
 		}
 
-		res.status( 500 ).json( errorResponse( "Something goes wrong!", res ) );
+		return res.status( 500 ).json( errorResponse( "Something goes wrong!", res ) );
 	} );
 }
