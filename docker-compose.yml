@@ -8,11 +8,11 @@ services:
       - ../.SBS.env
     environment:
       - HTTPPORT=${DOCKER_PORT}
-      - MONGOMongoPORT=${DOCKER_MONGOMongoPORT}
-      - MONGOMongoHOST=mongodb
-      - MONGOMongoUSER=${DOCKER_MOGNOMongoUSERNAME}
-      - MONGOMongoPASSWD=${DOCKER_MOGNOMongoPASSWORD}
-      - MONGOMongoDATABASE=${DOCKER_DATABASE}
+      - MONGODB_PORT=${DOCKER_MONGODB_PORT}
+      - MONGODB_HOST=mongodb
+      - MONGODB_USER=${DOCKER_MONGODB_USERNAME}
+      - MONGODB_PASSWD=${DOCKER_MONGODB_PASSWORD}
+      - MONGODB_DATABASE=${DOCKER_DATABASE}
     volumes:
       # config for the cashboard if you want to edit that copy to a other path and mount it to here.
       - ./mount/files:/mount/

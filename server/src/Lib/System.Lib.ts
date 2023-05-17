@@ -24,22 +24,17 @@ export type BashColorString =
 
 export class systemLibClass {
 	public readonly IsDevMode: boolean;
-	private readonly UseDebug: boolean;
 
 	static IsDev(): boolean {
 		return process.env.NODE_ENV !== "production";
 	}
 
 	constructor() {
-		this.IsDevMode = process.argv[ 2 ] === "true";
-		this.UseDebug =
-			process.argv[ 2 ] === "true" ||
-			process.argv[ 2 ] === "Debug" ||
-			process.argv[ 2 ] === "development";
+		this.IsDevMode = systemLibClass.IsDev();
 
 		this.DebugLog( "SYSTEM", "Try to load:", ".env" );
 		dotenv.config();
-		if( systemLibClass.IsDev() ) {
+		if( this.IsDevMode ) {
 			this.DebugLog( "SYSTEM", "Try to load:", ".env.dev" );
 			dotenv.config( {
 				path: ".env.dev"
@@ -53,7 +48,7 @@ export class systemLibClass {
 	}
 
 	public DebugMode(): boolean {
-		return this.UseDebug;
+		return this.IsDevMode;
 	}
 
 	static TBC( String: BashColorString ) {
