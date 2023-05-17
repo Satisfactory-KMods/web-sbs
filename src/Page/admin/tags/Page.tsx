@@ -17,12 +17,8 @@ const Component: FunctionComponent = () => {
 	usePageTitle( `SBS - Admin: Tags` );
 	const { tags, totalTags } = useLoaderData() as TagAdminLoaderData;
 
-	const [ total, setTotal ] = useState( () => {
-		return totalTags;
-	} );
-	const [ data, setData ] = useState( () => {
-		return tags;
-	} );
+	const [ total, setTotal ] = useState( () => totalTags );
+	const [ data, setData ] = useState( () => tags );
 	const [ DisplayName, setDisplayName ] = useState( "" );
 	const [ isFetching, setIsFetching ] = useState( false );
 
@@ -34,9 +30,7 @@ const Component: FunctionComponent = () => {
 		}
 	};
 	const { setPage, currentPage, maxPage, filterOption } = useRawPageHandler( total, onPageChange, 20 );
-	const doFetch = async() => {
-		return onPageChange( filterOption );
-	};
+	const doFetch = async() => onPageChange( filterOption );
 
 	const createTag = async() => {
 		setIsFetching( true );
@@ -55,9 +49,7 @@ const Component: FunctionComponent = () => {
 				</div>
 				<div className="flex gap-2 p-3">
 					<SBSInput label="Display Name" value={ DisplayName } mainClassName="flex-1"
-						onChange={ ( e: any ) => {
-							return setDisplayName( e.target.value );
-						} } />
+						onChange={ ( e: any ) => setDisplayName( e.target.value ) } />
 					<LoadingButton color="green" isLoading={ isFetching } onClick={ createTag } Icon={ FaPlus } disabled={ DisplayName.clearWs().length < 1 } >Add Tag</LoadingButton>
 				</div>
 			</div>
@@ -78,9 +70,7 @@ const Component: FunctionComponent = () => {
 						</Table.HeadCell>
 					</Table.Head>
 					<Table.Body>
-						{ data.map( tag => {
-							return <TagRow key={ tag._id } data={ tag } doFetch={ doFetch } />;
-						} ) }
+						{ data.map( tag => <TagRow key={ tag._id } data={ tag } doFetch={ doFetch } /> ) }
 					</Table.Body>
 				</Table>
 			</div>

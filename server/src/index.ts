@@ -90,11 +90,9 @@ mongoose
 		global.TaskManager = new TaskManagerClass();
 		await TaskManager.Init();
 
-		HttpServer.listen( parseInt( process.env.HTTPPORT as string ), async() => {
-			return SystemLib.Log( "start",
-				"API listen on port",
-				process.env.HTTPPORT
-			);
-		}
+		HttpServer.listen( parseInt( process.env.HTTPPORT as string ), async() => SystemLib.Log( "start",
+			"API listen on port",
+			process.env.HTTPPORT
+		)
 		);
 	} );

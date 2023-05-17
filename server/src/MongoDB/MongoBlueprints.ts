@@ -108,9 +108,7 @@ const BlueprintSchema = new mongoose.Schema( {
 		updateRating: async function() {
 			const findRating = () => {
 				const totalRating = this.rating.length * 5;
-				const currentTotalRating = this.rating.reduce( ( total, rating ) => {
-					return total + rating.rating;
-				}, 0 );
+				const currentTotalRating = this.rating.reduce( ( total, rating ) => total + rating.rating, 0 );
 				const currRating = Math.round( currentTotalRating / totalRating * 5 * 100 ) / 100;
 				return !isNaN( currRating ) ? currRating : 0;
 			};
@@ -189,9 +187,7 @@ const BlueprintPackSchema = new mongoose.Schema( {
 		updateRating: async function() {
 			const findRating = () => {
 				const totalRating = this.rating.length * 5;
-				const currentTotalRating = this.rating.reduce( ( total, rating ) => {
-					return total + rating.rating;
-				}, 0 );
+				const currentTotalRating = this.rating.reduce( ( total, rating ) => total + rating.rating, 0 );
 				const currRating = Math.round( currentTotalRating / totalRating * 5 * 100 ) / 100;
 				return !isNaN( currRating ) ? currRating : 0;
 			};

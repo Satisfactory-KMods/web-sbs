@@ -35,9 +35,7 @@ export default function() {
 				if( copy.tags.length > 0 ) {
 					const tags = await MongoTags.find( { _id: { $in: copy.tags } } );
 					// @ts-ignore
-					copy.tags = tags.map( e => {
-						return  { DisplayName: e.DisplayName, _id: e._id.toString() };
-					} );
+					copy.tags = tags.map( e => ( { DisplayName: e.DisplayName, _id: e._id.toString() } ) );
 				}
 				blueprints.push( copy );
 			}
@@ -57,9 +55,7 @@ export default function() {
 	Router.post( ApiUrl( "mod/gettags" ), MWRest, async( req: ExpressRequest, res: Response ) => {
 		try {
 			const tags = await MongoTags.find();
-			return res.json( { tags: tags.map( e => {
-				return  { _id: e._id.toString(), DisplayName: e.DisplayName };
-			} ) } );
+			return res.json( { tags: tags.map( e => ( { _id: e._id.toString(), DisplayName: e.DisplayName } ) ) } );
 		} catch( e ) {
 			if( e instanceof Error ) {
 				SystemLib.LogError( e.message );
@@ -95,15 +91,11 @@ export default function() {
 				if( copy.tags.length > 0 ) {
 					const tags = await MongoTags.find( { _id: { $in: copy.tags } } );
 					// @ts-ignore
-					copy.tags = tags.map( e => {
-						return  { DisplayName: e.DisplayName, _id: e._id.toString() };
-					} );
+					copy.tags = tags.map( e => ( { DisplayName: e.DisplayName, _id: e._id.toString() } ) );
 				}
 				if( Blueprints.length > 0 ) {
 					// @ts-ignore
-					copy.blueprints = Blueprints.map( e => {
-						return  { _id: e._id.toString(), name: e.name, iconData: e.iconData! };
-					} );
+					copy.blueprints = Blueprints.map( e => ( { _id: e._id.toString(), name: e.name, iconData: e.iconData! } ) );
 				}
 				blueprints.push( copy );
 			}
@@ -119,8 +111,6 @@ export default function() {
 		return res.sendStatus( 500 );
 	} );
 
-	Router.post( ApiUrl( "mod/authcheck" ), MWRest, MWRestUser, async( req: ExpressRequest, res: Response ) => {
-		return res.status( 200 ).json( { success: true } );
-	} );
+	Router.post( ApiUrl( "mod/authcheck" ), MWRest, MWRestUser, async( req: ExpressRequest, res: Response ) => res.status( 200 ).json( { success: true } ) );
 }
 

@@ -67,36 +67,28 @@ const Component: FunctionComponent = () => {
 								<Label htmlFor="login" value="Your username" />
 							</div>
 							<TextInput id="login" type="text" placeholder="Super Mario" required={ true }
-							           onChange={ e => {
-									return setUsername( e.target.value );
-								} } />
+							           onChange={ e => setUsername( e.target.value ) } />
 						</div>
 						<div>
 							<div className="mb-2 block">
 								<Label htmlFor="email" value="Your email" />
 							</div>
 							<TextInput id="email" type="email" placeholder="kmods@example.com" required={ true }
-							           onChange={ e => {
-									return setEmail( e.target.value );
-								} } />
+							           onChange={ e => setEmail( e.target.value ) } />
 						</div>
 						<div>
 							<div className="mb-2 block">
 								<Label htmlFor="password" value="Password" />
 							</div>
 							<TextInput id="password" type="password" placeholder="Password123" required={ true }
-							           onChange={ e => {
-									return setPassword( e.target.value );
-								} } />
+							           onChange={ e => setPassword( e.target.value ) } />
 						</div>
 						<div>
 							<div className="mb-2 block">
 								<Label htmlFor="password2" value="Repeat Password" />
 							</div>
 							<TextInput id="password2" type="password" placeholder="Password123" required={ true }
-							           onChange={ e => {
-									return setPassword2( e.target.value );
-								} } />
+							           onChange={ e => setPassword2( e.target.value ) } />
 						</div>
 						<hr className="border-gray-600" />
 						<div className="flex items-center justify-between">

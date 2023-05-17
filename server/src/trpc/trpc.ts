@@ -80,15 +80,13 @@ const isModOrOwnerMiddleware = middleware( async opts => {
 } );
 
 // check if we have a role for example for admin actions or something else
-const roleMiddleware = ( role: ERoles ) => {
-	return middleware( async opts => {
-		const { ctx } = opts;
-		if( !ctx.userClass.HasPermission( role ) ) {
-			throw new TRPCError( { code: 'UNAUTHORIZED' } );
-		}
-		return opts.next();
-	} );
-};
+const roleMiddleware = ( role: ERoles ) => middleware( async opts => {
+	const { ctx } = opts;
+	if( !ctx.userClass.HasPermission( role ) ) {
+		throw new TRPCError( { code: 'UNAUTHORIZED' } );
+	}
+	return opts.next();
+} );
 
 export const router = t.router;
 export const publicProcedure = t.procedure;

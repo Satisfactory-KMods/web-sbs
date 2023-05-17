@@ -42,7 +42,7 @@ module.exports = {
 
 		"prefer-arrow-callback": "error",
 		"no-useless-computed-key": "error",
-		"arrow-body-style": [ "error", "always" ],
+		"arrow-body-style": [ "error", "as-needed" ],
 		"semi-style": [ "error", "last" ],
 		"semi-spacing": "error",
 		"comma-spacing": "off",

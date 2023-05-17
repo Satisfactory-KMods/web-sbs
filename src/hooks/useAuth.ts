@@ -15,15 +15,13 @@ export function useAuth() {
 	const { Storage, SetStorage, ResetStorage } = useLocalStorage( AUTHTOKEN, "" );
 	const { loggedIn, user } = useContext( AuthContext );
 
-	const logout = async( preventSwal?: boolean ) => {
-		return tRPCAuth.logout.mutate().then( async msg => {
-			ResetStorage();
-			if( !preventSwal ) {
-				await fireSwalFromApi( msg, true );
-				navigate( 0 );
-			}
-		} ).catch( tRPCHandleError );
-	};
+	const logout = async( preventSwal?: boolean ) => tRPCAuth.logout.mutate().then( async msg => {
+		ResetStorage();
+		if( !preventSwal ) {
+			await fireSwalFromApi( msg, true );
+			navigate( 0 );
+		}
+	} ).catch( tRPCHandleError );
 
 	const setToken = ( token: string ) => {
 		SetStorage( token );

@@ -10,9 +10,7 @@ export async function InstallRoutings( Dir: string ) {
 			await InstallRoutings( DirTarget );
 		} else {
 			await import( DirTarget ).then(
-				Module => {
-					return Module.default();
-				}
+				Module => Module.default()
 			);
 		}
 	}

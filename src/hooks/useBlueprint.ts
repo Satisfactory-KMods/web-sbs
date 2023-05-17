@@ -44,9 +44,7 @@ export function useBlueprint( InitValue: string | BlueprintData, defaultUser?: {
 	const [ blueprintData, setBlueprintData ] = useState<Blueprint | undefined>( Config?.blueprint );
 	const [ Tags, setTags ] = useState<Tag[]>( [] );
 	const [ Mods, setMods ] = useState<Mod[]>( [] );
-	const [ owner, setOwner ] = useState<{ id: string, username: string }>( () => {
-		return defaultUser || { id: "", username: "" };
-	} );
+	const [ owner, setOwner ] = useState<{ id: string, username: string }>( () => defaultUser || { id: "", username: "" } );
 
 	const BlueprintID = useMemo( () => {
 		if( typeof InitValue === "string" ) {
@@ -55,9 +53,7 @@ export function useBlueprint( InitValue: string | BlueprintData, defaultUser?: {
 		return InitValue._id;
 	}, [ InitValue ] );
 
-	const isOwner = useMemo( () => {
-		return user.Get._id === owner.id;
-	}, [ owner.id, user.Get._id ] );
+	const isOwner = useMemo( () => user.Get._id === owner.id, [ owner.id, user.Get._id ] );
 
 	const isValid = useMemo( () => {
 		if( Config?.IgnoreBlacklisted ) {
@@ -68,12 +64,8 @@ export function useBlueprint( InitValue: string | BlueprintData, defaultUser?: {
 
 	const updateData = ( newData?: BlueprintData ) => {
 		const blueprintData = newData || Blueprint;
-		setTags( tags.filter( e => {
-			return blueprintData.tags.includes( e._id );
-		} ) );
-		setMods( mods.filter( e => {
-			return blueprintData.mods.includes( e.mod_reference );
-		} ) );
+		setTags( tags.filter( e => blueprintData.tags.includes( e._id ) ) );
+		setMods( mods.filter( e => blueprintData.mods.includes( e.mod_reference ) ) );
 	};
 
 	const QueryBlueprintParse = async() => {

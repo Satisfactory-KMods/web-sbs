@@ -30,9 +30,7 @@ export default function() {
 			const ZipFile = path.join( __MountDir, "Zips", id, `${ BPName }.zip` );
 			const AsOnly = path.join( __MountDir, "Zips", id, `${ BPName }.${ only }` );
 
-			if( !DownloadIPCached.find( R => {
-				return R.id === blueprint._id.toString() && R.ip === req.ip;
-			} ) ) {
+			if( !DownloadIPCached.find( R => R.id === blueprint._id.toString() && R.ip === req.ip ) ) {
 				if( !blueprint.downloads ) {
 					blueprint.downloads = 0;
 				}
@@ -78,9 +76,7 @@ export default function() {
 				}
 
 				return res.download( ZipFile, `${ BPName }.zip` );
-			} ).on( "error", err => {
-				return res.status( 404 ).json( { error: "Blueprint not found" } );
-			} );
+			} ).on( "error", err => res.status( 404 ).json( { error: "Blueprint not found" } ) );
 
 		} catch( e ) {
 			if( e instanceof Error ) {
@@ -100,9 +96,7 @@ export default function() {
 			const ZipTempDir = path.join( __MountDir, "Zips", id );
 			const ZipFile = path.join( __MountDir, "Zips", id, `${ id }.zip` );
 
-			if( !DownloadIPCached.find( R => {
-				return R.id === BPPack._id.toString() && R.ip === req.ip;
-			} ) ) {
+			if( !DownloadIPCached.find( R => R.id === BPPack._id.toString() && R.ip === req.ip ) ) {
 				if( !BPPack.downloads ) {
 					BPPack.downloads = 0;
 				}
@@ -154,9 +148,7 @@ export default function() {
 				fs.writeFileSync( path.join( ZipTempDir, `created.log` ), Date.now().toString() );
 				SystemLib.Log( "api", "BlueprintPack Download Created: " + ZipFile );
 				return res.download( ZipFile, `${ BPPack._id.toString() }.zip` );
-			} ).on( "error", err => {
-				return res.status( 404 ).json( { error: "Blueprint not found" } );
-			} );
+			} ).on( "error", err => res.status( 404 ).json( { error: "Blueprint not found" } ) );
 		} catch( e ) {
 			if( e instanceof Error ) {
 				SystemLib.LogError( "api", e.message );

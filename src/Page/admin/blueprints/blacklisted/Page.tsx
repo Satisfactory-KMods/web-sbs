@@ -16,12 +16,8 @@ const Component: FunctionComponent = () => {
 	usePageTitle( `SBS - Admin: Blueprints` );
 	const { blueprints, totalBlueprints } = useLoaderData() as IndexLoaderData;
 
-	const [ TotalBlueprints, setTotalBlueprints ] = useState<number>( () => {
-		return totalBlueprints;
-	} );
-	const [ Blueprints, setBlueprints ] = useState<BlueprintData[]>( () => {
-		return blueprints;
-	} );
+	const [ TotalBlueprints, setTotalBlueprints ] = useState<number>( () => totalBlueprints );
+	const [ Blueprints, setBlueprints ] = useState<BlueprintData[]>( () => blueprints );
 
 	const [ filter, setFilter ] = useState<FilterSchema>( {} );
 	const [ isFetching, setIsFetching ] = useState<boolean>( false );
@@ -36,9 +32,7 @@ const Component: FunctionComponent = () => {
 	    setIsFetching( false );
 	};
 	const { setPage, currentPage, maxPage, filterOption } = useRawPageHandler( TotalBlueprints, onPageChange, 12 );
-	const doFetch = async() => {
-		return onPageChange( filterOption );
-	};
+	const doFetch = async() => onPageChange( filterOption );
 
 	return (
 		<div className="flex flex-col">
@@ -48,9 +42,7 @@ const Component: FunctionComponent = () => {
 			<PageManager MaxPage={ maxPage } Page={ currentPage } OnPageChange={ setPage } />
 
 			<div className="flex flex-col gap-2 mt-2">
-				{ Blueprints.map( BP => {
-					return <BlueprintRow key={ BP._id } Data={ BP } onToggled={ doFetch } />;
-				} ) }
+				{ Blueprints.map( BP => <BlueprintRow key={ BP._id } Data={ BP } onToggled={ doFetch } /> ) }
 			</div>
 
 			<PageManager Hide={ maxPage === currentPage } MaxPage={ maxPage } Page={ currentPage } OnPageChange={ setPage } />

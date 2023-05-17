@@ -14,12 +14,8 @@ const Component: FunctionComponent = () => {
 	usePageTitle( `SBS - Admin: Users` );
 	const { users, totalTags } = useLoaderData() as UserAdminLoaderData;
 
-	const [ total, setTotal ] = useState( () => {
-		return totalTags;
-	} );
-	const [ data, setData ] = useState( () => {
-		return users;
-	} );
+	const [ total, setTotal ] = useState( () => totalTags );
+	const [ data, setData ] = useState( () => users );
 
 	const onPageChange: Parameters<typeof useRawPageHandler>[1] = async options => {
 		const response = await tRPCAuth.adminUsers.listUsers.query( options ).catch( tRPCHandleError );
@@ -29,9 +25,7 @@ const Component: FunctionComponent = () => {
 		}
 	};
 	const { setPage, currentPage, maxPage, filterOption } = useRawPageHandler( total, onPageChange, 20 );
-	const doFetch = async() => {
-		return onPageChange( filterOption );
-	};
+	const doFetch = async() => onPageChange( filterOption );
 
 	return (
 		<div className="flex flex-col">
@@ -60,9 +54,7 @@ const Component: FunctionComponent = () => {
 						</Table.HeadCell>
 					</Table.Head>
 					<Table.Body>
-						{ data.map( tag => {
-							return <UserRow key={ tag._id } data={ tag } doFetch={ doFetch } />;
-						} ) }
+						{ data.map( tag => <UserRow key={ tag._id } data={ tag } doFetch={ doFetch } /> ) }
 					</Table.Body>
 				</Table>
 			</div>

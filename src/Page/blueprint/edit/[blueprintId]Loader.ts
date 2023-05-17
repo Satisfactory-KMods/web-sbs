@@ -19,9 +19,7 @@ const blueprintIdLoader: LoaderFunction = async( { params, request } ) => {
 	const { blueprintId } = params;
 
 	const [ blueprint ] = await Promise.all( [
-		tRPCPublic.blueprint.readBlueprint.mutate( { blueprintId: blueprintId! } ).catch( () => {
-			return null;
-		} )
+		tRPCPublic.blueprint.readBlueprint.mutate( { blueprintId: blueprintId! } ).catch( () => null )
 	] );
 
 	if( !blueprint || result.blueprintData.blacklisted ) {

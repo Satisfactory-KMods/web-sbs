@@ -44,12 +44,8 @@ const BlueprintFilter: FunctionComponent<BlueprintFilterProps> = ( { isFetching,
 			sortBy: SelectSorting?.value || undefined,
 			name: BlueprintName !== "" ? BlueprintName : undefined,
 			onlyVanilla: SelectVanilla?.value || undefined,
-			mods: SelectMods.length > 0 ? SelectMods.map( e => {
-				return e.value;
-			} ) : undefined,
-			tags: SelectTags.length > 0 ? SelectTags.map( e => {
-				return e.value;
-			} ) : undefined
+			mods: SelectMods.length > 0 ? SelectMods.map( e => e.value ) : undefined,
+			tags: SelectTags.length > 0 ? SelectTags.map( e => e.value ) : undefined
 		};
 		dirtyRef.current = true;
 		setFilter( filter );
@@ -70,9 +66,7 @@ const BlueprintFilter: FunctionComponent<BlueprintFilterProps> = ( { isFetching,
 			</div>
 			<div className="p-5 grid grid-cols-1 text-neutral-200 md:grid-cols-2 lg:grid-cols-3 gap-2">
 				<SBSInput label="Blueprint Name" value={ BlueprintName }
-					onChange={ ( e: any ) => {
-						return setBlueprintName( e.target.value );
-					} }>
+					onChange={ ( e: any ) => setBlueprintName( e.target.value ) }>
 					<HiSearch />
 				</SBSInput>
 				<SBSSelect label="Sort By">

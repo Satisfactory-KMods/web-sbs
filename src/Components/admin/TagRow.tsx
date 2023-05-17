@@ -15,9 +15,7 @@ interface TagRowProps {
 }
 
 const TagRow: FunctionComponent<TagRowProps> = ( { data, doFetch } ) => {
-	const [ DisplayName, setDisplayName ] = useState( () => {
-		return data.DisplayName;
-	} );
+	const [ DisplayName, setDisplayName ] = useState( () => data.DisplayName );
 
 	const deleteTag = async() => {
 		if( await onConfirm( "Tag wirklich löschen?" ) ) {
@@ -40,11 +38,7 @@ const TagRow: FunctionComponent<TagRowProps> = ( { data, doFetch } ) => {
 				{ data._id }
 			</Table.Cell>
 			<Table.Cell>
-				<SBSInput value={ DisplayName } onChange={ e => {
-					return setDisplayName( () => {
-						return e.target.value;
-					} );
-				} } label="Display Name" />
+				<SBSInput value={ DisplayName } onChange={ e => setDisplayName( () => e.target.value ) } label="Display Name" />
 			</Table.Cell>
 			<Table.Cell className="flex gap-2">
 				<LoadingButton color="green" isLoading={ false } onClick={ editTag } Icon={ BiSave } disabled={ _.isEqual( data.DisplayName, DisplayName ) } >Save</LoadingButton>

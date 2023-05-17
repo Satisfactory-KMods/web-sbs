@@ -42,18 +42,12 @@ const UserRow: FunctionComponent<UserRowProps> = ( { data, doFetch } ) => {
 				{ data.username }
 			</Table.Cell>
 			<Table.Cell>
-				<Select onChange={ e => {
-					return modifyRole( parseInt( e.target.value ) );
-				} } defaultValue={ data.role } disabled={ _.isEqual( user.Get._id, data._id ) }>
-					{ Object.entries( ERoles ).filter( e => {
-						return !isNaN( parseInt( e[ 0 ] ) );
-					} ).map( ( [ key, value ] ) => {
-						return (
-							<option key={ id + key } value={ key }>
+				<Select onChange={ e => modifyRole( parseInt( e.target.value ) ) } defaultValue={ data.role } disabled={ _.isEqual( user.Get._id, data._id ) }>
+					{ Object.entries( ERoles ).filter( e => !isNaN( parseInt( e[ 0 ] ) ) ).map( ( [ key, value ] ) => (
+						<option key={ id + key } value={ key }>
       						[{ key }] { value }
-							</option>
-						);
-					} ) }
+						</option>
+					) ) }
 				</Select>
 			</Table.Cell>
 			<Table.Cell className="flex gap-2">
