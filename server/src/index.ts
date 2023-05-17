@@ -41,6 +41,11 @@ Api.use( ( req, res, next ) => {
 	next();
 } );
 
+SystemLib.Log( "start", "Try to connect to mongodb...", `mongodb://${ process.env.MONGODB_HOST }:${ process.env.MONGODB_PORT }` );
+SystemLib.Log( "start", "User:", process.env.MONGODB_USER );
+SystemLib.Log( "start", "User:", process.env.MONGODB_PASSWD );
+SystemLib.Log( "start", "User:", process.env.MONGODB_DATABASE );
+
 mongoose
 	.connect(
 		`mongodb://${ process.env.MONGODB_HOST }:${ process.env.MONGODB_PORT }`,
