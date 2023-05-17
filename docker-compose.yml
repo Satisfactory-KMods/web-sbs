@@ -8,7 +8,7 @@ services:
       - ../.SBS.env
     environment:
       - HTTPPORT=${DOCKER_PORT}
-      - MONGODB_PORT=${DOCKER_MOGNODB_PORT}
+      - MONGODB_PORT=${DOCKER_MONGODB_PORT}
       - MONGODB_HOST=mongodb
       - MONGODB_USER=${DOCKER_MOGNODB_USERNAME}
       - MONGODB_PASSWD=${DOCKER_MOGNODB_PASSWORD}
