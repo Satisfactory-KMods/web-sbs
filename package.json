@@ -1,7 +1,7 @@
 {
   "name": "vite-react-template",
   "private": true,
-  "version": "0.2.0",
+  "version": "0.2.1",
   "scripts": {
     "production": "NODE_ENV=production yarn server",
     "server": "ts-node --project ./server/tsconfig.json -r tsconfig-paths/register server/src/index.ts",
