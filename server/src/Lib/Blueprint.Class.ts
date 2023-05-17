@@ -5,7 +5,7 @@ import fs from 'fs';
 import _ from "lodash";
 import path from "path";
 import type { BlueprintData } from "../MongoDB/MongoBlueprints";
-import MongoBlueprints from "../MongoDB/MongoBlueprints";
+import MongoBlueprints, { MongoBlueprintPacks } from "../MongoDB/MongoBlueprints";
 
 
 export class BlueprintClass<T extends boolean = false> {
@@ -70,5 +70,19 @@ export class BlueprintClass<T extends boolean = false> {
 
 	public isOwner( userId: string ) {
 		return _.isEqual( userId, this.data?.owner );
+	}
+
+	public async remove(): Promise<boolean> {
+		const bpDocument = await this.getDocument();
+		if( bpDocument ) {
+			const id = bpDocument._id.toString();
+
+			fs.existsSync( path.join( __BlueprintDir, id ) ) && fs.rmdirSync( path.join( __BlueprintDir, id ) );
+			fs.existsSync( path.join( __MountDir, "Zips", id ) ) && fs.rmdirSync( path.join( __MountDir, "Zips", id ) );
+
+			await MongoBlueprintPacks.updateMany( { blueprints: bpDocument._id }, { $pull: { blueprints: bpDocument._id } } );
+			await bpDocument.deleteOne();
+		}
+		return false;
 	}
 }

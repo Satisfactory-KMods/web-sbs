@@ -112,27 +112,6 @@ export function useBlueprint( InitValue: string | BlueprintData, defaultUser?: {
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	useEffect( updateData, [ Blueprint.tags, Blueprint.mods ] );
 
-	const toggleBlacklist = async(): Promise<boolean> => {
-		if( !loggedIn ) {
-			await fireSwalFromApi( "You need to be logged in to do this!", "error" );
-			return false;
-		}
-
-		if( !allowedToEdit ) {
-			return false;
-		}
-
-
-		if( await onConfirm( "Do you really want to remove that Blueprint?" ) ) {
-			const result = await tRPCAuth.blueprints.toggleBlueprint.mutate( { blueprintId: BlueprintID } )
-				.then( successSwal )
-				.catch( tRPCHandleError );
-
-			return !!result;
-		}
-		return false;
-	};
-
 	const remove = async(): Promise<boolean> => {
 		if( !loggedIn ) {
 			await fireSwalFromApi( "You need to be logged in to do this!", "error" );
@@ -157,7 +136,6 @@ export function useBlueprint( InitValue: string | BlueprintData, defaultUser?: {
 		owner,
 		isOwner,
 		remove,
-		toggleBlacklist,
 		blueprintParse: blueprintData,
 		Mods,
 		Tags,

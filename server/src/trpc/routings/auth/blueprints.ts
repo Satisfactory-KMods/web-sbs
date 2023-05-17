@@ -43,32 +43,10 @@ export const authBlueprints = router( {
 		throw new TRPCError( { message: "password or login is to short.", code: "BAD_REQUEST" } );
 	} ),
 
-	toggleBlueprint: blueprintModOwnerProcedure.mutation( async( { ctx } ) => {
+	deleteBlueprint: blueprintModOwnerProcedure.mutation( async( { ctx } ) => {
 		const { blueprint } = ctx;
 		try {
-			const bpDocument = await blueprint.getDocument();
-			if( bpDocument ) {
-				bpDocument.blacklisted = !bpDocument.blacklisted;
-				bpDocument.markModified( "blacklisted" );
-				if( await bpDocument.save() ) {
-					return bpDocument.blacklisted ? "Blueprint blacklisted!" : "Blueprint removed from blacklist!";
-				}
-			}
-		} catch( e ) {
-			handleTRCPErr( e );
-		}
-		throw new TRPCError( { message: "Something goes wrong!", code: "INTERNAL_SERVER_ERROR" } );
-	} ),
-
-	deleteBlueprint: adminBlueprintProcedure.mutation( async( { ctx } ) => {
-		const { blueprint } = ctx;
-		try {
-			const bpDocument = await blueprint.getDocument();
-			if( bpDocument ) {
-				const id = bpDocument._id.toString();
-				if( await bpDocument.deleteOne() && fs.existsSync( path.join( __BlueprintDir, id ) ) ) {
-					fs.rmSync( path.join( __BlueprintDir, id ), { recursive: true } );
-				}
+			if( await blueprint.remove() ) {
 				return "Blueprint deleted!";
 			}
 		} catch( e ) {

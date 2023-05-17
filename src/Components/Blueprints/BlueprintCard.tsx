@@ -22,12 +22,12 @@ const BlueprintCard: FunctionComponent<IBlueprintCardProps> = ( { Data, onToggle
 		owner,
 		Blueprint,
 		allowedToEdit,
-		toggleBlacklist,
+		remove,
 		Tags
 	} = bpHook;
 
 	const doBlacklist = async() => {
-		await toggleBlacklist(  );
+		await remove(  );
 		await onToggled();
 	};
 

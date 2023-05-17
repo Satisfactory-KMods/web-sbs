@@ -47,13 +47,13 @@ const Component: FunctionComponent = () => {
 		Blueprint,
 		blueprintParse,
 		allowedToEdit,
-		toggleBlacklist,
+		remove,
 		Tags,
 		Mods
 	} = bpHook;
 
 	const doBlacklist = async() => {
-		await toggleBlacklist();
+		await remove();
 	};
 
 	const buildingCount = useMemo( () => {

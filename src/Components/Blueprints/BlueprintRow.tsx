@@ -18,7 +18,7 @@ const BlueprintRow: FunctionComponent<IBlueprintRowProps> = ( { Data, onToggled 
 	const {
 		Blueprint,
 		allowedToEdit,
-		toggleBlacklist,
+		remove,
 		remove
 	} = bpHook;
 
@@ -26,7 +26,7 @@ const BlueprintRow: FunctionComponent<IBlueprintRowProps> = ( { Data, onToggled 
 		if( Data.blacklisted ) {
 			await remove();
 		} else {
-			await toggleBlacklist();
+			await remove();
 		}
 		await onToggled();
 	};
