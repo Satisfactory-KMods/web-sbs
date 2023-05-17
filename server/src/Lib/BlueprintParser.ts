@@ -31,7 +31,7 @@ export class BlueprintParser {
 			this.Success = true;
 		} catch( e ) {
 			if( e instanceof Error ) {
-				SystemLib.LogError( "api", e.message );
+				SystemLib.LogError( "blueprintparse", e.message );
 			}
 			this.Data = undefined;
 			this.Success = false;

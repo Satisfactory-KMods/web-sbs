@@ -17,7 +17,7 @@ const loader: LoaderFunction = async( { params, request } ) => {
 	if( result instanceof Response ) {
 		return result;
 	}
-	const response = await tRPCAuth.adminUsers.listUsers.query( { limit: 10 } ).catch( tRPCHandleError );
+	const response = await tRPCAuth.adminUsers.listUsers.query( { limit: 20 } ).catch( tRPCHandleError );
 	const users: ClientUserAccount[] = response?.data || [];
 	const totalTags = response?.count || 0;
 

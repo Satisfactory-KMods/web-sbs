@@ -24,6 +24,7 @@ const Component: FunctionComponent = () => {
 			setTotal( response.count );
 		}
 	};
+
 	const { setPage, currentPage, maxPage, filterOption } = useRawPageHandler( total, onPageChange, 20 );
 	const doFetch = async() => onPageChange( filterOption );
 
@@ -43,7 +44,7 @@ const Component: FunctionComponent = () => {
 						<Table.HeadCell className="w-0">
     					  	Id
 						</Table.HeadCell>
-						<Table.HeadCell className="w-0">
+						<Table.HeadCell>
       						User Name
 						</Table.HeadCell>
 						<Table.HeadCell>
