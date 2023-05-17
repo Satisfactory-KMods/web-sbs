@@ -8,6 +8,7 @@ import { TRPCError } from "@trpc/server";
 import _ from "lodash";
 import { z } from "zod";
 
+
 export const authUpdateAccount =
 	publicProcedure.input( z.object( {
 		username: z.string().min( 6, { message: "Username is to short." } ).optional(),

@@ -5,6 +5,7 @@ import {
 } from "@server/trpc/trpc";
 import { TRPCError } from "@trpc/server";
 
+
 export const authLogout = authProcedure.mutation( async( { ctx } ) => {
 	const { token } = ctx;
 

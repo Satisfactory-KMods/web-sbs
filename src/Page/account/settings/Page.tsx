@@ -17,14 +17,19 @@ import type {
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+
 const Component: FunctionComponent = () => {
 	const { user, logout } = useAuth();
 	const navigate = useNavigate();
 	const [ isSending, setIsSending ] = useState( false );
 	usePageTitle( `SBS - Sign Up` );
 
-	const [ username, setUsername ] = useState( () => user.Get.username );
-	const [ email, setEmail ] = useState( () => user.Get.email );
+	const [ username, setUsername ] = useState( () => {
+		return user.Get.username;
+	} );
+	const [ email, setEmail ] = useState( () => {
+		return user.Get.email;
+	} );
 	const [ password, setPassword ] = useState( "" );
 	const [ password2, setPassword2 ] = useState( "" );
 
@@ -77,7 +82,9 @@ const Component: FunctionComponent = () => {
 							</div>
 							<TextInput id="login" type="text" placeholder="Super Mario"
 							           value={ username }
-							           onChange={ e => setUsername( e.target.value ) } />
+							           onChange={ e => {
+									return setUsername( e.target.value );
+								} } />
 						</div>
 						<div>
 							<div className="mb-2 block">
@@ -85,7 +92,9 @@ const Component: FunctionComponent = () => {
 							</div>
 							<TextInput id="email" type="email" placeholder="kmods@example.com"
 							           value={ email }
-							           onChange={ e => setEmail( e.target.value ) } />
+							           onChange={ e => {
+									return setEmail( e.target.value );
+								} } />
 						</div>
 						<div>
 							<div className="mb-2 block">
@@ -93,7 +102,9 @@ const Component: FunctionComponent = () => {
 							</div>
 							<TextInput id="password" type="password" placeholder="Password123"
 							           value={ password }
-							           onChange={ e => setPassword( e.target.value ) } />
+							           onChange={ e => {
+									return setPassword( e.target.value );
+								} } />
 						</div>
 						<div>
 							<div className="mb-2 block">
@@ -101,7 +112,9 @@ const Component: FunctionComponent = () => {
 							</div>
 							<TextInput id="password2" type="password" placeholder="Password123"
 							           value={ password2 }
-							           onChange={ e => setPassword2( e.target.value ) } />
+							           onChange={ e => {
+									return setPassword2( e.target.value );
+								} } />
 						</div>
 						<hr className="border-gray-600" />
 						<div className="flex items-center justify-between">

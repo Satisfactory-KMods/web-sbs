@@ -8,6 +8,7 @@ import _ from "lodash";
 import { z } from "zod";
 import { BlueprintClass } from "../Lib/Blueprint.Class";
 
+
 export function handleTRCPErr( e: unknown ) {
 	if( e instanceof TRPCError ) {
 		throw new TRPCError( { message: e.message, code: e.code } );
@@ -41,7 +42,7 @@ const t = trpc.initTRPC.context<Context>().create( {
 export const middleware = t.middleware;
 
 // create the blueprint class and add it to the context
-const blueprintMiddleware = middleware( async( opts ) => {
+const blueprintMiddleware = middleware( async opts => {
 	const { input } = opts;
 	const { blueprintId } = input as{ blueprintId: string };
 	const blueprint = await BlueprintClass.createClass( blueprintId );
@@ -52,12 +53,12 @@ const blueprintMiddleware = middleware( async( opts ) => {
 	return opts.next( {
 		ctx: {
 			blueprint
-		},
+		}
 	} );
 } );
 
 // only check if we have admin or we are the owner
-const isOwnerMiddleware = middleware( async( opts ) => {
+const isOwnerMiddleware = middleware( async opts => {
 	const { ctx } = opts;
 	const { blueprint, userClass } = ctx as{ blueprint: BlueprintClass<true> } & typeof ctx;
 	const isOwner = false;
@@ -68,7 +69,7 @@ const isOwnerMiddleware = middleware( async( opts ) => {
 } );
 
 // only check if we have admin or we are the owner
-const isModOrOwnerMiddleware = middleware( async( opts ) => {
+const isModOrOwnerMiddleware = middleware( async opts => {
 	const { ctx } = opts;
 	const { blueprint, userClass } = ctx as{ blueprint: BlueprintClass<true> } & typeof ctx;
 	const isOwner = false;
@@ -79,13 +80,15 @@ const isModOrOwnerMiddleware = middleware( async( opts ) => {
 } );
 
 // check if we have a role for example for admin actions or something else
-const roleMiddleware = ( role: ERoles ) => middleware( async( opts ) => {
-	const { ctx } = opts;
-	if( !ctx.userClass.HasPermission( role ) ) {
-		throw new TRPCError( { code: 'UNAUTHORIZED' } );
-	}
-	return opts.next();
-} );
+const roleMiddleware = ( role: ERoles ) => {
+	return middleware( async opts => {
+		const { ctx } = opts;
+		if( !ctx.userClass.HasPermission( role ) ) {
+			throw new TRPCError( { code: 'UNAUTHORIZED' } );
+		}
+		return opts.next();
+	} );
+};
 
 export const router = t.router;
 export const publicProcedure = t.procedure;

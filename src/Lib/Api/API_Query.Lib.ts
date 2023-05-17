@@ -4,6 +4,7 @@ import type { EApiBlueprintUtils } from "@shared/Enum/EApiPath";
 import superjson from 'superjson';
 import type { SuperJSONResult } from "superjson/dist/types";
 
+
 export class apiQueryLib {
 	static async PostToAPI<T, D = any>(
 		Path: EApiBlueprintUtils,

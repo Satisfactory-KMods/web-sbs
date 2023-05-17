@@ -1,6 +1,7 @@
 import type { InputHTMLAttributes } from "react";
 import React, { useId } from "react";
 
+
 type SBSInputProps = InputHTMLAttributes<HTMLInputElement> & {
 	label: React.ReactElement | string,
 	mainClassName?: string,

@@ -14,17 +14,22 @@ import type { FunctionComponent } from "react";
 import { useState } from "react";
 import { useLoaderData } from "react-router-dom";
 
+
 const Component: FunctionComponent = () => {
 	const { blueprints, totalBlueprints } = useLoaderData() as IndexLoaderData;
 
-	const [ TotalBlueprints, setTotalBlueprints ] = useState<number>( () => totalBlueprints );
-	const [ Blueprints, setBlueprints ] = useState<BlueprintData[]>( () => blueprints );
+	const [ TotalBlueprints, setTotalBlueprints ] = useState<number>( () => {
+		return totalBlueprints;
+	} );
+	const [ Blueprints, setBlueprints ] = useState<BlueprintData[]>( () => {
+		return blueprints;
+	} );
 
 	usePageTitle( `SBS - Blueprints` );
 
 	const [ filter, setFilter ] = useState<FilterSchema>( {} );
 	const [ isFetching, setIsFetching ] = useState<boolean>( false );
-	const onPageChange: Parameters<typeof useRawPageHandler>[1] = async( options ) => {
+	const onPageChange: Parameters<typeof useRawPageHandler>[1] = async options => {
 		setIsFetching( true );
 		const queryFilter = { filterOptions: filter, ...options };
 		const Blueprints = await tRPCPublic.blueprint.getBlueprints.query( queryFilter ).catch( tRPCHandleError );
@@ -35,7 +40,9 @@ const Component: FunctionComponent = () => {
 	    setIsFetching( false );
 	};
 	const { setPage, currentPage, maxPage, filterOption } = useRawPageHandler( TotalBlueprints, onPageChange, 12 );
-	const doFetch = async() => onPageChange( filterOption );
+	const doFetch = async() => {
+		return onPageChange( filterOption );
+	};
 
 
 	return (
@@ -46,7 +53,9 @@ const Component: FunctionComponent = () => {
 			<PageManager MaxPage={ maxPage } Page={ currentPage } OnPageChange={ setPage } />
 
 			<div className="mt-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-3">
-				{ Blueprints.map( BP => <BlueprintCard key={ BP._id } Data={ BP } onToggled={ doFetch } /> ) }
+				{ Blueprints.map( BP => {
+					return <BlueprintCard key={ BP._id } Data={ BP } onToggled={ doFetch } />;
+				} ) }
 			</div>
 
 			<PageManager Hide={ maxPage === currentPage } MaxPage={ maxPage } Page={ currentPage } OnPageChange={ setPage } />

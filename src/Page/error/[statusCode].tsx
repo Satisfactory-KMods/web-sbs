@@ -5,6 +5,7 @@ import {
 	useParams
 } from "react-router-dom";
 
+
 const Component: FunctionComponent = () => {
 	const { statusCode } = useParams<{ statusCode: string }>();
 	usePageTitle( `SBS - Error ${ statusCode }` );

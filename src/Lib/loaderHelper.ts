@@ -6,6 +6,7 @@ import { User } from "@shared/Class/User.Class";
 import { ERoles } from "@shared/Enum/ERoles";
 import { redirect } from "react-router-dom";
 
+
 export enum LoginRule {
 	NotLoggedIn,
 	LoggedIn,

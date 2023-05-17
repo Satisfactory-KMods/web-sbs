@@ -6,6 +6,7 @@ import type { LoaderFunction } from "react-router-dom";
 import { json } from "react-router-dom";
 import type { Tag } from './../../../../server/src/MongoDB/MongoTags';
 
+
 export type TagAdminLoaderData = LoaderDataBase & {
 	tags: Tag[],
 	totalTags: number

@@ -5,6 +5,7 @@ import type {
 } from "react";
 import { useRef } from "react";
 
+
 interface NavigationDropdownProps extends PropsWithChildren {
 	image?: string;
 	text?: string | ReactElement;

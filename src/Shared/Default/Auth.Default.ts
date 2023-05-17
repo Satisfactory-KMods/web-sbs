@@ -2,6 +2,7 @@ import type { ClientUserAccount } from "@server/MongoDB/MongoUserAccount";
 import { ERoles } from "@shared/Enum/ERoles";
 import type { IAPIResponseBase } from "@shared/Types/API_Response";
 
+
 export const DefaultUser: ClientUserAccount = {
 	createdAt: "",
 	updatedAt: "",

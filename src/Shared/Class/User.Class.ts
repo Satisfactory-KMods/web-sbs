@@ -4,6 +4,7 @@ import { DefaultUser } from "@shared/Default/Auth.Default";
 import type { ERoles } from "@shared/Enum/ERoles";
 import jwt from "jwt-decode";
 
+
 export class User {
 	public JsonWebToken;
 	private user: UserSession;

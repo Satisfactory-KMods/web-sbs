@@ -2,11 +2,13 @@ import { mdxComponents } from "@app/Page/terms/private/Page";
 import { useBlueprint } from "@app/hooks/useBlueprint";
 import type { BlueprintData } from "@server/MongoDB/MongoBlueprints";
 import { Button } from "flowbite-react";
-import { useId, type FunctionComponent } from "react";
+import type { FunctionComponent } from "react";
+import { useId } from "react";
 import { HiCog, HiDownload, HiTrash } from "react-icons/hi";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import { Link } from "react-router-dom";
 import BlueprintRating from "./BlueprintRating";
+
 
 interface IBlueprintCardProps {
 	Data: BlueprintData;
@@ -72,9 +74,11 @@ const BlueprintCard: FunctionComponent<IBlueprintCardProps> = ( { Data, onToggle
 				</div>
 			</div>
 			{ !!Blueprint.tags.length && <div className="flex flex-wrap p-3 pt-0 border-t bg-gray-700 border-gray-700 text-neutral-200 text-xs">
-				{ Tags.map( e => (
-					<div key={ id + e._id } className="bg-gray-900 p-1 px-3 rounded-lg border border-gray-800 shadow">{ e.DisplayName }</div>
-				) ) }
+				{ Tags.map( e => {
+					return (
+						<div key={ id + e._id } className="bg-gray-900 p-1 px-3 rounded-lg border border-gray-800 shadow">{ e.DisplayName }</div>
+					);
+				} ) }
 			</div> }
 		</div>
 	);

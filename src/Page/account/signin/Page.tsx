@@ -63,19 +63,25 @@ const Component: FunctionComponent = () => {
 								<Label htmlFor="login" value="Your email or username" />
 							</div>
 							<TextInput id="login" type="text" placeholder="kmods@example.com" required={ true }
-							           onChange={ e => setLogin( e.target.value ) } />
+							           onChange={ e => {
+									return setLogin( e.target.value );
+								} } />
 						</div>
 						<div>
 							<div className="mb-2 block">
 								<Label htmlFor="password" value="Password" />
 							</div>
 							<TextInput id="password" type="password" placeholder="Password123" required={ true }
-							           onChange={ e => setPassword( e.target.value ) } />
+							           onChange={ e => {
+									return setPassword( e.target.value );
+								} } />
 						</div>
 						<div className="flex items-center justify-between">
 							<div className="flex items-center gap-2">
 								<Checkbox id="stay" value={ Number( stayLoggedIn ) }
-								          onChange={ e => setStayLoggedIn( e.target.checked ) } />
+								          onChange={ e => {
+										return setStayLoggedIn( e.target.checked );
+									} } />
 								<Label htmlFor="stay">
 									Stay logged in
 								</Label>

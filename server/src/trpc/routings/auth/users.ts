@@ -18,7 +18,7 @@ export const adminUsers = router( {
 	} ) ).query( async( { input } ) => {
 		const { limit, skip } = input;
 		try {
-			const data = await MongoUserAccount.find( {}, { salt:0, hash:0, email:0 }, { sort: { cratedAt: -1 }, limit, skip } ) as ClientUserAccount[];
+			const data = await MongoUserAccount.find( {}, { salt: 0, hash: 0, email: 0 }, { sort: { cratedAt: -1 }, limit, skip } ) as ClientUserAccount[];
 			const count = await MongoUserAccount.count( {} );
 			return { data, count };
 		} catch( e ) {

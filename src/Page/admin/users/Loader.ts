@@ -6,6 +6,7 @@ import type { ClientUserAccount } from "@server/MongoDB/MongoUserAccount";
 import type { LoaderFunction } from "react-router-dom";
 import { json } from "react-router-dom";
 
+
 export type UserAdminLoaderData = LoaderDataBase & {
 	users: ClientUserAccount[],
 	totalTags: number

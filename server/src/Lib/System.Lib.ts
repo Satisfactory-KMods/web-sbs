@@ -4,6 +4,7 @@ import fs from "fs";
 import process from "process";
 import Util from "util";
 
+
 export type BashColorString =
 	| "Default"
 	| "Red"

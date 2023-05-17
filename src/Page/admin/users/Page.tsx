@@ -9,14 +9,19 @@ import type { FunctionComponent } from "react";
 import { useState } from "react";
 import { useLoaderData } from "react-router-dom";
 
+
 const Component: FunctionComponent = () => {
 	usePageTitle( `SBS - Admin: Users` );
 	const { users, totalTags } = useLoaderData() as UserAdminLoaderData;
 
-	const [ total, setTotal ] = useState( () => totalTags );
-	const [ data, setData ] = useState( () => users );
+	const [ total, setTotal ] = useState( () => {
+		return totalTags;
+	} );
+	const [ data, setData ] = useState( () => {
+		return users;
+	} );
 
-	const onPageChange: Parameters<typeof useRawPageHandler>[1] = async( options ) => {
+	const onPageChange: Parameters<typeof useRawPageHandler>[1] = async options => {
 		const response = await tRPCAuth.adminUsers.listUsers.query( options ).catch( tRPCHandleError );
 		if( response ) {
 			setData( response.data );
@@ -24,7 +29,9 @@ const Component: FunctionComponent = () => {
 		}
 	};
 	const { setPage, currentPage, maxPage, filterOption } = useRawPageHandler( total, onPageChange, 20 );
-	const doFetch = async() => onPageChange( filterOption );
+	const doFetch = async() => {
+		return onPageChange( filterOption );
+	};
 
 	return (
 		<div className="flex flex-col">
@@ -53,7 +60,9 @@ const Component: FunctionComponent = () => {
 						</Table.HeadCell>
 					</Table.Head>
 					<Table.Body>
-						{ data.map( tag => <UserRow key={ tag._id } data={ tag } doFetch={ doFetch } /> ) }
+						{ data.map( tag => {
+							return <UserRow key={ tag._id } data={ tag } doFetch={ doFetch } />;
+						} ) }
 					</Table.Body>
 				</Table>
 			</div>

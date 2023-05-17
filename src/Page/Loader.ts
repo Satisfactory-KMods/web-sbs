@@ -9,6 +9,7 @@ import type { Tag } from "@server/MongoDB/MongoTags";
 import type { LoaderFunction } from "react-router-dom";
 import { json } from "react-router-dom";
 
+
 export type LayoutLoaderData = LoaderDataBase & {
 	mods: Mod[],
 	tags: Tag[]

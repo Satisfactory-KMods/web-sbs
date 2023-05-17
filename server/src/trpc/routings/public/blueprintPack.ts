@@ -1,6 +1,6 @@
 import {
 	buildFilter,
-	filterSchema,
+	filterSchema
 } from '@/server/src/trpc/routings/public/blueprint';
 import type { BlueprintData } from '@server/MongoDB/MongoBlueprints';
 import { MongoBlueprintPacks } from '@server/MongoDB/MongoBlueprints';
@@ -8,13 +8,14 @@ import { handleTRCPErr, publicProcedure, router } from '@server/trpc/trpc';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
+
 export const publicBlueprintPacks = router( {
 	getBlueprintPacks: publicProcedure
 		.input(
 			z.object( {
 				skip: z.number().optional(),
 				limit: z.number().optional(),
-				filterOptions: filterSchema.optional(),
+				filterOptions: filterSchema.optional()
 			} )
 		)
 		.query( async( { input } ) => {
@@ -28,7 +29,7 @@ export const publicBlueprintPacks = router( {
 					{
 						...options,
 						limit,
-						skip,
+						skip
 					}
 				).populate( 'blueprints' );
 				return { blueprintPacks, totalBlueprints };
@@ -37,7 +38,7 @@ export const publicBlueprintPacks = router( {
 			}
 			throw new TRPCError( {
 				message: 'Something goes wrong!',
-				code: 'INTERNAL_SERVER_ERROR',
+				code: 'INTERNAL_SERVER_ERROR'
 			} );
-		} ),
+		} )
 } );

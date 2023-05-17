@@ -9,6 +9,7 @@ import type {
 	QueryOptions
 } from "mongoose";
 
+
 export type RequestWithUser<T = any> = {
 	UserClass?: T;
 };

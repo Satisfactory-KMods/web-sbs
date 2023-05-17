@@ -8,6 +8,7 @@ import { ERoles } from "@shared/Enum/ERoles";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
+
 export const publicCreateAccount =
 	publicProcedure.input( z.object( {
 		username: z.string().min( 6, { message: "Username is to short." } ),

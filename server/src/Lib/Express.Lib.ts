@@ -17,6 +17,7 @@ import _ from "lodash";
 import multer from "multer";
 import path from "path";
 
+
 export function ApiUrl( Url: EApiBlueprintUtils | string ) {
 	const EndUrl = `/api/v1/${ Url }`;
 	SystemLib.Log( "URL", "Routing registered:", SystemLib.ToBashColor( "Red" ), EndUrl );
@@ -97,5 +98,5 @@ export async function MWRestUser( req: Request, res: Response, next: NextFunctio
 }
 
 export const upload = multer( {
-	dest: path.join( __MountDir, "tmp" ),
+	dest: path.join( __MountDir, "tmp" )
 } );

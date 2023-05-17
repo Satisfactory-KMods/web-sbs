@@ -6,6 +6,7 @@ import type {
 } from "react";
 import { useLoaderData } from "react-router-dom";
 
+
 const Component: FunctionComponent = () => {
 	usePageTitle( `SBS - Edit Blueprints` );
 	const { blueprintData, blueprint } = useLoaderData() as BlueprintIdLoader;

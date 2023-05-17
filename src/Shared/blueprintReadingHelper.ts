@@ -16,5 +16,7 @@ export const findModsFromBlueprint = ( objects: ( SaveEntity | SaveComponent )[]
 			modRefSet.add( ueObj.typePath.split( "/" )[ 2 ].split( "." )[ 0 ] );
 		}
 	}
-	return [ ...modRefSet ].filter( e => !_.isEqual( "FactoryGame", e ) && !_.isEqual( "Game", e ) );
+	return [ ...modRefSet ].filter( e => {
+		return !_.isEqual( "FactoryGame", e ) && !_.isEqual( "Game", e );
+	} );
 };

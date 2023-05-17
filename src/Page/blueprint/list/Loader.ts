@@ -8,6 +8,7 @@ import type { BlueprintData } from "@server/MongoDB/MongoBlueprints";
 import type { LoaderFunction } from "react-router-dom";
 import { json } from "react-router-dom";
 
+
 export type IndexLoaderData = LoaderDataBase & {
 	blueprints: BlueprintData[],
 	totalBlueprints: number

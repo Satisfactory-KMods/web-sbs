@@ -10,6 +10,7 @@ import { HiSearch } from "react-icons/hi";
 import type { MultiValue, SingleValue } from "react-select";
 import Select from "react-select";
 
+
 interface BlueprintFilterProps extends PropsWithChildren {
 	isFetching: boolean;
 	filterSchema: [FilterSchema, Dispatch<SetStateAction<FilterSchema>>],
@@ -43,8 +44,12 @@ const BlueprintFilter: FunctionComponent<BlueprintFilterProps> = ( { isFetching,
 			sortBy: SelectSorting?.value || undefined,
 			name: BlueprintName !== "" ? BlueprintName : undefined,
 			onlyVanilla: SelectVanilla?.value || undefined,
-			mods: SelectMods.length > 0 ? SelectMods.map( e => e.value ) : undefined,
-			tags: SelectTags.length > 0 ? SelectTags.map( e => e.value ) : undefined
+			mods: SelectMods.length > 0 ? SelectMods.map( e => {
+				return e.value;
+			} ) : undefined,
+			tags: SelectTags.length > 0 ? SelectTags.map( e => {
+				return e.value;
+			} ) : undefined
 		};
 		dirtyRef.current = true;
 		setFilter( filter );
@@ -65,7 +70,9 @@ const BlueprintFilter: FunctionComponent<BlueprintFilterProps> = ( { isFetching,
 			</div>
 			<div className="p-5 grid grid-cols-1 text-neutral-200 md:grid-cols-2 lg:grid-cols-3 gap-2">
 				<SBSInput label="Blueprint Name" value={ BlueprintName }
-					onChange={ ( e: any ) => setBlueprintName( e.target.value ) }>
+					onChange={ ( e: any ) => {
+						return setBlueprintName( e.target.value );
+					} }>
 					<HiSearch />
 				</SBSInput>
 				<SBSSelect label="Sort By">

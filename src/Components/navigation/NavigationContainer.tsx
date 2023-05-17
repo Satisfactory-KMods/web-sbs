@@ -7,6 +7,7 @@ import {
 	useLocation
 } from "react-router-dom";
 
+
 type NavigationContainerProps = HTMLAttributes<HTMLDivElement> & {
 	role?: ERoles,
 	path: string,
@@ -27,8 +28,12 @@ const NavigationContainer: FunctionComponent<NavigationContainerProps> = ( { chi
 		classNames = "flex text-gray-300 hover:bg-gray-600 hover:text-white rounded-md px-3 py-2 text-sm font-medium ";
 	}
 
-	const onHover = () => ref.current?.classList.toggle( "hidden", false );
-	const onUnHover = () => ref.current?.classList.toggle( "hidden", true );
+	const onHover = () => {
+		return ref.current?.classList.toggle( "hidden", false );
+	};
+	const onUnHover = () => {
+		return ref.current?.classList.toggle( "hidden", true );
+	};
 
 	let loc = "left-1/4 transform -translate-x-1/4";
 	if( !location ) {

@@ -72,7 +72,9 @@ export function fireToastFromApi<PreConfirmResult = any>( message: string[] | st
 }
 
 
-export const tRPCToken = () => window.localStorage.getItem( AUTHTOKEN ) || "";
+export const tRPCToken = () => {
+	return window.localStorage.getItem( AUTHTOKEN ) || "";
+};
 
 export const tRPCPublic = createTRPCProxyClient<PublicRouter>( {
 	transformer,
@@ -102,7 +104,9 @@ export const tRPCHandleError = ( e: any, asToast?: boolean ) => {
 		let message: string | string[] = e.message;
 		try {
 			const asArray: any[] = JSON.parse( e.message );
-			message = asArray.map( msg => msg.message );
+			message = asArray.map( msg => {
+				return msg.message;
+			} );
 		} catch( err ) {
 		}
 

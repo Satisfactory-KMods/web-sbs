@@ -5,6 +5,7 @@ import { publicProcedure } from "@server/trpc/trpc";
 import * as jwt from "jsonwebtoken";
 import { z } from "zod";
 
+
 export const publicValidate =
 	publicProcedure
 		.input( z.object( {

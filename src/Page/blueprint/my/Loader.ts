@@ -9,6 +9,7 @@ import type { BlueprintData } from "@server/MongoDB/MongoBlueprints";
 import type { LoaderFunction } from "react-router-dom";
 import { json } from "react-router-dom";
 
+
 export const loader: LoaderFunction = async( { params, request } ) => {
 	const result = await validateLogin( { params, request }, LoginRule.LoggedIn, "/account/signin" );
 	if( result instanceof Response ) {

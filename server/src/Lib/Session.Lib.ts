@@ -6,6 +6,7 @@ import type {
 import type { JwtPayload } from "jsonwebtoken";
 import * as jwt from "jsonwebtoken";
 
+
 export type UserSession = ClientUserAccount & Partial<JwtPayload>;
 
 export async function CreateSession( User: Partial<UserAccount>, stayLoggedIn = false ): Promise<string | undefined> {

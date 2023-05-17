@@ -1,6 +1,7 @@
 import type { BlueprintData } from "@server/MongoDB/MongoBlueprints";
 import type { User } from "@shared/Class/User.Class";
 
+
 export interface LoaderDataBase {
 	loggedIn: boolean;
 	user: User;

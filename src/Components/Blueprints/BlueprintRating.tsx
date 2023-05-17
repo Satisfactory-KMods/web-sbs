@@ -2,7 +2,9 @@ import { successSwal, tRPCAuth, tRPCHandleError } from "@app/Lib/tRPC";
 import type { useBlueprint } from "@app/hooks/useBlueprint";
 import type { RatingProps } from "flowbite-react";
 import { Rating } from "flowbite-react";
-import { useState, type FunctionComponent } from "react";
+import type { FunctionComponent } from "react";
+import { useState } from "react";
+
 
 interface BlueprintRatingProps extends RatingProps {
 	blueprintHook: ReturnType<typeof useBlueprint>
@@ -16,7 +18,9 @@ const BlueprintRating: FunctionComponent<BlueprintRatingProps> = ( { blueprintHo
 		if( !allowedToLike ) {
 			return;
 		}
-		setHover( () => rating );
+		setHover( () => {
+			return rating;
+		} );
 	};
 
 	const setRating = async( rating: number ) => {
@@ -36,11 +40,41 @@ const BlueprintRating: FunctionComponent<BlueprintRatingProps> = ( { blueprintHo
 
 	return (
 		<Rating { ...props }>
-			<Rating.Star onClick={ () => setRating( 1 ) } onMouseEnter={ () => setHoverRating( 1 ) } onMouseLeave={ () => setHoverRating( 0 ) } filled={ ( rating >= 1 && hover === 0 ) || hover >= 1 } />
-			<Rating.Star onClick={ () => setRating( 2 ) } onMouseEnter={ () => setHoverRating( 2 ) } onMouseLeave={ () => setHoverRating( 0 ) } filled={ ( rating >= 2 && hover === 0 ) || hover >= 2 } />
-			<Rating.Star onClick={ () => setRating( 3 ) } onMouseEnter={ () => setHoverRating( 3 ) } onMouseLeave={ () => setHoverRating( 0 ) } filled={ ( rating >= 3 && hover === 0 ) || hover >= 3 } />
-			<Rating.Star onClick={ () => setRating( 4 ) } onMouseEnter={ () => setHoverRating( 4 ) } onMouseLeave={ () => setHoverRating( 0 ) } filled={ ( rating >= 4 && hover === 0 ) || hover >= 4 } />
-			<Rating.Star onClick={ () => setRating( 5 ) } onMouseEnter={ () => setHoverRating( 5 ) } onMouseLeave={ () => setHoverRating( 0 ) } filled={ ( rating >= 5 && hover === 0 ) || hover >= 5 } />
+			<Rating.Star onClick={ () => {
+				return setRating( 1 );
+			} } onMouseEnter={ () => {
+				return setHoverRating( 1 );
+			} } onMouseLeave={ () => {
+				return setHoverRating( 0 );
+			} } filled={ ( rating >= 1 && hover === 0 ) || hover >= 1 } />
+			<Rating.Star onClick={ () => {
+				return setRating( 2 );
+			} } onMouseEnter={ () => {
+				return setHoverRating( 2 );
+			} } onMouseLeave={ () => {
+				return setHoverRating( 0 );
+			} } filled={ ( rating >= 2 && hover === 0 ) || hover >= 2 } />
+			<Rating.Star onClick={ () => {
+				return setRating( 3 );
+			} } onMouseEnter={ () => {
+				return setHoverRating( 3 );
+			} } onMouseLeave={ () => {
+				return setHoverRating( 0 );
+			} } filled={ ( rating >= 3 && hover === 0 ) || hover >= 3 } />
+			<Rating.Star onClick={ () => {
+				return setRating( 4 );
+			} } onMouseEnter={ () => {
+				return setHoverRating( 4 );
+			} } onMouseLeave={ () => {
+				return setHoverRating( 0 );
+			} } filled={ ( rating >= 4 && hover === 0 ) || hover >= 4 } />
+			<Rating.Star onClick={ () => {
+				return setRating( 5 );
+			} } onMouseEnter={ () => {
+				return setHoverRating( 5 );
+			} } onMouseLeave={ () => {
+				return setHoverRating( 0 );
+			} } filled={ ( rating >= 5 && hover === 0 ) || hover >= 5 } />
 			<p className="ml-2 text-sm font-medium text-gray-500 dark:text-gray-400">
 				{ Blueprint.totalRating } out of 5
 			</p>

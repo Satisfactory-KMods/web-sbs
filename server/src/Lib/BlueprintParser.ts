@@ -7,6 +7,7 @@ import {
 import * as fs from 'fs';
 import path from 'path';
 
+
 export function parseBlueprintById( blueprintId: string, blueprintName: string ) {
 	const SBP: Buffer = fs.readFileSync( path.join( __BlueprintDir, blueprintId!, `${ blueprintId }.sbp` ) );
 	const SBPCFG: Buffer = fs.readFileSync( path.join( __BlueprintDir, blueprintId!, `${ blueprintId }.sbp` ) );

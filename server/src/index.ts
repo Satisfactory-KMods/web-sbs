@@ -15,6 +15,7 @@ import MongoUserAccount from "./MongoDB/MongoUserAccount";
 import { InstallRoutings } from "./Routings/InitRouter";
 import { TaskManagerClass } from "./Tasks/TaskManager";
 
+
 global.__BaseDir = __dirname;
 global.__MountDir = path.join( process.cwd(), "mount" );
 ( !fs.existsSync( path.join( __MountDir, "Logs" ) ) ) && fs.mkdirSync( path.join( __MountDir, "Logs" ), { recursive: true } );
@@ -31,7 +32,7 @@ Api.use( bodyParser.json() );
 Api.use( bodyParser.urlencoded( { extended: true } ) );
 Api.use( express.static( path.join( __BaseDir, "../..", "build" ), { extensions: [ "js" ] } ) );
 
-Api.use( function( req, res, next ) {
+Api.use( ( req, res, next ) => {
 	res.setHeader( "Access-Control-Allow-Origin", "*" );
 	res.setHeader( "Access-Control-Allow-Methods", "GET, POST" );
 	res.setHeader( "Access-Control-Allow-Headers", "X-Requested-With,content-type" );
@@ -72,7 +73,7 @@ mongoose
 		await InstallRoutings( path.join( __BaseDir, "Routings/Router" ) );
 
 		Api.use( Router );
-		Api.get( "*", function( req, res ) {
+		Api.get( "*", ( req, res ) => {
 			res.sendFile( path.join( __BaseDir, "../..", "build", "index.html" ) );
 		} );
 
@@ -89,10 +90,11 @@ mongoose
 		global.TaskManager = new TaskManagerClass();
 		await TaskManager.Init();
 
-		HttpServer.listen( parseInt( process.env.HTTPPORT as string ), async() =>
-			SystemLib.Log( "start",
+		HttpServer.listen( parseInt( process.env.HTTPPORT as string ), async() => {
+			return SystemLib.Log( "start",
 				"API listen on port",
 				process.env.HTTPPORT
-			)
+			);
+		}
 		);
 	} );

@@ -27,6 +27,7 @@ import { Link, useNavigate } from "react-router-dom";
 import type { MultiValue, SingleValue } from "react-select";
 import Select from "react-select";
 
+
 interface BlueprintEditorProps {
 	defaultData?: BlueprintData
 	defaultBlueprintData?: Blueprint
@@ -62,10 +63,18 @@ const BlueprintEditor: FunctionComponent<BlueprintEditorProps> = ( { defaultData
 		};
 	} );
 	const [ isUploading, setIsUploading ] = useState<boolean>( false );
-	const [ blueprintParse, setBlueprintParse ] = useState<Blueprint | undefined>( () => defaultBlueprintData );
-	const [ sbpFile, setSbpFile ] = useState<File | null>( () => null );
-	const [ sbpcfgFile, setSbpcfgFile ] = useState<File | null>( () => null );
-	const [ images, setImages ] = useState<FileList | null>( () => null );
+	const [ blueprintParse, setBlueprintParse ] = useState<Blueprint | undefined>( () => {
+		return defaultBlueprintData;
+	} );
+	const [ sbpFile, setSbpFile ] = useState<File | null>( () => {
+		return null;
+	} );
+	const [ sbpcfgFile, setSbpcfgFile ] = useState<File | null>( () => {
+		return null;
+	} );
+	const [ images, setImages ] = useState<FileList | null>( () => {
+		return null;
+	} );
 	const [ DesignerSize, setDesignerSize ] = useState<SingleValue<SelectOptionStruct<EDesignerSize>>>( designerSizeSingle( defaultData?.DesignerSize || EDesignerSize.mk1 ) );
 	const [ formTags, setTags ] = useState<MultiValue<SelectOptionStruct>>( tagSelectedMulti( defaultData?.tags || [] ) );
 
@@ -73,32 +82,42 @@ const BlueprintEditor: FunctionComponent<BlueprintEditorProps> = ( { defaultData
 
 	const Mods: Mod[] = useMemo( () => {
 		const modRefs = findModsFromBlueprint( blueprintParse?.objects );
-		return mods.filter( e => modRefs.includes( e.mod_reference ) );
-	}, [ blueprintParse?.objects, mods ] ) ;
+		return mods.filter( e => {
+			return modRefs.includes( e.mod_reference );
+		} );
+	}, [ blueprintParse?.objects, mods ] );
 
 	const Tags: Tag[] = useMemo( () => {
-		return tags.filter( e => form.tags.includes( e._id ) );
-	}, [ form.tags, tags ] ) ;
+		return tags.filter( e => {
+			return form.tags.includes( e._id );
+		} );
+	}, [ form.tags, tags ] );
 
 	const buildingCount = useMemo( () => {
 		const objects: ( SaveEntity | SaveComponent )[] = blueprintParse?.objects || [];
-		return objects.filter( e => e.type === "SaveEntity" ).length;
+		return objects.filter( e => {
+			return e.type === "SaveEntity";
+		} ).length;
 	}, [ blueprintParse?.objects ] );
 
 	const totalItemCost = useMemo( () => {
 		const itemCosts: [string, number][] = blueprintParse?.header.itemCosts || [];
-		return itemCosts.reduce( ( total, cost ) => total + cost[ 1 ], 0 );
+		return itemCosts.reduce( ( total, cost ) => {
+			return total + cost[ 1 ];
+		}, 0 );
 	}, [ blueprintParse?.header.itemCosts ] );
 
 	// smallHelper function to set form values
 	function setKey<K extends keyof BlueprintData>( key: K, value: BlueprintData[K] ) {
-		setForm( curr => ( {
-			...curr,
-			[ key ]: value
-		} ) );
+		setForm( curr => {
+			return  {
+				...curr,
+				[ key ]: value
+			};
+		} );
 	}
 
-	const handleFileSelect: ChangeEventHandler<HTMLInputElement> = ( e ) => {
+	const handleFileSelect: ChangeEventHandler<HTMLInputElement> = e => {
 		switch ( e.target.name ) {
 			case "sbp":
 				if( !e.target.files || !e.target.files[ 0 ].name.endsWith( ".sbp" ) ) {
@@ -224,11 +243,15 @@ const BlueprintEditor: FunctionComponent<BlueprintEditorProps> = ( { defaultData
 					</div>
 
 					<div className="p-3 flex flex-col gap-3">
-						<SBSInput label="Blueprint Title" value={ form.name } onChange={ e => setKey( "name", e.target.value ) } />
+						<SBSInput label="Blueprint Title" value={ form.name } onChange={ e => {
+							return setKey( "name", e.target.value );
+						} } />
 						<div className="flex flex-col">
 							<div className="bg-gray-600 pt-2 rounded-lg">
 								<Label htmlFor={ id + "desc" } className="text-lg p-3 w-full">Blueprit Description (.md / Markdown)</Label>
-								<Textarea id={ id + "desc" } className="mt-2" style={ { minHeight: 200, maxHeight: 200 } } value={ form.description } onChange={ e => setKey( "description", e.target.value ) } />
+								<Textarea id={ id + "desc" } className="mt-2" style={ { minHeight: 200, maxHeight: 200 } } value={ form.description } onChange={ e => {
+									return setKey( "description", e.target.value );
+								} } />
 							</div>
 						</div>
 						<SBSSelect label="Tags">
@@ -237,7 +260,9 @@ const BlueprintEditor: FunctionComponent<BlueprintEditorProps> = ( { defaultData
 								classNamePrefix="my-react-select" isMulti={ true } onChange={ e => {
 									setTags( e );
 									if( e ) {
-										form.tags = e.map( e => e.value );
+										form.tags = e.map( e => {
+											return e.value;
+										} );
 									}
 								} } />
 						</SBSSelect>
@@ -285,9 +310,11 @@ const BlueprintEditor: FunctionComponent<BlueprintEditorProps> = ( { defaultData
 						<div className="p-3 border-b bg-gray-900 border-gray-700 text-neutral-300">
 							<BiTag className="inline me-1 text-xl pb-1" /> <b>Tags</b>
 							{ !!Tags.length && <div className="flex flex-wrap p-2 text-neutral-200 text-xs gap-2">
-								{ Tags.map( e => (
-									<div key={ id + e._id } className="bg-gray-700 p-1 px-3 rounded-lg border border-gray-600 shadow">{ e.DisplayName }</div>
-								) ) }
+								{ Tags.map( e => {
+									return (
+										<div key={ id + e._id } className="bg-gray-700 p-1 px-3 rounded-lg border border-gray-600 shadow">{ e.DisplayName }</div>
+									);
+								} ) }
 							</div> }
 						</div>
 						{ !!Mods.length && <div className="p-3 border-b bg-gray-900 border-gray-700 text-neutral-300">

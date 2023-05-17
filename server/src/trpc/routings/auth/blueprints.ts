@@ -16,9 +16,10 @@ import { z } from "zod";
 import { buildFilter, filterSchema } from "../public/blueprint";
 import { adminProcedure } from './../../trpc';
 
+
 export const authBlueprints = router( {
 	rate: blueprintProcedure.input( z.object( {
-		rating: z.number().min( 1 ).max( 5 ),
+		rating: z.number().min( 1 ).max( 5 )
 	} ) ).mutation( async( { ctx, input } ) => {
 		const { blueprint, userClass } = ctx;
 		const { rating } = input;
@@ -26,7 +27,9 @@ export const authBlueprints = router( {
 		try {
 			const bpDocument = await blueprint.getDocument();
 			if( bpDocument ) {
-				const ratingIndex = bpDocument.rating.findIndex( e => _.isEqual( e.userid, userClass.Get._id ) );
+				const ratingIndex = bpDocument.rating.findIndex( e => {
+					return _.isEqual( e.userid, userClass.Get._id );
+				} );
 				if( ratingIndex >= 0 ) {
 					bpDocument.rating[ ratingIndex ].rating = rating;
 				} else {
@@ -85,8 +88,8 @@ export const authBlueprints = router( {
 		const { userClass } = ctx;
 		try {
 			const { filter, options } = buildFilter( filterOptions );
-			const totalBlueprints = await MongoBlueprints.count( { ...filter, blacklisted: { $ne : true }, owner: userClass.Get._id } );
-			const blueprints = await MongoBlueprints.find<BlueprintData>( { ...filter, blacklisted: { $ne : true }, owner: userClass.Get._id }, null, { ...options, limit, skip } );
+			const totalBlueprints = await MongoBlueprints.count( { ...filter, blacklisted: { $ne: true }, owner: userClass.Get._id } );
+			const blueprints = await MongoBlueprints.find<BlueprintData>( { ...filter, blacklisted: { $ne: true }, owner: userClass.Get._id }, null, { ...options, limit, skip } );
 			return { blueprints, totalBlueprints };
 		} catch( e ) {
 			handleTRCPErr( e );

@@ -9,6 +9,7 @@ import { useLocalStorage } from "@kyri123/k-reactutils";
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
+
 export function useAuth() {
 	const navigate = useNavigate();
 	const { Storage, SetStorage, ResetStorage } = useLocalStorage( AUTHTOKEN, "" );

@@ -5,6 +5,7 @@ import type { Blueprint } from "@etothepii/satisfactory-file-parser";
 import type { LoaderFunction } from "react-router-dom";
 import { json, redirect } from "react-router-dom";
 
+
 export type BlueprintIdLoader = LoaderBlueprintBase & {
 	blueprint: Blueprint
 };
@@ -18,7 +19,9 @@ const blueprintIdLoader: LoaderFunction = async( { params, request } ) => {
 	const { blueprintId } = params;
 
 	const [ blueprint ] = await Promise.all( [
-		tRPCPublic.blueprint.readBlueprint.mutate( { blueprintId: blueprintId! } ).catch( () => null )
+		tRPCPublic.blueprint.readBlueprint.mutate( { blueprintId: blueprintId! } ).catch( () => {
+			return null;
+		} )
 	] );
 
 	if( !blueprint || result.blueprintData.blacklisted ) {

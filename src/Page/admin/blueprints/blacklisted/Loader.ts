@@ -6,6 +6,7 @@ import type { BlueprintData } from "@server/MongoDB/MongoBlueprints";
 import type { LoaderFunction } from "react-router-dom";
 import { json } from "react-router-dom";
 
+
 const loader: LoaderFunction = async( { params, request } ) => {
 	const result = await validateLogin( { params, request }, LoginRule.LoggedIn, "/error/401", ERoles.admin );
 	if( result instanceof Response ) {

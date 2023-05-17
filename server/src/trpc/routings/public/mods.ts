@@ -7,6 +7,7 @@ import {
 } from "@server/trpc/trpc";
 import { TRPCError } from "@trpc/server";
 
+
 export const publicMods = router( {
 	getMods: publicProcedure.query( async() => {
 		try {

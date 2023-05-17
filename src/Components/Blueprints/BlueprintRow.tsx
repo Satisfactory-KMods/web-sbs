@@ -7,6 +7,7 @@ import { FaEye } from "react-icons/fa";
 import { HiCog, HiDownload, HiTrash } from "react-icons/hi";
 import { Link } from "react-router-dom";
 
+
 interface IBlueprintRowProps {
 	Data: BlueprintData;
 	onToggled: () => Promise<void>;

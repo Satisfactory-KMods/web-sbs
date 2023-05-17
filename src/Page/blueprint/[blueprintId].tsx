@@ -37,6 +37,7 @@ import {
 	useLoaderData
 }                                        from "react-router-dom";
 
+
 const Component: FunctionComponent = () => {
 	const id = useId();
 	const { blueprintData, blueprintOwner, blueprint } = useLoaderData() as BlueprintIdLoader;
@@ -57,12 +58,16 @@ const Component: FunctionComponent = () => {
 
 	const buildingCount = useMemo( () => {
 		const objects: ( SaveEntity | SaveComponent )[] = blueprintParse?.objects || [];
-		return objects.filter( e => e.type === "SaveEntity" ).length;
+		return objects.filter( e => {
+			return e.type === "SaveEntity";
+		} ).length;
 	}, [ blueprintParse?.objects ] );
 
 	const totalItemCost = useMemo( () => {
 		const itemCosts: [ string, number ][] = blueprintParse?.header.itemCosts || [];
-		return itemCosts.reduce( ( total, cost ) => total + cost[ 1 ], 0 );
+		return itemCosts.reduce( ( total, cost ) => {
+			return total + cost[ 1 ];
+		}, 0 );
 	}, [ blueprintParse?.header.itemCosts ] );
 
 	return (
@@ -80,11 +85,13 @@ const Component: FunctionComponent = () => {
 					<div className="absolute inset-0 flex items-center justify-center w-full h-full">
 						{ Blueprint.images.length > 1 ?
 							( <Carousel>
-								{ Blueprint.images.map( e => (
-									<img className="w-full h-full object-cover"
+								{ Blueprint.images.map( e => {
+									return (
+										<img className="w-full h-full object-cover"
 									     src={ `/api/v1/image/${ Blueprint._id }/${ e }` } key={ id + e }
 									     alt="BlueprintLogo" />
-								) ) }
+									);
+								} ) }
 							</Carousel> )
 							: ( <img className="w-full h-full object-cover"
 							         src={ `/api/v1/image/${ Blueprint._id }/${ Blueprint.images[ 0 ] }` }
@@ -104,10 +111,12 @@ const Component: FunctionComponent = () => {
 					<BlueprintRating className="flex-1" blueprintHook={ bpHook } />
 				</div>
 				{ !!Blueprint.tags.length && <div className="flex flex-wrap p-3 pt-0 border-t bg-gray-700 border-gray-700 text-neutral-200 text-xs">
-					{ Tags.map( e => (
-						<div key={ id + e._id }
+					{ Tags.map( e => {
+						return (
+							<div key={ id + e._id }
 						     className="bg-gray-900 p-1 px-3 rounded-lg border border-gray-800 shadow">{ e.DisplayName }</div>
-					) ) }
+						);
+					} ) }
 				</div> }
 			</div>
 

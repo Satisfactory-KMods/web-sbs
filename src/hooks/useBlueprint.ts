@@ -15,6 +15,7 @@ import {
 	useState
 } from "react";
 
+
 export interface IBlueprintHookConfig {
 	IgnoreBlacklisted: boolean;
 	blueprint: Blueprint;
@@ -43,7 +44,9 @@ export function useBlueprint( InitValue: string | BlueprintData, defaultUser?: {
 	const [ blueprintData, setBlueprintData ] = useState<Blueprint | undefined>( Config?.blueprint );
 	const [ Tags, setTags ] = useState<Tag[]>( [] );
 	const [ Mods, setMods ] = useState<Mod[]>( [] );
-	const [ owner, setOwner ] = useState<{ id: string, username: string }>( () => defaultUser || { id: "", username: "" } );
+	const [ owner, setOwner ] = useState<{ id: string, username: string }>( () => {
+		return defaultUser || { id: "", username: "" };
+	} );
 
 	const BlueprintID = useMemo( () => {
 		if( typeof InitValue === "string" ) {
@@ -65,8 +68,12 @@ export function useBlueprint( InitValue: string | BlueprintData, defaultUser?: {
 
 	const updateData = ( newData?: BlueprintData ) => {
 		const blueprintData = newData || Blueprint;
-		setTags( tags.filter( e => blueprintData.tags.includes( e._id ) ) );
-		setMods( mods.filter( e => blueprintData.mods.includes( e.mod_reference ) ) );
+		setTags( tags.filter( e => {
+			return blueprintData.tags.includes( e._id );
+		} ) );
+		setMods( mods.filter( e => {
+			return blueprintData.mods.includes( e.mod_reference );
+		} ) );
 	};
 
 	const QueryBlueprintParse = async() => {

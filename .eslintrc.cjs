@@ -30,7 +30,34 @@ module.exports = {
 		"@typescript-eslint"
 	],
 	rules: {
-		"camelcase": [ "warn", { "properties": "never" }],
+		"import/newline-after-import": [ "error", { "count": 2 } ],
+		"import/consistent-type-specifier-style": [ "error", "prefer-top-level" ],
+		"import/no-empty-named-blocks": "error",
+		"object-property-newline": [ "error", { "allowMultiplePropertiesPerLine": true } ],
+		"comma-dangle": "off",
+		"@typescript-eslint/comma-dangle": "error",
+
+		"block-spacing": "off",
+		"@typescript-eslint/block-spacing": "error",
+
+		"prefer-arrow-callback": "error",
+		"no-useless-computed-key": "error",
+		"arrow-body-style": [ "error", "always" ],
+		"semi-style": [ "error", "last" ],
+		"semi-spacing": "error",
+		"comma-spacing": "off",
+		"@typescript-eslint/comma-spacing": [ "error", { "before": false, "after": true } ],
+
+		"comma-style": [ "error", "last" ],
+		"computed-property-spacing": [ "error", "always" ],
+
+		"eol-last": [ "error", "always" ],
+		"key-spacing": "off",
+    	"@typescript-eslint/key-spacing": "error",
+
+		"eqeqeq": "error",
+		"curly": "error",
+		"camelcase": [ "warn", { "properties": "never" } ],
 		"brace-style": "off",
 		"@typescript-eslint/brace-style": [ "warn", "1tbs", {
 			"allowSingleLine": false
@@ -58,23 +85,31 @@ module.exports = {
 		"space-before-blocks": "off",
 		"@typescript-eslint/space-before-blocks": "warn",
 
-		"comma-spacing": [ "error", { "before": false, "after": true } ],
 		"space-infix-ops": "error",
 		"arrow-spacing": [ "warn", { "before": true, "after": true } ],
 		"space-before-function-paren": "off",
 		"@typescript-eslint/space-before-function-paren": [ "warn", "never" ],
+    	"@typescript-eslint/type-annotation-spacing": [ "error", { "before": false, "after": true, overrides: { arrow: { before: true, after: true } } } ],
 
-		"@typescript-eslint/type-annotation-spacing": "warn",
-		"@typescript-eslint/no-import-type-side-effects": "warn",
+		"indent": "off",
 		"@typescript-eslint/indent": [ "warn", "tab" ],
+
+		"arrow-parens": [ "error", "as-needed" ],
+		"switch-colon-spacing": "error",
+		"@typescript-eslint/array-type": "error",
+		"no-whitespace-before-property": "warn",
+		"no-unneeded-ternary": "warn",
+		"no-mixed-spaces-and-tabs": "warn",
+		"new-parens": "error",
+		"linebreak-style": [ "error", "windows" ],
+		"@typescript-eslint/no-import-type-side-effects": "warn",
 		"no-cond-assign": [ "error", "always" ],
 		"no-empty": 0,
 		"no-trailing-spaces": "warn",
 		"template-curly-spacing": [ "error", "always" ],
 		"space-in-parens": [ "warn", "always" ],
-		"indent": "off",
 		"no-tabs": 0,
-		"no-restricted-imports":"warn",
+		"no-restricted-imports": "warn",
 		"react/jsx-closing-bracket-location": [ "warn", "after-props" ],
 		"array-bracket-spacing": [ "warn", "always" ],
 		"computed-property-spacing": [ "warn", "always" ],

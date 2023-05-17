@@ -5,6 +5,7 @@ import * as crypto from "crypto";
 import * as mongoose from "mongoose";
 import { z } from "zod";
 
+
 const ZodUserAccountSchema = z.object( {
 	role: z.nativeEnum( ERoles ),
 	username: z.string(),
@@ -28,7 +29,8 @@ const UserAccountSchema = new mongoose.Schema( {
 	salt: { type: String, required: true },
 	apiKey: { type: String, required: false }
 }, {
-	timestamps: true, methods: {
+	timestamps: true,
+	methods: {
 		setPassword: function( password ) {
 			this.salt = crypto.randomBytes( 16 ).toString( "hex" );
 			this.hash = crypto.pbkdf2Sync( password, this.salt, 1000, 256, `sha512` ).toString( `hex` );
