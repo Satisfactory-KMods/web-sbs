@@ -79,6 +79,6 @@ const BlueprintPackSchema = new mongoose.Schema( {
 
 export type BlueprintPack = z.infer<typeof ZodBlueprintPackSchema> & MongoBase;
 
-export default mongoose.model<BlueprintPack, mongoose.Model<BlueprintPack, any, BlueprintPackSchemaMethods>>( "SBS_BlueprintPacks", BlueprintPackSchema );
+export default mongoose.model<BlueprintPack, mongoose.Model<BlueprintPack, unknown, BlueprintPackSchemaMethods>>( "SBS_BlueprintPacks", BlueprintPackSchema );
 export { BlueprintPackSchema, ZodBlueprintPackSchema };
 
