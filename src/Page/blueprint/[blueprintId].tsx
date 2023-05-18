@@ -1,4 +1,5 @@
 import BlueprintRating from "@app/Components/Blueprints/BlueprintRating";
+import { CopyButton } from "@app/Components/elements/Buttons";
 import type { BlueprintIdLoader } from "@app/Page/blueprint/edit/[blueprintId]Loader";
 import { mdxComponents } from "@app/Page/terms/private/Page";
 import type {
@@ -116,6 +117,13 @@ const Component: FunctionComponent = () => {
 				<div className="flex-1 flex flex-col mb-auto">
 					<div className="p-3 border-b bg-gray-900 border-gray-700 text-neutral-300 rounded-t-lg">
 						<BiUser className="inline me-1 text-xl pb-1" /> <b>Creator:</b> <span className="text-neutral-100">{ owner.username }</span>
+					</div>
+					<div className="p-3 border-b bg-gray-900 border-gray-700 text-neutral-300 rounded-t-lg flex">
+						<div className="flex-1">
+							<BiUser className="inline me-1 text-xl pb-1 content-left" />
+							<b>Blueprint ID:</b> <span className="text-neutral-100">{ Blueprint._id }</span>
+						</div>
+						<CopyButton size="xs" copyString={ Blueprint._id } />
 					</div>
 					<div className="p-3 border-b bg-gray-900 border-gray-700 text-neutral-300">
 						<MdOutlinePhotoSizeSelectSmall className="inline me-1 text-xl pb-1" /> <b>Designer Size:</b>
