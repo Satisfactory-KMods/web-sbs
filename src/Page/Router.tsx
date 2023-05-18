@@ -102,6 +102,46 @@ const rootRouter = createBrowserRouter( [
 					return loader( { request, params } );
 				}
 			},
+			{
+				path: "/blueprint/packs/edit/:blueprintId",
+				lazy: async() => await import( "@page/blueprint/packs/edit/[blueprintPackId]" ),
+				loader: async( { request, params } ) => {
+					const { loader } = await import( "@page/blueprint/packs/edit/[blueprintPackId]Loader" );
+					return loader( { request, params } );
+				}
+			},
+			{
+				path: "/blueprint/packs/my",
+				lazy: async() => await import( "@page/blueprint/packs/my/Page" ),
+				loader: async( { request, params } ) => {
+					const { loader } = await import( "@page/blueprint/packs/my/Loader" );
+					return loader( { request, params } );
+				}
+			},
+			{
+				path: "/blueprint/packs/create/",
+				lazy: async() => await import( "@page/blueprint/packs/create/Page" ),
+				loader: async( { request, params } ) => {
+					const { loader } = await import( "@page/blueprint/packs/create/Loader" );
+					return loader( { request, params } );
+				}
+			},
+			{
+				path: "/blueprint/packs/edit/:blueprintPackId",
+				lazy: async() => await import( "@page/blueprint/packs/edit/[blueprintPackId]" ),
+				loader: async( { request, params } ) => {
+					const { loader } = await import( "@page/blueprint/packs/edit/[blueprintPackId]Loader" );
+					return loader( { request, params } );
+				}
+			},
+			{
+				path: "/blueprint/packs/",
+				lazy: async() => await import( "@page/blueprint/packs/Page" ),
+				loader: async( { request, params } ) => {
+					const { loader } = await import( "@page/blueprint/packs/Loader" );
+					return loader( { request, params } );
+				}
+			},
 			// end App ----------------------------------,
 			{
 				path: "/",

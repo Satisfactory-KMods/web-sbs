@@ -79,6 +79,6 @@ const Component: FunctionComponent = () => {
 };
 
 export {
-    Component
+	Component
 };
 

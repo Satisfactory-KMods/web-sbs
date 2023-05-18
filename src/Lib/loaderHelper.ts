@@ -61,7 +61,7 @@ const validateBlueprint = async( {
 		redirect( redirectTo );
 	}
 
-	blueprintOwner.id = result.blueprintData.owner;
+	blueprintOwner.id = result.blueprintData.owner as string;
 	blueprintOwner.username = result.bpOwnerName;
 
 	const blueprintPermission = ( loaderBase.user.Get._id === result.blueprintData.owner || loaderBase.user.HasPermission( ERoles.admin ) );
