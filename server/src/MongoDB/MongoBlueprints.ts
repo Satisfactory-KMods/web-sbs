@@ -1,5 +1,7 @@
 import { BlueprintClass } from "@/server/src/Lib/Blueprint.Class";
 import { parseBlueprintById } from "@/server/src/Lib/BlueprintParser";
+import { ZodTagSchema } from "@/server/src/MongoDB/MongoTags";
+import { ZodUserAccountSchema } from "@/server/src/MongoDB/MongoUserAccount";
 import { findModsFromBlueprint } from "@/src/Shared/blueprintReadingHelper";
 import type { BlueprintConfig } from "@etothepii/satisfactory-file-parser";
 import type { MongoBase } from "@server/Types/mongo";
@@ -9,7 +11,7 @@ import { z } from "zod";
 
 
 const ZodRating = z.object( {
-	userid: z.string(),
+	userid: z.string().or( ZodUserAccountSchema ),
 	rating: z.number().min( 1 ).max( 5 )
 } );
 
@@ -31,25 +33,25 @@ const ZodBlueprintBase = z.object( {
 	iconData: ZodIconData.optional(),
 	name: z.string(),
 	description: z.string(),
-	owner: z.string(),
+	owner: z.string().or( ZodUserAccountSchema ),
 	DesignerSize: z.nativeEnum( EDesignerSize ),
 	mods: z.array( z.string() ),
 	rating: z.array( ZodRating ),
 	totalRating: z.number(),
 	totalRatingCount: z.number(),
-	tags: z.array( z.string() ),
+	tags: z.array( z.string() ).or( z.array( ZodTagSchema ) ),
 	images: z.array( z.string() )
 } );
 
 const ZodBlueprintPackSchema = z.object( {
 	name: z.string(),
 	description: z.string(),
-	owner: z.string(),
+	owner: z.string().or( ZodUserAccountSchema ),
 	mods: z.array( z.string() ),
 	rating: z.array( ZodRating ),
 	totalRating: z.number(),
 	totalRatingCount: z.number(),
-	tags: z.array( z.string() ),
+	tags: z.array( z.string() ).or( z.array( ZodTagSchema ) ),
 	downloads: z.number(),
 	images: z.array( z.string() ),
 	blueprints: z.array( z.string() ).or( z.array( ZodBlueprintBase ) )
@@ -75,16 +77,16 @@ const BlueprintSchema = new mongoose.Schema( {
 	name: { type: String, required: true },
 	description: { type: String, required: true },
 	mods: { type: [ String ], required: true, default: [] },
-	tags: { type: [ String ], required: true, default: [] },
+	tags: { type: [ mongoose.Schema.Types.ObjectId ], ref: "SBS_Tags", required: true, default: [] },
 	rating: { type: [ {
-		userid: { type: String, required: true },
+		userid: { type: mongoose.Schema.Types.ObjectId, ref: "SBS_UserAccount", required: true },
 		rating: { type: Number, required: true }
 	} ],
 	required: true },
 	totalRating: { type: Number, required: true },
 	totalRatingCount: { type: Number, required: true },
 	DesignerSize: { type: String, required: true },
-	owner: { type: String, required: true },
+	owner: { type: mongoose.Schema.Types.ObjectId, ref: "SBS_UserAccount", required: true },
 	downloads: { type: Number, required: true, default: 0 },
 	images: { type: [ String ], required: true },
 	inPacks: { type: [ mongoose.Schema.Types.ObjectId ], ref: "SBS_BlueprintPacks", required: true },
@@ -168,14 +170,14 @@ const BlueprintPackSchema = new mongoose.Schema( {
 	description: { type: String, required: true },
 	mods: { type: [ String ], required: true },
 	rating: { type: [ {
-		userid: { type: String, required: true },
+		userid: { type: mongoose.Schema.Types.ObjectId, ref: "SBS_UserAccount", required: true },
 		rating: { type: Number, required: true }
 	} ],
 	required: true },
 	totalRating: { type: Number, required: true },
 	totalRatingCount: { type: Number, required: true },
-	tags: { type: [ String ], required: true },
-	owner: { type: String, required: true },
+	tags: { type: [ mongoose.Schema.Types.ObjectId ], ref: "SBS_Tags", required: true },
+	owner: { type: mongoose.Schema.Types.ObjectId, ref: "SBS_UserAccount", required: true },
 	downloads: { type: Number, required: true, default: 0 },
 	blueprints: { type: [ mongoose.Schema.Types.ObjectId ], ref: "SBS_Blueprints", required: true }
 }, { timestamps: true,

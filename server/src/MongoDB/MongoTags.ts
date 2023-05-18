@@ -14,4 +14,4 @@ const TagSchema = new mongoose.Schema( {
 export type Tag = z.infer<typeof ZodTagSchema> & MongoBase;
 
 export default mongoose.model<Tag>( "SBS_Tags", TagSchema );
-export { TagSchema };
+export { TagSchema, ZodTagSchema };

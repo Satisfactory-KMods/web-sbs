@@ -57,5 +57,5 @@ export type ClientUserAccount = Omit<UserAccount, "hash" | "salt" | "__v">;
 const Model = mongoose.model<UserAccount, mongoose.Model<UserAccount, unknown, UserAccountMethods>>( "SBS_UserAccount", UserAccountSchema );
 
 export default Model;
-export { UserAccountSchema };
+export { UserAccountSchema, ZodUserAccountSchema };
 
