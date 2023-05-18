@@ -230,6 +230,14 @@ export const Revalidate = async() => {
 	for await ( const bpDoc of MongoBlueprints.find( { iconData: { $exists: false } } ) ) {
 		await bpDoc.updateBlueprintData();
 	}
+
+	// todo: remove
+	for await ( const bpDoc of MongoBlueprints.find() ) {
+		bpDoc.markModified( "rating" );
+		bpDoc.markModified( "tags" );
+		bpDoc.markModified( "owner" );
+		await bpDoc.save();
+	}
 };
 
 export default MongoBlueprints;
