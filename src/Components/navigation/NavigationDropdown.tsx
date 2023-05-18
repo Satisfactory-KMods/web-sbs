@@ -41,9 +41,9 @@ const NavigationDropdown: FunctionComponent<NavigationDropdownProps> = ( { image
 				{ image && <img className="h-8 w-8 rounded-full"
 				                src={ image }
 				                alt="Logoimage" /> }
-				{ text && <span className="ml-3 hidden md:block">{ text }</span> }
+				{ text && <span className="ml-3">{ text }</span> }
 			</button>
-			<div className="hidden max-w-sm bg-white divide-y divide-gray-100 shadow absolute right-0 mt-2 w-56 origin-top-right"
+			<div className="hidden max-w-sm bg-white divide-y divide-gray-100 shadow absolute right-0 mt-2 w-56 origin-top-right z-50"
 				ref={ dropDownRef }>
 				{ children }
 			</div>

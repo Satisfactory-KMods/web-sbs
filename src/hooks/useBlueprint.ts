@@ -17,7 +17,6 @@ import {
 
 
 export interface IBlueprintHookConfig {
-	IgnoreBlacklisted: boolean;
 	blueprint: Blueprint;
 }
 
@@ -41,7 +40,7 @@ export function useBlueprint( InitValue: string | BlueprintData, defaultUser?: {
 	} );
 	const { loggedIn, user } = useAuth();
 	const [ DoQueryLikes, setDoQueryLikes ] = useState<boolean>( false );
-	const [ blueprintData, setBlueprintData ] = useState<Blueprint | undefined>( Config?.blueprint );
+	const [ blueprintParse, setBlueprintData ] = useState<Blueprint | undefined>( Config?.blueprint );
 	const [ Tags, setTags ] = useState<Tag[]>( [] );
 	const [ Mods, setMods ] = useState<Mod[]>( [] );
 	const [ owner, setOwner ] = useState<{ id: string, username: string }>( () => defaultUser || { id: "", username: "" } );
@@ -55,17 +54,12 @@ export function useBlueprint( InitValue: string | BlueprintData, defaultUser?: {
 
 	const isOwner = useMemo( () => user.Get._id === owner.id, [ owner.id, user.Get._id ] );
 
-	const isValid = useMemo( () => {
-		if( Config?.IgnoreBlacklisted ) {
-			return Blueprint._id !== "";
-		}
-		return Blueprint._id !== "";
-	}, [ Blueprint._id, Config?.IgnoreBlacklisted ] );
+	const isValid = useMemo( () => Blueprint._id !== "", [ Blueprint._id ] );
 
 	const updateData = ( newData?: BlueprintData ) => {
-		const blueprintData = newData || Blueprint;
-		setTags( tags.filter( e => blueprintData.tags.includes( e._id ) ) );
-		setMods( mods.filter( e => blueprintData.mods.includes( e.mod_reference ) ) );
+		const blueprintParse = newData || Blueprint;
+		setTags( tags.filter( e => blueprintParse.tags.includes( e._id ) ) );
+		setMods( mods.filter( e => blueprintParse.mods.includes( e.mod_reference ) ) );
 	};
 
 	const QueryBlueprintParse = async() => {
@@ -77,11 +71,11 @@ export function useBlueprint( InitValue: string | BlueprintData, defaultUser?: {
 	};
 
 	const Query = async() => {
-		const [ blueprintData, Result ] = await Promise.all( [
+		const [ blueprintParse, Result ] = await Promise.all( [
 			tRPCPublic.blueprint.readBlueprint.mutate( { blueprintId: BlueprintID } ).catch( () => {} ),
 			tRPCPublic.blueprint.getBlueprint.query( { blueprintId: BlueprintID } ).catch( () => {} )
 		] );
-		blueprintData && setBlueprintData( blueprintData );
+		blueprintParse && setBlueprintData( blueprintParse );
 		if( Result ) {
 			setOwner( { id: Result.blueprintData.owner, username: Result.bpOwnerName } );
 			updateData( Result.blueprintData );
@@ -132,20 +126,21 @@ export function useBlueprint( InitValue: string | BlueprintData, defaultUser?: {
 		return false;
 	};
 
+	const allowedToLike = useMemo( () => loggedIn && Blueprint.owner !== user.Get._id, [ loggedIn, Blueprint.owner, user ] );
+
 	return {
 		owner,
 		isOwner,
 		remove,
-		blueprintParse: blueprintData,
+		blueprintParse,
 		Mods,
 		Tags,
-		allowedToLike: loggedIn && Blueprint.owner !== user.Get._id,
+		allowedToLike,
 		allowedToEdit,
 		isValid,
 		Update: Query,
 		Blueprint,
 		BlueprintID,
-		UpdateBlueprintCache: setBlueprint,
 		DoQueryLikes
 	};
 }
