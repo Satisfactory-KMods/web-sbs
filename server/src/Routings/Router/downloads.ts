@@ -14,7 +14,7 @@ import path from "path";
 const increaseDownloadCount = async( docu: HydratedDocument<BlueprintData>, ip: string ) => {
 	const id = docu._id.toString();
 	if( !DownloadIPCached.get( id )?.includes( ip ) ) {
-		if( docu.downloads ) {
+		if( typeof docu.downloads !== "number" ) {
 			docu.downloads = 0;
 		}
 		docu.downloads++;
