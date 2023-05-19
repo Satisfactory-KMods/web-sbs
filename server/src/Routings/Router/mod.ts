@@ -51,6 +51,46 @@ export default function() {
 	} );
 
 
+	Router.post( ApiUrl( "mod/getblueprintpacks" ), MWRest, async( req: ExpressRequest<{
+		skip: number,
+		limit: number,
+		filterOptions: z.infer<typeof filterSchema>
+	}>, res: Response ) => {
+		try {
+			z.number().optional().parse( req.body.skip );
+			z.number().parse( req.body.limit );
+			filterSchema.optional().parse( req.body.filterOptions );
+
+			const { skip, limit, filterOptions } = req.body;
+
+			const { filter, options } = buildFilter( filterOptions );
+			const totalBlueprints = await MongoBlueprintPacks.count( filter );
+			const blueprintPacks: BlueprintPack[] = [];
+			for await ( const blueprint of MongoBlueprintPacks.find( filter, { description: 0 }, { skip, limit, options } ) ) {
+				const copy: BlueprintPack = _.cloneDeep( blueprint.toJSON() );
+				const owner = await MongoUserAccount.findById( blueprint.owner );
+				if( owner ) {
+					copy.owner = owner.username || "Unknown User";
+				}
+				if( copy.tags.length > 0 ) {
+					const tags = await MongoTags.find( { _id: { $in: copy.tags } } );
+					// @ts-ignore
+					copy.tags = tags.map( e => ( { DisplayName: e.DisplayName, _id: e._id.toString() } ) );
+				}
+				blueprintPacks.push( copy );
+			}
+
+			return res.json( { blueprintPacks, totalBlueprints } );
+		} catch( e ) {
+			if( e instanceof Error ) {
+				SystemLib.LogError( "api", e.message );
+			}
+		}
+
+		return res.sendStatus( 500 );
+	} );
+
+
 	Router.post( ApiUrl( "mod/gettags" ), MWRest, async( req: ExpressRequest, res: Response ) => {
 		try {
 			const tags = await MongoTags.find();

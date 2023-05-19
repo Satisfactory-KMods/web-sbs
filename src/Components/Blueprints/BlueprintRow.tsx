@@ -5,7 +5,7 @@ import { Button } from "flowbite-react";
 import type { FunctionComponent } from "react";
 import { FaEye } from "react-icons/fa";
 import { HiCog, HiDownload, HiTrash } from "react-icons/hi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 
 interface IBlueprintRowProps {
@@ -14,6 +14,7 @@ interface IBlueprintRowProps {
 }
 
 const BlueprintRow: FunctionComponent<IBlueprintRowProps> = ( { Data, onToggled } ) => {
+	const nav = useNavigate();
 	const bpHook = useBlueprint( Data );
 	const {
 		Blueprint,
@@ -49,7 +50,7 @@ const BlueprintRow: FunctionComponent<IBlueprintRowProps> = ( { Data, onToggled 
 						<HiDownload className="text-sm me-2" /> { Blueprint.downloads }
 					</Button>
 
-					<Button href={ `/blueprint/${ Blueprint._id }` } target="_blank" color="gray" size="small" className="p-1 px-3 ms-2">
+					<Button onClick={ () => nav( `/blueprint/${ Blueprint._id }` ) } color="gray" size="small" className="p-1 px-3 ms-2">
 						&nbsp;&nbsp;<FaEye className="text-sm me-2" />
 					</Button>
 				</div>
