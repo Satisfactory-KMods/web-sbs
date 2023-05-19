@@ -7,8 +7,8 @@ import type { IconType } from "react-icons/lib";
 
 
 interface LoadingButtonsProps extends ButtonProps {
-	isLoading?: boolean;
-	Icon: IconType;
+	isLoading?: boolean,
+	Icon: IconType
 }
 
 const LoadingButton = forwardRef<HTMLButtonElement, LoadingButtonsProps>( ( {
@@ -31,8 +31,8 @@ const LoadingButton = forwardRef<HTMLButtonElement, LoadingButtonsProps>( ( {
 } );
 
 interface CopyButtonsProps extends ButtonProps {
-	copyString?: string;
-	getCopyString?: () => string;
+	copyString?: string,
+	getCopyString?: () => string
 }
 
 const CopyButton = forwardRef<HTMLButtonElement, CopyButtonsProps>( ( {

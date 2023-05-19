@@ -38,14 +38,14 @@ const Component: FunctionComponent = () => {
 		}
 	    setIsFetching( false );
 	};
-	const { setPage, currentPage, maxPage, filterOption } = useRawPageHandler( totalPacks, onPageChange, 12 );
+	const { setPage, currentPage, maxPage, filterOption } = useRawPageHandler( totalPacks, onPageChange, 20 );
 	const doFetch = async() => onPageChange( filterOption );
 
 	return (
 		<>
 			<BlueprintFilter filterSchema={ [ filter, setFilter ] } isFetching={ isFetching } doFetch={ doFetch }>
 				<span className="flex-1">
-					Blueprint Pack Filter
+					Blueprint Pack Filter ({ totalPacks })
 				</span>
 				<Button size="xs" color="green" onClick={ () => nav( "/blueprintpacks/create" ) }><FaPlus className="me-2" /> Add a new blueprint pack</Button>
 			</BlueprintFilter>

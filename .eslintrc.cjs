@@ -48,6 +48,17 @@ module.exports = {
 		"semi-spacing": "error",
 		"comma-spacing": "off",
 		"@typescript-eslint/comma-spacing": [ "error", { "before": false, "after": true } ],
+		"@typescript-eslint/member-delimiter-style": [ "error", {
+			"multiline": {
+				"delimiter": "comma",
+				"requireLast": false
+			},
+			"singleline": {
+				"delimiter": "comma",
+				"requireLast": false
+			},
+			"multilineDetection": "brackets"
+		} ],
 
 		"comma-style": [ "error", "last" ],
 

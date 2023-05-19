@@ -1,11 +1,11 @@
 
-import type { IndexLoaderData } from "@app/Page/blueprint/list/Loader";
+import type { BlueprintPackListLoaderData } from "@app/Page/blueprintpacks/list/Loader";
 import { LoginRule, validateLogin } from "@applib/loaderHelper";
 import {
 	tRPCAuth,
 	tRPCHandleError
 } from "@applib/tRPC";
-import type { BlueprintData } from "@server/MongoDB/MongoBlueprints";
+import type { BlueprintPackExtended } from "@server/MongoDB/MongoBlueprints";
 import type { LoaderFunction } from "react-router-dom";
 import { json } from "react-router-dom";
 
@@ -15,9 +15,9 @@ export const loader: LoaderFunction = async( { params, request } ) => {
 	if( result instanceof Response ) {
 		return result;
 	}
-	const Blueprints = await tRPCAuth.blueprints.myBlueprints.query( { limit: 10 } ).catch( tRPCHandleError );
-	const blueprints: BlueprintData[] = Blueprints?.blueprints || [];
-	const totalBlueprints: number = Blueprints?.totalBlueprints || 0;
+	const queryResult = await tRPCAuth.blueprintPacks.my.query( { limit: 20 } ).catch( tRPCHandleError );
+	const blueprintPacks: BlueprintPackExtended[] = queryResult?.blueprintPacks || [];
+	const totalBlueprints: number = queryResult?.totalBlueprints || 0;
 
-	return json<IndexLoaderData>( { ...result, blueprints, totalBlueprints } );
+	return json<BlueprintPackListLoaderData>( { ...result, blueprintPacks, totalBlueprints } );
 };

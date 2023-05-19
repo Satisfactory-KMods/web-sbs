@@ -12,7 +12,7 @@ import Select from "react-select";
 
 
 interface BlueprintFilterProps extends PropsWithChildren {
-	isFetching: boolean;
+	isFetching: boolean,
 	filterSchema: [FilterSchema, Dispatch<SetStateAction<FilterSchema>>],
 	doFetch: () => Promise<void>
 }
@@ -101,7 +101,7 @@ const BlueprintFilter: FunctionComponent<BlueprintFilterProps> = ( { isFetching,
 					</LoadingButton>
 					<LoadingButton isLoading={ isFetching } color="red" className="flex-1" Icon={ BiTrash }
 						onClick={ ResetSearch }>
-							Clear Searching
+							Clear
 					</LoadingButton>
 				</div>
 			</div>

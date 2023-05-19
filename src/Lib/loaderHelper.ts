@@ -106,5 +106,5 @@ const validateBlueprintPack = async( {
 	return { ...loaderBase, blueprintPack: result };
 };
 
-export { validateLogin, validateBlueprint, validateBlueprintPack };
+export { validateBlueprint, validateBlueprintPack, validateLogin };
 

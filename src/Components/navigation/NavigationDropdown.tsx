@@ -7,8 +7,8 @@ import { useRef } from "react";
 
 
 interface NavigationDropdownProps extends PropsWithChildren {
-	image?: string;
-	text?: string | ReactElement;
+	image?: string,
+	text?: string | ReactElement
 }
 
 const NavigationDropdown: FunctionComponent<NavigationDropdownProps> = ( { image, text, children } ) => {

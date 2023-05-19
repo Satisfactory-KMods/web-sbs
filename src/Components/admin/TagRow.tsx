@@ -11,7 +11,7 @@ import { BiSave, BiTrash } from "react-icons/bi";
 
 interface TagRowProps {
 	data: Tag,
-	doFetch: () => Promise<void>,
+	doFetch: () => Promise<void>
 }
 
 const TagRow: FunctionComponent<TagRowProps> = ( { data, doFetch } ) => {

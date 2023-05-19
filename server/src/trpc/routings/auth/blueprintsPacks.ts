@@ -117,9 +117,7 @@ export const authBlueprintPacks = router( {
 				}
 			).populate( [ 'blueprints', 'owner', 'tags' ] );
 
-			const setOfImages = new Set( blueprintPacks.map( e => e.blueprints.reduce<string[]>( ( arr, cur ) => arr.concat( cur.images ), [] ) ) );
-			const image = Array.from( setOfImages ).reduce<string[]>( ( arr, cur ) => arr.concat( cur ), [] )[ Math.floor( Math.random() * setOfImages.size ) ];
-			return { blueprintPacks, totalBlueprints, image };
+			return { blueprintPacks, totalBlueprints };
 		} catch( e ) {
 			handleTRCPErr( e );
 		}

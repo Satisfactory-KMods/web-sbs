@@ -12,10 +12,7 @@ export const publicLogin = publicProcedure.input( z.object( {
 	login: z.string().min( 6, { message: "Username is to short." } ),
 	password: z.string().min( 8, { message: "Password is to short." } ),
 	stayLoggedIn: z.boolean()
-} ) ).mutation<{
-	token: string;
-	message: string;
-}>( async( { input } ) => {
+} ) ).mutation( async( { input } ) => {
 	const { login, password, stayLoggedIn } = input;
 
 	try {

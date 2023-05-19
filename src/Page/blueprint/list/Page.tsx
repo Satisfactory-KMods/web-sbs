@@ -46,7 +46,7 @@ const Component: FunctionComponent = () => {
 		<>
 			<BlueprintFilter filterSchema={ [ filter, setFilter ] } isFetching={ isFetching } doFetch={ doFetch } >
 				<span className="flex-1">
-					Blueprint Filter
+					Blueprint Filter ({ TotalBlueprints })
 				</span>
 				<Button size="xs" color="green" onClick={ () => nav( "/blueprint/create" ) }><FaPlus className="me-2" /> Add a new blueprint</Button>
 			</BlueprintFilter>

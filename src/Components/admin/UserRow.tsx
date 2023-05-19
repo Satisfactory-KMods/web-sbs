@@ -12,7 +12,7 @@ import { BiTrash } from "react-icons/bi";
 
 interface UserRowProps {
 	data: ClientUserAccount,
-	doFetch: () => Promise<void>,
+	doFetch: () => Promise<void>
 }
 
 const UserRow: FunctionComponent<UserRowProps> = ( { data, doFetch } ) => {

@@ -11,7 +11,7 @@ import {
 type NavigationContainerProps = HTMLAttributes<HTMLDivElement> & {
 	role?: ERoles,
 	path: string,
-	label: string | ReactElement
+	label: string | ReactElement,
 	location?: "center" | "left" | "right"
 };
 

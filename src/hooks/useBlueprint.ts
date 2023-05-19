@@ -17,7 +17,7 @@ import {
 
 
 export interface IBlueprintHookConfig {
-	blueprint: Blueprint;
+	blueprint: Blueprint
 }
 
 export function useBlueprint( InitValue: string | BlueprintData, defaultUser?: { id: string, username: string }, Config?: Partial<IBlueprintHookConfig> ) {
@@ -126,7 +126,7 @@ export function useBlueprint( InitValue: string | BlueprintData, defaultUser?: {
 		return false;
 	};
 
-	const allowedToLike = useMemo( () => loggedIn && _.isEqual( Blueprint.owner.toString(), user.Get._id ), [ loggedIn, Blueprint.owner, user ] );
+	const allowedToLike = useMemo( () => ( loggedIn && !_.isEqual( Blueprint.owner.toString(), user.Get._id ) ), [ loggedIn, Blueprint.owner, user ] );
 
 	return {
 		owner,

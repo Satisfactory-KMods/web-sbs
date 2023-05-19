@@ -63,29 +63,29 @@ const ZodBlueprintSchema = ZodBlueprintBase.merge( z.object( {
 } ) );
 
 interface BPInterface extends z.infer<typeof ZodBlueprintSchema> {
-	DesignerSize: EDesignerSize;
+	DesignerSize: EDesignerSize,
 	owner: string,
 	tags: string[],
-	inPacks: string[],
+	inPacks: string[]
 }
 
 interface BlueprintPackExtendedInterface extends z.infer<typeof ZodBlueprintPackSchema> {
 	owner: UserAccount,
 	tags: Tag[],
-	blueprints: ( BPInterface & MongoBase )[],
+	blueprints: ( BPInterface & MongoBase )[]
 }
 
 interface BlueprintPackInterface extends z.infer<typeof ZodBlueprintPackSchema> {
 	owner: string,
 	tags: string[],
-	blueprints: string[],
+	blueprints: string[]
 }
 
 interface BPExtendedInterface extends z.infer<typeof ZodBlueprintSchema> {
-	DesignerSize: EDesignerSize;
+	DesignerSize: EDesignerSize,
 	owner: UserAccount,
 	tags: Tag[],
-	inPacks: BlueprintPack[],
+	inPacks: BlueprintPack[]
 }
 
 export type BlueprintPack = BlueprintPackInterface & MongoBase;
@@ -96,14 +96,14 @@ export type BlueprintRating = z.infer<typeof ZodRating>;
 export type IconData = z.infer<typeof ZodIconData>;
 
 export interface BlueprintPackSchemaMethods {
-	updateRating: () => Promise<boolean>;
-	updateModRefs: ( save?: boolean ) => Promise<void>;
+	updateRating: () => Promise<boolean>,
+	updateModRefs: ( save?: boolean ) => Promise<void>
 }
 
 export interface BlueprintSchemaMethods {
-	updateRating: () => Promise<boolean>;
-	updateModRefs: ( save?: boolean ) => Promise<void>;
-	updateBlueprintData: ( save?: boolean ) => Promise<void>;
+	updateRating: () => Promise<boolean>,
+	updateModRefs: ( save?: boolean ) => Promise<void>,
+	updateBlueprintData: ( save?: boolean ) => Promise<void>
 }
 
 const BlueprintSchema = new mongoose.Schema( {
@@ -279,5 +279,5 @@ export const Revalidate = async() => {
 const MongoBlueprintPacks = mongoose.model<BlueprintPack, mongoose.Model<BlueprintPack, unknown, BlueprintPackSchemaMethods>>( "SBS_BlueprintPacks", BlueprintPackSchema );
 
 export default MongoBlueprints;
-export { BlueprintSchema, ZodBlueprintSchema, ZodRating, ZodIconData, BlueprintPackSchema, ZodBlueprintPackSchema, MongoBlueprintPacks };
+export { BlueprintPackSchema, BlueprintSchema, MongoBlueprintPacks, ZodBlueprintPackSchema, ZodBlueprintSchema, ZodIconData, ZodRating };
 

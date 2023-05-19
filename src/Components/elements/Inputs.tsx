@@ -5,8 +5,8 @@ import React, { useId } from "react";
 type SBSInput = {
 	label: React.ReactElement | string,
 	mainClassName?: string,
-	hint?: React.ReactElement | string
-	hintClassName?: string,
+	hint?: React.ReactElement | string,
+	hintClassName?: string
 };
 
 type SBSInputProps = InputHTMLAttributes<HTMLInputElement> & SBSInput;

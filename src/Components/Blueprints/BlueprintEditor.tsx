@@ -29,7 +29,7 @@ import Select from "react-select";
 
 
 interface BlueprintEditorProps {
-	defaultData?: BlueprintData
+	defaultData?: BlueprintData,
 	defaultBlueprintData?: Blueprint
 }
 

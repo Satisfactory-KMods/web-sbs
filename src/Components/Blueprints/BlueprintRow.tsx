@@ -9,8 +9,8 @@ import { Link, useNavigate } from "react-router-dom";
 
 
 interface IBlueprintRowProps {
-	Data: BlueprintData;
-	onToggled: () => Promise<void>;
+	Data: BlueprintData,
+	onToggled: () => Promise<void>
 }
 
 const BlueprintRow: FunctionComponent<IBlueprintRowProps> = ( { Data, onToggled } ) => {

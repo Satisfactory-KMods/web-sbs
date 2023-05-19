@@ -21,7 +21,7 @@ export function handleTRCPErr( e: unknown ) {
 
 export interface Context {
 	token: string,
-	userClass: User,
+	userClass: User
 }
 
 export const createContext = async( {

@@ -10,12 +10,12 @@ export function useBlueprintPack( InitValue: BlueprintPackExtended ) {
 	const [ blueprintPack, setBlueprintPack ] = useState( InitValue );
 	const { user, loggedIn } = useAuth();
 
-	const allowedToLike = useMemo<boolean>( () => loggedIn && !_.isEqual( user.Get._id, blueprintPack.owner ), [ blueprintPack.owner, loggedIn, user.Get._id ] );
+	const allowedToLike = useMemo<boolean>( () => loggedIn && !_.isEqual( user.Get._id, blueprintPack.owner._id ), [ blueprintPack.owner, loggedIn, user.Get._id ] );
 
-	const allowedToEdit = useMemo<boolean>( () => loggedIn && ( _.isEqual( user.Get._id, blueprintPack.owner ) || user.HasPermission( ERoles.admin ) ), [ blueprintPack.owner, loggedIn, user ] );
+	const allowedToEdit = useMemo<boolean>( () => loggedIn && ( _.isEqual( user.Get._id, blueprintPack.owner._id ) || user.HasPermission( ERoles.admin ) ), [ blueprintPack.owner, loggedIn, user ] );
 
 	const update = async() => {
-		await tRPCPublic.blueprintPacks.getBlueprintPack.query( { id: blueprintPack._id } )
+		await tRPCPublic.blueprintPacks.getBlueprintPack.query( { blueprintPackId: blueprintPack._id } )
 			.then( setBlueprintPack )
 			.catch( console.error );
 	};

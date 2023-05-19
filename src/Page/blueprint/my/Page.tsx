@@ -15,11 +15,13 @@ import { Button, Modal } from "flowbite-react";
 import type { ChangeEventHandler, FunctionComponent } from "react";
 import { useState } from "react";
 import { BiUpload } from "react-icons/bi";
-import { useLoaderData } from "react-router-dom";
+import { FaPlus } from "react-icons/fa";
+import { useLoaderData, useNavigate } from "react-router-dom";
 
 
 const Component: FunctionComponent = () => {
 	usePageTitle( `SBS - My Blueprints` );
+	const nav = useNavigate();
 	const { blueprints, totalBlueprints } = useLoaderData() as IndexLoaderData;
 	const [ showBulk, toggleShowBulk ] = useToggle( false );
 
@@ -38,7 +40,7 @@ const Component: FunctionComponent = () => {
 		}
 	    setIsFetching( false );
 	};
-	const { setPage, currentPage, maxPage, filterOption } = useRawPageHandler( TotalBlueprints, onPageChange, 12 );
+	const { setPage, currentPage, maxPage, filterOption } = useRawPageHandler( TotalBlueprints, onPageChange, 20 );
 	const doFetch = async() => onPageChange( filterOption );
 
 	const [ sbpFiles, setSbpFiles ] = useState<FileList | null>( () => null );
@@ -56,7 +58,7 @@ const Component: FunctionComponent = () => {
 				formData.append( "blueprints", sbpFiles[ i ] );
 			}
 			await apiQueryLib.PostToAPI<{
-				message: string;
+				message: string
 			}>( EApiBlueprintUtils.bulkUpdate, formData )
 				.then( async response => {
 					await successSwalAwait( response.message );
@@ -71,9 +73,9 @@ const Component: FunctionComponent = () => {
 		<div className="flex flex-col">
 			<BlueprintFilter filterSchema={ [ filter, setFilter ] } isFetching={ isFetching } doFetch={ doFetch } >
 				<span className="flex-1">
-					My Blueprints ({ TotalBlueprints })
+					Blueprint Filter ({ TotalBlueprints })
 				</span>
-				<Button size="xs" color="green" className="hidden lg:block" onClick={ toggleShowBulk }><BiUpload className="me-2" /> Bulk update blueprints</Button>
+				<Button size="xs" color="green" onClick={ () => nav( "/blueprint/create" ) }><FaPlus className="me-2" /> Add a new blueprint</Button>
 			</BlueprintFilter>
 			<PageManager MaxPage={ maxPage } Page={ currentPage } OnPageChange={ setPage } />
 

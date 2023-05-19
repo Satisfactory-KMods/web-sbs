@@ -11,8 +11,8 @@ import BlueprintRating from "./BlueprintRating";
 
 
 interface IBlueprintCardProps {
-	Data: BlueprintData;
-	onToggled: () => Promise<void>;
+	Data: BlueprintData,
+	onToggled: () => Promise<void>
 }
 
 const BlueprintCard: FunctionComponent<IBlueprintCardProps> = ( { Data, onToggled } ) => {
