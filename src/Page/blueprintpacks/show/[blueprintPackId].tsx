@@ -1,27 +1,20 @@
-import BlueprintRating from "@app/Components/Blueprints/BlueprintRating";
-import type { BlueprintIdLoader } from "@app/Page/blueprint/edit/[blueprintId]Loader";
+import BlueprintPackBlueprintRow from "@app/Components/packs/BlueprintPackBlueprintRow";
+import BlueprintPackRating from "@app/Components/packs/BlueprintPackRating";
+import type { BlueprintPackDefaultLoader } from "@app/Lib/loaderHelper";
 import { mdxComponents } from "@app/Page/terms/private/Page";
-import type {
-	SaveComponent,
-	SaveEntity
-} from "@etothepii/satisfactory-file-parser";
-import { useBlueprint } from "@hooks/useBlueprint";
+import { useBlueprintPack } from "@app/hooks/useBlueprintPack";
 import {
-	Button,
-	Carousel
+	Button
 } from "flowbite-react";
 import type { FunctionComponent } from "react";
 import {
-	useId,
-	useMemo
+	useId
 } from "react";
 import {
 	BiUser,
 	BiWrench
 } from "react-icons/bi";
 import {
-	BsBox,
-	BsBoxes,
 	BsHouseAdd
 } from "react-icons/bs";
 import { FaClock } from "react-icons/fa";
@@ -30,48 +23,41 @@ import {
 	HiDownload,
 	HiTrash
 } from "react-icons/hi";
-import { MdOutlinePhotoSizeSelectSmall } from "react-icons/md";
 import ReactMarkdown from "react-markdown";
 import {
 	Link,
-	useLoaderData
+	useLoaderData,
+	useNavigate
 } from "react-router-dom";
 
 
 const Component: FunctionComponent = () => {
+	const nav = useNavigate();
 	const id = useId();
-	const { blueprintData, blueprintOwner, blueprint } = useLoaderData() as BlueprintIdLoader;
-	const bpHook = useBlueprint( blueprintData, blueprintOwner, { blueprint } );
+	const loaderData = useLoaderData() as BlueprintPackDefaultLoader;
+	const bpHook = useBlueprintPack( loaderData.blueprintPack );
 	const {
+		mods,
+		tags,
 		owner,
-		Blueprint,
-		blueprintParse,
+		blueprintPack,
+		blueprints,
+		image,
 		allowedToEdit,
-		remove,
-		Tags,
-		Mods
+		remove
 	} = bpHook;
 
-	const doBlacklist = async() => {
+	const doRemove = async() => {
 		await remove();
+		nav( "/blueprintpacks/list" );
 	};
 
-	const buildingCount = useMemo( () => {
-		const objects: ( SaveEntity | SaveComponent )[] = blueprintParse?.objects || [];
-		return objects.filter( e => e.type === "SaveEntity" ).length;
-	}, [ blueprintParse?.objects ] );
-
-	const totalItemCost = useMemo( () => {
-		const itemCosts: [ string, number ][] = blueprintParse?.header.itemCosts || [];
-		return itemCosts.reduce( ( total, cost ) => total + cost[ 1 ], 0 );
-	}, [ blueprintParse?.header.itemCosts ] );
-
-	return (
+	return ( <>
 		<div className="grid grid-cols-1 xl:grid-cols-5 gap-3">
 			<div className="xl:col-span-3 flex flex-col w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
 				<div className="p-3 border-b bg-gray-700 border-gray-700 rounded-t-lg text-neutral-200 truncate text-ellipsis overflow-hidden">
 					<span className="text-2xl">
-						{ Blueprint.name }
+						{ blueprintPack.name }
 					</span>
 					<span className="text-xs text-gray-400 block">
 						Creator: <b>{ owner.username }</b>
@@ -79,33 +65,23 @@ const Component: FunctionComponent = () => {
 				</div>
 				<div className="relative h-56 sm:h-64 xl:h-80 2xl:h-96">
 					<div className="absolute inset-0 flex items-center justify-center w-full h-full">
-						{ Blueprint.images.length > 1 ?
-							( <Carousel>
-								{ Blueprint.images.map( e => (
-									<img className="w-full h-full object-cover"
-									     src={ `/api/v1/image/${ Blueprint._id }/${ e }` } key={ id + e }
-									     alt="BlueprintLogo" />
-								) ) }
-							</Carousel> )
-							: ( <img className="w-full h-full object-cover"
-							         src={ `/api/v1/image/${ Blueprint._id }/${ Blueprint.images[ 0 ] }` }
-							         alt="BlueprintLogo" /> ) }
+						<img className="w-full h-full object-cover" src={ `/api/v1/image/${ image[ 0 ] }/${ image[ 1 ] }` } alt="BlueprintLogo" />
 					</div>
 					<div className="absolute top-0 right-0 m-3">
 						<div className="bg-orange-800 p-1 px-5 rounded-lg border border-orange-700 text-white">
-							{ Blueprint.mods.length ? "Modded" : "Vanilla" }
+							{ blueprintPack.mods.length ? "Modded" : "Vanilla" }
 						</div>
 					</div>
 				</div>
 				<ReactMarkdown components={ mdxComponents }
 				               className="text-neutral-200 flex-1 p-3 border-t-1 border-gray-700">
-					{ Blueprint.description }
+					{ blueprintPack.description }
 				</ReactMarkdown>
 				<div className=" p-3 border-t bg-gray-700 border-gray-700 flex">
-					<BlueprintRating className="flex-1" blueprintHook={ bpHook } />
+					<BlueprintPackRating className="flex-1" blueprintHook={ bpHook } />
 				</div>
-				{ !!Blueprint.tags.length && <div className="flex flex-wrap p-3 pt-0 border-t bg-gray-700 border-gray-700 text-neutral-200 text-xs rounded-b-lg">
-					{ Tags.map( e => (
+				{ !!tags.length && <div className="flex flex-wrap p-3 pt-0 border-t bg-gray-700 border-gray-700 text-neutral-200 text-xs rounded-b-lg">
+					{ tags.map( e => (
 						<div key={ id + e._id }
 						     className="bg-gray-900 p-1 px-3 rounded-lg border border-gray-800 shadow">{ e.DisplayName }</div>
 					) ) }
@@ -118,30 +94,17 @@ const Component: FunctionComponent = () => {
 						<BiUser className="inline me-1 text-xl pb-1" /> <b>Creator:</b> <span className="text-neutral-100">{ owner.username }</span>
 					</div>
 					<div className="p-3 border-b bg-gray-900 border-gray-700 text-neutral-300">
-						<MdOutlinePhotoSizeSelectSmall className="inline me-1 text-xl pb-1" /> <b>Designer Size:</b>
-						<span className="text-neutral-100">{ Blueprint.DesignerSize }</span>
+						<BsHouseAdd className="inline me-1 text-xl pb-1" /> <b>Blueprints:</b> <span className="text-neutral-100">{ blueprints.length }</span>
 					</div>
 					<div className="p-3 border-b bg-gray-900 border-gray-700 text-neutral-300">
-						<BsHouseAdd className="inline me-1 text-xl pb-1" /> <b>Buildings:</b> <span className="text-neutral-100">{ buildingCount }</span>
+						<FaClock className="inline me-1 text-xl pb-1" /> <b>Created at:</b> <span className="text-neutral-100">{ new Date( blueprintPack.createdAt ).toLocaleString() }</span>
 					</div>
 					<div className="p-3 border-b bg-gray-900 border-gray-700 text-neutral-300">
-						<BsBox className="inline me-1 text-xl pb-1" /> <b>Object-Count:</b> <span className="text-neutral-100">{ blueprintParse?.objects.length || 0 }</span>
+						<FaClock className="inline me-1 text-xl pb-1" /> <b>Last Update:</b> <span className="text-neutral-100">{ new Date( blueprintPack.updatedAt ).toLocaleString() }</span>
 					</div>
-					<div className="p-3 border-b bg-gray-900 border-gray-700 text-neutral-300">
-						<BsBoxes className="inline me-1 text-xl pb-1" /> <b>Total Cost:</b> <span className="text-neutral-100">{ totalItemCost } items</span>
-					</div>
-					<div className="p-3 border-b bg-gray-900 border-gray-700 text-neutral-300">
-						<HiDownload className="inline me-1 text-xl pb-1" /> <b>Total Downloads:</b> <span className="text-neutral-100">{ Blueprint.downloads }</span>
-					</div>
-					<div className="p-3 border-b bg-gray-900 border-gray-700 text-neutral-300">
-						<FaClock className="inline me-1 text-xl pb-1" /> <b>Created at:</b> <span className="text-neutral-100">{ new Date( Blueprint.createdAt ).toLocaleString() }</span>
-					</div>
-					<div className="p-3 border-b bg-gray-900 border-gray-700 text-neutral-300">
-						<FaClock className="inline me-1 text-xl pb-1" /> <b>Last Update:</b> <span className="text-neutral-100">{ new Date( Blueprint.updatedAt ).toLocaleString() }</span>
-					</div>
-					{ !!Mods.length && <div className="p-3 border-b bg-gray-900 border-gray-700 text-neutral-300">
+					{ !!mods.length && <div className="p-3 border-b bg-gray-900 border-gray-700 text-neutral-300">
 						<BiWrench className="inline me-1 text-xl pb-1" /> <b>Used Mods:</b>
-						{ Mods.map( e => (
+						{ mods.map( e => (
 							<Link to={ `https://ficsit.app/mod/${ e.id }` } target="_blank" key={ id + e.id }
 								      className="mt-2 flex hover:bg-gray-700 bg-gray-600 p-0 rounded-lg border border-gray-700 shadow">
 								<img onError={ e => {
@@ -155,23 +118,33 @@ const Component: FunctionComponent = () => {
 
 				<div className="flex flex-0 bg-gray-700 border-t border-gray-800 p-3">
 					{ allowedToEdit && <>
-						<Button onClick={ doBlacklist } color="red" size="small" className="p-1 px-3">
+						<Button onClick={ doRemove } color="red" size="small" className="p-1 px-3">
 							<HiTrash className="text-sm me-2" /> Delete
 						</Button>
-						<Link to={ `/blueprint/edit/${ Blueprint._id }` }
+						<Link to={ `/blueprintpacks/edit/${ blueprintPack._id }` }
 						      className="text-gray-900 bg-white border border-gray-200 hover:bg-gray-100 hover:text-blue-700 disabled:hover:bg-white focus:ring-blue-700 focus:text-blue-700 dark:bg-transparent dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 focus:ring-2 dark:disabled:hover:bg-gray-800 group flex h-min items-center justify-centertext-center font-medium focus:z-10 rounded-lg p-1 ms-2 px-3">
 							<HiCog className="text-sm me-2" /> Edit Blueprint
 						</Link>
 					</> }
 
-					<Button href={ `/api/v1/download/${ Blueprint._id }` } target="_blank" color="gray" size="small"
-					        className="p-1 px-3 ms-2">
-						<HiDownload className="text-sm me-2" /> Download ({ Blueprint.downloads })
+					<Button href={ `/api/v1/download/pack/${ blueprintPack._id }` } target="_blank" color="gray" size="small" className="p-1 px-3 ms-2">
+						&nbsp;<HiDownload />&nbsp;
 					</Button>
 				</div>
 			</div>
 		</div>
-	);
+
+		<div className="flex flex-col gap-3 mt-3">
+			<div className="p-3 border-b bg-gray-700 border-gray-700 rounded-lg text-neutral-200 truncate text-ellipsis overflow-hidden">
+				<span className="text-2xl">
+						Blueprints
+				</span>
+			</div>
+			{ blueprints.map( e => ( <BlueprintPackBlueprintRow onToggled={ async() => {
+				nav( 0 );
+			} } Data={ e } key={ e._id } /> ) ) }
+		</div>
+	</> );
 };
 
 export {

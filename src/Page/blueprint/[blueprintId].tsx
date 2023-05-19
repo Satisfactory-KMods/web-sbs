@@ -60,6 +60,7 @@ const Component: FunctionComponent = () => {
 
 	const doBlacklist = async() => {
 		await remove();
+		nav( "/blueprintpacks/list" );
 	};
 
 	const buildingCount = useMemo( () => {

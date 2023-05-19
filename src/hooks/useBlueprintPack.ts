@@ -1,12 +1,15 @@
 import { successSwal, tRPCAuth, tRPCHandleError, tRPCPublic } from "@app/Lib/tRPC";
 import { ERoles } from "@app/Shared/Enum/ERoles";
 import { useAuth } from "@app/hooks/useAuth";
+import DataContext from '@context/DataContext';
+import type { Mod } from "@kyri123/lib";
 import type { BlueprintPackExtended } from "@server/MongoDB/MongoBlueprints";
 import _ from 'lodash';
-import { useMemo, useState } from 'react';
+import { useContext, useMemo, useState } from 'react';
 
 
 export function useBlueprintPack( InitValue: BlueprintPackExtended ) {
+	const { mods } = useContext( DataContext );
 	const [ blueprintPack, setBlueprintPack ] = useState( InitValue );
 	const { user, loggedIn } = useAuth();
 
@@ -32,6 +35,8 @@ export function useBlueprintPack( InitValue: BlueprintPackExtended ) {
 		return images[ Math.floor( Math.random() * images.length ) ];
 	}, [ blueprintPack.blueprints ] );
 
+	const resolvedMods = useMemo<Mod[]>( () => blueprintPack.mods.map( e => mods.find( m => m._id === e )! ).filter( e => !!e ) || [], [ blueprintPack.mods, mods ] );
+
 	return {
 		blueprintPack,
 		allowedToLike,
@@ -41,6 +46,7 @@ export function useBlueprintPack( InitValue: BlueprintPackExtended ) {
 		image,
 		owner: blueprintPack.owner,
 		blueprints: blueprintPack.blueprints,
-		tags: blueprintPack.tags
+		tags: blueprintPack.tags,
+		mods: resolvedMods
 	};
 }
