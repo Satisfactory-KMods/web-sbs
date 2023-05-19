@@ -1,6 +1,7 @@
 import BlueprintCard from "@app/Components/Blueprints/BlueprintCard";
 import BlueprintFilter from "@app/Components/Blueprints/BlueprintFilter";
 import PageManager from "@app/Components/Main/PageManager";
+import { useAuth } from "@app/hooks/useAuth";
 import {
 	tRPCHandleError,
 	tRPCPublic
@@ -18,6 +19,7 @@ import { useLoaderData, useNavigate } from "react-router-dom";
 
 
 const Component: FunctionComponent = () => {
+	const { loggedIn } = useAuth();
 	const { blueprints, totalBlueprints } = useLoaderData() as IndexLoaderData;
 	const nav = useNavigate();
 
@@ -48,7 +50,7 @@ const Component: FunctionComponent = () => {
 				<span className="flex-1">
 					Blueprint Filter ({ TotalBlueprints })
 				</span>
-				<Button size="xs" color="green" onClick={ () => nav( "/blueprint/create" ) }><FaPlus className="me-2" /> Add a new blueprint</Button>
+				{ loggedIn && <Button size="xs" color="green" onClick={ () => nav( "/blueprint/create" ) }><FaPlus className="me-2" /> Add a new blueprint</Button> }
 			</BlueprintFilter>
 			<PageManager MaxPage={ maxPage } Page={ currentPage } OnPageChange={ setPage } />
 

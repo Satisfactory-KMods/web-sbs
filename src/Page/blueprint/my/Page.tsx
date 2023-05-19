@@ -7,6 +7,7 @@ import { apiQueryLib } from "@app/Lib/Api/API_Query.Lib";
 import { successSwalAwait, tRPCAuth, tRPCHandleError } from "@app/Lib/tRPC";
 import type { IndexLoaderData } from "@app/Page/blueprint/list/Loader";
 import { EApiBlueprintUtils } from "@app/Shared/Enum/EApiPath";
+import { useAuth } from "@app/hooks/useAuth";
 import { useRawPageHandler } from "@app/hooks/useRawPageHandler";
 import { usePageTitle, useToggle } from "@kyri123/k-reactutils";
 import type { BlueprintData } from "@server/MongoDB/MongoBlueprints";
@@ -22,6 +23,7 @@ import { useLoaderData, useNavigate } from "react-router-dom";
 const Component: FunctionComponent = () => {
 	usePageTitle( `SBS - My Blueprints` );
 	const nav = useNavigate();
+	const { loggedIn } = useAuth();
 	const { blueprints, totalBlueprints } = useLoaderData() as IndexLoaderData;
 	const [ showBulk, toggleShowBulk ] = useToggle( false );
 
@@ -75,7 +77,7 @@ const Component: FunctionComponent = () => {
 				<span className="flex-1">
 					Blueprint Filter ({ TotalBlueprints })
 				</span>
-				<Button size="xs" color="green" onClick={ () => nav( "/blueprint/create" ) }><FaPlus className="me-2" /> Add a new blueprint</Button>
+				{ loggedIn && <Button size="xs" color="green" onClick={ () => nav( "/blueprint/create" ) }><FaPlus className="me-2" /> Add a new blueprint</Button> }
 			</BlueprintFilter>
 			<PageManager MaxPage={ maxPage } Page={ currentPage } OnPageChange={ setPage } />
 

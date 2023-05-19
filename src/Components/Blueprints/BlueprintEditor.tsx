@@ -179,7 +179,7 @@ const BlueprintEditor: FunctionComponent<BlueprintEditorProps> = ( { defaultData
 			form.description.length > 0,
 			false,
 			false,
-			!!tags.length ];
+			!!formTags.length ];
 		if( sbpFile && sbpcfgFile ) {
 			checklist[ 2 ] = sbpFile.name.replace( ".sbp", "" ) === sbpcfgFile.name.replace( ".sbpcfg", "" );
 		}
@@ -187,7 +187,7 @@ const BlueprintEditor: FunctionComponent<BlueprintEditorProps> = ( { defaultData
 			checklist[ 3 ] = images.length <= 5;
 		}
 		return checklist;
-	}, [ form.description.length, form.name.length, images, sbpFile, sbpcfgFile, tags.length ] );
+	}, [ form.description.length, form.name.length, formTags.length, images, sbpFile, sbpcfgFile ] );
 
 	const uploadBlueprint = async() => {
 		setIsUploading( true );
@@ -277,11 +277,11 @@ const BlueprintEditor: FunctionComponent<BlueprintEditorProps> = ( { defaultData
 								} } />
 						</SBSSelect>
 
-						<SBSInput ref={ sbpRef } name="sbp" accept=".sbp" required={ !isEditing } label={ `${ `${ defaultData?.originalName }.sbp` || "Blueprint (.sbpcfg)" }` } type="file" onChange={ handleFileSelect } />
+						<SBSInput ref={ sbpRef } name="sbp" accept=".sbp" required={ !isEditing } label={ defaultData?.originalName ? `${ defaultData?.originalName }.sbp` : "Blueprint (.sbp)" } type="file" onChange={ handleFileSelect } />
 						<SBSInput ref={ sbpcfgRef } hintClassName="flex" hint={ <>
 							<span className="flex-1 text-sm self-center">Blueprint files can you find here: <b>%localappdata%\FactoryGame\Saved\SaveGames\blueprints</b></span>
 							<CopyButton size="xs" copyString="%localappdata%\FactoryGame\Saved\SaveGames\blueprints" />
-						</> } name="sbpcfg" accept=".sbpcfg" required={ !isEditing } label={ `${ `${ defaultData?.originalName }.sbpcfg` || "Blueprint (.sbpcfg)" }` } type="file" onChange={ handleFileSelect } />
+						</> } name="sbpcfg" accept=".sbpcfg" required={ !isEditing } label={ defaultData?.originalName ? `${ defaultData?.originalName }.sbpcfg` : "Blueprint (.sbpcfg)"  } type="file" onChange={ handleFileSelect } />
 					 	{ checkList[ 2 ] && (
 							<Button onClick={ exportDatas } fullSized>Export blueprint name and description from files</Button>
 						) }

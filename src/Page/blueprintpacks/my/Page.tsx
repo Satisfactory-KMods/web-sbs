@@ -3,6 +3,7 @@ import PageManager from "@app/Components/Main/PageManager";
 import BlueprintPackRow from "@app/Components/packs/BlueprintPackRow";
 import { tRPCAuth, tRPCHandleError } from "@app/Lib/tRPC";
 import type { BlueprintPackListLoaderData } from "@app/Page/blueprintpacks/list/Loader";
+import { useAuth } from "@app/hooks/useAuth";
 import { useRawPageHandler } from "@app/hooks/useRawPageHandler";
 import { usePageTitle } from "@kyri123/k-reactutils";
 import type { BlueprintPackExtended } from "@server/MongoDB/MongoBlueprints";
@@ -17,6 +18,7 @@ import { useLoaderData, useNavigate } from "react-router-dom";
 const Component: FunctionComponent = () => {
 	usePageTitle( `SBS - My Blueprint Packs` );
 	const nav = useNavigate();
+	const { loggedIn } = useAuth();
 	const { blueprintPacks, totalBlueprints } = useLoaderData() as BlueprintPackListLoaderData;
 
 	const [ totalPacks, setTotalPacks ] = useState<number>( () => totalBlueprints );
@@ -45,7 +47,7 @@ const Component: FunctionComponent = () => {
 				<span className="flex-1">
 					Blueprint Pack Filter ({ totalPacks })
 				</span>
-				<Button size="xs" color="green" onClick={ () => nav( "/blueprintpacks/create" ) }><FaPlus className="me-2" /> Add a new blueprint pack</Button>
+				{ loggedIn && <Button size="xs" color="green" onClick={ () => nav( "/blueprintpacks/create" ) }><FaPlus className="me-2" /> Add a new blueprint pack</Button> }
 			</BlueprintFilter>
 			<PageManager MaxPage={ maxPage } Page={ currentPage } OnPageChange={ setPage } />
 

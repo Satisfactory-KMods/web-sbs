@@ -20,14 +20,6 @@ export type SessionToken = z.infer<typeof ZodSessionTokenSchema> & MongoBase;
 
 const MongoSessionToken = mongoose.model<SessionToken>( "SBS_UserAccountToken", SessionTokenSchema );
 
-export const Revalidate = async() => {
-	// todo: remove
-	for await ( const bpDoc of MongoSessionToken.find() ) {
-		bpDoc.markModified( "userid" );
-		await bpDoc.save();
-	}
-};
-
 export default MongoSessionToken;
 export { SessionTokenSchema, ZodSessionTokenSchema };
 
