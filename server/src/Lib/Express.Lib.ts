@@ -45,6 +45,9 @@ export async function MWAuth( req: Request, res: Response, next: NextFunction ) 
 				}
 			}
 		} catch( e ) {
+			/*if( e instanceof Error ) {
+				SystemLib.LogError( "middleware Auth", e.message );
+			}*/
 		}
 	}
 	return res.status( 401 ).json( errorResponse( "Unauthorized", res ) );

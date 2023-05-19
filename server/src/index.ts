@@ -68,7 +68,7 @@ mongoose
 			}
 		}
 
-		global.DownloadIPCached = [];
+		global.DownloadIPCached = new Map<string, string[]>();
 
 		SystemLib.Log( "start", "Connected... Start API and SOCKETIO" );
 

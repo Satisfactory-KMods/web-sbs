@@ -13,7 +13,7 @@ export default new JobTask(
 			"MakeItClean"
 		);
 
-		global.DownloadIPCached.empty();
+		global.DownloadIPCached.clear();
 		const ZipPath = path.join( __MountDir, "Zips" );
 		if( fs.existsSync( ZipPath ) ) {
 			for( const Dir of fs.readdirSync( ZipPath ) ) {

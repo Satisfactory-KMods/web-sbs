@@ -5,7 +5,7 @@ import type * as http from "http";
 
 
 export declare global {
-	var DownloadIPCached: { ip: string, id: string }[];
+	var DownloadIPCached: Map<string, string[]>;
 	var SystemLib: systemLibClass;
 	var Api: core.Express;
 	var Router: core.Router;

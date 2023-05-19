@@ -277,11 +277,11 @@ const BlueprintEditor: FunctionComponent<BlueprintEditorProps> = ( { defaultData
 								} } />
 						</SBSSelect>
 
-						<SBSInput ref={ sbpRef } name="sbp" accept=".sbp" required={ !isEditing } label="Blueprint (.sbp)" type="file" onChange={ handleFileSelect } />
+						<SBSInput ref={ sbpRef } name="sbp" accept=".sbp" required={ !isEditing } label={ `${ `${ defaultData?.originalName }.sbp` || "Blueprint (.sbpcfg)" }` } type="file" onChange={ handleFileSelect } />
 						<SBSInput ref={ sbpcfgRef } hintClassName="flex" hint={ <>
 							<span className="flex-1 text-sm self-center">Blueprint files can you find here: <b>%localappdata%\FactoryGame\Saved\SaveGames\blueprints</b></span>
 							<CopyButton size="xs" copyString="%localappdata%\FactoryGame\Saved\SaveGames\blueprints" />
-						</> } name="sbpcfg" accept=".sbpcfg" required={ !isEditing } label="Blueprint Config (.sbpcfg" type="file" onChange={ handleFileSelect } />
+						</> } name="sbpcfg" accept=".sbpcfg" required={ !isEditing } label={ `${ `${ defaultData?.originalName }.sbpcfg` || "Blueprint (.sbpcfg)" }` } type="file" onChange={ handleFileSelect } />
 					 	{ checkList[ 2 ] && (
 							<Button onClick={ exportDatas } fullSized>Export blueprint name and description from files</Button>
 						) }

@@ -2,7 +2,7 @@ import {
 	buildFilter,
 	filterSchema
 } from '@/server/src/trpc/routings/public/blueprint';
-import type { BlueprintData } from '@server/MongoDB/MongoBlueprints';
+import type { BlueprintPackExtended } from '@server/MongoDB/MongoBlueprints';
 import { MongoBlueprintPacks } from '@server/MongoDB/MongoBlueprints';
 import { handleTRCPErr, publicProcedure, router } from '@server/trpc/trpc';
 import { TRPCError } from '@trpc/server';
@@ -23,7 +23,7 @@ export const publicBlueprintPacks = router( {
 			try {
 				const { filter, options } = buildFilter( filterOptions );
 				const totalBlueprints = await MongoBlueprintPacks.count( filter );
-				const blueprintPacks = await MongoBlueprintPacks.find<BlueprintData>(
+				const blueprintPacks: BlueprintPackExtended[] = await MongoBlueprintPacks.find<BlueprintPackExtended>(
 					filter,
 					null,
 					{
@@ -31,7 +31,7 @@ export const publicBlueprintPacks = router( {
 						limit,
 						skip
 					}
-				).populate( 'blueprints' );
+				).populate( [ 'blueprints', 'owner', 'tags' ] );
 				return { blueprintPacks, totalBlueprints };
 			} catch( e ) {
 				handleTRCPErr( e );

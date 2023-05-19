@@ -1,6 +1,8 @@
 import { BlueprintClass } from "@/server/src/Lib/Blueprint.Class";
 import { parseBlueprintById } from "@/server/src/Lib/BlueprintParser";
+import type { Tag } from "@/server/src/MongoDB/MongoTags";
 import { ZodTagSchema } from "@/server/src/MongoDB/MongoTags";
+import type { UserAccount } from "@/server/src/MongoDB/MongoUserAccount";
 import { ZodUserAccountSchema } from "@/server/src/MongoDB/MongoUserAccount";
 import { findModsFromBlueprint } from "@/src/Shared/blueprintReadingHelper";
 import type { BlueprintConfig } from "@etothepii/satisfactory-file-parser";
@@ -47,24 +49,55 @@ const ZodBlueprintPackSchema = z.object( {
 	name: z.string(),
 	description: z.string(),
 	owner: z.string().or( ZodUserAccountSchema ),
+	tags: z.array( z.string() ).or( z.array( ZodTagSchema ) ),
+	blueprints: z.array( z.string() ).or( z.array( ZodBlueprintBase ) ),
 	mods: z.array( z.string() ),
 	rating: z.array( ZodRating ),
 	totalRating: z.number(),
 	totalRatingCount: z.number(),
-	tags: z.array( z.string() ).or( z.array( ZodTagSchema ) ),
-	downloads: z.number(),
-	images: z.array( z.string() ),
-	blueprints: z.array( z.string() ).or( z.array( ZodBlueprintBase ) )
+	images: z.array( z.string() )
 } );
 
 const ZodBlueprintSchema = ZodBlueprintBase.merge( z.object( {
 	inPacks: z.array( ZodBlueprintPackSchema ).or( z.array( z.string() ) )
 } ) );
 
+interface BPInterface extends z.infer<typeof ZodBlueprintSchema> {
+	DesignerSize: EDesignerSize;
+	owner: string,
+	tags: string[],
+	inPacks: string[],
+}
+
+interface BlueprintPackExtendedInterface extends z.infer<typeof ZodBlueprintPackSchema> {
+	owner: UserAccount,
+	tags: Tag[],
+	blueprints: ( BPInterface & MongoBase )[],
+}
+
+interface BlueprintPackInterface extends z.infer<typeof ZodBlueprintPackSchema> {
+	owner: string,
+	tags: string[],
+	blueprints: string[],
+}
+
+interface BPExtendedInterface extends z.infer<typeof ZodBlueprintSchema> {
+	DesignerSize: EDesignerSize;
+	owner: UserAccount,
+	tags: Tag[],
+	inPacks: BlueprintPack[],
+}
+
+export type BlueprintPack = BlueprintPackInterface & MongoBase;
+export type BlueprintPackExtended = BlueprintPackExtendedInterface & MongoBase;
+export type BlueprintData = BPInterface & MongoBase;
+export type BlueprintDataExtended = BPExtendedInterface & MongoBase;
+export type BlueprintRating = z.infer<typeof ZodRating>;
+export type IconData = z.infer<typeof ZodIconData>;
+
 export interface BlueprintPackSchemaMethods {
 	updateRating: () => Promise<boolean>;
 	updateModRefs: ( save?: boolean ) => Promise<void>;
-
 }
 
 export interface BlueprintSchemaMethods {
@@ -159,12 +192,6 @@ const BlueprintSchema = new mongoose.Schema( {
 		}
 	} } );
 
-export type BlueprintData = BPInterface & MongoBase;
-export type BlueprintRating = z.infer<typeof ZodRating>;
-export type IconData = z.infer<typeof ZodIconData>;
-
-const MongoBlueprints = mongoose.model<BlueprintData, mongoose.Model<BlueprintData, unknown, BlueprintSchemaMethods>>( "SBS_Blueprints", BlueprintSchema );
-
 const BlueprintPackSchema = new mongoose.Schema( {
 	name: { type: String, required: true },
 	description: { type: String, required: true },
@@ -178,7 +205,6 @@ const BlueprintPackSchema = new mongoose.Schema( {
 	totalRatingCount: { type: Number, required: true },
 	tags: { type: [ mongoose.Schema.Types.ObjectId ], ref: "SBS_Tags", required: true },
 	owner: { type: mongoose.Schema.Types.ObjectId, ref: "SBS_UserAccount", required: true },
-	downloads: { type: Number, required: true, default: 0 },
 	blueprints: { type: [ mongoose.Schema.Types.ObjectId ], ref: "SBS_Blueprints", required: true }
 }, { timestamps: true,
 	methods: {
@@ -205,25 +231,25 @@ const BlueprintPackSchema = new mongoose.Schema( {
 			return false;
 		},
 		updateModRefs: async function( save = true ) {
-			const blueprintSet = new Set<string>();
-			for await ( const bp of MongoBlueprints.find( { _id: this.blueprints } ) ) {
-				for( const mod of bp.mods ) {
-					blueprintSet.add( mod );
+			try {
+				const blueprintSet = new Set<string>();
+				for await ( const bp of MongoBlueprints.find( { _id: this.blueprints } ) ) {
+					for( const mod of bp.mods ) {
+						blueprintSet.add( mod );
+					}
 				}
-			}
-			this.mods = Array.from( blueprintSet );
-			if( save ) {
+				this.mods = Array.from( blueprintSet );
 				this.markModified( "mods" );
-				await this.save();
+				if( save ) {
+					await this.save();
+				}
+			} catch( e ) {
+				if( e instanceof Error ) {
+					SystemLib.LogError( "mongo", e.message );
+				}
 			}
 		}
 	} } );
-
-interface BPInterface extends z.infer<typeof ZodBlueprintSchema> {
-	DesignerSize: EDesignerSize;
-}
-
-type BlueprintPack = z.infer<typeof ZodBlueprintPackSchema> & MongoBase;
 
 
 export const Revalidate = async() => {
@@ -240,9 +266,9 @@ export const Revalidate = async() => {
 	}
 };
 
-export default MongoBlueprints;
-
+const MongoBlueprints = mongoose.model<BlueprintData, mongoose.Model<BlueprintData, unknown, BlueprintSchemaMethods>>( "SBS_Blueprints", BlueprintSchema );
 const MongoBlueprintPacks = mongoose.model<BlueprintPack, mongoose.Model<BlueprintPack, unknown, BlueprintPackSchemaMethods>>( "SBS_BlueprintPacks", BlueprintPackSchema );
 
-export { BlueprintSchema, ZodBlueprintSchema, ZodRating, ZodIconData, BlueprintPackSchema, ZodBlueprintPackSchema, BlueprintPack, MongoBlueprintPacks };
+export default MongoBlueprints;
+export { BlueprintSchema, ZodBlueprintSchema, ZodRating, ZodIconData, BlueprintPackSchema, ZodBlueprintPackSchema, MongoBlueprintPacks };
 
