@@ -1,3 +1,4 @@
+import { BlueprintPackClass } from "@/server/src/Lib/BlueprintPack.Class";
 import type { User } from "@shared/Class/User.Class";
 import { ERoles } from "@shared/Enum/ERoles";
 import { transformer } from "@shared/transformer";
@@ -20,7 +21,7 @@ export function handleTRCPErr( e: unknown ) {
 
 export interface Context {
 	token: string,
-	userClass: User,
+	userClass: User
 }
 
 export const createContext = async( {
@@ -57,12 +58,28 @@ const blueprintMiddleware = middleware( async opts => {
 	} );
 } );
 
+// create the blueprint class and add it to the context
+const blueprintPackMiddleware = middleware( async opts => {
+	const { input } = opts;
+	const { blueprintPackId } = input as{ blueprintPackId: string };
+	const blueprintPack = await BlueprintPackClass.createClass( blueprintPackId );
+	if( !blueprintPack ) {
+		throw new TRPCError( { code: 'UNAUTHORIZED' } );
+	}
+
+	return opts.next( {
+		ctx: {
+			blueprintPack
+		}
+	} );
+} );
+
 // only check if we have admin or we are the owner
 const isOwnerMiddleware = middleware( async opts => {
 	const { ctx } = opts;
 	const { blueprint, userClass } = ctx as{ blueprint: BlueprintClass<true> } & typeof ctx;
 	const isOwner = false;
-	if( !ctx.userClass.HasPermission( ERoles.admin ) && !_.eq( blueprint.get.owner, userClass.Get._id ) ) {
+	if( !ctx.userClass.HasPermission( ERoles.admin ) && !_.eq( blueprint.get.owner.toString(), userClass.Get._id ) ) {
 		throw new TRPCError( { code: 'UNAUTHORIZED' } );
 	}
 	return opts.next();
@@ -73,7 +90,17 @@ const isModOrOwnerMiddleware = middleware( async opts => {
 	const { ctx } = opts;
 	const { blueprint, userClass } = ctx as{ blueprint: BlueprintClass<true> } & typeof ctx;
 	const isOwner = false;
-	if( !( ctx.userClass.HasPermission( ERoles.admin ) || ctx.userClass.HasPermission( ERoles.moderator ) ) && !_.eq( blueprint.get.owner, userClass.Get._id ) ) {
+	if( !( ctx.userClass.HasPermission( ERoles.admin ) || ctx.userClass.HasPermission( ERoles.moderator ) ) && !_.eq( blueprint.get.owner.toString(), userClass.Get._id ) ) {
+		throw new TRPCError( { code: 'UNAUTHORIZED' } );
+	}
+	return opts.next();
+} );
+
+// only check if we have admin or we are the owner
+const isModOrOwnerPackMiddleware = middleware( async opts => {
+	const { ctx } = opts;
+	const { blueprintPack, userClass } = ctx as{ blueprintPack: BlueprintPackClass<true> } & typeof ctx;
+	if( !( ctx.userClass.HasPermission( ERoles.admin ) || ctx.userClass.HasPermission( ERoles.moderator ) ) && !_.eq( blueprintPack.get.owner._id, userClass.Get._id ) ) {
 		throw new TRPCError( { code: 'UNAUTHORIZED' } );
 	}
 	return opts.next();
@@ -108,3 +135,10 @@ export const adminBlueprintProcedure = authProcedure.use( roleMiddleware( ERoles
 export const modBlueprintProcedure = authProcedure.use( roleMiddleware( ERoles.moderator ) ).input( z.object( {
 	blueprintId: z.string()
 } ) ).use( blueprintMiddleware );
+
+export const blueprintPackProcedure = authProcedure.input( z.object( {
+	blueprintPackId: z.string()
+} ) ).use( blueprintPackMiddleware );
+export const blueprintPackOwnerProcedure = authProcedure.input( z.object( {
+	blueprintPackId: z.string()
+} ) ).use( blueprintPackMiddleware ).use( isModOrOwnerPackMiddleware );

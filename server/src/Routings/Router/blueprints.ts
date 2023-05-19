@@ -1,11 +1,11 @@
+import { upload } from "@/server/src/Lib/Multer.Lib";
 import type { User } from "@/src/Shared/Class/User.Class";
 import { ERoles } from "@/src/Shared/Enum/ERoles";
 import { dataResponse, errorResponse } from "@kyri123/lib";
 import { BlueprintParser } from "@server/Lib/BlueprintParser";
 import {
 	ApiUrl,
-	MWAuth,
-	upload
+	MWAuth
 } from "@server/Lib/Express.Lib";
 import type { BlueprintData } from "@server/MongoDB/MongoBlueprints";
 import MongoBlueprints from "@server/MongoDB/MongoBlueprints";
@@ -21,7 +21,7 @@ import { z } from "zod";
 
 
 export default function() {
-	Router.post( ApiUrl( EApiBlueprintUtils.parseblueprint ), upload.array( "blueprint", 2 ), MWAuth, async( req: ExpressRequest<{
+	Router.post( ApiUrl( EApiBlueprintUtils.parseblueprint ), MWAuth, upload.array( "blueprint", 2 ), async( req: ExpressRequest<{
 		blueprintName: string
 	}>, res: Response ) => {
 		if( req.files && Array.isArray( req.files ) && Number( req.files.length ) === 2 ) {
@@ -57,7 +57,7 @@ export default function() {
 	} );
 
 
-	Router.post( ApiUrl( EApiBlueprintUtils.create ), upload.fields( [ { name: 'sbp', maxCount: 1 }, { name: 'sbpcfg', maxCount: 1 }, { name: 'images', maxCount: 5 } ] ), MWAuth, async( req: ExpressRequest<{
+	Router.post( ApiUrl( EApiBlueprintUtils.create ), MWAuth, upload.fields( [ { name: 'sbp', maxCount: 1 }, { name: 'sbpcfg', maxCount: 1 }, { name: 'images', maxCount: 5 } ] ), async( req: ExpressRequest<{
 		blueprint: Omit<BlueprintData, "_id" | "__v"> | string,
 		UserClass: User
 	}>, res: Response ) => {
@@ -71,7 +71,6 @@ export default function() {
 			blueprint.totalRatingCount = 0;
 			blueprint.rating = [];
 			blueprint.images = [];
-			blueprint.blacklisted = false;
 
 			if( req.files && !Array.isArray( req.files ) ) {
 				const id = blueprint._id.toString();
@@ -125,7 +124,7 @@ export default function() {
 			if( !blueprint ) {
 				return res.status( 404 ).json( errorResponse( "Blueprint not found!", res ) );
 			}
-			if( !( _.isEqual( req.body.UserClass.Get._id, blueprint.owner ) || req.body.UserClass.HasPermission( ERoles.moderator ) ) ) {
+			if( !( _.isEqual( req.body.UserClass.Get._id, blueprint.owner.toString() ) || req.body.UserClass.HasPermission( ERoles.moderator ) ) ) {
 				return res.status( 401 ).json( errorResponse( "Unauthorized", res ) );
 			}
 

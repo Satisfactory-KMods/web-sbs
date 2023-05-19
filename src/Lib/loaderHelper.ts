@@ -2,10 +2,15 @@ import type { LoaderBlueprintBase, LoaderDataBase } from "@app/Types/loader";
 import { AUTHTOKEN } from "@applib/constance";
 import { tRPCPublic } from "@applib/tRPC";
 import type { LoaderFunctionArgs } from "@remix-run/router/utils";
+import type { BlueprintPackExtended } from "@server/MongoDB/MongoBlueprints";
 import { User } from "@shared/Class/User.Class";
 import { ERoles } from "@shared/Enum/ERoles";
 import { redirect } from "react-router-dom";
 
+
+export interface BlueprintPackDefaultLoader extends LoaderDataBase {
+	blueprintPack: BlueprintPackExtended
+}
 
 export enum LoginRule {
 	NotLoggedIn,
@@ -61,7 +66,7 @@ const validateBlueprint = async( {
 		redirect( redirectTo );
 	}
 
-	blueprintOwner.id = result.blueprintData.owner;
+	blueprintOwner.id = result.blueprintData.owner as string;
 	blueprintOwner.username = result.bpOwnerName;
 
 	const blueprintPermission = ( loaderBase.user.Get._id === result.blueprintData.owner || loaderBase.user.HasPermission( ERoles.admin ) );
@@ -75,5 +80,31 @@ const validateBlueprint = async( {
 	return { ...loaderBase, blueprintData: result.blueprintData, blueprintPermission, blueprintOwner };
 };
 
-export { validateLogin, validateBlueprint };
+const validateBlueprintPack = async( {
+	params,
+	request
+}: LoaderFunctionArgs, redirectTo = "/", loggedInRule = LoginRule.DontCare, ownerRedirectTo = "/error/401", role = ERoles.member ): Promise<BlueprintPackDefaultLoader | Response> => {
+	const loaderBase = await validateLogin( { params, request }, loggedInRule, "/error/401", role );
+	if( loaderBase instanceof Response ) {
+		return loaderBase;
+	}
+	const { blueprintPackId } = params;
+
+	const result: BlueprintPackExtended | null = await tRPCPublic.blueprintPacks.getBlueprintPack.query( { blueprintPackId: blueprintPackId! } );
+	if( !result ) {
+		redirect( redirectTo );
+	}
+
+	const blueprintPermission = ( loaderBase.user.Get._id === result.owner._id || loaderBase.user.HasPermission( ERoles.admin ) );
+
+	if( loggedInRule === LoginRule.BlueprintOwner ) {
+		if( !loaderBase.user.IsValid || !blueprintPermission ) {
+			redirect( ownerRedirectTo );
+		}
+	}
+
+	return { ...loaderBase, blueprintPack: result };
+};
+
+export { validateBlueprint, validateBlueprintPack, validateLogin };
 

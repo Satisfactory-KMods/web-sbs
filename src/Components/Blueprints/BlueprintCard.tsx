@@ -11,8 +11,8 @@ import BlueprintRating from "./BlueprintRating";
 
 
 interface IBlueprintCardProps {
-	Data: BlueprintData;
-	onToggled: () => Promise<void>;
+	Data: BlueprintData,
+	onToggled: () => Promise<void>
 }
 
 const BlueprintCard: FunctionComponent<IBlueprintCardProps> = ( { Data, onToggled } ) => {
@@ -22,12 +22,12 @@ const BlueprintCard: FunctionComponent<IBlueprintCardProps> = ( { Data, onToggle
 		owner,
 		Blueprint,
 		allowedToEdit,
-		toggleBlacklist,
+		remove,
 		Tags
 	} = bpHook;
 
 	const doBlacklist = async() => {
-		await toggleBlacklist(  );
+		await remove(  );
 		await onToggled();
 	};
 

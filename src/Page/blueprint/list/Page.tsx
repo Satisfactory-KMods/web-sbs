@@ -10,13 +10,16 @@ import { usePageTitle } from "@kyri123/k-reactutils";
 import type { IndexLoaderData } from "@page/blueprint/list/Loader";
 import type { BlueprintData } from "@server/MongoDB/MongoBlueprints";
 import type { FilterSchema } from "@server/trpc/routings/public/blueprint";
+import { Button } from "flowbite-react";
 import type { FunctionComponent } from "react";
 import { useState } from "react";
-import { useLoaderData } from "react-router-dom";
+import { FaPlus } from "react-icons/fa";
+import { useLoaderData, useNavigate } from "react-router-dom";
 
 
 const Component: FunctionComponent = () => {
 	const { blueprints, totalBlueprints } = useLoaderData() as IndexLoaderData;
+	const nav = useNavigate();
 
 	const [ TotalBlueprints, setTotalBlueprints ] = useState<number>( () => totalBlueprints );
 	const [ Blueprints, setBlueprints ] = useState<BlueprintData[]>( () => blueprints );
@@ -42,7 +45,10 @@ const Component: FunctionComponent = () => {
 	return (
 		<>
 			<BlueprintFilter filterSchema={ [ filter, setFilter ] } isFetching={ isFetching } doFetch={ doFetch } >
-				Blueprint Filter
+				<span className="flex-1">
+					Blueprint Filter ({ TotalBlueprints })
+				</span>
+				<Button size="xs" color="green" onClick={ () => nav( "/blueprint/create" ) }><FaPlus className="me-2" /> Add a new blueprint</Button>
 			</BlueprintFilter>
 			<PageManager MaxPage={ maxPage } Page={ currentPage } OnPageChange={ setPage } />
 

@@ -2,7 +2,7 @@ import BlueprintEditorCheckList from "@app/Components/Blueprints/BlueprintEditor
 import { SBSInput, SBSSelect } from "@app/Components/elements/Inputs";
 import DataContext from "@app/Context/DataContext";
 import { apiQueryLib } from "@app/Lib/Api/API_Query.Lib";
-import { successSwalAwait } from "@app/Lib/tRPC";
+import { fireSwalFromApi, successSwalAwait } from "@app/Lib/tRPC";
 import { mdxComponents } from "@app/Page/terms/private/Page";
 import { EApiBlueprintUtils } from "@app/Shared/Enum/EApiPath";
 import { EDesignerSize } from "@app/Shared/Enum/EDesignerSize";
@@ -10,7 +10,7 @@ import type { SelectOptionStruct } from "@app/Shared/Types/SelectOptions";
 import { findModsFromBlueprint } from "@app/Shared/blueprintReadingHelper";
 import { useAuth } from "@app/hooks/useAuth";
 import { useSelectOptions } from "@app/hooks/useSelectOptions";
-import { LoadingButton } from "@comp/elements/Buttons";
+import { CopyButton, LoadingButton } from "@comp/elements/Buttons";
 import type { Blueprint, SaveComponent, SaveEntity } from "@etothepii/satisfactory-file-parser";
 import type { Mod } from "@kyri123/lib";
 import type { BlueprintData } from "@server/MongoDB/MongoBlueprints";
@@ -18,7 +18,7 @@ import type { Tag } from "@server/MongoDB/MongoTags";
 import { Button, Label, Textarea } from "flowbite-react";
 import _ from "lodash";
 import type { ChangeEventHandler, FunctionComponent } from "react";
-import { useContext, useEffect, useId, useMemo, useState } from "react";
+import { useContext, useEffect, useId, useMemo, useRef, useState } from "react";
 import { BiSave, BiTag, BiUser, BiWrench } from "react-icons/bi";
 import { BsBox, BsBoxes, BsHouseAdd } from "react-icons/bs";
 import { MdOutlinePhotoSizeSelectSmall } from "react-icons/md";
@@ -29,7 +29,7 @@ import Select from "react-select";
 
 
 interface BlueprintEditorProps {
-	defaultData?: BlueprintData
+	defaultData?: BlueprintData,
 	defaultBlueprintData?: Blueprint
 }
 
@@ -58,8 +58,7 @@ const BlueprintEditor: FunctionComponent<BlueprintEditorProps> = ( { defaultData
 			totalRating: 0,
 			tags: [],
 			images: [],
-			downloads: 0,
-			blacklisted: false
+			downloads: 0
 		};
 	} );
 	const [ isUploading, setIsUploading ] = useState<boolean>( false );
@@ -68,7 +67,10 @@ const BlueprintEditor: FunctionComponent<BlueprintEditorProps> = ( { defaultData
 	const [ sbpcfgFile, setSbpcfgFile ] = useState<File | null>( () => null );
 	const [ images, setImages ] = useState<FileList | null>( () => null );
 	const [ DesignerSize, setDesignerSize ] = useState<SingleValue<SelectOptionStruct<EDesignerSize>>>( designerSizeSingle( defaultData?.DesignerSize || EDesignerSize.mk1 ) );
-	const [ formTags, setTags ] = useState<MultiValue<SelectOptionStruct>>( tagSelectedMulti( defaultData?.tags || [] ) );
+	const [ formTags, setTags ] = useState<MultiValue<SelectOptionStruct>>( tagSelectedMulti( defaultData?.tags as string[] || [] ) );
+
+	const sbpRef = useRef<HTMLInputElement>( null );
+	const sbpcfgRef = useRef<HTMLInputElement>( null );
 
 	const isEditing = !!defaultData;
 
@@ -77,7 +79,7 @@ const BlueprintEditor: FunctionComponent<BlueprintEditorProps> = ( { defaultData
 		return mods.filter( e => modRefs.includes( e.mod_reference ) );
 	}, [ blueprintParse?.objects, mods ] );
 
-	const Tags: Tag[] = useMemo( () => tags.filter( e => form.tags.includes( e._id ) ), [ form.tags, tags ] );
+	const Tags: Tag[] = useMemo( () => tags.filter( e => ( form.tags as string[] ).includes( e._id ) ), [ form.tags, tags ] );
 
 	const buildingCount = useMemo( () => {
 		const objects: ( SaveEntity | SaveComponent )[] = blueprintParse?.objects || [];
@@ -100,14 +102,14 @@ const BlueprintEditor: FunctionComponent<BlueprintEditorProps> = ( { defaultData
 	const handleFileSelect: ChangeEventHandler<HTMLInputElement> = e => {
 		switch ( e.target.name ) {
 			case "sbp":
-				if( !e.target.files || !e.target.files[ 0 ].name.endsWith( ".sbp" ) ) {
+				if( !e.target.files || !e.target.files[ 0 ]?.name.endsWith( ".sbp" ) ) {
 					setSbpFile( null );
 					return;
 				}
 				setSbpFile( e.target.files[ 0 ] );
 				return;
 			case "sbpcfg":
-				if( !e.target.files || !e.target.files[ 0 ].name.endsWith( ".sbpcfg" ) ) {
+				if( !e.target.files || !e.target.files[ 0 ]?.name.endsWith( ".sbpcfg" ) ) {
 					setSbpcfgFile( null );
 					return;
 				}
@@ -127,6 +129,31 @@ const BlueprintEditor: FunctionComponent<BlueprintEditorProps> = ( { defaultData
 	};
 
 	useEffect( () => {
+		if( ( sbpFile || sbpcfgFile ) && isEditing ) {
+			if( ( sbpFile && !_.isEqual( sbpFile.name.replace( ".sbp", "" ), defaultData.originalName ) ) ) {
+				fireSwalFromApi( ".sbp must begin with " + defaultData.originalName, false, {
+					timer: undefined
+				} );
+				setSbpFile( null );
+				if( sbpRef.current ) {
+					sbpRef.current.files = null;
+					sbpRef.current.value = "";
+				}
+				return;
+			}
+			if( ( sbpcfgFile && !_.isEqual( sbpcfgFile.name.replace( ".sbpcfg", "" ), defaultData.originalName ) ) ) {
+				fireSwalFromApi( ".sbgcfg must begin with " + defaultData.originalName, false, {
+					timer: undefined
+				} );
+				setSbpcfgFile( null );
+				if( sbpcfgRef.current ) {
+					sbpcfgRef.current.files = null;
+					sbpcfgRef.current.value = "";
+				}
+				return;
+			}
+		}
+
 		if( sbpFile && sbpcfgFile ) {
 			if( !_.isEqual( sbpFile.name.replace( ".sbp", "" ), sbpcfgFile.name.replace( ".sbpcfg", "" ) ) ) {
 				setBlueprintParse( defaultBlueprintData );
@@ -141,10 +168,9 @@ const BlueprintEditor: FunctionComponent<BlueprintEditorProps> = ( { defaultData
 					setBlueprintParse( e );
 					setKey( "mods", findModsFromBlueprint( e.objects ) );
 				} );
-			return;
 		}
 		setBlueprintParse( defaultBlueprintData );
-	}, [ defaultBlueprintData, sbpFile, sbpcfgFile ] );
+	}, [ defaultBlueprintData, defaultData?.originalName, isEditing, sbpFile, sbpcfgFile ] );
 
 	// [ title, description, sameblueprint, image(s), tag(s) ]
 	const checkList = useMemo( () => {
@@ -196,7 +222,7 @@ const BlueprintEditor: FunctionComponent<BlueprintEditorProps> = ( { defaultData
 					data.append( "images", file );
 				}
 				data.append( "blueprint", JSON.stringify( form ) );
-				await apiQueryLib.PostToAPI<{ msg: string, blueprintId: string }>( EApiBlueprintUtils.create, data )
+				await await apiQueryLib.PostToAPI<{ msg: string, blueprintId: string }>( EApiBlueprintUtils.create, data )
 					.then( async response => {
 						await successSwalAwait( response.msg );
 						navigate( `/blueprint/${ response.blueprintId }` );
@@ -251,12 +277,15 @@ const BlueprintEditor: FunctionComponent<BlueprintEditorProps> = ( { defaultData
 								} } />
 						</SBSSelect>
 
-						<SBSInput name="sbp" accept=".sbp" required={ !isEditing } label="Blueprint (.sbp)" type="file" onChange={ handleFileSelect } />
-						<SBSInput name="sbpcfg" accept=".sbpcfg" required={ !isEditing } label="Blueprint Config (.sbpcfg" type="file" onChange={ handleFileSelect } />
+						<SBSInput ref={ sbpRef } name="sbp" accept=".sbp" required={ !isEditing } label={ `${ `${ defaultData?.originalName }.sbp` || "Blueprint (.sbpcfg)" }` } type="file" onChange={ handleFileSelect } />
+						<SBSInput ref={ sbpcfgRef } hintClassName="flex" hint={ <>
+							<span className="flex-1 text-sm self-center">Blueprint files can you find here: <b>%localappdata%\FactoryGame\Saved\SaveGames\blueprints</b></span>
+							<CopyButton size="xs" copyString="%localappdata%\FactoryGame\Saved\SaveGames\blueprints" />
+						</> } name="sbpcfg" accept=".sbpcfg" required={ !isEditing } label={ `${ `${ defaultData?.originalName }.sbpcfg` || "Blueprint (.sbpcfg)" }` } type="file" onChange={ handleFileSelect } />
 					 	{ checkList[ 2 ] && (
 							<Button onClick={ exportDatas } fullSized>Export blueprint name and description from files</Button>
 						) }
-						<SBSInput name="img" accept=".gif,.jpg,.jpeg,.png" multiple max={ 5 } min={ 1 } required={ !isEditing } label="Images (Min 1, Max 5)" type="file" onChange={ handleFileSelect } />
+						<SBSInput name="img" accept="image/png, image/jpeg" multiple max={ 5 } min={ 1 } required={ !isEditing } label="Images (Min 1, Max 5)" type="file" onChange={ handleFileSelect } />
 
 						{ ( ( !isEditing && checkList[ 0 ] && checkList[ 1 ] && checkList[ 2 ] && checkList[ 3 ] ) || isEditing ) && (
 							<LoadingButton isLoading={ isUploading } color="green" onClick={ uploadBlueprint } Icon={ BiSave } fullSized>Start Upload</LoadingButton>

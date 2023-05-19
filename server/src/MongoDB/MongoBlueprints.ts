@@ -1,5 +1,9 @@
 import { BlueprintClass } from "@/server/src/Lib/Blueprint.Class";
 import { parseBlueprintById } from "@/server/src/Lib/BlueprintParser";
+import type { Tag } from "@/server/src/MongoDB/MongoTags";
+import { ZodTagSchema } from "@/server/src/MongoDB/MongoTags";
+import type { UserAccount } from "@/server/src/MongoDB/MongoUserAccount";
+import { ZodUserAccountSchema } from "@/server/src/MongoDB/MongoUserAccount";
 import { findModsFromBlueprint } from "@/src/Shared/blueprintReadingHelper";
 import type { BlueprintConfig } from "@etothepii/satisfactory-file-parser";
 import type { MongoBase } from "@server/Types/mongo";
@@ -9,7 +13,7 @@ import { z } from "zod";
 
 
 const ZodRating = z.object( {
-	userid: z.string(),
+	userid: z.string().or( ZodUserAccountSchema ),
 	rating: z.number().min( 1 ).max( 5 )
 } );
 
@@ -27,68 +31,96 @@ const ZodIconData = z.object( {
 
 const ZodBlueprintBase = z.object( {
 	downloads: z.number(),
-	blacklisted: z.boolean(),
 	originalName: z.string(),
 	iconData: ZodIconData.optional(),
 	name: z.string(),
 	description: z.string(),
-	owner: z.string(),
+	owner: z.string().or( ZodUserAccountSchema ),
 	DesignerSize: z.nativeEnum( EDesignerSize ),
 	mods: z.array( z.string() ),
 	rating: z.array( ZodRating ),
 	totalRating: z.number(),
 	totalRatingCount: z.number(),
-	tags: z.array( z.string() ),
+	tags: z.array( z.string() ).or( z.array( ZodTagSchema ) ),
 	images: z.array( z.string() )
 } );
 
 const ZodBlueprintPackSchema = z.object( {
 	name: z.string(),
 	description: z.string(),
-	owner: z.string(),
+	owner: z.string().or( ZodUserAccountSchema ),
+	tags: z.array( z.string() ).or( z.array( ZodTagSchema ) ),
+	blueprints: z.array( z.string() ).or( z.array( ZodBlueprintBase ) ),
 	mods: z.array( z.string() ),
 	rating: z.array( ZodRating ),
 	totalRating: z.number(),
 	totalRatingCount: z.number(),
-	tags: z.array( z.string() ),
-	downloads: z.number(),
-	blacklisted: z.boolean(),
-	images: z.array( z.string() ),
-	blueprints: z.array( z.string() ).or( z.array( ZodBlueprintBase ) )
+	images: z.array( z.string() )
 } );
 
 const ZodBlueprintSchema = ZodBlueprintBase.merge( z.object( {
 	inPacks: z.array( ZodBlueprintPackSchema ).or( z.array( z.string() ) )
 } ) );
 
-export interface BlueprintPackSchemaMethods {
-	updateRating: () => Promise<boolean>;
-	updateModRefs: ( save?: boolean ) => Promise<void>;
+interface BPInterface extends z.infer<typeof ZodBlueprintSchema> {
+	DesignerSize: EDesignerSize,
+	owner: string,
+	tags: string[],
+	inPacks: string[]
+}
 
+interface BlueprintPackExtendedInterface extends z.infer<typeof ZodBlueprintPackSchema> {
+	owner: UserAccount,
+	tags: Tag[],
+	blueprints: ( BPInterface & MongoBase )[]
+}
+
+interface BlueprintPackInterface extends z.infer<typeof ZodBlueprintPackSchema> {
+	owner: string,
+	tags: string[],
+	blueprints: string[]
+}
+
+interface BPExtendedInterface extends z.infer<typeof ZodBlueprintSchema> {
+	DesignerSize: EDesignerSize,
+	owner: UserAccount,
+	tags: Tag[],
+	inPacks: BlueprintPack[]
+}
+
+export type BlueprintPack = BlueprintPackInterface & MongoBase;
+export type BlueprintPackExtended = BlueprintPackExtendedInterface & MongoBase;
+export type BlueprintData = BPInterface & MongoBase;
+export type BlueprintDataExtended = BPExtendedInterface & MongoBase;
+export type BlueprintRating = z.infer<typeof ZodRating>;
+export type IconData = z.infer<typeof ZodIconData>;
+
+export interface BlueprintPackSchemaMethods {
+	updateRating: () => Promise<boolean>,
+	updateModRefs: ( save?: boolean ) => Promise<void>
 }
 
 export interface BlueprintSchemaMethods {
-	updateRating: () => Promise<boolean>;
-	updateModRefs: ( save?: boolean ) => Promise<void>;
-	updateBlueprintData: ( save?: boolean ) => Promise<void>;
+	updateRating: () => Promise<boolean>,
+	updateModRefs: ( save?: boolean ) => Promise<void>,
+	updateBlueprintData: ( save?: boolean ) => Promise<void>
 }
 
 const BlueprintSchema = new mongoose.Schema( {
 	name: { type: String, required: true },
 	description: { type: String, required: true },
 	mods: { type: [ String ], required: true, default: [] },
-	tags: { type: [ String ], required: true, default: [] },
+	tags: { type: [ mongoose.Schema.Types.ObjectId ], ref: "SBS_Tags", required: true, default: [] },
 	rating: { type: [ {
-		userid: { type: String, required: true },
+		userid: { type: mongoose.Schema.Types.ObjectId, ref: "SBS_UserAccount", required: true },
 		rating: { type: Number, required: true }
 	} ],
 	required: true },
 	totalRating: { type: Number, required: true },
 	totalRatingCount: { type: Number, required: true },
 	DesignerSize: { type: String, required: true },
-	owner: { type: String, required: true },
+	owner: { type: mongoose.Schema.Types.ObjectId, ref: "SBS_UserAccount", required: true },
 	downloads: { type: Number, required: true, default: 0 },
-	blacklisted: { type: Boolean, required: false, default: false },
 	images: { type: [ String ], required: true },
 	inPacks: { type: [ mongoose.Schema.Types.ObjectId ], ref: "SBS_BlueprintPacks", required: true },
 	originalName: { type: String, required: true, unique: true },
@@ -160,27 +192,21 @@ const BlueprintSchema = new mongoose.Schema( {
 		}
 	} } );
 
-export type BlueprintData = BPInterface & MongoBase;
-export type BlueprintRating = z.infer<typeof ZodRating>;
-export type IconData = z.infer<typeof ZodIconData>;
-
 const MongoBlueprints = mongoose.model<BlueprintData, mongoose.Model<BlueprintData, unknown, BlueprintSchemaMethods>>( "SBS_Blueprints", BlueprintSchema );
 
 const BlueprintPackSchema = new mongoose.Schema( {
 	name: { type: String, required: true },
 	description: { type: String, required: true },
-	mods: { type: [ String ], required: true },
+	mods: { type: [ String ], required: false },
 	rating: { type: [ {
-		userid: { type: String, required: true },
+		userid: { type: mongoose.Schema.Types.ObjectId, ref: "SBS_UserAccount", required: true },
 		rating: { type: Number, required: true }
 	} ],
 	required: true },
 	totalRating: { type: Number, required: true },
 	totalRatingCount: { type: Number, required: true },
-	tags: { type: [ String ], required: true },
-	owner: { type: String, required: true },
-	downloads: { type: Number, required: true, default: 0 },
-	blacklisted: { type: Boolean, required: false, default: false },
+	tags: { type: [ mongoose.Schema.Types.ObjectId ], ref: "SBS_Tags", required: false },
+	owner: { type: mongoose.Schema.Types.ObjectId, ref: "SBS_UserAccount", required: true },
 	blueprints: { type: [ mongoose.Schema.Types.ObjectId ], ref: "SBS_Blueprints", required: true }
 }, { timestamps: true,
 	methods: {
@@ -207,36 +233,51 @@ const BlueprintPackSchema = new mongoose.Schema( {
 			return false;
 		},
 		updateModRefs: async function( save = true ) {
-			const blueprintSet = new Set<string>();
-			for await ( const bp of MongoBlueprints.find( { _id: this.blueprints } ) ) {
-				for( const mod of bp.mods ) {
-					blueprintSet.add( mod );
+			try {
+				const blueprintSet = new Set<string>();
+				const tagsSet = new Set<mongoose.Types.ObjectId>();
+				for await ( const bp of MongoBlueprints.find( { _id: this.blueprints } ) ) {
+					for( const mod of bp.mods ) {
+						blueprintSet.add( mod );
+					}
+					for( const tag of bp.tags ) {
+						tagsSet.add( new mongoose.Types.ObjectId( tag ) );
+					}
 				}
-			}
-			this.mods = Array.from( blueprintSet );
-			if( save ) {
+				this.mods = Array.from( blueprintSet );
 				this.markModified( "mods" );
-				await this.save();
+				this.tags = Array.from( tagsSet );
+				this.markModified( "tags" );
+				if( save ) {
+					await this.save();
+				}
+				await MongoBlueprints.updateMany( {}, { $pull: { inPacks: this._id } } );
+				await MongoBlueprints.updateMany( { _id: this.blueprints }, { $push: { inPacks: this._id } } );
+			} catch( e ) {
+				if( e instanceof Error ) {
+					SystemLib.LogError( "mongo", e.message );
+				}
 			}
 		}
 	} } );
-
-interface BPInterface extends z.infer<typeof ZodBlueprintSchema> {
-	DesignerSize: EDesignerSize;
-}
-
-type BlueprintPack = z.infer<typeof ZodBlueprintPackSchema> & MongoBase;
 
 
 export const Revalidate = async() => {
 	for await ( const bpDoc of MongoBlueprints.find( { iconData: { $exists: false } } ) ) {
 		await bpDoc.updateBlueprintData();
 	}
-};
 
-export default MongoBlueprints;
+	// todo: remove
+	for await ( const bpDoc of MongoBlueprints.find() ) {
+		bpDoc.markModified( "rating" );
+		bpDoc.markModified( "tags" );
+		bpDoc.markModified( "owner" );
+		await bpDoc.save();
+	}
+};
 
 const MongoBlueprintPacks = mongoose.model<BlueprintPack, mongoose.Model<BlueprintPack, unknown, BlueprintPackSchemaMethods>>( "SBS_BlueprintPacks", BlueprintPackSchema );
 
-export { BlueprintSchema, ZodBlueprintSchema, ZodRating, ZodIconData, BlueprintPackSchema, ZodBlueprintPackSchema, BlueprintPack, MongoBlueprintPacks };
+export default MongoBlueprints;
+export { BlueprintPackSchema, BlueprintSchema, MongoBlueprintPacks, ZodBlueprintPackSchema, ZodBlueprintSchema, ZodIconData, ZodRating };
 

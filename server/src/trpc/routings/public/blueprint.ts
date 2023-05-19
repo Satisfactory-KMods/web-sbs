@@ -34,9 +34,7 @@ export function buildFilter<T extends BlueprintData | BlueprintPack>( filter?: F
 		filter: FilterQuery<T>,
 		options: QueryOptions<T>
 	} = {
-		filter: {
-			blacklisted: { $ne: true }
-		},
+		filter: {},
 		options: {
 			sort: { createdAt: -1 }
 		}

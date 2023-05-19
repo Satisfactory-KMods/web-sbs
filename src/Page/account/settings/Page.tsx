@@ -53,7 +53,7 @@ const Component: FunctionComponent = () => {
 		}
 
 		setIsSending( true );
-		const response = await tRPCAuth.updateAccount.mutate( sendData ).catch( tRPCHandleError );
+		const response = await tRPCAuth.updateAccount.modify.mutate( sendData ).catch( tRPCHandleError );
 
 		if( response ) {
 			await logout( false );

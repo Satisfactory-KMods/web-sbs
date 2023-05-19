@@ -12,9 +12,9 @@ import Select from "react-select";
 
 
 interface BlueprintFilterProps extends PropsWithChildren {
-	isFetching: boolean;
+	isFetching: boolean,
 	filterSchema: [FilterSchema, Dispatch<SetStateAction<FilterSchema>>],
-	doFetch: () => Promise<void>,
+	doFetch: () => Promise<void>
 }
 
 const BlueprintFilter: FunctionComponent<BlueprintFilterProps> = ( { isFetching, filterSchema, doFetch, children } ) => {
@@ -43,7 +43,7 @@ const BlueprintFilter: FunctionComponent<BlueprintFilterProps> = ( { isFetching,
 		const filter: FilterSchema = {
 			sortBy: SelectSorting?.value || undefined,
 			name: BlueprintName !== "" ? BlueprintName : undefined,
-			onlyVanilla: SelectVanilla?.value || undefined,
+			onlyVanilla: SelectVanilla?.value !== undefined ? SelectVanilla?.value : undefined,
 			mods: SelectMods.length > 0 ? SelectMods.map( e => e.value ) : undefined,
 			tags: SelectTags.length > 0 ? SelectTags.map( e => e.value ) : undefined
 		};
@@ -61,7 +61,7 @@ const BlueprintFilter: FunctionComponent<BlueprintFilterProps> = ( { isFetching,
 
 	return (
 		<div className="w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-			<div className="bg-gray-700 p-3 text-2xl font-semibold rounded-t-lg text-neutral-300 border-b border-gray-600">
+			<div className="bg-gray-700 p-3 text-2xl font-semibold rounded-t-lg text-neutral-300 border-b border-gray-600 flex">
 				{ children }
 			</div>
 			<div className="p-5 grid grid-cols-1 text-neutral-200 md:grid-cols-2 lg:grid-cols-3 gap-2">
@@ -101,7 +101,7 @@ const BlueprintFilter: FunctionComponent<BlueprintFilterProps> = ( { isFetching,
 					</LoadingButton>
 					<LoadingButton isLoading={ isFetching } color="red" className="flex-1" Icon={ BiTrash }
 						onClick={ ResetSearch }>
-							Clear Searching
+							Clear
 					</LoadingButton>
 				</div>
 			</div>

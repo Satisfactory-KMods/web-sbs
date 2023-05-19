@@ -1,4 +1,5 @@
 import { ApiUrl } from "@server/Lib/Express.Lib";
+import type { BlueprintData, BlueprintPack } from "@server/MongoDB/MongoBlueprints";
 import MongoBlueprints, { MongoBlueprintPacks } from "@server/MongoDB/MongoBlueprints";
 import * as Compress from "compressing";
 import type {
@@ -6,149 +7,139 @@ import type {
 	Response
 } from "express";
 import { default as FS, default as fs } from "fs";
+import type { HydratedDocument } from "mongoose";
 import path from "path";
 
 
+const increaseDownloadCount = async( docu: HydratedDocument<BlueprintData>, ip: string ) => {
+	const id = docu._id.toString();
+	if( !DownloadIPCached.get( id )?.includes( ip ) ) {
+		if( typeof docu.downloads !== "number" ) {
+			docu.downloads = 0;
+		}
+		docu.downloads++;
+		docu.markModified( "downloads" );
+		await docu.save();
+	}
+};
+
+const createZipForBlueprint = async( id: string, only?: string ): Promise<[ string, HydratedDocument<BlueprintData> ]> => {
+	const blueprint = await MongoBlueprints.findOne( { _id: id } );
+	if( blueprint ) {
+		const zipDir = path.join( __MountDir, "Zips", id );
+		const zipFile = path.join( zipDir, `${ blueprint.originalName }.zip` );
+
+		const sbpFile = path.join( __BlueprintDir, id, `${ id }.sbp` );
+		const sbpcfgFile = path.join( __BlueprintDir, id, `${ id }.sbpcfg` );
+
+		const sbpDownloadFile = path.join( zipDir, `${ blueprint.originalName }.sbp` );
+		const sbpcfgDownloadFile = path.join( zipDir, `${ blueprint.originalName }.sbpcfg` );
+		const downloadFile = path.join( zipDir, `${ blueprint.originalName }.${ only || "zip" }` );
+
+		if( !fs.existsSync( sbpFile ) || !fs.existsSync( sbpcfgFile ) ) {
+			throw new Error( "Blueprint not found" );
+		}
+
+		if( fs.existsSync( downloadFile ) ) {
+			return [ downloadFile, blueprint ];
+		}
+
+		fs.existsSync( zipDir ) && fs.rmSync( zipDir, { recursive: true } );
+		fs.mkdirSync( zipDir, { recursive: true } );
+
+		const zipStream = new Compress.zip.Stream();
+
+		fs.copyFileSync( sbpFile, sbpDownloadFile );
+		fs.copyFileSync( sbpcfgFile, sbpcfgDownloadFile );
+
+		zipStream.addEntry( sbpDownloadFile );
+		zipStream.addEntry( sbpcfgDownloadFile );
+
+		const destStream = FS.createWriteStream( zipFile );
+		await new Promise<void>( ( resolve, reject ) => {
+			zipStream.pipe( destStream ).on( "finish", () => {
+				fs.writeFileSync( path.join( zipDir, `created.log` ), Date.now().toString() );
+				SystemLib.Log( "api", "Blueprint Download Created: " + zipFile );
+
+				resolve();
+			} ).on( "error", err => reject( "Blueprint can't create" ) );
+		} );
+
+		return [ downloadFile, blueprint ];
+	}
+	throw new Error( "File not found" );
+};
+
+const createZipForBlueprintPack = async( id: string, ip: string ): Promise<[ string, HydratedDocument<BlueprintPack> ]> => {
+	const zipDir = path.join( __MountDir, "PackZips", id );
+	const zipFile = path.join( zipDir, `${ id }.zip` );
+	const docu = await MongoBlueprintPacks.findById( id );
+	if( docu ) {
+		if( fs.existsSync( zipFile ) ) {
+			return [ zipFile, docu ];
+		}
+
+		const zipPackStream = new Compress.zip.Stream();
+		const files = new Set<string>();
+		for( const blueprint of docu.blueprints ) {
+			const [ sbpFile, sbpcfgFile ] = await Promise.all( [
+				createZipForBlueprint( blueprint.toString(), "sbp" ).catch( () => null ),
+				createZipForBlueprint( blueprint.toString(), "sbpcfg" ).catch( () => null )
+			] );
+			if( sbpFile && sbpcfgFile && sbpFile[ 0 ] && sbpcfgFile[ 0 ] ) {
+				files.add( sbpFile[ 0 ] );
+				files.add( sbpcfgFile[ 0 ] );
+				await increaseDownloadCount( sbpFile[ 1 ], ip );
+			}
+		}
+
+		for( const file of Array.from( files ) ) {
+			zipPackStream.addEntry( file );
+		}
+
+		fs.mkdirSync( zipDir, { recursive: true } );
+		const destStream = FS.createWriteStream( zipFile );
+		await new Promise<void>( ( resolve, reject ) => {
+			zipPackStream.pipe( destStream ).on( "finish", () => {
+				fs.writeFileSync( path.join( zipDir, `created.log` ), Date.now().toString() );
+				SystemLib.Log( "api", "BlueprintPack Download Created: " + zipFile );
+
+				resolve();
+			} ).on( "error", err => reject( new Error( "Blueprint Pack can't create: " + err.message ) ) );
+		} );
+
+		return [ zipFile, docu ];
+	}
+	throw new Error( "File not found" );
+};
+
+
 export default function() {
-	Router.get( ApiUrl( "download/:id/:only?" ), async( req: Request, res: Response ) => {
+	Router.get( ApiUrl( "download/pack/:id" ), async( req: Request, res: Response ) => {
 		try {
-			const { id, only } = req.params;
-			const blueprint = await MongoBlueprints.findOne( { _id: id, blacklisted: { $ne: true } } );
-			if( !blueprint ) {
-				return res.status( 404 ).json( { error: "Blueprint not found" } );
+			const { id } = req.params;
+			const [ downloadFile ] = await createZipForBlueprintPack( id, req.ip );
+			if( downloadFile ) {
+				return res.download( downloadFile );
 			}
-			const ZipTempDir = path.join( __MountDir, "Zips", id );
-
-			const FileSBP = path.join( __BlueprintDir, id, `${ id }.sbp` );
-			const FileSBPCFG = path.join( __BlueprintDir, id, `${ id }.sbpcfg` );
-
-			if( !fs.existsSync( FileSBP ) || !fs.existsSync( FileSBPCFG ) ) {
-				return res.status( 404 ).json( { error: "Blueprint not found" } );
-			}
-
-			const BPName = blueprint.originalName;
-			const ZipFile = path.join( __MountDir, "Zips", id, `${ BPName }.zip` );
-			const AsOnly = path.join( __MountDir, "Zips", id, `${ BPName }.${ only }` );
-
-			if( !DownloadIPCached.find( R => R.id === blueprint._id.toString() && R.ip === req.ip ) ) {
-				if( !blueprint.downloads ) {
-					blueprint.downloads = 0;
-				}
-				blueprint.downloads++;
-				if( await blueprint.save() ) {
-					DownloadIPCached.push( { ip: req.ip, id: blueprint._id.toString() } );
-				}
-			}
-
-			if( fs.existsSync( ZipFile ) ) {
-				if( only && fs.existsSync( AsOnly ) ) {
-					return res.download( AsOnly );
-				}
-
-				return res.download( ZipFile, `${ BPName }.zip` );
-			}
-
-			const SBPCFGFILE = path.join( __MountDir, "Zips", id, `${ BPName }.sbpcfg` );
-			const SBPFILE = path.join( __MountDir, "Zips", id, `${ BPName }.sbp` );
-			const ZipStream = new Compress.zip.Stream();
-
-			fs.mkdirSync( ZipTempDir, { recursive: true } );
-
-			const CopiedFileSBP = path.join( ZipTempDir, `${ BPName }.sbp` );
-			const CopiedFileSBPCFG = path.join( ZipTempDir, `${ BPName }.sbpcfg` );
-
-			fs.copyFileSync( FileSBP, CopiedFileSBP );
-			fs.copyFileSync( FileSBPCFG, CopiedFileSBPCFG );
-
-			ZipStream.addEntry( CopiedFileSBP );
-			ZipStream.addEntry( CopiedFileSBPCFG );
-
-			const destStream = FS.createWriteStream( ZipFile );
-			ZipStream.pipe( destStream ).on( "finish", () => {
-				fs.renameSync( CopiedFileSBP, SBPFILE );
-				fs.renameSync( CopiedFileSBPCFG, SBPCFGFILE );
-
-				fs.writeFileSync( path.join( ZipTempDir, `created.log` ), Date.now().toString() );
-				SystemLib.Log( "api", "Blueprint Download Created: " + ZipFile );
-
-				if( only && fs.existsSync( AsOnly ) ) {
-					return res.download( AsOnly );
-				}
-
-				return res.download( ZipFile, `${ BPName }.zip` );
-			} ).on( "error", err => res.status( 404 ).json( { error: "Blueprint not found" } ) );
-
+			return res.status( 404 ).json( { error: "BlueprintPack not found" } );
 		} catch( e ) {
 			if( e instanceof Error ) {
 				SystemLib.LogError( "api", e.message );
 			}
-			return res.status( 404 ).json( { error: "Blueprint not found" } );
+			return res.status( 404 ).json( { error: "BlueprintPack not found" } );
 		}
 	} );
 
-	Router.get( ApiUrl( "download/pack/:id" ), async( req: Request, res: Response ) => {
+	Router.get( ApiUrl( "download/:id/:only?" ), async( req: Request, res: Response ) => {
 		try {
-			const { id } = req.params;
-			const BPPack = await MongoBlueprintPacks.findOne( { _id: id, blacklisted: { $ne: true } } );
-			if( !BPPack ) {
-				return res.status( 404 ).json( { error: "Blueprint not found" } );
+			const { id, only } = req.params;
+			const [ downloadFile, blueprint ] = await createZipForBlueprint( id, only );
+			if( downloadFile ) {
+				await increaseDownloadCount( blueprint, req.ip );
+				return res.download( downloadFile );
 			}
-			const ZipTempDir = path.join( __MountDir, "Zips", id );
-			const ZipFile = path.join( __MountDir, "Zips", id, `${ id }.zip` );
-
-			if( !DownloadIPCached.find( R => R.id === BPPack._id.toString() && R.ip === req.ip ) ) {
-				if( !BPPack.downloads ) {
-					BPPack.downloads = 0;
-				}
-				BPPack.downloads++;
-				if( await BPPack.save() ) {
-					DownloadIPCached.push( { ip: req.ip, id: BPPack._id.toString() } );
-				}
-			}
-			if( fs.existsSync( ZipFile ) ) {
-				return res.download( ZipFile, `${ BPPack._id.toString() }.zip` );
-			}
-
-			const ZipStream = new Compress.zip.Stream();
-
-			fs.mkdirSync( ZipTempDir, { recursive: true } );
-
-			for( const BlueprintID of BPPack.blueprints ) {
-				try {
-					const BP = await MongoBlueprints.findOne( { _id: BlueprintID, blacklisted: { $ne: true } } );
-					if( BP ) {
-						const BPName = BP.name.replace( /[^a-z0-9]/gi, "_" ).toLowerCase();
-
-						const CopiedFileSBP = path.join( ZipTempDir, `${ BPName }.sbp` );
-						const CopiedFileSBPCFG = path.join( ZipTempDir, `${ BPName }.sbpcfg` );
-
-						const FileSBP = path.join( __BlueprintDir, id, `${ id }.sbp` );
-						const FileSBPCFG = path.join( __BlueprintDir, id, `${ id }.sbpcfg` );
-
-						fs.copyFileSync( FileSBP, CopiedFileSBP );
-						fs.copyFileSync( FileSBPCFG, CopiedFileSBPCFG );
-
-						ZipStream.addEntry( CopiedFileSBP );
-						ZipStream.addEntry( CopiedFileSBPCFG );
-					}
-				} catch( e ) {
-					if( e instanceof Error ) {
-						SystemLib.LogError( "api", e.message );
-					}
-				}
-			}
-
-			const destStream = FS.createWriteStream( ZipFile );
-			ZipStream.pipe( destStream ).on( "finish", () => {
-				for( const File of fs.readdirSync( ZipTempDir ) ) {
-					if( File.endsWith( ".sbp" ) || File.endsWith( ".sbpcfg" ) ) {
-						fs.rmSync( path.join( ZipTempDir, File ) );
-					}
-				}
-				fs.writeFileSync( path.join( ZipTempDir, `created.log` ), Date.now().toString() );
-				SystemLib.Log( "api", "BlueprintPack Download Created: " + ZipFile );
-				return res.download( ZipFile, `${ BPPack._id.toString() }.zip` );
-			} ).on( "error", err => res.status( 404 ).json( { error: "Blueprint not found" } ) );
+			return res.status( 404 ).json( { error: "Blueprint not found" } );
 		} catch( e ) {
 			if( e instanceof Error ) {
 				SystemLib.LogError( "api", e.message );

@@ -1,13 +1,14 @@
+import { useCopy } from "@kyri123/k-reactutils";
 import type { ButtonProps } from "flowbite-react";
 import { Button } from "flowbite-react";
 import { forwardRef } from "react";
-import { CgSpinner } from "react-icons/all";
+import { BiCopy, CgSpinner, FaCheck } from "react-icons/all";
 import type { IconType } from "react-icons/lib";
 
 
 interface LoadingButtonsProps extends ButtonProps {
-	isLoading?: boolean;
-	Icon: IconType;
+	isLoading?: boolean,
+	Icon: IconType
 }
 
 const LoadingButton = forwardRef<HTMLButtonElement, LoadingButtonsProps>( ( {
@@ -29,7 +30,43 @@ const LoadingButton = forwardRef<HTMLButtonElement, LoadingButtonsProps>( ( {
 	);
 } );
 
-LoadingButton.displayName = "LoadingButton";
+interface CopyButtonsProps extends ButtonProps {
+	copyString?: string,
+	getCopyString?: () => string
+}
 
-export { LoadingButton };
+const CopyButton = forwardRef<HTMLButtonElement, CopyButtonsProps>( ( {
+	children,
+	getCopyString,
+	hidden,
+	disabled,
+	copyString,
+	...props
+}, ref ) => {
+	const [ doCopy, isCopied ] = useCopy( "", 2000 );
+	if( hidden ) {
+		return null;
+	}
+
+	const getString = () => {
+		if( getCopyString ) {
+			return getCopyString();
+		}
+		if( !copyString ) {
+			alert( "DEV: No copyString set!" );
+		}
+		return copyString || "noCopySet!";
+	};
+
+	return (
+		<Button ref={ ref } onClick={ () => doCopy( getString() ) } disabled={ isCopied() || !!disabled } size="xs" { ...props }>
+			{ !isCopied() ? <BiCopy /> : <FaCheck /> }
+		</Button>
+	);
+} );
+
+LoadingButton.displayName = "LoadingButton";
+CopyButton.displayName = "CopyButton";
+
+export { LoadingButton, CopyButton };
 

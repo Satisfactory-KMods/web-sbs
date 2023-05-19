@@ -1,4 +1,6 @@
+import { authBlueprintPacks } from "@/server/src/trpc/routings/auth/blueprintsPacks";
 import { adminUsers } from "@/server/src/trpc/routings/auth/users";
+import { publicBlueprintPacks } from "@/server/src/trpc/routings/public/blueprintPack";
 import { MWAuth } from "@server/Lib/Express.Lib";
 import { BC } from "@server/Lib/System.Lib";
 import { authLogout } from "@server/trpc/routings/auth/logout";
@@ -19,6 +21,7 @@ import { adminTags } from "./routings/auth/tags";
 
 
 const publicRouter = router( {
+	blueprintPacks: publicBlueprintPacks,
 	validate: publicValidate,
 	login: publicLogin,
 	register: publicCreateAccount,
@@ -27,6 +30,7 @@ const publicRouter = router( {
 	mods: publicMods
 } );
 const authRouter = router( {
+	blueprintPacks: authBlueprintPacks,
 	blueprints: authBlueprints,
 	updateAccount: authUpdateAccount,
 	logout: authLogout,

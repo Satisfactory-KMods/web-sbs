@@ -12,6 +12,7 @@ import type {
 	Request,
 	Response
 } from "express";
+import fs from 'fs';
 import * as jwt from "jsonwebtoken";
 import _ from "lodash";
 import multer from "multer";
@@ -45,9 +46,29 @@ export async function MWAuth( req: Request, res: Response, next: NextFunction ) 
 				}
 			}
 		} catch( e ) {
+			/*if( e instanceof Error ) {
+				SystemLib.LogError( "middleware Auth", e.message );
+			}*/
 		}
 	}
 	return res.status( 401 ).json( errorResponse( "Unauthorized", res ) );
+}
+
+export async function MWCleanMulterCache( req: Request, res: Response, next: NextFunction ) {
+	if( req.files ) {
+		if( Array.isArray( req.files ) ) {
+			for( const file of req.files ) {
+				fs.existsSync( file.path ) && fs.rmSync( file.path, { recursive: true } );
+			}
+		} else {
+			for( const fileCluster of Object.values( req.files ) ) {
+				for( const file of fileCluster ) {
+					fs.existsSync( file.path ) && fs.rmSync( file.path, { recursive: true } );
+				}
+			}
+		}
+	}
+	next();
 }
 
 export async function MWPermission( req: Request, res: Response, next: NextFunction, Permission: ERoles ) {
@@ -96,7 +117,3 @@ export async function MWRestUser( req: Request, res: Response, next: NextFunctio
 	}
 	return res.status( 401 ).json( { error: "Unauthorized" } );
 }
-
-export const upload = multer( {
-	dest: path.join( __MountDir, "tmp" )
-} );

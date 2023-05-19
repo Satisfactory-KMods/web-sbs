@@ -16,9 +16,9 @@ const ZodUserAccountSchema = z.object( {
 } );
 
 export interface UserAccountMethods {
-	setPassword: ( password: string ) => void;
-	validPassword: ( password: string ) => boolean;
-	createKey: () => Promise<string>;
+	setPassword: ( password: string ) => void,
+	validPassword: ( password: string ) => boolean,
+	createKey: () => Promise<string>
 }
 
 const UserAccountSchema = new mongoose.Schema( {
@@ -57,5 +57,5 @@ export type ClientUserAccount = Omit<UserAccount, "hash" | "salt" | "__v">;
 const Model = mongoose.model<UserAccount, mongoose.Model<UserAccount, unknown, UserAccountMethods>>( "SBS_UserAccount", UserAccountSchema );
 
 export default Model;
-export { UserAccountSchema };
+export { UserAccountSchema, ZodUserAccountSchema };
 

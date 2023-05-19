@@ -5,7 +5,7 @@ import fs from 'fs';
 import _ from "lodash";
 import path from "path";
 import type { BlueprintData } from "../MongoDB/MongoBlueprints";
-import MongoBlueprints from "../MongoDB/MongoBlueprints";
+import MongoBlueprints, { MongoBlueprintPacks } from "../MongoDB/MongoBlueprints";
 
 
 export class BlueprintClass<T extends boolean = false> {
@@ -40,20 +40,18 @@ export class BlueprintClass<T extends boolean = false> {
 	}
 
 	public async parseBlueprint(): Promise<Blueprint | undefined> {
-		if( this instanceof BlueprintClass<true> ) {
-			const doc = await this.getDocument();
-			if( doc ) {
-				const sbp = path.join( __BlueprintDir, doc._id.toString(), `${ doc._id.toString() }.sbp` );
-				const sbpcfg = path.join( __BlueprintDir, doc._id.toString(), `${ doc._id.toString() }.sbpcfg` );
-				try {
-					const blueprint = new BlueprintParser( doc.originalName, fs.readFileSync( sbp ), fs.readFileSync( sbpcfg ) );
-					if( blueprint.Success ) {
-						return blueprint.Get;
-					}
-				} catch( e ) {
-					if( e instanceof Error ) {
-						SystemLib.LogError( "blueprint", e.message );
-					}
+		const doc = await this.getDocument();
+		if( doc ) {
+			const sbp = path.join( __BlueprintDir, doc._id.toString(), `${ doc._id.toString() }.sbp` );
+			const sbpcfg = path.join( __BlueprintDir, doc._id.toString(), `${ doc._id.toString() }.sbpcfg` );
+			try {
+				const blueprint = new BlueprintParser( doc.originalName, fs.readFileSync( sbp ), fs.readFileSync( sbpcfg ) );
+				if( blueprint.Success ) {
+					return blueprint.Get;
+				}
+			} catch( e ) {
+				if( e instanceof Error ) {
+					SystemLib.LogError( "blueprint", e.message );
 				}
 			}
 		}
@@ -69,6 +67,23 @@ export class BlueprintClass<T extends boolean = false> {
 	}
 
 	public isOwner( userId: string ) {
-		return _.isEqual( userId, this.data?.owner );
+		return _.isEqual( userId, this.data?.owner.toString() );
+	}
+
+	public async remove(): Promise<boolean> {
+		const bpDocument = await this.getDocument();
+		if( bpDocument ) {
+			const id = bpDocument._id.toString();
+
+			fs.existsSync( path.join( __BlueprintDir, id ) ) && fs.rmdirSync( path.join( __BlueprintDir, id ) );
+			fs.existsSync( path.join( __MountDir, "Zips", id ) ) && fs.rmdirSync( path.join( __MountDir, "Zips", id ) );
+
+			await MongoBlueprintPacks.updateMany( { blueprints: bpDocument._id }, { $pull: { blueprints: bpDocument._id } } );
+
+			// remove all empty blueprint packs
+			await MongoBlueprintPacks.deleteMany( { "blueprints.0": { $exists: false } } );
+			await bpDocument.deleteOne();
+		}
+		return false;
 	}
 }

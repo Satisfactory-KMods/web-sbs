@@ -6,8 +6,8 @@ import { Link } from "react-router-dom";
 
 
 interface NavigationDropdownProps extends LinkProps {
-	to: string;
-	permission?: ERoles;
+	to: string,
+	permission?: ERoles
 }
 
 const NavigationDropdown: FunctionComponent<NavigationDropdownProps> = ( {

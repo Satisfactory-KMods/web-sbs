@@ -14,10 +14,7 @@ export const publicCreateAccount =
 		username: z.string().min( 6, { message: "Username is to short." } ),
 		email: z.string().email( { message: "Email is invalid." } ),
 		password: z.string().min( 8, { message: "Password is to short." } )
-	} ) ).mutation<{
-		token: string;
-		message: string;
-	}>( async( { input } ) => {
+	} ) ).mutation( async( { input } ) => {
 		const { password, email, username } = input;
 		try {
 			if( !await MongoUserAccount.exists( {

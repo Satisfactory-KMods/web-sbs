@@ -1,3 +1,4 @@
+import { MWCleanMulterCache } from "@/server/src/Lib/Express.Lib";
 import "@kyri123/k-javascript-utils/lib/useAddons";
 import { ERoles } from "@shared/Enum/ERoles";
 import bodyParser from "body-parser";
@@ -42,9 +43,6 @@ Api.use( ( req, res, next ) => {
 } );
 
 SystemLib.Log( "start", "Try to connect to mongodb...", `mongodb://${ process.env.MONGODB_HOST }:${ process.env.MONGODB_PORT }` );
-SystemLib.Log( "start", "User:", process.env.MONGODB_USER );
-SystemLib.Log( "start", "User:", process.env.MONGODB_PASSWD );
-SystemLib.Log( "start", "User:", process.env.MONGODB_DATABASE );
 
 mongoose
 	.connect(
@@ -71,7 +69,7 @@ mongoose
 			}
 		}
 
-		global.DownloadIPCached = [];
+		global.DownloadIPCached = new Map<string, string[]>();
 
 		SystemLib.Log( "start", "Connected... Start API and SOCKETIO" );
 
@@ -95,6 +93,8 @@ mongoose
 
 		global.TaskManager = new TaskManagerClass();
 		await TaskManager.Init();
+
+		Api.use( MWCleanMulterCache );
 
 		HttpServer.listen( parseInt( process.env.HTTPPORT as string ), async() => SystemLib.Log( "start",
 			"API listen on port",

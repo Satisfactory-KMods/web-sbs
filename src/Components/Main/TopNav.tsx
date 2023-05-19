@@ -1,8 +1,11 @@
 import NavigationContainer from "@app/Components/navigation/NavigationContainer";
+import NavigationLinkButton from "@app/Components/navigation/NavigationLinkButton";
+import { fireSwalFromApi, tRPCAuth, tRPCHandleError } from "@app/Lib/tRPC";
 import NavigationDropdown from "@comp/navigation/NavigationDropdown";
 import NavigationDropdownItem from "@comp/navigation/NavigationDropdownItem";
 import NavigationLink from "@comp/navigation/NavigationLink";
 import { useAuth } from "@hooks/useAuth";
+import { useCopy } from "@kyri123/k-reactutils";
 import { ERoles } from "@shared/Enum/ERoles";
 import type { FunctionComponent } from "react";
 import { useRef } from "react";
@@ -18,22 +21,61 @@ import { Link } from "react-router-dom";
 const TopNav: FunctionComponent = () => {
 	const { user, loggedIn, logout } = useAuth();
 	const divRef = useRef<HTMLDivElement>( null );
+	const [ doCopy ] = useCopy();
+
+	const fetchAccountKey = async() => {
+		await tRPCAuth.updateAccount.getKey.query()
+			.then( doCopy )
+			.then( () => fireSwalFromApi( "Key copied to clipboard", "info" ) )
+			.catch( tRPCHandleError );
+	};
 
 	const Nav = ( <>
-		<NavigationContainer path="/blueprint" label="Blueprints" >
-			<NavigationLink label="Browse blueprints" to="/blueprint/list">Browse all blueprints!</NavigationLink>
+		<NavigationContainer path="/blueprint/" label="Blueprints" >
+			<NavigationLink label="Browse" to="/blueprint/list">Browse all blueprints!</NavigationLink>
 			{ loggedIn && ( <>
-				<NavigationLink label="Create a blueprint" to="/blueprint/create">Add you own blueprint</NavigationLink>
-				<NavigationLink label="My blueprints" to="/blueprint/my">Show all of your blueprints</NavigationLink>
+				<NavigationLink label="Create" to="/blueprint/create">Add you own blueprint</NavigationLink>
+				<NavigationLink label="My" to="/blueprint/my">Show all of your blueprints</NavigationLink>
+			</> ) }
+		</NavigationContainer>
+		<NavigationContainer path="/blueprintpacks" label="Blueprint Packs" >
+			<NavigationLink label="Browse" to="/blueprintpacks/list">Browse all blueprint packs!</NavigationLink>
+			{ loggedIn && ( <>
+				<NavigationLink label="Create" to="/blueprintpacks/create">Add you own blueprint pack</NavigationLink>
+				<NavigationLink label="My" to="/blueprintpacks/my">Show all of your blueprint packs</NavigationLink>
 			</> ) }
 		</NavigationContainer>
 		{ user.HasPermission( ERoles.admin ) && (
 			<NavigationContainer path="/admin" label="Admin" >
-				<NavigationLink label="Users" to="/admin/users">Manage all Users</NavigationLink>
-				<NavigationLink label="Blueprints" to="/admin/blueprint/blacklisted">Manage all blacklisted blueprints</NavigationLink>
+				<NavigationLink label="Users" to="/admin/users">Admin: Manage all Users</NavigationLink>
 				<NavigationLink label="Tags" to="/admin/tags">Manage all Tags</NavigationLink>
 			</NavigationContainer>
 		) }
+		{ loggedIn && ( <>
+			<NavigationLinkButton label="My Mod Key" to="#" onClick={ e => {
+				e.preventDefault();
+				fetchAccountKey();
+			} } />
+		</> ) }
+		<NavigationLinkButton label="Download the mod now!" to="https://ficsit.app/mod/SBS" target="_blank" />
+	</> );
+
+	const NavMobile = ( <>
+		<NavigationLinkButton label="Blueprints" to="/blueprint/list" />
+		{ loggedIn && ( <>
+			{ /*<NavigationLinkButton label="Create Blueprint" to="/blueprint/create" />*/ }
+			<NavigationLinkButton label="My Blueprints" to="/blueprint/my" />
+		</> ) }
+		<NavigationLinkButton label="Blueprint Packs" to="/blueprintpacks/list" />
+		{ loggedIn && ( <>
+			{ /*<NavigationLinkButton label="Blueprints" to="/blueprintpacks/create" />*/ }
+			<NavigationLinkButton label="My Blueprint Packs" to="/blueprintpacks/my" />
+		</> ) }
+		{ user.HasPermission( ERoles.admin ) && ( <>
+			<NavigationLinkButton label="Admin: Manage all Usersers" to="/admin/users" />
+			<NavigationLinkButton label="Admin: Manage all Tags" to="/admin/tags" />
+		</> ) }
+		<NavigationLinkButton label="Download the mod now!" to="https://ficsit.app/mod/SBS" target="_blank" />
 	</> );
 
 	return (
@@ -101,7 +143,7 @@ const TopNav: FunctionComponent = () => {
 
 				<div className="hidden sm:hidden" id="mobile-menu" ref={ divRef }>
 					<div className="space-y-1 px-2 pb-3 pt-2">
-						{ Nav }
+						{ NavMobile }
 					</div>
 				</div>
 			</div>
