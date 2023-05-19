@@ -31,18 +31,18 @@ const TopNav: FunctionComponent = () => {
 	};
 
 	const Nav = ( <>
-		<NavigationContainer path="/blueprint" label="Blueprints" >
+		<NavigationContainer path="/blueprint/" label="Blueprints" >
 			<NavigationLink label="Browse" to="/blueprint/list">Browse all blueprints!</NavigationLink>
 			{ loggedIn && ( <>
 				<NavigationLink label="Create" to="/blueprint/create">Add you own blueprint</NavigationLink>
 				<NavigationLink label="My" to="/blueprint/my">Show all of your blueprints</NavigationLink>
 			</> ) }
 		</NavigationContainer>
-		<NavigationContainer path="/blueprint/packs" label="Blueprint Packs" >
-			<NavigationLink label="Browse" to="/blueprint/packs">Browse all blueprint packs!</NavigationLink>
+		<NavigationContainer path="/blueprintpacks" label="Blueprint Packs" >
+			<NavigationLink label="Browse" to="/blueprintpacks">Browse all blueprint packs!</NavigationLink>
 			{ loggedIn && ( <>
-				<NavigationLink label="Create" to="/blueprint/packs/create">Add you own blueprint pack</NavigationLink>
-				<NavigationLink label="My" to="/blueprint/packs/my">Show all of your blueprint packs</NavigationLink>
+				<NavigationLink label="Create" to="/blueprintpacks/create">Add you own blueprint pack</NavigationLink>
+				<NavigationLink label="My" to="/blueprintpacks/my">Show all of your blueprint packs</NavigationLink>
 			</> ) }
 		</NavigationContainer>
 		{ user.HasPermission( ERoles.admin ) && (
@@ -65,10 +65,10 @@ const TopNav: FunctionComponent = () => {
 			{ /*<NavigationLinkButton label="Create Blueprint" to="/blueprint/create" />*/ }
 			<NavigationLinkButton label="My Blueprints" to="/blueprint/my" />
 		</> ) }
-		<NavigationLinkButton label="Blueprint Packs" to="/blueprint/packs" />
+		<NavigationLinkButton label="Blueprint Packs" to="/blueprintpacks" />
 		{ loggedIn && ( <>
-			{ /*<NavigationLinkButton label="Blueprints" to="/blueprint/packs/create" />*/ }
-			<NavigationLinkButton label="My Blueprint Packs" to="/blueprint/packs/my" />
+			{ /*<NavigationLinkButton label="Blueprints" to="/blueprintpacks/create" />*/ }
+			<NavigationLinkButton label="My Blueprint Packs" to="/blueprintpacks/my" />
 		</> ) }
 		{ user.HasPermission( ERoles.admin ) && ( <>
 			<NavigationLinkButton label="Admin: Manage all Usersers" to="/admin/users" />

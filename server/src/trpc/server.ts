@@ -21,7 +21,7 @@ import { adminTags } from "./routings/auth/tags";
 
 
 const publicRouter = router( {
-	publicBlueprintPacks,
+	blueprintPacks: publicBlueprintPacks,
 	validate: publicValidate,
 	login: publicLogin,
 	register: publicCreateAccount,
@@ -30,7 +30,7 @@ const publicRouter = router( {
 	mods: publicMods
 } );
 const authRouter = router( {
-	authBlueprintPacks,
+	blueprintPacks: authBlueprintPacks,
 	blueprints: authBlueprints,
 	updateAccount: authUpdateAccount,
 	logout: authLogout,

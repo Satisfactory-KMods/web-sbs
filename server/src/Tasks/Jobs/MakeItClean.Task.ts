@@ -1,10 +1,11 @@
+import { MongoBlueprintPacks } from "@/server/src/MongoDB/MongoBlueprints";
 import { JobTask } from "@server/Tasks/TaskManager";
 import fs from "fs";
 import path from "path";
 
 
 export default new JobTask(
-	1800000 * 2,
+	1800000,
 	"MakeItClean",
 	async() => {
 		SystemLib.Log( "tasks",
@@ -13,6 +14,8 @@ export default new JobTask(
 			"MakeItClean"
 		);
 
+		// remove all empty blueprint packs
+		await MongoBlueprintPacks.deleteMany( { "blueprints.0": { $exists: false } } );
 		global.DownloadIPCached.clear();
 		const ZipPath = path.join( __MountDir, "Zips" );
 		if( fs.existsSync( ZipPath ) ) {

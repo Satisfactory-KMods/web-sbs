@@ -10,6 +10,22 @@ import { z } from 'zod';
 
 
 export const publicBlueprintPacks = router( {
+	getBlueprintPack: publicProcedure.input( z.object( { id: z.string() } ) ).query( async( { input } ) => {
+		const { id } = input;
+		try {
+			const docu = await MongoBlueprintPacks.findById( id ).populate( [ 'blueprints', 'owner', 'tags' ] );
+			if( docu ) {
+				return docu.toJSON<BlueprintPackExtended>();
+			}
+		} catch( e ) {
+			handleTRCPErr( e );
+		}
+		throw new TRPCError( {
+			message: 'Something goes wrong!',
+			code: 'INTERNAL_SERVER_ERROR'
+		} );
+	} ),
+
 	getBlueprintPacks: publicProcedure
 		.input(
 			z.object( {
@@ -32,9 +48,7 @@ export const publicBlueprintPacks = router( {
 						skip
 					}
 				).populate( [ 'blueprints', 'owner', 'tags' ] );
-				const setOfImages = new Set( blueprintPacks.map( e => e.blueprints.reduce<string[]>( ( arr, cur ) => arr.concat( cur.images ), [] ) ) );
-				const image = Array.from( setOfImages ).reduce<string[]>( ( arr, cur ) => arr.concat( cur ), [] )[ Math.floor( Math.random() * setOfImages.size ) ];
-				return { blueprintPacks, totalBlueprints, image };
+				return { blueprintPacks, totalBlueprints };
 			} catch( e ) {
 				handleTRCPErr( e );
 			}

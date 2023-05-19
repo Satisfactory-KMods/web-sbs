@@ -81,6 +81,9 @@ export class BlueprintClass<T extends boolean = false> {
 			fs.existsSync( path.join( __MountDir, "Zips", id ) ) && fs.rmdirSync( path.join( __MountDir, "Zips", id ) );
 
 			await MongoBlueprintPacks.updateMany( { blueprints: bpDocument._id }, { $pull: { blueprints: bpDocument._id } } );
+
+			// remove all empty blueprint packs
+			await MongoBlueprintPacks.deleteMany( { "blueprints.0": { $exists: false } } );
 			await bpDocument.deleteOne();
 		}
 		return false;

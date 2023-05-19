@@ -103,42 +103,42 @@ const rootRouter = createBrowserRouter( [
 				}
 			},
 			{
-				path: "/blueprint/packs/edit/:blueprintId",
-				lazy: async() => await import( "@page/blueprint/packs/edit/[blueprintPackId]" ),
+				path: "/blueprintpacks/edit/:blueprintId",
+				lazy: async() => await import( "@page/blueprintpacks/edit/[blueprintPackId]" ),
 				loader: async( { request, params } ) => {
-					const { loader } = await import( "@page/blueprint/packs/edit/[blueprintPackId]Loader" );
+					const { loader } = await import( "@page/blueprintpacks/edit/[blueprintPackId]Loader" );
 					return loader( { request, params } );
 				}
 			},
 			{
-				path: "/blueprint/packs/my",
-				lazy: async() => await import( "@page/blueprint/packs/my/Page" ),
+				path: "/blueprintpacks/my",
+				lazy: async() => await import( "@page/blueprintpacks/my/Page" ),
 				loader: async( { request, params } ) => {
-					const { loader } = await import( "@page/blueprint/packs/my/Loader" );
+					const { loader } = await import( "@page/blueprintpacks/my/Loader" );
 					return loader( { request, params } );
 				}
 			},
 			{
-				path: "/blueprint/packs/create/",
-				lazy: async() => await import( "@page/blueprint/packs/create/Page" ),
+				path: "/blueprintpacks/create/",
+				lazy: async() => await import( "@page/blueprintpacks/create/Page" ),
 				loader: async( { request, params } ) => {
-					const { loader } = await import( "@page/blueprint/packs/create/Loader" );
+					const { loader } = await import( "@page/blueprintpacks/create/Loader" );
 					return loader( { request, params } );
 				}
 			},
 			{
-				path: "/blueprint/packs/edit/:blueprintPackId",
-				lazy: async() => await import( "@page/blueprint/packs/edit/[blueprintPackId]" ),
+				path: "/blueprintpacks/edit/:blueprintPackId",
+				lazy: async() => await import( "@page/blueprintpacks/edit/[blueprintPackId]" ),
 				loader: async( { request, params } ) => {
-					const { loader } = await import( "@page/blueprint/packs/edit/[blueprintPackId]Loader" );
+					const { loader } = await import( "@page/blueprintpacks/edit/[blueprintPackId]Loader" );
 					return loader( { request, params } );
 				}
 			},
 			{
-				path: "/blueprint/packs/",
-				lazy: async() => await import( "@page/blueprint/packs/Page" ),
+				path: "/blueprintpacks/",
+				lazy: async() => await import( "@page/blueprintpacks/Page" ),
 				loader: async( { request, params } ) => {
-					const { loader } = await import( "@page/blueprint/packs/Loader" );
+					const { loader } = await import( "@page/blueprintpacks/Loader" );
 					return loader( { request, params } );
 				}
 			},
@@ -150,6 +150,10 @@ const rootRouter = createBrowserRouter( [
 			{
 				path: "/error/:statusCode",
 				lazy: async() => await import( "@page/error/[statusCode]" )
+			},
+			{
+				path: "*",
+				element: <Navigate to="/error/404" />
 			}
 		]
 	},

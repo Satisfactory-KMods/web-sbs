@@ -70,7 +70,6 @@ const Component: FunctionComponent = () => {
 	return ( <>
 		<div className="flex flex-col">
 			<BlueprintFilter filterSchema={ [ filter, setFilter ] } isFetching={ isFetching } doFetch={ doFetch } >
-
 				<span className="flex-1">
 					My Blueprints ({ TotalBlueprints })
 				</span>
