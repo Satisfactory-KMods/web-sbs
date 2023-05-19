@@ -1,3 +1,4 @@
+import { MWCleanMulterCache } from "@/server/src/Lib/Express.Lib";
 import "@kyri123/k-javascript-utils/lib/useAddons";
 import { ERoles } from "@shared/Enum/ERoles";
 import bodyParser from "body-parser";
@@ -92,6 +93,8 @@ mongoose
 
 		global.TaskManager = new TaskManagerClass();
 		await TaskManager.Init();
+
+		Api.use( MWCleanMulterCache );
 
 		HttpServer.listen( parseInt( process.env.HTTPPORT as string ), async() => SystemLib.Log( "start",
 			"API listen on port",
