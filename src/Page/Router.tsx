@@ -103,7 +103,7 @@ const rootRouter = createBrowserRouter( [
 				}
 			},
 			{
-				path: "/blueprintpacks/edit/:blueprintId",
+				path: "/blueprintpacks/edit/:blueprintPackId",
 				lazy: async() => await import( "@page/blueprintpacks/edit/[blueprintPackId]" ),
 				loader: async( { request, params } ) => {
 					const { loader } = await import( "@page/blueprintpacks/edit/[blueprintPackId]Loader" );
@@ -127,10 +127,10 @@ const rootRouter = createBrowserRouter( [
 				}
 			},
 			{
-				path: "/blueprintpacks/edit/:blueprintPackId",
-				lazy: async() => await import( "@page/blueprintpacks/edit/[blueprintPackId]" ),
+				path: "/blueprintpacks/show/:blueprintPackId",
+				lazy: async() => await import( "@page/blueprintpacks/show/[blueprintPackId]" ),
 				loader: async( { request, params } ) => {
-					const { loader } = await import( "@page/blueprintpacks/edit/[blueprintPackId]Loader" );
+					const { loader } = await import( "@page/blueprintpacks/show/[blueprintPackId]Loader" );
 					return loader( { request, params } );
 				}
 			},

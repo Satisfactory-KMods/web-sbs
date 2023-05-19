@@ -64,13 +64,13 @@ const BlueprintPackCard: FunctionComponent<BlueprintPackCardProps> = ( { Data, o
 						<Button onClick={ doBlacklist } color="red" size="small" className="p-1 px-3">
 							&nbsp;<HiTrash /> &nbsp;
 						</Button>
-						<Link to={ `/blueprint/edit/${ blueprintPack._id }` } className="text-gray-900 bg-white border border-gray-200 hover:bg-gray-100 hover:text-blue-700 disabled:hover:bg-white focus:ring-blue-700 focus:text-blue-700 dark:bg-transparent dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 focus:ring-2 dark:disabled:hover:bg-gray-800 group flex h-min items-center justify-centertext-center font-medium focus:z-10 rounded-lg p-1 ms-2 px-3">
+						<Link to={ `/blueprintpacks/edit/${ blueprintPack._id }` } className="text-gray-900 bg-white border border-gray-200 hover:bg-gray-100 hover:text-blue-700 disabled:hover:bg-white focus:ring-blue-700 focus:text-blue-700 dark:bg-transparent dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 focus:ring-2 dark:disabled:hover:bg-gray-800 group flex h-min items-center justify-centertext-center font-medium focus:z-10 rounded-lg p-1 ms-2 px-3">
 							&nbsp;<HiCog /> &nbsp;
 						</Link>
 					</> }
 
 					<Button href={ `/api/v1/download/pack/${ blueprintPack._id }` } target="_blank" color="gray" size="small" className="p-1 px-3 ms-2">
-						<HiDownload className="text-sm me-2" />
+						&nbsp;<HiDownload />&nbsp;
 					</Button>
 				</div>
 			</div>

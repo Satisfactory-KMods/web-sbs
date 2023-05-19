@@ -2,6 +2,7 @@ import BlueprintRating from "@app/Components/Blueprints/BlueprintRating";
 import { CopyButton } from "@app/Components/elements/Buttons";
 import type { BlueprintIdLoader } from "@app/Page/blueprint/edit/[blueprintId]Loader";
 import { mdxComponents } from "@app/Page/terms/private/Page";
+import { useAuth } from "@app/hooks/useAuth";
 import type {
 	SaveComponent,
 	SaveEntity
@@ -21,11 +22,12 @@ import {
 	BiWrench
 } from "react-icons/bi";
 import {
+	BsArrowLeft,
 	BsBox,
 	BsBoxes,
 	BsHouseAdd
 } from "react-icons/bs";
-import { FaClock } from "react-icons/fa";
+import { FaClock, FaPlus } from "react-icons/fa";
 import {
 	HiCog,
 	HiDownload,
@@ -35,12 +37,15 @@ import { MdOutlinePhotoSizeSelectSmall } from "react-icons/md";
 import ReactMarkdown from "react-markdown";
 import {
 	Link,
-	useLoaderData
+	useLoaderData,
+	useNavigate
 } from "react-router-dom";
 
 
 const Component: FunctionComponent = () => {
+	const nav = useNavigate();
 	const id = useId();
+	const { loggedIn } = useAuth();
 	const { blueprintData, blueprintOwner, blueprint } = useLoaderData() as BlueprintIdLoader;
 	const bpHook = useBlueprint( blueprintData, blueprintOwner, { blueprint } );
 	const {
@@ -70,13 +75,17 @@ const Component: FunctionComponent = () => {
 	return (
 		<div className="grid grid-cols-1 xl:grid-cols-5 gap-3">
 			<div className="xl:col-span-3 flex flex-col w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-				<div className="p-3 border-b bg-gray-700 border-gray-700 rounded-t-lg text-neutral-200 truncate text-ellipsis overflow-hidden">
-					<span className="text-2xl">
-						{ Blueprint.name }
-					</span>
-					<span className="text-xs text-gray-400 block">
+				<div className="p-3 border-b bg-gray-700 border-gray-700 rounded-t-lg text-neutral-200 truncate text-ellipsis overflow-hidden flex">
+					<div className="flex-1">
+						<span className="text-2xl">
+							{ Blueprint.name }
+						</span>
+						<span className="text-xs text-gray-400 block">
 						Creator: <b>{ owner.username }</b>
-					</span>
+						</span>
+					</div>
+					<Button size="xs" color="green" onClick={ () => nav( "/blueprint/list" ) } className="me-2"><BsArrowLeft className="me-2" /> Back</Button>
+					{ loggedIn && <Button size="xs" color="green" onClick={ () => nav( "/blueprint/create" ) }><FaPlus className="me-2" /> Add new</Button> }
 				</div>
 				<div className="relative h-56 sm:h-64 xl:h-80 2xl:h-96">
 					<div className="absolute inset-0 flex items-center justify-center w-full h-full">

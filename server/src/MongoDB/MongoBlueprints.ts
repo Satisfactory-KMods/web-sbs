@@ -192,10 +192,12 @@ const BlueprintSchema = new mongoose.Schema( {
 		}
 	} } );
 
+const MongoBlueprints = mongoose.model<BlueprintData, mongoose.Model<BlueprintData, unknown, BlueprintSchemaMethods>>( "SBS_Blueprints", BlueprintSchema );
+
 const BlueprintPackSchema = new mongoose.Schema( {
 	name: { type: String, required: true },
 	description: { type: String, required: true },
-	mods: { type: [ String ], required: true },
+	mods: { type: [ String ], required: false },
 	rating: { type: [ {
 		userid: { type: mongoose.Schema.Types.ObjectId, ref: "SBS_UserAccount", required: true },
 		rating: { type: Number, required: true }
@@ -203,7 +205,7 @@ const BlueprintPackSchema = new mongoose.Schema( {
 	required: true },
 	totalRating: { type: Number, required: true },
 	totalRatingCount: { type: Number, required: true },
-	tags: { type: [ mongoose.Schema.Types.ObjectId ], ref: "SBS_Tags", required: true },
+	tags: { type: [ mongoose.Schema.Types.ObjectId ], ref: "SBS_Tags", required: false },
 	owner: { type: mongoose.Schema.Types.ObjectId, ref: "SBS_UserAccount", required: true },
 	blueprints: { type: [ mongoose.Schema.Types.ObjectId ], ref: "SBS_Blueprints", required: true }
 }, { timestamps: true,
@@ -233,16 +235,24 @@ const BlueprintPackSchema = new mongoose.Schema( {
 		updateModRefs: async function( save = true ) {
 			try {
 				const blueprintSet = new Set<string>();
+				const tagsSet = new Set<mongoose.Types.ObjectId>();
 				for await ( const bp of MongoBlueprints.find( { _id: this.blueprints } ) ) {
 					for( const mod of bp.mods ) {
 						blueprintSet.add( mod );
 					}
+					for( const tag of bp.tags ) {
+						tagsSet.add( new mongoose.Types.ObjectId( tag ) );
+					}
 				}
 				this.mods = Array.from( blueprintSet );
 				this.markModified( "mods" );
+				this.tags = Array.from( tagsSet );
+				this.markModified( "tags" );
 				if( save ) {
 					await this.save();
 				}
+				await MongoBlueprints.updateMany( {}, { $pull: { inPacks: this._id } } );
+				await MongoBlueprints.updateMany( { _id: this.blueprints }, { $push: { inPacks: this._id } } );
 			} catch( e ) {
 				if( e instanceof Error ) {
 					SystemLib.LogError( "mongo", e.message );
@@ -266,7 +276,6 @@ export const Revalidate = async() => {
 	}
 };
 
-const MongoBlueprints = mongoose.model<BlueprintData, mongoose.Model<BlueprintData, unknown, BlueprintSchemaMethods>>( "SBS_Blueprints", BlueprintSchema );
 const MongoBlueprintPacks = mongoose.model<BlueprintPack, mongoose.Model<BlueprintPack, unknown, BlueprintPackSchemaMethods>>( "SBS_BlueprintPacks", BlueprintPackSchema );
 
 export default MongoBlueprints;

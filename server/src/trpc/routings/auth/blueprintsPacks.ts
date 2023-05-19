@@ -17,8 +17,7 @@ const ZodBlueprintCreateSchema = z.object( {
 	data: z.object( {
 		name: z.string().min( 3 ),
 		description: z.string().min( 3 ),
-		tags: z.array( z.string() ),
-		blueprints: z.array( z.string() )
+		blueprints: z.array( z.string() ).min( 1 )
 	} )
 } );
 
@@ -63,23 +62,21 @@ export const authBlueprintPacks = router( {
 	modify: blueprintPackOwnerProcedure.input( ZodBlueprintCreateSchema ).mutation( async( { ctx, input } ) => {
 		const { blueprintPack } = ctx;
 		const { data } = input;
-		const { name, description, tags, blueprints } = data;
+		const { name, description, blueprints } = data;
 		try {
 			const docu = await blueprintPack.getDocument();
 			if( docu ) {
 				docu.name = name;
 				docu.description = description;
-				docu.tags = tags;
 				docu.blueprints = blueprints;
 
 				docu.markModified( "name" );
 				docu.markModified( "description" );
-				docu.markModified( "tags" );
 				docu.markModified( "blueprints" );
 
-				docu.updateModRefs( false );
 				if( await docu.save() ) {
-					return "Blueprint modified!";
+					docu.updateModRefs( true );
+					return { message: "Blueprint modified!", id: docu._id.toString() };
 				}
 			} else {
 				throw new TRPCError( { message: "BlueprintPack is invalid!", code: "BAD_REQUEST" } );
@@ -119,19 +116,14 @@ export const authBlueprintPacks = router( {
 		throw new TRPCError( { message: "Something goes wrong!", code: "INTERNAL_SERVER_ERROR" } );
 	} ),
 
-	add: authProcedure.input( ZodBlueprintCreateSchema ).input( z.object( {
-		skip: z.number().optional(),
-		limit: z.number().optional(),
-		filterOptions: filterSchema.optional()
-	} ) ).query( async( { ctx, input } ) => {
+	add: authProcedure.input( ZodBlueprintCreateSchema ).mutation( async( { ctx, input } ) => {
 		const { data } = input;
-		const { name, description, tags, blueprints } = data;
+		const { name, description, blueprints } = data;
 		const { userClass } = ctx;
 		try {
 			const docu = new MongoBlueprintPacks();
 			docu.name = name;
 			docu.description = description;
-			docu.tags = tags;
 			docu.blueprints = blueprints;
 			docu.owner = userClass.Get._id;
 			docu.rating = [];
@@ -139,14 +131,9 @@ export const authBlueprintPacks = router( {
 			docu.totalRatingCount = 0;
 			docu.mods = [];
 
-			docu.markModified( "name" );
-			docu.markModified( "description" );
-			docu.markModified( "tags" );
-			docu.markModified( "blueprints" );
-
 			if( await docu.save() ) {
 				docu.updateModRefs( true );
-				return { message: "Blueprint Created!", id: docu._id.toString() };
+				return { message: "Blueprint created!", id: docu._id.toString() };
 			}
 		} catch( e ) {
 			handleTRCPErr( e );

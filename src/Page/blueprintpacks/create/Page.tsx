@@ -1,4 +1,4 @@
-import BlueprintEditor from "@app/Components/Blueprints/BlueprintEditor";
+import BlueprintPackEditor from "@app/Components/packs/BlueprintPackEditor";
 import { usePageTitle } from "@kyri123/k-reactutils";
 import type {
 	FunctionComponent
@@ -11,8 +11,8 @@ export interface IFile {
 }
 
 const Component: FunctionComponent = () => {
-	usePageTitle( `SBS - Create Blueprints` );
-	return <BlueprintEditor />;
+	usePageTitle( `SBS - Create Blueprint Pack` );
+	return <BlueprintPackEditor />;
 };
 
 export {

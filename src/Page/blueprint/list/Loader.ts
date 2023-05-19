@@ -19,7 +19,7 @@ export const loader: LoaderFunction = async( { params, request } ) => {
 	if( result instanceof Response ) {
 		return result;
 	}
-	const Blueprints = await tRPCPublic.blueprint.getBlueprints.query( { limit: 10 } ).catch( tRPCHandleError );
+	const Blueprints = await tRPCPublic.blueprint.getBlueprints.query( { limit: 12 } ).catch( tRPCHandleError );
 	let blueprints: BlueprintData[] = [];
 	let totalBlueprints = 0;
 	if( Blueprints ) {
