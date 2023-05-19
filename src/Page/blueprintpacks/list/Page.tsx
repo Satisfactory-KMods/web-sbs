@@ -43,7 +43,7 @@ const Component: FunctionComponent = () => {
 
 	return (
 		<>
-			<BlueprintFilter filterSchema={ [ filter, setFilter ] } isFetching={ isFetching } doFetch={ doFetch } >
+			<BlueprintFilter filterSchema={ [ filter, setFilter ] } isFetching={ isFetching } doFetch={ doFetch }>
 				<span className="flex-1">
 					Blueprint Pack Filter
 				</span>

@@ -14,7 +14,7 @@ import Select from "react-select";
 interface BlueprintFilterProps extends PropsWithChildren {
 	isFetching: boolean;
 	filterSchema: [FilterSchema, Dispatch<SetStateAction<FilterSchema>>],
-	doFetch: () => Promise<void>,
+	doFetch: () => Promise<void>
 }
 
 const BlueprintFilter: FunctionComponent<BlueprintFilterProps> = ( { isFetching, filterSchema, doFetch, children } ) => {
@@ -43,7 +43,7 @@ const BlueprintFilter: FunctionComponent<BlueprintFilterProps> = ( { isFetching,
 		const filter: FilterSchema = {
 			sortBy: SelectSorting?.value || undefined,
 			name: BlueprintName !== "" ? BlueprintName : undefined,
-			onlyVanilla: SelectVanilla?.value || undefined,
+			onlyVanilla: SelectVanilla?.value !== undefined ? SelectVanilla?.value : undefined,
 			mods: SelectMods.length > 0 ? SelectMods.map( e => e.value ) : undefined,
 			tags: SelectTags.length > 0 ? SelectTags.map( e => e.value ) : undefined
 		};

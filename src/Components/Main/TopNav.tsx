@@ -57,6 +57,7 @@ const TopNav: FunctionComponent = () => {
 				fetchAccountKey();
 			} } />
 		</> ) }
+		<NavigationLinkButton label="Download the mod now!" to="https://ficsit.app/mod/SBS" target="_blank" />
 	</> );
 
 	const NavMobile = ( <>
@@ -74,6 +75,7 @@ const TopNav: FunctionComponent = () => {
 			<NavigationLinkButton label="Admin: Manage all Usersers" to="/admin/users" />
 			<NavigationLinkButton label="Admin: Manage all Tags" to="/admin/tags" />
 		</> ) }
+		<NavigationLinkButton label="Download the mod now!" to="https://ficsit.app/mod/SBS" target="_blank" />
 	</> );
 
 	return (
