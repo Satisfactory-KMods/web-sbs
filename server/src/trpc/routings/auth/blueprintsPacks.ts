@@ -8,7 +8,9 @@ import {
 	router
 } from "@server/trpc/trpc";
 import { TRPCError } from "@trpc/server";
+import fs from 'fs';
 import _ from "lodash";
+import path from "path";
 import { z } from "zod";
 import { buildFilter, filterSchema } from "../public/blueprint";
 
@@ -76,6 +78,14 @@ export const authBlueprintPacks = router( {
 
 				if( await docu.save() ) {
 					docu.updateModRefs( true );
+
+					const id = docu._id.toString();
+					const zipDir = path.join( __MountDir, "PackZips", id );
+
+					if( fs.existsSync( zipDir ) ) {
+						fs.rmSync( zipDir, { recursive: true } );
+					}
+
 					return { message: "Blueprint modified!", id: docu._id.toString() };
 				}
 			} else {

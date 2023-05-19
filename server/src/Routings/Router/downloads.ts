@@ -41,7 +41,6 @@ const createZipForBlueprint = async( id: string, only?: string ): Promise<[ stri
 		}
 
 		if( fs.existsSync( downloadFile ) ) {
-			fs.writeFileSync( path.join( zipDir, `created.log` ), Date.now().toString() );
 			return [ downloadFile, blueprint ];
 		}
 
@@ -76,39 +75,38 @@ const createZipForBlueprintPack = async( id: string, ip: string ): Promise<[ str
 	const zipFile = path.join( zipDir, `${ id }.zip` );
 	const docu = await MongoBlueprintPacks.findById( id );
 	if( docu ) {
-		const zipStream = new Compress.zip.Stream();
+		if( fs.existsSync( zipFile ) ) {
+			return [ zipFile, docu ];
+		}
+
+		const zipPackStream = new Compress.zip.Stream();
+		const files = new Set<string>();
 		for( const blueprint of docu.blueprints ) {
 			const [ sbpFile, sbpcfgFile ] = await Promise.all( [
-				createZipForBlueprint( blueprint, "sbp" ).catch( () => null ),
-				createZipForBlueprint( blueprint, "sbpcfg" ).catch( () => null )
+				createZipForBlueprint( blueprint.toString(), "sbp" ).catch( () => null ),
+				createZipForBlueprint( blueprint.toString(), "sbpcfg" ).catch( () => null )
 			] );
 			if( sbpFile && sbpcfgFile && sbpFile[ 0 ] && sbpcfgFile[ 0 ] ) {
-				zipStream.addEntry( sbpFile[ 0 ] );
-				zipStream.addEntry( sbpcfgFile[ 0 ] );
+				files.add( sbpFile[ 0 ] );
+				files.add( sbpcfgFile[ 0 ] );
+				await increaseDownloadCount( sbpFile[ 1 ], ip );
 			}
 		}
 
+		for( const file of Array.from( files ) ) {
+			zipPackStream.addEntry( file );
+		}
+
+		fs.mkdirSync( zipDir, { recursive: true } );
 		const destStream = FS.createWriteStream( zipFile );
 		await new Promise<void>( ( resolve, reject ) => {
-			zipStream.pipe( destStream ).on( "finish", () => {
+			zipPackStream.pipe( destStream ).on( "finish", () => {
 				fs.writeFileSync( path.join( zipDir, `created.log` ), Date.now().toString() );
 				SystemLib.Log( "api", "BlueprintPack Download Created: " + zipFile );
 
 				resolve();
-			} ).on( "error", err => reject( "Blueprint can't create" ) );
+			} ).on( "error", err => reject( new Error( "Blueprint Pack can't create: " + err.message ) ) );
 		} );
-
-		for( const blueprint of docu.blueprints ) {
-			const [ sbpFile, sbpcfgFile, bpDocu ] = await Promise.all( [
-				createZipForBlueprint( blueprint, "sbp" ).catch( () => null ),
-				createZipForBlueprint( blueprint, "sbpcfg" ).catch( () => null ),
-				await MongoBlueprints.findById( blueprint ).catch( () => null )
-			] );
-
-			if( bpDocu && sbpFile && sbpcfgFile && sbpFile[ 0 ] && sbpcfgFile[ 0 ] ) {
-				await increaseDownloadCount( bpDocu, ip );
-			}
-		}
 
 		return [ zipFile, docu ];
 	}
@@ -117,6 +115,22 @@ const createZipForBlueprintPack = async( id: string, ip: string ): Promise<[ str
 
 
 export default function() {
+	Router.get( ApiUrl( "download/pack/:id" ), async( req: Request, res: Response ) => {
+		try {
+			const { id } = req.params;
+			const [ downloadFile ] = await createZipForBlueprintPack( id, req.ip );
+			if( downloadFile ) {
+				return res.download( downloadFile );
+			}
+			return res.status( 404 ).json( { error: "BlueprintPack not found" } );
+		} catch( e ) {
+			if( e instanceof Error ) {
+				SystemLib.LogError( "api", e.message );
+			}
+			return res.status( 404 ).json( { error: "BlueprintPack not found" } );
+		}
+	} );
+
 	Router.get( ApiUrl( "download/:id/:only?" ), async( req: Request, res: Response ) => {
 		try {
 			const { id, only } = req.params;
@@ -125,26 +139,12 @@ export default function() {
 				await increaseDownloadCount( blueprint, req.ip );
 				return res.download( downloadFile );
 			}
+			return res.status( 404 ).json( { error: "Blueprint not found" } );
 		} catch( e ) {
 			if( e instanceof Error ) {
 				SystemLib.LogError( "api", e.message );
 			}
 			return res.status( 404 ).json( { error: "Blueprint not found" } );
-		}
-	} );
-
-	Router.get( ApiUrl( "download/pack/:id" ), async( req: Request, res: Response ) => {
-		try {
-			const { id } = req.params;
-			const [ downloadFile ] = await createZipForBlueprintPack( id, req.ip );
-			if( downloadFile ) {
-				return res.download( downloadFile );
-			}
-		} catch( e ) {
-			if( e instanceof Error ) {
-				SystemLib.LogError( "api", e.message );
-			}
-			return res.status( 404 ).json( { error: "BlueprintPack not found" } );
 		}
 	} );
 

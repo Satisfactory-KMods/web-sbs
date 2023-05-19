@@ -4,8 +4,10 @@ import fs from "fs";
 import path from "path";
 
 
+const time = 1800000 / 2;
+
 export default new JobTask(
-	1800000,
+	time,
 	"MakeItClean",
 	async() => {
 		SystemLib.Log( "tasks",
@@ -17,7 +19,7 @@ export default new JobTask(
 		// remove all empty blueprint packs
 		await MongoBlueprintPacks.deleteMany( { "blueprints.0": { $exists: false } } );
 		global.DownloadIPCached.clear();
-		const ZipPath = path.join( __MountDir, "Zips" );
+		let ZipPath = path.join( __MountDir, "Zips" );
 		if( fs.existsSync( ZipPath ) ) {
 			for( const Dir of fs.readdirSync( ZipPath ) ) {
 				const DirPath = path.join( ZipPath, Dir );
@@ -30,7 +32,31 @@ export default new JobTask(
 						continue;
 					}
 					const Time = parseInt( fs.readFileSync( CreateFile ).toString() );
-					if( Time <= Date.now() - 1800000 * 2 ) {
+					if( Time <= Date.now() - time ) {
+						SystemLib.LogWarning( "tasks", "Remove Zip for BP:", DirPath );
+						fs.rmSync( DirPath, { recursive: true } );
+					}
+				} else {
+					SystemLib.LogWarning( "tasks", "Remove Zip for BP:", DirPath );
+					fs.rmSync( DirPath, { recursive: true } );
+				}
+			}
+		}
+
+		ZipPath = path.join( __MountDir, "PackZips" );
+		if( fs.existsSync( ZipPath ) ) {
+			for( const Dir of fs.readdirSync( ZipPath ) ) {
+				const DirPath = path.join( ZipPath, Dir );
+				const State = fs.statSync( DirPath );
+				if( State.isDirectory() ) {
+					const CreateFile = path.join( DirPath, "created.log" );
+					if( !fs.existsSync( CreateFile ) ) {
+						SystemLib.LogWarning( "tasks", "Remove Zip for BP:", DirPath );
+						fs.rmSync( DirPath, { recursive: true } );
+						continue;
+					}
+					const Time = parseInt( fs.readFileSync( CreateFile ).toString() );
+					if( Time <= Date.now() - time ) {
 						SystemLib.LogWarning( "tasks", "Remove Zip for BP:", DirPath );
 						fs.rmSync( DirPath, { recursive: true } );
 					}

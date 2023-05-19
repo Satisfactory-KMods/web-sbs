@@ -34,7 +34,7 @@ const BlueprintPackCard: FunctionComponent<BlueprintPackCardProps> = ( { Data, o
 
 	return (
 		<div className="flex flex-col w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-			<Link to={ `/blueprint/${ blueprintPack._id }` } className="flex-1 flex flex-col">
+			<Link to={ `/blueprintpacks/show/${ blueprintPack._id }` } className="flex-1 flex flex-col">
 				<div className="p-3 border-b bg-gray-700 border-gray-700 rounded-t-lg text-neutral-200 truncate text-ellipsis overflow-hidden">
 					<span className="text-2xl">
 						{ blueprintPack.name }
