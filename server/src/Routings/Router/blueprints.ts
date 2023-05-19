@@ -21,7 +21,7 @@ import { z } from "zod";
 
 
 export default function() {
-	Router.post( ApiUrl( EApiBlueprintUtils.parseblueprint ), upload.array( "blueprint", 2 ), MWAuth, async( req: ExpressRequest<{
+	Router.post( ApiUrl( EApiBlueprintUtils.parseblueprint ), MWAuth, upload.array( "blueprint", 2 ), async( req: ExpressRequest<{
 		blueprintName: string
 	}>, res: Response ) => {
 		if( req.files && Array.isArray( req.files ) && Number( req.files.length ) === 2 ) {
@@ -57,7 +57,7 @@ export default function() {
 	} );
 
 
-	Router.post( ApiUrl( EApiBlueprintUtils.create ), upload.fields( [ { name: 'sbp', maxCount: 1 }, { name: 'sbpcfg', maxCount: 1 }, { name: 'images', maxCount: 5 } ] ), MWAuth, async( req: ExpressRequest<{
+	Router.post( ApiUrl( EApiBlueprintUtils.create ), MWAuth, upload.fields( [ { name: 'sbp', maxCount: 1 }, { name: 'sbpcfg', maxCount: 1 }, { name: 'images', maxCount: 5 } ] ), async( req: ExpressRequest<{
 		blueprint: Omit<BlueprintData, "_id" | "__v"> | string,
 		UserClass: User
 	}>, res: Response ) => {
