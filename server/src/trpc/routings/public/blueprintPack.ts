@@ -32,7 +32,9 @@ export const publicBlueprintPacks = router( {
 						skip
 					}
 				).populate( [ 'blueprints', 'owner', 'tags' ] );
-				return { blueprintPacks, totalBlueprints };
+				const setOfImages = new Set( blueprintPacks.map( e => e.blueprints.reduce<string[]>( ( arr, cur ) => arr.concat( cur.images ), [] ) ) );
+				const image = Array.from( setOfImages ).reduce<string[]>( ( arr, cur ) => arr.concat( cur ), [] )[ Math.floor( Math.random() * setOfImages.size ) ];
+				return { blueprintPacks, totalBlueprints, image };
 			} catch( e ) {
 				handleTRCPErr( e );
 			}

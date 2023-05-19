@@ -1,4 +1,4 @@
-import type { BlueprintData } from "@/server/src/MongoDB/MongoBlueprints";
+import type { BlueprintPackExtended } from "@/server/src/MongoDB/MongoBlueprints";
 import { MongoBlueprintPacks } from "@/server/src/MongoDB/MongoBlueprints";
 import {
 	authProcedure,
@@ -100,8 +100,19 @@ export const authBlueprintPacks = router( {
 		try {
 			const { filter, options } = buildFilter( filterOptions );
 			const totalBlueprints = await MongoBlueprintPacks.count( { ...filter, owner: userClass.Get._id } );
-			const blueprints = await MongoBlueprintPacks.find<BlueprintData>( { ...filter, owner: userClass.Get._id }, null, { ...options, limit, skip } );
-			return { blueprints, totalBlueprints };
+			const blueprintPacks: BlueprintPackExtended[] = await MongoBlueprintPacks.find<BlueprintPackExtended>(
+				{ ...filter, owner: userClass.Get._id },
+				null,
+				{
+					...options,
+					limit,
+					skip
+				}
+			).populate( [ 'blueprints', 'owner', 'tags' ] );
+
+			const setOfImages = new Set( blueprintPacks.map( e => e.blueprints.reduce<string[]>( ( arr, cur ) => arr.concat( cur.images ), [] ) ) );
+			const image = Array.from( setOfImages ).reduce<string[]>( ( arr, cur ) => arr.concat( cur ), [] )[ Math.floor( Math.random() * setOfImages.size ) ];
+			return { blueprintPacks, totalBlueprints, image };
 		} catch( e ) {
 			handleTRCPErr( e );
 		}
