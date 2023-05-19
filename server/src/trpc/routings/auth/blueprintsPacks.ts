@@ -115,7 +115,7 @@ export const authBlueprintPacks = router( {
 					limit,
 					skip
 				}
-			).populate( [ 'blueprints', 'owner', 'tags' ] );
+			).populate( [ 'blueprints', { path: "owner", select: '-hash -apiKey -salt' }, 'tags' ] );
 
 			return { blueprintPacks, totalBlueprints };
 		} catch( e ) {

@@ -13,7 +13,7 @@ export const publicBlueprintPacks = router( {
 	getBlueprintPack: publicProcedure.input( z.object( { blueprintPackId: z.string() } ) ).query( async( { input } ) => {
 		const { blueprintPackId } = input;
 		try {
-			const docu = await MongoBlueprintPacks.findById( blueprintPackId ).populate( [ 'blueprints', 'owner', 'tags' ] );
+			const docu = await MongoBlueprintPacks.findById( blueprintPackId ).populate( [ 'blueprints', { path: "owner", select: '-hash -apiKey -salt' }, 'tags' ] );
 			if( docu ) {
 				return docu.toJSON<BlueprintPackExtended>();
 			}
@@ -67,7 +67,7 @@ export const publicBlueprintPacks = router( {
 						limit,
 						skip
 					}
-				).populate( [ 'blueprints', 'owner', 'tags' ] );
+				).populate( [ 'blueprints', { path: "owner", select: '-hash -apiKey -salt' }, 'tags' ] );
 				return { blueprintPacks, totalBlueprints };
 			} catch( e ) {
 				handleTRCPErr( e );

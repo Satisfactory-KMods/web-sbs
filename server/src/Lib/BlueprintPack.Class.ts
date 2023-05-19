@@ -22,7 +22,7 @@ export class BlueprintPackClass<T extends boolean = false> {
 
 	public async readData() {
 		try {
-			this.data = ( await MongoBlueprintPacks.findById( this.id ).populate( [ 'owner', 'blueprints', 'tags' ] ) ) as IfClass<T, BlueprintPackExtended>;
+			this.data = ( await MongoBlueprintPacks.findById( this.id ).populate( [ { path: "owner", select: '-hash -apiKey -salt' }, 'blueprints', 'tags' ] ) ) as IfClass<T, BlueprintPackExtended>;
 		} catch( e ) {
 			if( e instanceof Error ) {
 				SystemLib.LogError( "blueprint", e.message );
@@ -39,7 +39,7 @@ export class BlueprintPackClass<T extends boolean = false> {
 	}
 
 	public async getDocument() {
-		return await MongoBlueprintPacks.findById( this.data?._id  ).populate( [ 'owner', 'blueprints', 'tags' ] ).catch( () => {} );
+		return await MongoBlueprintPacks.findById( this.data?._id  ).populate( [ { path: "owner", select: '-hash -apiKey -salt' }, 'blueprints', 'tags' ] ).catch( () => {} );
 	}
 
 	public async remove() {

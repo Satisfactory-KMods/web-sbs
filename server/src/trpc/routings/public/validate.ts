@@ -11,14 +11,13 @@ export const publicValidate =
 		.input( z.object( {
 			token: z.string()
 		} ) ).query( async( { input } ) => {
-		try {
-			const result = await jwt.verify( input.token, process.env.JWTToken || "" ) as UserSession;
-			const userAccountExsists = !!( await MongoUserAccount.exists( { _id: result._id } ) );
-			if( !userAccountExsists ) {
-				MongoSessionToken.deleteMany( { userid: result._id } );
-			} else {
-			}
-			return { tokenValid: !!( await MongoSessionToken.exists( { token: input.token } ) ) && userAccountExsists };
-		} catch( e ) {  }
-		return { tokenValid: false };
-	} );
+			try {
+				const result = await jwt.verify( input.token, process.env.JWTToken || "" ) as UserSession;
+				const userAccountExsists = !!( await MongoUserAccount.exists( { _id: result._id } ) );
+				if( !userAccountExsists ) {
+					MongoSessionToken.deleteMany( { userid: result._id } );
+				}
+				return { tokenValid: !!( await MongoSessionToken.exists( { token: input.token } ) ) && userAccountExsists };
+			} catch( e ) {  }
+			return { tokenValid: false };
+		} );
