@@ -135,10 +135,10 @@ const rootRouter = createBrowserRouter( [
 				}
 			},
 			{
-				path: "/blueprintpacks/",
-				lazy: async() => await import( "@page/blueprintpacks/Page" ),
+				path: "/blueprintpacks/list/",
+				lazy: async() => await import( "@app/Page/blueprintpacks/list/Page" ),
 				loader: async( { request, params } ) => {
-					const { loader } = await import( "@page/blueprintpacks/Loader" );
+					const { loader } = await import( "@app/Page/blueprintpacks/list/Loader" );
 					return loader( { request, params } );
 				}
 			},

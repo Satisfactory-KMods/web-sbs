@@ -39,7 +39,7 @@ const TopNav: FunctionComponent = () => {
 			</> ) }
 		</NavigationContainer>
 		<NavigationContainer path="/blueprintpacks" label="Blueprint Packs" >
-			<NavigationLink label="Browse" to="/blueprintpacks">Browse all blueprint packs!</NavigationLink>
+			<NavigationLink label="Browse" to="/blueprintpacks/list">Browse all blueprint packs!</NavigationLink>
 			{ loggedIn && ( <>
 				<NavigationLink label="Create" to="/blueprintpacks/create">Add you own blueprint pack</NavigationLink>
 				<NavigationLink label="My" to="/blueprintpacks/my">Show all of your blueprint packs</NavigationLink>
@@ -65,7 +65,7 @@ const TopNav: FunctionComponent = () => {
 			{ /*<NavigationLinkButton label="Create Blueprint" to="/blueprint/create" />*/ }
 			<NavigationLinkButton label="My Blueprints" to="/blueprint/my" />
 		</> ) }
-		<NavigationLinkButton label="Blueprint Packs" to="/blueprintpacks" />
+		<NavigationLinkButton label="Blueprint Packs" to="/blueprintpacks/list" />
 		{ loggedIn && ( <>
 			{ /*<NavigationLinkButton label="Blueprints" to="/blueprintpacks/create" />*/ }
 			<NavigationLinkButton label="My Blueprint Packs" to="/blueprintpacks/my" />

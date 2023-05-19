@@ -129,12 +129,11 @@ const BlueprintPackEditor: FunctionComponent<BlueprintPackEditorProps> = ( { blu
 	useEffect( () => {
 		tRPCPublic.blueprint.getBlueprints.query( { limit: 100 } ).then(
 			result => {
-				setOptions( result.blueprints.map( e => ( { label: e.name, value: e._id } ) ).filter( e => !blueprints.find( b => _.isEqual( e.value, b._id ) ) ) );
+				setOptions( result.blueprints.map( e => ( { label: e.name, value: e._id } ) ) );
 			}
 		).catch( tRPCHandleError );
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [  ] );
-
 
 	return (
 		<>

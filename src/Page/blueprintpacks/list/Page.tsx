@@ -1,7 +1,7 @@
 import BlueprintFilter from "@app/Components/Blueprints/BlueprintFilter";
 import PageManager from "@app/Components/Main/PageManager";
 import BlueprintPackCard from "@app/Components/packs/BlueprintPackCard";
-import type { BlueprintPackListLoaderData } from "@app/Page/blueprintpacks/Loader";
+import type { BlueprintPackListLoaderData } from "@app/Page/blueprintpacks/list/Loader";
 import {
 	tRPCHandleError,
 	tRPCPublic
@@ -47,7 +47,7 @@ const Component: FunctionComponent = () => {
 				<span className="flex-1">
 					Blueprint Pack Filter
 				</span>
-				<Button size="xs" color="green" onClick={ () => nav( "/blueprintpacks/create" ) }><FaPlus className="me-2" /> Add a new blueprint-pack</Button>
+				<Button size="xs" color="green" onClick={ () => nav( "/blueprintpacks/create" ) }><FaPlus className="me-2" /> Add a new blueprint pack</Button>
 			</BlueprintFilter>
 			<PageManager MaxPage={ maxPage } Page={ currentPage } OnPageChange={ setPage } />
 
