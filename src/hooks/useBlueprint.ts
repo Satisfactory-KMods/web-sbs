@@ -85,7 +85,7 @@ export function useBlueprint( InitValue: string | BlueprintData, defaultUser?: {
 
 	const allowedToEdit = useMemo( () => {
 		if( loggedIn && ( isValid ) ) {
-			return user.HasPermission( ERoles.admin ) || _.isEqual( Blueprint.owner, user.Get._id );
+			return user.HasPermission( ERoles.admin ) || _.isEqual( Blueprint.owner.toString(), user.Get._id );
 		}
 		return false;
 	}, [ loggedIn, isValid, Blueprint.owner, user ] );
@@ -126,7 +126,7 @@ export function useBlueprint( InitValue: string | BlueprintData, defaultUser?: {
 		return false;
 	};
 
-	const allowedToLike = useMemo( () => loggedIn && Blueprint.owner !== user.Get._id, [ loggedIn, Blueprint.owner, user ] );
+	const allowedToLike = useMemo( () => loggedIn && _.isEqual( Blueprint.owner.toString(), user.Get._id ), [ loggedIn, Blueprint.owner, user ] );
 
 	return {
 		owner,

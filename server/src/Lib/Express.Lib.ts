@@ -117,7 +117,3 @@ export async function MWRestUser( req: Request, res: Response, next: NextFunctio
 	}
 	return res.status( 401 ).json( { error: "Unauthorized" } );
 }
-
-export const upload = multer( {
-	dest: path.join( __MountDir, "tmp" )
-} );

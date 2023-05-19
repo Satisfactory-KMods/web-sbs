@@ -72,7 +72,7 @@ export class BlueprintPackClass<T extends boolean = false> {
 	}
 
 	public isOwner( userId: string ) {
-		return _.isEqual( userId, this.data?.owner );
+		return _.isEqual( userId, this.data?.owner.toString() );
 	}
 
 	public async remove(): Promise<boolean> {

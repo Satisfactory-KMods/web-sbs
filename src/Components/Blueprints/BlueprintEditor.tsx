@@ -222,7 +222,7 @@ const BlueprintEditor: FunctionComponent<BlueprintEditorProps> = ( { defaultData
 					data.append( "images", file );
 				}
 				data.append( "blueprint", JSON.stringify( form ) );
-				await apiQueryLib.PostToAPI<{ msg: string, blueprintId: string }>( EApiBlueprintUtils.create, data )
+				await await apiQueryLib.PostToAPI<{ msg: string, blueprintId: string }>( EApiBlueprintUtils.create, data )
 					.then( async response => {
 						await successSwalAwait( response.msg );
 						navigate( `/blueprint/${ response.blueprintId }` );

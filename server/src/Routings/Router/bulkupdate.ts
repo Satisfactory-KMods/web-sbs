@@ -1,10 +1,10 @@
+import { upload } from "@/server/src/Lib/Multer.Lib";
 import MongoBlueprints from "@/server/src/MongoDB/MongoBlueprints";
 import type { User } from "@/src/Shared/Class/User.Class";
-import { errorResponse } from "@kyri123/lib";
+import { dataResponse, errorResponse } from "@kyri123/lib";
 import {
 	ApiUrl,
-	MWAuth,
-	upload
+	MWAuth
 } from "@server/Lib/Express.Lib";
 import type { ExpressRequest } from "@server/Types/express";
 import { EApiBlueprintUtils } from "@shared/Enum/EApiPath";
@@ -17,15 +17,15 @@ import path from "path";
 
 
 export default function() {
-	Router.post( ApiUrl( EApiBlueprintUtils.bulkUpdaze ), MWAuth, upload.array( "blueprints", 200 ), async( req: ExpressRequest<{
+	Router.post( ApiUrl( EApiBlueprintUtils.bulkUpdate ), upload.array( "blueprints", 200 ), MWAuth, async( req: ExpressRequest<{
 		UserClass: User,
 		blueprintName: string
 	}>, res: Response ) => {
-		if( req.files && Array.isArray( req.files ) && Number( req.files.length ) === 2 ) {
+		if( req.files && Array.isArray( req.files ) && Number( req.files.length ) >= 2 ) {
 			try {
 				const checkedBlueprints = new Map<string, Map<string, Express.Multer.File>>();
 				for( const file of req.files ) {
-					if( file.originalname.endsWith( ".sbp" )  || file.originalname.endsWith( ".sbpcfg" )  ) {
+					if( file.originalname.endsWith( ".sbp" ) || file.originalname.endsWith( ".sbpcfg" )  ) {
 						const isSbp = file.originalname.endsWith( ".sbp" );
 						const rawFilename = isSbp ? file.originalname.replace( ".sbp", "" ) : file.originalname.replace( ".sbpcfg", "" );
 						if( !checkedBlueprints.has( rawFilename ) ) {
@@ -43,7 +43,7 @@ export default function() {
 					const sbp = files.get( ".sbp" );
 					const sbpcfg = files.get( ".sbpcfg" );
 					if( blueprintDocument && sbp && sbpcfg ) {
-						if( _.isEqual( blueprintDocument.owner, req.body.UserClass.Get._id ) ) {
+						if( _.isEqual( blueprintDocument.owner.toString(), req.body.UserClass.Get._id ) ) {
 							const sbpFile = path.join( __BlueprintDir, blueprintDocument._id.toString(), `${ blueprintDocument._id.toString() }.sbp` );
 							const sbpcfgFile = path.join( __BlueprintDir, blueprintDocument._id.toString(), `${ blueprintDocument._id.toString() }.sbpcfg` );
 
@@ -53,12 +53,13 @@ export default function() {
 							fs.renameSync( sbp.path, sbpFile );
 							fs.renameSync( sbpcfg.path, sbpcfgFile );
 
+							await blueprintDocument.updateModRefs( true );
 							updatedCount++;
 						}
 					}
 				}
 
-				return res.status( 200 ).json( errorResponse( `Blueprints for ${ updatedCount } was updated`, res ) );
+				return res.status( 200 ).json( dataResponse( { message: `${ updatedCount } blueprints was updated.` } ) );
 			} catch( e ) {
 				if( e instanceof Error ) {
 					SystemLib.LogError( "api", e.message );

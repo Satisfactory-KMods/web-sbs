@@ -1,11 +1,11 @@
+import { upload } from "@/server/src/Lib/Multer.Lib";
 import type { User } from "@/src/Shared/Class/User.Class";
 import { ERoles } from "@/src/Shared/Enum/ERoles";
 import { dataResponse, errorResponse } from "@kyri123/lib";
 import { BlueprintParser } from "@server/Lib/BlueprintParser";
 import {
 	ApiUrl,
-	MWAuth,
-	upload
+	MWAuth
 } from "@server/Lib/Express.Lib";
 import type { BlueprintData } from "@server/MongoDB/MongoBlueprints";
 import MongoBlueprints from "@server/MongoDB/MongoBlueprints";
@@ -124,7 +124,7 @@ export default function() {
 			if( !blueprint ) {
 				return res.status( 404 ).json( errorResponse( "Blueprint not found!", res ) );
 			}
-			if( !( _.isEqual( req.body.UserClass.Get._id, blueprint.owner ) || req.body.UserClass.HasPermission( ERoles.moderator ) ) ) {
+			if( !( _.isEqual( req.body.UserClass.Get._id, blueprint.owner.toString() ) || req.body.UserClass.HasPermission( ERoles.moderator ) ) ) {
 				return res.status( 401 ).json( errorResponse( "Unauthorized", res ) );
 			}
 
