@@ -1,9 +1,11 @@
 import NavigationContainer from "@app/Components/navigation/NavigationContainer";
 import NavigationLinkButton from "@app/Components/navigation/NavigationLinkButton";
+import { fireSwalFromApi, tRPCAuth, tRPCHandleError } from "@app/Lib/tRPC";
 import NavigationDropdown from "@comp/navigation/NavigationDropdown";
 import NavigationDropdownItem from "@comp/navigation/NavigationDropdownItem";
 import NavigationLink from "@comp/navigation/NavigationLink";
 import { useAuth } from "@hooks/useAuth";
+import { useCopy } from "@kyri123/k-reactutils";
 import { ERoles } from "@shared/Enum/ERoles";
 import type { FunctionComponent } from "react";
 import { useRef } from "react";
@@ -19,6 +21,14 @@ import { Link } from "react-router-dom";
 const TopNav: FunctionComponent = () => {
 	const { user, loggedIn, logout } = useAuth();
 	const divRef = useRef<HTMLDivElement>( null );
+	const [ doCopy ] = useCopy();
+
+	const fetchAccountKey = async() => {
+		await tRPCAuth.updateAccount.getKey.query()
+			.then( doCopy )
+			.then( () => fireSwalFromApi( "Key copied to clipboard", "info" ) )
+			.catch( tRPCHandleError );
+	};
 
 	const Nav = ( <>
 		<NavigationContainer path="/blueprint" label="Blueprints" >
@@ -41,6 +51,12 @@ const TopNav: FunctionComponent = () => {
 				<NavigationLink label="Tags" to="/admin/tags">Manage all Tags</NavigationLink>
 			</NavigationContainer>
 		) }
+		{ loggedIn && ( <>
+			<NavigationLinkButton label="My Mod Key" to="#" onClick={ e => {
+				e.preventDefault();
+				fetchAccountKey();
+			} } />
+		</> ) }
 	</> );
 
 	const NavMobile = ( <>
