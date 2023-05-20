@@ -238,18 +238,18 @@ const BlueprintPackSchema = new mongoose.Schema( {
 		updateModRefs: async function( save = true ) {
 			try {
 				const blueprintSet = new Set<string>();
-				const tagsSet = new Set<mongoose.Types.ObjectId>();
+				const tagsSet = new Set<string>();
 				for await ( const bp of MongoBlueprints.find( { _id: this.blueprints } ) ) {
 					for( const mod of bp.mods ) {
 						blueprintSet.add( mod );
 					}
 					for( const tag of bp.tags ) {
-						tagsSet.add( new mongoose.Types.ObjectId( tag ) );
+						tagsSet.add( tag.toString() );
 					}
 				}
 				this.mods = Array.from( blueprintSet );
 				this.markModified( "mods" );
-				this.tags = Array.from( tagsSet );
+				this.tags = Array.from( Array.from( tagsSet ).map( e => new mongoose.Types.ObjectId( e ) ) );
 				this.markModified( "tags" );
 				if( save ) {
 					await this.save();

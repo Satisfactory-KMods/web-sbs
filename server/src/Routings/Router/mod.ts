@@ -90,6 +90,7 @@ export default function() {
 				} );
 			}
 
+			SystemLib.DebugLog( "return bp", blueprints.length, totalBlueprints );
 			return res.json( { blueprints, totalBlueprints } );
 		} catch( e ) {
 			if( e instanceof Error ) {
