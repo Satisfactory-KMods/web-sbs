@@ -23,7 +23,7 @@ export const authBlueprints = router( {
 		try {
 			const bpDocument = await blueprint.getDocument();
 			if( bpDocument ) {
-				const ratingIndex = bpDocument.rating.findIndex( e => _.isEqual( e.userid, userClass.Get._id ) );
+				const ratingIndex = bpDocument.rating.findIndex( e => _.isEqual( e.userid.toString(), userClass.Get._id ) );
 				if( ratingIndex >= 0 ) {
 					bpDocument.rating[ ratingIndex ].rating = rating;
 				} else {
