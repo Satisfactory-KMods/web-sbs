@@ -8,7 +8,10 @@ import { findModsFromBlueprint } from "@/src/Shared/blueprintReadingHelper";
 import type { BlueprintConfig } from "@etothepii/satisfactory-file-parser";
 import type { MongoBase } from "@server/Types/mongo";
 import { EDesignerSize } from "@shared/Enum/EDesignerSize";
+import fs from "fs";
+import Jimp from "jimp";
 import * as mongoose from "mongoose";
+import path from "path";
 import { z } from "zod";
 
 
@@ -266,6 +269,32 @@ export const Revalidate = async() => {
 	for await ( const bpDoc of MongoBlueprints.find( { iconData: { $exists: false } } ) ) {
 		await bpDoc.updateBlueprintData();
 	}
+
+	for await ( const blueprint of MongoBlueprints.find() ) {
+		for( let i = 0; i < blueprint.images.length; i++ ) {
+			try {
+				const image = blueprint.images[ i ];
+				const dir = path.join( __BlueprintDir, blueprint._id.toString() );
+				if( !image.endsWith( ".jpg" ) ) {
+					const newName = `image_${ blueprint._id.toString() }_${ i }.jpg`;
+					const jimpImage = await Jimp.read( path.join( dir, image ) );
+					jimpImage.resize( 512 * 1.5, 288 * 1.5 ).quality( 80 ).write( path.join( dir, newName ) );
+					fs.rmSync( path.join( dir, image ) );
+					blueprint.images[ i ] = newName;
+					blueprint.markModified( "images" );
+					SystemLib.LogWarning( path.join( dir, image ), " > ", path.join( dir, newName ) );
+				}
+			} catch( e ) {
+				if( e instanceof Error ) {
+					SystemLib.LogError( e.message );
+				}
+			}
+		}
+		blueprint.images = blueprint.images.filter( e => !!e );
+		await blueprint.save();
+	}
+
+
 };
 
 const MongoBlueprintPacks = mongoose.model<BlueprintPack, mongoose.Model<BlueprintPack, unknown, BlueprintPackSchemaMethods>>( "SBS_BlueprintPacks", BlueprintPackSchema );

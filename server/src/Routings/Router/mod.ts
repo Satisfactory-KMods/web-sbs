@@ -1,13 +1,51 @@
 import { ApiUrl, MWRest, MWRestUser } from "@/server/src/Lib/Express.Lib";
-import type { BlueprintData, BlueprintPack } from "@/server/src/MongoDB/MongoBlueprints";
+import type { BlueprintDataExtended, BlueprintPackExtended } from "@/server/src/MongoDB/MongoBlueprints";
 import MongoBlueprints, { MongoBlueprintPacks } from "@/server/src/MongoDB/MongoBlueprints";
 import MongoTags from "@/server/src/MongoDB/MongoTags";
-import MongoUserAccount from "@/server/src/MongoDB/MongoUserAccount";
+import type { UserAccount } from "@/server/src/MongoDB/MongoUserAccount";
 import type { ExpressRequest } from "@/server/src/Types/express";
 import { buildFilter, filterSchema } from "@/server/src/trpc/routings/public/blueprint";
 import type { Response } from "express";
-import _ from "lodash";
+import type { HydratedDocument } from "mongoose";
 import { z } from "zod";
+
+
+interface BlueprintPackModData {
+	_id: string,
+	name: string,
+	mods: string[],
+	tags: {
+		_id: string,
+		DisplayName: string
+	}[],
+	owner: string,
+	image: string,
+	createdAt: Date | string,
+	updatedAt: Date | string,
+	blueprints: string[],
+	totalRating: number,
+	totalRatingCount: number
+}
+
+
+interface BlueprintModData {
+	_id: string,
+	name: string,
+	mods: string[],
+	tags: {
+		_id: string,
+		DisplayName: string
+	}[],
+	originalName: string,
+	owner: string,
+	downloads: number,
+	DesignerSize: string,
+	createdAt: Date | string,
+	updatedAt: Date | string,
+	totalRating: number,
+	totalRatingCount: number,
+	images: string[]
+}
 
 
 export default function() {
@@ -25,62 +63,26 @@ export default function() {
 
 			const { filter, options } = buildFilter( filterOptions );
 			const totalBlueprints = await MongoBlueprints.count( filter );
-			const blueprints: BlueprintData[] = [];
-			for await ( const blueprint of MongoBlueprints.find( filter, { description: 0 }, { skip, limit, options } ) ) {
-				const copy: BlueprintData = _.cloneDeep( blueprint.toJSON() );
-				const owner = await MongoUserAccount.findById( blueprint.owner );
-				if( owner ) {
-					copy.owner = owner.username || "Unknown User";
-				}
-				if( copy.tags.length > 0 ) {
-					const tags = await MongoTags.find( { _id: { $in: copy.tags } } );
-					// @ts-ignore
-					copy.tags = tags.map( e => ( { DisplayName: e.DisplayName, _id: e._id.toString() } ) );
-				}
-				blueprints.push( copy );
+			const blueprints: BlueprintModData[] = [];
+			for await ( const blueprint of MongoBlueprintPacks.find<HydratedDocument<BlueprintDataExtended>>( filter, { description: 0 }, { skip, limit, options } ).populate( [ { path: "owner", select: '-hash -apiKey -salt' }, 'tags' ] ) ) {
+				blueprints.push( {
+					_id: blueprint._id.toString(),
+					name: blueprint.name,
+					mods: blueprint.mods,
+					tags: blueprint.tags.map( e => ( { DisplayName: e.DisplayName, _id: e._id.toString() } ) ),
+					originalName: blueprint.originalName,
+					owner: blueprint.owner._id.toString(),
+					downloads: blueprint.downloads,
+					DesignerSize: blueprint.DesignerSize as string,
+					createdAt: blueprint.createdAt,
+					updatedAt: blueprint.updatedAt,
+					totalRating: blueprint.totalRating,
+					totalRatingCount: blueprint.totalRatingCount,
+					images: blueprint.images
+				} );
 			}
 
 			return res.json( { blueprints, totalBlueprints } );
-		} catch( e ) {
-			if( e instanceof Error ) {
-				SystemLib.LogError( "api", e.message );
-			}
-		}
-
-		return res.sendStatus( 500 );
-	} );
-
-
-	Router.post( ApiUrl( "mod/getblueprintpacks" ), MWRest, async( req: ExpressRequest<{
-		skip: number,
-		limit: number,
-		filterOptions: z.infer<typeof filterSchema>
-	}>, res: Response ) => {
-		try {
-			z.number().optional().parse( req.body.skip );
-			z.number().parse( req.body.limit );
-			filterSchema.optional().parse( req.body.filterOptions );
-
-			const { skip, limit, filterOptions } = req.body;
-
-			const { filter, options } = buildFilter( filterOptions );
-			const totalBlueprints = await MongoBlueprintPacks.count( filter );
-			const blueprintPacks: BlueprintPack[] = [];
-			for await ( const blueprint of MongoBlueprintPacks.find( filter, { description: 0 }, { skip, limit, options } ) ) {
-				const copy: BlueprintPack = _.cloneDeep( blueprint.toJSON() );
-				const owner = await MongoUserAccount.findById( blueprint.owner );
-				if( owner ) {
-					copy.owner = owner.username || "Unknown User";
-				}
-				if( copy.tags.length > 0 ) {
-					const tags = await MongoTags.find( { _id: { $in: copy.tags } } );
-					// @ts-ignore
-					copy.tags = tags.map( e => ( { DisplayName: e.DisplayName, _id: e._id.toString() } ) );
-				}
-				blueprintPacks.push( copy );
-			}
-
-			return res.json( { blueprintPacks, totalBlueprints } );
 		} catch( e ) {
 			if( e instanceof Error ) {
 				SystemLib.LogError( "api", e.message );
@@ -119,24 +121,21 @@ export default function() {
 
 			const { filter, options } = buildFilter( filterOptions );
 			const totalBlueprints = await MongoBlueprintPacks.count( filter );
-			const blueprints: BlueprintPack[] = [];
-			for await ( const blueprintPack of MongoBlueprintPacks.find( filter, { description: 0 }, { skip, limit, options } ) ) {
-				const copy: BlueprintPack = _.cloneDeep( blueprintPack.toJSON() );
-				const Blueprints = await MongoBlueprints.find( { _id: blueprintPack.blueprints } );
-				const owner = await MongoUserAccount.findById( blueprintPack.owner );
-				if( owner ) {
-					copy.owner = owner.username || "Unknown User";
-				}
-				if( copy.tags.length > 0 ) {
-					const tags = await MongoTags.find( { _id: { $in: copy.tags } } );
-					// @ts-ignore
-					copy.tags = tags.map( e => ( { DisplayName: e.DisplayName, _id: e._id.toString() } ) );
-				}
-				if( Blueprints.length > 0 ) {
-					// @ts-ignore
-					copy.blueprints = Blueprints.map( e => ( { _id: e._id.toString(), name: e.name, iconData: e.iconData! } ) );
-				}
-				blueprints.push( copy );
+			const blueprints: BlueprintPackModData[] = [];
+			for await ( const blueprintPack of MongoBlueprintPacks.find<HydratedDocument<BlueprintPackExtended>>( filter, { description: 0 }, { skip, limit, options } ).populate( [ { path: "owner", select: '-hash -apiKey -salt' }, 'blueprints', 'tags' ] ) ) {
+				blueprints.push( {
+					_id: blueprintPack._id.toString(),
+					name: blueprintPack.name,
+					mods: blueprintPack.mods,
+					tags: blueprintPack.tags.map( e => ( { DisplayName: e.DisplayName, _id: e._id.toString() } ) ),
+					owner: blueprintPack.owner._id.toString(),
+					createdAt: blueprintPack.createdAt,
+					updatedAt: blueprintPack.updatedAt,
+					blueprints: blueprintPack.blueprints.map( e => e._id.toString() ),
+					totalRating: blueprintPack.totalRating,
+					totalRatingCount: blueprintPack.totalRatingCount,
+					image: blueprintPack.blueprints[ 0 ].images[ 0 ]
+				} );
 			}
 
 			return res.json( { blueprints, totalBlueprints } );
@@ -149,6 +148,13 @@ export default function() {
 		return res.sendStatus( 500 );
 	} );
 
-	Router.post( ApiUrl( "mod/authcheck" ), MWRest, MWRestUser, async( req: ExpressRequest, res: Response ) => res.status( 200 ).json( { success: true } ) );
+	Router.post( ApiUrl( "mod/authcheck" ), MWRest, MWRestUser, async( req: ExpressRequest<{ user: UserAccount }>, res: Response ) => res.status( 200 ).json( {
+		success: true,
+		user: {
+			_id: req.body.user._id.toString(),
+			username: req.body.user.username,
+			role: req.body.user.role
+		}
+	} ) );
 }
 

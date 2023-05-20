@@ -112,6 +112,7 @@ export async function MWRestUser( req: Request, res: Response, next: NextFunctio
 	if( apiKey ) {
 		const userDoc = await MongoUserAccount.findOne( { apiKey } );
 		if( userDoc ) {
+			req.body.user = userDoc.toJSON();
 			return next();
 		}
 	}

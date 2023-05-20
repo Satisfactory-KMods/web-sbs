@@ -15,6 +15,7 @@ import type {
 	Response
 } from "express";
 import fs from "fs";
+import Jimp from "jimp";
 import _ from "lodash";
 import path from "path";
 import { z } from "zod";
@@ -82,8 +83,10 @@ export default function() {
 				let idx = 0;
 				for( const file of req.files.images ) {
 					if( file.mimetype && file.mimetype.split( "/" )[ 0 ] === "image" && file.mimetype.split( "/" )[ 1 ] ) {
-						const newName = `image_${ id }_${ idx }.${ file.mimetype.split( "/" )[ 1 ] }`;
-						fs.renameSync( file.path, path.join( blueprintDir, newName ) );
+						const newName = `image_${ id }_${ idx }.jpg`;
+						const image = await Jimp.read( file.path );
+						image.resize( 512 * 1.5, 288 * 1.5 ).quality( 80 ).write( path.join( blueprintDir, newName ) );
+						fs.rmSync( file.path );
 						blueprint.images.push( newName );
 						idx++;
 					}
@@ -163,8 +166,10 @@ export default function() {
 					}
 					for( const file of req.files.images ) {
 						if( file.mimetype && file.mimetype.split( "/" )[ 0 ] === "image" && file.mimetype.split( "/" )[ 1 ] ) {
-							const newName = `image_${ id }_${ idx }.${ file.mimetype.split( "/" )[ 1 ] }`;
-							fs.renameSync( file.path, path.join( blueprintDir, newName ) );
+							const newName = `image_${ id }_${ idx }.jpg`;
+							const image = await Jimp.read( file.path );
+							image.resize( 512 * 1.5, 288 * 1.5 ).quality( 80 ).write( path.join( blueprintDir, newName ) );
+							fs.rmSync( file.path );
 							blueprint.images.push( newName );
 							idx++;
 						}
