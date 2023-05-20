@@ -84,6 +84,7 @@ export class BlueprintClass<T extends boolean = false> {
 			// remove all empty blueprint packs
 			await MongoBlueprintPacks.deleteMany( { "blueprints.0": { $exists: false } } );
 			await bpDocument.deleteOne();
+			return true;
 		}
 		return false;
 	}
