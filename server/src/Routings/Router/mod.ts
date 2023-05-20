@@ -8,6 +8,7 @@ import { buildFilter, filterSchema } from "@/server/src/trpc/routings/public/blu
 import type { Response } from "express";
 import type { HydratedDocument } from "mongoose";
 import { z } from "zod";
+import type { IconData } from './../../MongoDB/MongoBlueprints';
 
 
 interface BlueprintPackModData {
@@ -22,7 +23,12 @@ interface BlueprintPackModData {
 	image: string,
 	createdAt: Date | string,
 	updatedAt: Date | string,
-	blueprints: string[],
+	blueprints: {
+		_id: string,
+		originalName: string,
+		name: string,
+		iconData: IconData
+	}[],
 	totalRating: number,
 	totalRatingCount: number
 }
@@ -44,7 +50,8 @@ interface BlueprintModData {
 	updatedAt: Date | string,
 	totalRating: number,
 	totalRatingCount: number,
-	images: string[]
+	images: string[],
+	iconData: IconData
 }
 
 
@@ -60,28 +67,32 @@ export default function() {
 			filterSchema.optional().parse( req.body.filterOptions );
 
 			const { skip, limit, filterOptions } = req.body;
+			console.log( { skip, limit, filterOptions } );
 
 			const { filter, options } = buildFilter( filterOptions );
 			const totalBlueprints = await MongoBlueprints.count( filter );
 			const blueprints: BlueprintModData[] = [];
-			for await ( const blueprint of MongoBlueprintPacks.find<HydratedDocument<BlueprintDataExtended>>( filter, { description: 0 }, { skip, limit, options } ).populate( [ { path: "owner", select: '-hash -apiKey -salt' }, 'tags' ] ) ) {
+			for await ( const blueprint of MongoBlueprints.find<HydratedDocument<BlueprintDataExtended>>( filter, { description: 0 }, { skip, limit, options, populate: [ { path: "owner", select: '-hash -apiKey -salt' }, { path: 'tags' } ] } ) ) {
+				console.log( blueprint._id );
 				blueprints.push( {
 					_id: blueprint._id.toString(),
 					name: blueprint.name,
 					mods: blueprint.mods,
 					tags: blueprint.tags.map( e => ( { DisplayName: e.DisplayName, _id: e._id.toString() } ) ),
 					originalName: blueprint.originalName,
-					owner: blueprint.owner._id.toString(),
+					owner: blueprint.owner.username,
 					downloads: blueprint.downloads,
 					DesignerSize: blueprint.DesignerSize as string,
 					createdAt: blueprint.createdAt,
 					updatedAt: blueprint.updatedAt,
 					totalRating: blueprint.totalRating,
 					totalRatingCount: blueprint.totalRatingCount,
-					images: blueprint.images
+					images: blueprint.images,
+					iconData: blueprint.iconData!
 				} );
 			}
 
+			console.log( blueprints );
 			return res.json( { blueprints, totalBlueprints } );
 		} catch( e ) {
 			if( e instanceof Error ) {
@@ -131,7 +142,12 @@ export default function() {
 					owner: blueprintPack.owner._id.toString(),
 					createdAt: blueprintPack.createdAt,
 					updatedAt: blueprintPack.updatedAt,
-					blueprints: blueprintPack.blueprints.map( e => e._id.toString() ),
+					blueprints: blueprintPack.blueprints.map( e => ( {
+						_id: e._id.toString(),
+						originalName: e.originalName,
+						name: e.name,
+						iconData: e.iconData!
+					} ) ),
 					totalRating: blueprintPack.totalRating,
 					totalRatingCount: blueprintPack.totalRatingCount,
 					image: blueprintPack.blueprints[ 0 ].images[ 0 ]
