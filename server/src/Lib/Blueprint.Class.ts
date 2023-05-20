@@ -75,9 +75,10 @@ export class BlueprintClass<T extends boolean = false> {
 		if( bpDocument ) {
 			const id = bpDocument._id.toString();
 
-			fs.existsSync( path.join( __BlueprintDir, id ) ) && fs.rmdirSync( path.join( __BlueprintDir, id ) );
-			fs.existsSync( path.join( __MountDir, "Zips", id ) ) && fs.rmdirSync( path.join( __MountDir, "Zips", id ) );
+			fs.existsSync( path.join( __BlueprintDir, id ) ) && fs.rmdirSync( path.join( __BlueprintDir, id ), { recursive: true } );
+			fs.existsSync( path.join( __MountDir, "Zips", id ) ) && fs.rmdirSync( path.join( __MountDir, "Zips", id ), { recursive: true } );
 
+			SystemLib.LogWarning( "blueprints", "Remove data for blueprint (delete):", id );
 			await MongoBlueprintPacks.updateMany( { blueprints: bpDocument._id }, { $pull: { blueprints: bpDocument._id } } );
 
 			// remove all empty blueprint packs
