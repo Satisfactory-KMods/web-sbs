@@ -1,7 +1,8 @@
 {
+  "packageManager": "^pnpm@8.5.1",
   "name": "vite-react-template",
   "private": true,
-  "version": "0.3.0",
+  "version": "0.3.1",
   "scripts": {
     "production": "NODE_ENV=production yarn server",
     "server": "ts-node --project ./server/tsconfig.json -r tsconfig-paths/register server/src/index.ts",
@@ -33,6 +34,7 @@
     "lodash": "^4.17.21",
     "mongoose": "^7.1.1",
     "multer": "^1.4.5-lts.1",
+    "pnpm": "^8.5.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.8.0",

@@ -102,13 +102,17 @@ export const publicBlueprint = router( {
 	} ),
 
 	getBlueprints: publicProcedure.input( z.object( {
+		owner: z.string().optional(),
 		skip: z.number().optional(),
 		limit: z.number().optional(),
 		filterOptions: filterSchema.optional()
 	} ) ).query( async( { input } ) => {
-		const { limit, filterOptions, skip } = input;
+		const { limit, filterOptions, skip, owner } = input;
 		try {
 			const { filter, options } = buildFilter( filterOptions );
+			if( owner ) {
+				filter.owner = owner;
+			}
 			const totalBlueprints = await MongoBlueprints.count( filter );
 			const blueprints = await MongoBlueprints.find<BlueprintData>( filter, null, { ...options, limit, skip } );
 			return { blueprints, totalBlueprints };

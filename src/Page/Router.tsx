@@ -95,6 +95,14 @@ const rootRouter = createBrowserRouter( [
 				}
 			},
 			{
+				path: "/blueprint/user/:owner",
+				lazy: async() => await import( "@page/blueprint/user/[owner]" ),
+				loader: async( { request, params } ) => {
+					const { loader } = await import( "@page/blueprint/user/[owner]Loader" );
+					return loader( { request, params } );
+				}
+			},
+			{
 				path: "/blueprint/:blueprintId",
 				lazy: async() => await import( "@page/blueprint/[blueprintId]" ),
 				loader: async( { request, params } ) => {

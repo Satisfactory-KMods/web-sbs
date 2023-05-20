@@ -39,7 +39,7 @@ const BlueprintCard: FunctionComponent<IBlueprintCardProps> = ( { Data, onToggle
 						{ Blueprint.name }
 					</span>
 					<span className="text-xs text-gray-400 block">
-						Creator: <b>{ owner.username }</b>
+						Creator: <Link to={ `/blueprint/user/${ owner.id }` } className="text-neutral-200 font-bold underline">{ owner.username }</Link>
 					</span>
 				</div>
 				<div className="relative aspect-video">
