@@ -297,73 +297,73 @@ const BlueprintEditor: FunctionComponent<BlueprintEditorProps> = ( { defaultData
 				<div className="flex flex-col xl:col-span-2 w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
 					<div className="flex-1 flex flex-col mb-auto">
 						<div className="p-3 border-b bg-gray-900 border-gray-700 text-neutral-300 rounded-t-lg">
-							<BiUser className="inline me-1 text-xl pb-1" /> <b>Creator:</b> <span className="text-neutral-100">{ user.Get.username }</span>
-						</div>
-						<div className="p-3 border-b bg-gray-900 border-gray-700 text-neutral-300">
-							<MdOutlinePhotoSizeSelectSmall className="inline me-1 text-xl pb-1" /> <b>Designer Size:</b> <span className="text-neutral-100">{ form.DesignerSize }</span>
-						</div>
-						<div className="p-3 border-b bg-gray-900 border-gray-700 text-neutral-300">
-							<BsHouseAdd className="inline me-1 text-xl pb-1" /> <b>Buildings:</b> <span className="text-neutral-100">{ buildingCount }</span>
-						</div>
-						<div className="p-3 border-b bg-gray-900 border-gray-700 text-neutral-300">
-							<BsBox className="inline me-1 text-xl pb-1" /> <b>Object-Count:</b> <span className="text-neutral-100">{ blueprintParse?.objects.length || 0 }</span>
-						</div>
-						<div className="p-3 border-b bg-gray-900 border-gray-700 text-neutral-300">
-							<BsBoxes className="inline me-1 text-xl pb-1" /> <b>Total Cost:</b> <span className="text-neutral-100">{ totalItemCost } items</span>
-						</div>
-						<div className="p-3 border-b bg-gray-900 border-gray-700 text-neutral-300">
-							<BiTag className="inline me-1 text-xl pb-1" /> <b>Tags</b>
-							{ !!Tags.length && <div className="flex flex-wrap p-2 text-neutral-200 text-xs gap-2">
-								{ Tags.map( e => (
-									<div key={ id + e._id } className="bg-gray-700 p-1 px-3 rounded-lg border border-gray-600 shadow">{ e.DisplayName }</div>
+							<BiUser className="inline me-1 text-xl pb-1" /> <b>Creator:</b> <Link to={ `/blueprint/user/${ user.Get._id }` } className="text-neutral-200 font-bold underline">{ user.Get.username }</Link>
+							<div className="p-3 border-b bg-gray-900 border-gray-700 text-neutral-300">
+								<MdOutlinePhotoSizeSelectSmall className="inline me-1 text-xl pb-1" /> <b>Designer Size:</b> <span className="text-neutral-100">{ form.DesignerSize }</span>
+							</div>
+							<div className="p-3 border-b bg-gray-900 border-gray-700 text-neutral-300">
+								<BsHouseAdd className="inline me-1 text-xl pb-1" /> <b>Buildings:</b> <span className="text-neutral-100">{ buildingCount }</span>
+							</div>
+							<div className="p-3 border-b bg-gray-900 border-gray-700 text-neutral-300">
+								<BsBox className="inline me-1 text-xl pb-1" /> <b>Object-Count:</b> <span className="text-neutral-100">{ blueprintParse?.objects.length || 0 }</span>
+							</div>
+							<div className="p-3 border-b bg-gray-900 border-gray-700 text-neutral-300">
+								<BsBoxes className="inline me-1 text-xl pb-1" /> <b>Total Cost:</b> <span className="text-neutral-100">{ totalItemCost } items</span>
+							</div>
+							<div className="p-3 border-b bg-gray-900 border-gray-700 text-neutral-300">
+								<BiTag className="inline me-1 text-xl pb-1" /> <b>Tags</b>
+								{ !!Tags.length && <div className="flex flex-wrap p-2 text-neutral-200 text-xs gap-2">
+									{ Tags.map( e => (
+										<div key={ id + e._id } className="bg-gray-700 p-1 px-3 rounded-lg border border-gray-600 shadow">{ e.DisplayName }</div>
+									) ) }
+								</div> }
+							</div>
+							{ !!Mods.length && <div className="p-3 border-b bg-gray-900 border-gray-700 text-neutral-300">
+								<BiWrench className="inline me-1 text-xl pb-1" /> <b>Used Mods:</b>
+								{ Mods.map( e => (
+									<Link to={ `https://ficsit.app/mod/${ e.id }` } target="_blank" key={ id + e.id } className="mt-2 flex hover:bg-gray-700 bg-gray-600 p-0 rounded-lg border border-gray-700 shadow">
+										<img onError={ e => {
+											e.currentTarget.src = "/images/default/unknown.png";
+										} } src={ e.logo } alt={ e.name } className="h-8 w-8 rounded-l-lg" />
+										<span className="px-2 py-1">{ e.name }</span>
+									</Link>
 								) ) }
 							</div> }
 						</div>
-						{ !!Mods.length && <div className="p-3 border-b bg-gray-900 border-gray-700 text-neutral-300">
-							<BiWrench className="inline me-1 text-xl pb-1" /> <b>Used Mods:</b>
-							{ Mods.map( e => (
-								<Link to={ `https://ficsit.app/mod/${ e.id }` } target="_blank" key={ id + e.id } className="mt-2 flex hover:bg-gray-700 bg-gray-600 p-0 rounded-lg border border-gray-700 shadow">
-									<img onError={ e => {
-										e.currentTarget.src = "/images/default/unknown.png";
-									} } src={ e.logo } alt={ e.name } className="h-8 w-8 rounded-l-lg" />
-									<span className="px-2 py-1">{ e.name }</span>
-								</Link>
-							) ) }
-						</div> }
+
+						<BlueprintEditorCheckList done={ checkList[ 0 ] } optional={ isEditing } label="Title" >
+						Set a title
+						</BlueprintEditorCheckList>
+
+						<BlueprintEditorCheckList done={ checkList[ 1 ] } optional={ isEditing } label="Description" >
+						Write a description
+						</BlueprintEditorCheckList>
+
+						<BlueprintEditorCheckList done={ checkList[ 2 ] } optional={ isEditing } label="Blueprint" >
+						Select the .sbp and .sbpcfg files (note the names must be matched)
+						</BlueprintEditorCheckList>
+
+						<BlueprintEditorCheckList done={ checkList[ 3 ] } optional={ isEditing } label="Images" >
+						Select some images (up to 5 but min 1)
+						</BlueprintEditorCheckList>
+
+						<BlueprintEditorCheckList done={ checkList[ 4 ] } optional={ true } label="Tags" >
+						set some tags
+						</BlueprintEditorCheckList>
+					</div>
+				</div>
+				<div className="mt-3 flex flex-col w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+					<div className="relative p-3 border-b bg-gray-700 border-gray-700 rounded-t-lg text-neutral-200 truncate text-ellipsis overflow-hidden">
+						<span className="text-2xl">
+						Description Preview
+						</span>
 					</div>
 
-					<BlueprintEditorCheckList done={ checkList[ 0 ] } optional={ isEditing } label="Title" >
-						Set a title
-					</BlueprintEditorCheckList>
-
-					<BlueprintEditorCheckList done={ checkList[ 1 ] } optional={ isEditing } label="Description" >
-						Write a description
-					</BlueprintEditorCheckList>
-
-					<BlueprintEditorCheckList done={ checkList[ 2 ] } optional={ isEditing } label="Blueprint" >
-						Select the .sbp and .sbpcfg files (note the names must be matched)
-					</BlueprintEditorCheckList>
-
-					<BlueprintEditorCheckList done={ checkList[ 3 ] } optional={ isEditing } label="Images" >
-						Select some images (up to 5 but min 1)
-					</BlueprintEditorCheckList>
-
-					<BlueprintEditorCheckList done={ checkList[ 4 ] } optional={ true } label="Tags" >
-						set some tags
-					</BlueprintEditorCheckList>
-				</div>
-			</div>
-			<div className="mt-3 flex flex-col w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-				<div className="relative p-3 border-b bg-gray-700 border-gray-700 rounded-t-lg text-neutral-200 truncate text-ellipsis overflow-hidden">
-					<span className="text-2xl">
-						Description Preview
-					</span>
-				</div>
-
-				<div className="p-3 flex flex-col gap-3">
-					<ReactMarkdown components={ mdxComponents } className="text-neutral-200 flex-1 p-3 border-t-1 border-gray-700">
-						{ form.description }
-					</ReactMarkdown>
+					<div className="p-3 flex flex-col gap-3">
+						<ReactMarkdown components={ mdxComponents } className="text-neutral-200 flex-1 p-3 border-t-1 border-gray-700">
+							{ form.description }
+						</ReactMarkdown>
+					</div>
 				</div>
 			</div>
 		</>

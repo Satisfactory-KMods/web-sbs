@@ -77,7 +77,7 @@ const Component: FunctionComponent = () => {
 				<span className="flex-1">
 					Blueprint Filter ({ TotalBlueprints })
 				</span>
-				{ loggedIn && <Button size="xs" color="green" onClick={ () => nav( "/blueprint/create" ) }><FaPlus className="me-2" /> Add a new blueprint</Button> }
+				{ loggedIn && <Button size="xs" color="green" onClick={ toggleShowBulk }><FaPlus className="me-2" /> Bulk Upload</Button> }
 			</BlueprintFilter>
 			<PageManager MaxPage={ maxPage } Page={ currentPage } OnPageChange={ setPage } />
 
@@ -88,28 +88,30 @@ const Component: FunctionComponent = () => {
 			<PageManager Hide={ maxPage === currentPage } MaxPage={ maxPage } Page={ currentPage } OnPageChange={ setPage } />
 		</div>
 
-		<Modal dismissible={ true } className="dark"
-			show={ showBulk } size="5xl"
-			onClose={ toggleShowBulk }>
-			<Modal.Header>
+		{ showBulk && (
+			<Modal dismissible={ true } className="dark"
+				show={ showBulk } size="5xl"
+				onClose={ toggleShowBulk }>
+				<Modal.Header>
 				Bulk update blueprints
-			</Modal.Header>
-			<Modal.Body>
-				<SBSInput accept=".sbpcfg,.sbp" multiple hintClassName="flex" hint={ <>
-					<span className="flex-1 text-sm self-center">Blueprint files can you find here: <b>%localappdata%\FactoryGame\Saved\SaveGames\blueprints</b></span>
-					<CopyButton size="xs" copyString="%localappdata%\FactoryGame\Saved\SaveGames\blueprints" />
-				</> } name="sbpcfg" required={ true } label="Blueprints (.sbpcfg|.sbp)" type="file" onChange={ handleFileSelect } />
-			</Modal.Body>
-			<Modal.Footer>
-				<LoadingButton disabled={ !sbpFiles || sbpFiles.length <= 1 } Icon={ BiUpload } isLoading={ isLoading } onClick={ bulkUpload }>
+				</Modal.Header>
+				<Modal.Body>
+					<SBSInput accept=".sbpcfg,.sbp" multiple hintClassName="flex" hint={ <>
+						<span className="flex-1 text-sm self-center">Blueprint files can you find here: <b>%localappdata%\FactoryGame\Saved\SaveGames\blueprints</b></span>
+						<CopyButton size="xs" copyString="%localappdata%\FactoryGame\Saved\SaveGames\blueprints" />
+					</> } name="sbpcfg" required={ true } label="Blueprints (.sbpcfg|.sbp)" type="file" onChange={ handleFileSelect } />
+				</Modal.Body>
+				<Modal.Footer>
+					<LoadingButton disabled={ !sbpFiles || sbpFiles.length <= 1 } Icon={ BiUpload } isLoading={ isLoading } onClick={ bulkUpload }>
 					Upload
-				</LoadingButton>
-				<Button color="gray"
-					onClick={ toggleShowBulk }>
+					</LoadingButton>
+					<Button color="gray"
+						onClick={ toggleShowBulk }>
 					Cancel
-				</Button>
-			</Modal.Footer>
-		</Modal>
+					</Button>
+				</Modal.Footer>
+			</Modal>
+		) }
 	</> );
 };
 

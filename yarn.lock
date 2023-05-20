@@ -5613,6 +5613,11 @@ pngjs@^6.0.0:
   resolved "https://registry.yarnpkg.com/pngjs/-/pngjs-6.0.0.tgz#ca9e5d2aa48db0228a52c419c3308e87720da821"
   integrity sha512-TRzzuFRRmEoSW/p1KVAmiOgPco2Irlah+bGFCeNfJXxxYGwSw7YwAOAcd7X28K/m5bjBWKsC29KyoMfHbypayg==
 
+pnpm@^8.5.1:
+  version "8.5.1"
+  resolved "https://registry.yarnpkg.com/pnpm/-/pnpm-8.5.1.tgz#97019f5a8ec2416123506419ab36dd558e4c72eb"
+  integrity sha512-W6elL7Nww0a/MCICkzpkbxW6f99TQuX4DuJoDjWp39X08PKDkEpg4cgj3d6EtgYADcdQWl/eM8NdlLJVE3RgpA==
+
 postcss-cli@^10.1.0:
   version "10.1.0"
   resolved "https://registry.npmjs.org/postcss-cli/-/postcss-cli-10.1.0.tgz"
