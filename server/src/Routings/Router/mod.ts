@@ -137,7 +137,7 @@ export default function() {
 					name: blueprintPack.name,
 					mods: blueprintPack.mods,
 					tags: blueprintPack.tags.map( e => ( { DisplayName: e.DisplayName, _id: e._id.toString() } ) ),
-					owner: blueprintPack.owner._id.toString(),
+					owner: blueprintPack.owner.username,
 					createdAt: blueprintPack.createdAt.toLocaleString(),
 					updatedAt: blueprintPack.updatedAt.toLocaleString(),
 					blueprints: blueprintPack.blueprints.map( e => ( {
