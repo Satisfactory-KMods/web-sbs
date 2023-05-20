@@ -32,7 +32,7 @@ export function useBlueprintPack( InitValue: BlueprintPackExtended ) {
 
 	const image = useMemo<[string, string]>( () => {
 		const images = blueprintPack.blueprints.reduce<[string, string][]>( ( all, curr ) => all.concat( curr.images.map<[string, string]>( e => [ curr._id, e ] ) ), [] );
-		return images[ Math.floor( Math.random() * images.length ) ];
+		return images[ Math.floor( Math.random() * images.length ) ] || [ "", "" ];
 	}, [ blueprintPack.blueprints ] );
 
 	const resolvedMods = useMemo<Mod[]>( () => blueprintPack.mods.map( e => mods.find( m => m._id === e )! ).filter( e => !!e ) || [], [ blueprintPack.mods, mods ] );

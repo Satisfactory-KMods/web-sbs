@@ -59,7 +59,7 @@ const CopyButton = forwardRef<HTMLButtonElement, CopyButtonsProps>( ( {
 	};
 
 	return (
-		<Button ref={ ref } onClick={ () => doCopy( getString() ) } disabled={ isCopied() || !!disabled } size="xs" { ...props }>
+		<Button ref={ ref } onClick={ () => doCopy( getString() ) } disabled={ isCopied() || !!disabled } color={ isCopied() ? "green" : undefined } size="xs" { ...props }>
 			{ !isCopied() ? <BiCopy /> : <FaCheck /> }
 		</Button>
 	);

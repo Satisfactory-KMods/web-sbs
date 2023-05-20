@@ -21,6 +21,7 @@ import type { ChangeEventHandler, FunctionComponent } from "react";
 import { useContext, useEffect, useId, useMemo, useRef, useState } from "react";
 import { BiSave, BiTag, BiUser, BiWrench } from "react-icons/bi";
 import { BsBox, BsBoxes, BsHouseAdd } from "react-icons/bs";
+import { FaQuestionCircle } from "react-icons/fa";
 import { MdOutlinePhotoSizeSelectSmall } from "react-icons/md";
 import ReactMarkdown from "react-markdown";
 import { Link, useNavigate } from "react-router-dom";
@@ -252,7 +253,7 @@ const BlueprintEditor: FunctionComponent<BlueprintEditorProps> = ( { defaultData
 						<SBSInput label="Blueprint Title" value={ form.name } onChange={ e => setKey( "name", e.target.value ) } />
 						<div className="flex flex-col">
 							<div className="bg-gray-600 pt-2 rounded-lg">
-								<Label htmlFor={ id + "desc" } className="text-lg p-3 w-full">Blueprit Description (.md / Markdown)</Label>
+								<Label htmlFor={ id + "desc" } className="text-lg p-3 w-full">Blueprit Description (.md / Markdown) <Link to="https://de.wikipedia.org/wiki/Markdown" target="_blank"><FaQuestionCircle class="ms-1 inline" /></Link></Label>
 								<Textarea id={ id + "desc" } className="mt-2" style={ { minHeight: 200, maxHeight: 200 } } value={ form.description } onChange={ e => setKey( "description", e.target.value ) } />
 							</div>
 						</div>
