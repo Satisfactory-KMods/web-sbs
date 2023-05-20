@@ -67,13 +67,11 @@ export default function() {
 			filterSchema.optional().parse( req.body.filterOptions );
 
 			const { skip, limit, filterOptions } = req.body;
-			console.log( { skip, limit, filterOptions } );
 
 			const { filter, options } = buildFilter( filterOptions );
 			const totalBlueprints = await MongoBlueprints.count( filter );
 			const blueprints: BlueprintModData[] = [];
 			for await ( const blueprint of MongoBlueprints.find<HydratedDocument<BlueprintDataExtended>>( filter, { description: 0 }, { skip, limit, options, populate: [ { path: "owner", select: '-hash -apiKey -salt' }, { path: 'tags' } ] } ) ) {
-				console.log( blueprint._id );
 				blueprints.push( {
 					_id: blueprint._id.toString(),
 					name: blueprint.name,
@@ -92,7 +90,6 @@ export default function() {
 				} );
 			}
 
-			console.log( blueprints );
 			return res.json( { blueprints, totalBlueprints } );
 		} catch( e ) {
 			if( e instanceof Error ) {
