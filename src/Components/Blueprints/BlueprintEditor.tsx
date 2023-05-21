@@ -75,22 +75,19 @@ const BlueprintEditor: FunctionComponent<BlueprintEditorProps> = ( { defaultData
 
 	const isEditing = !!defaultData;
 
-	const Mods: Mod[] = useMemo( () => {
-		const modRefs = findModsFromBlueprint( blueprintParse?.objects );
-		return mods.filter( e => modRefs.includes( e.mod_reference ) );
-	}, [ blueprintParse?.objects, mods ] );
+	const [ Mods, buildingCount, totalItemCost ]: [Mod[], number, number] = useMemo( () => {
+		const modRefs = findModsFromBlueprint( blueprintParse );
+
+		const objects: ( SaveEntity | SaveComponent )[] = blueprintParse?.objects || [];
+		const itemCosts: [string, number][] = blueprintParse?.header.itemCosts || [];
+		return [
+			mods.filter( e => modRefs.includes( e.mod_reference ) ),
+			objects.filter( e => e.type === "SaveEntity" ).length,
+			itemCosts.reduce( ( total, cost ) => total + cost[ 1 ], 0 )
+		];
+	}, [ blueprintParse, mods ] );
 
 	const Tags: Tag[] = useMemo( () => tags.filter( e => ( form.tags as string[] ).includes( e._id ) ), [ form.tags, tags ] );
-
-	const buildingCount = useMemo( () => {
-		const objects: ( SaveEntity | SaveComponent )[] = blueprintParse?.objects || [];
-		return objects.filter( e => e.type === "SaveEntity" ).length;
-	}, [ blueprintParse?.objects ] );
-
-	const totalItemCost = useMemo( () => {
-		const itemCosts: [string, number][] = blueprintParse?.header.itemCosts || [];
-		return itemCosts.reduce( ( total, cost ) => total + cost[ 1 ], 0 );
-	}, [ blueprintParse?.header.itemCosts ] );
 
 	// smallHelper function to set form values
 	function setKey<K extends keyof BlueprintData>( key: K, value: BlueprintData[K] ) {
@@ -167,7 +164,7 @@ const BlueprintEditor: FunctionComponent<BlueprintEditorProps> = ( { defaultData
 			apiQueryLib.PostToAPI<Blueprint>( EApiBlueprintUtils.parseblueprint, formData )
 				.then( e => {
 					setBlueprintParse( e );
-					setKey( "mods", findModsFromBlueprint( e.objects ) );
+					setKey( "mods", findModsFromBlueprint( e ) );
 				} );
 		}
 		setBlueprintParse( defaultBlueprintData );

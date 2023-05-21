@@ -165,7 +165,7 @@ const BlueprintSchema = new mongoose.Schema( {
 		updateModRefs: async function( save = true ) {
 			const parse = parseBlueprintById( this._id.toString(), this.name );
 			if( parse ) {
-				this.mods = findModsFromBlueprint( parse.objects );
+				this.mods = findModsFromBlueprint( parse );
 				if( save ) {
 					this.markModified( "mods" );
 					this.save();
