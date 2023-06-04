@@ -14,10 +14,11 @@ import Select from "react-select";
 interface BlueprintFilterProps extends PropsWithChildren {
 	isFetching: boolean,
 	filterSchema: [FilterSchema, Dispatch<SetStateAction<FilterSchema>>],
-	doFetch: () => Promise<void>
+	doFetch: () => Promise<void>,
+	hideTags?: boolean
 }
 
-const BlueprintFilter: FunctionComponent<BlueprintFilterProps> = ( { isFetching, filterSchema, doFetch, children } ) => {
+const BlueprintFilter: FunctionComponent<BlueprintFilterProps> = ( { isFetching, filterSchema, doFetch, children, hideTags } ) => {
 	const { tagsSelectOptions, modSelectOptions, sortSelectOptions, vanillaSelectOptions } = useSelectOptions();
 	const [ filter, setFilter ] = filterSchema;
 
@@ -88,11 +89,11 @@ const BlueprintFilter: FunctionComponent<BlueprintFilterProps> = ( { isFetching,
 						classNamePrefix="my-react-select" isMulti={ true } onChange={ setSelectMods } />
 				</SBSSelect> }
 
-				<SBSSelect label="Tags">
+				{ !hideTags && <SBSSelect label="Tags">
 					<Select options={ tagsSelectOptions } className="gray-select flex-1"
 						value={ SelectTags }
 						classNamePrefix="my-react-select" isMulti={ true } onChange={ setSelectTags } />
-				</SBSSelect>
+				</SBSSelect> }
 
 				<div className="mt-2 md:mt-0 flex gap-2">
 					<LoadingButton isLoading={ isFetching } color="gray" className="flex-1"

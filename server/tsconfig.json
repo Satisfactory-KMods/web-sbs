@@ -1,4 +1,7 @@
 {
+  "ts-node": {
+    "maxOldSpaceSize": 65568
+  },
   "compilerOptions": {
     "outDir": "../buildserver",
     "rootDirs": [

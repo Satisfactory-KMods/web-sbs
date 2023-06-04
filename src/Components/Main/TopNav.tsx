@@ -33,15 +33,15 @@ const TopNav: FunctionComponent = () => {
 	const Nav = ( <>
 		<NavigationContainer path="/blueprint/" label="Blueprints" >
 			<NavigationLink label="Browse" to="/blueprint/list">Browse all blueprints!</NavigationLink>
+			<NavigationLink label="Create" target="_blank" to="https://satisfactory-calculator.com/en/blueprints">Add you own blueprint</NavigationLink>
 			{ loggedIn && ( <>
-				<NavigationLink label="Create" to="/blueprint/create">Add you own blueprint</NavigationLink>
 				<NavigationLink label="My" to="/blueprint/my">Show all of your blueprints</NavigationLink>
 			</> ) }
 		</NavigationContainer>
 		<NavigationContainer path="/blueprintpacks" label="Blueprint Packs" >
 			<NavigationLink label="Browse" to="/blueprintpacks/list">Browse all blueprint packs!</NavigationLink>
 			{ loggedIn && ( <>
-				<NavigationLink label="Create" to="/blueprintpacks/create">Add you own blueprint pack</NavigationLink>
+				<NavigationLink label="Create" to="/blueprintpacks/create">Add your own blueprint pack</NavigationLink>
 				<NavigationLink label="My" to="/blueprintpacks/my">Show all of your blueprint packs</NavigationLink>
 			</> ) }
 		</NavigationContainer>
@@ -51,13 +51,14 @@ const TopNav: FunctionComponent = () => {
 				<NavigationLink label="Tags" to="/admin/tags">Manage all Tags</NavigationLink>
 			</NavigationContainer>
 		) }
-		{ loggedIn && ( <>
+		<NavigationLinkButton target="_blank" to="https://satisfactory-calculator.com/" label="Blueprints Hosted by SCIM" />
+		{ ( loggedIn && false ) && ( <>
 			<NavigationLinkButton label="My Mod Key" to="#" onClick={ e => {
 				e.preventDefault();
 				fetchAccountKey();
 			} } />
 		</> ) }
-		<NavigationLinkButton label="Download the mod now!" to="https://ficsit.app/mod/SBS" target="_blank" />
+		<NavigationLinkButton label="Install SBS Mod!" to="https://ficsit.app/mod/SBS" target="_blank" />
 	</> );
 
 	const NavMobile = ( <>

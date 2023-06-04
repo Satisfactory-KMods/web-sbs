@@ -1,4 +1,5 @@
 export enum EDesignerSize {
+	mk0 = "undefined",
 	mk1 = "4x4x4",
 	mk2 = "6x6x6",
 	mk3 = "8x8x8",

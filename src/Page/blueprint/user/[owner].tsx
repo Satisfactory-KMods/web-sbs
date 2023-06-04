@@ -49,7 +49,6 @@ const Component: FunctionComponent = () => {
 				<span className="flex-1">
 					Blueprints from { showUser.username } ({ TotalBlueprints })
 				</span>
-				{ loggedIn && <Button size="xs" color="green" onClick={ () => nav( "/blueprint/create" ) }><FaPlus className="me-2" /> Add a new blueprint</Button> }
 			</BlueprintFilter>
 			<PageManager MaxPage={ maxPage } Page={ currentPage } OnPageChange={ setPage } />
 

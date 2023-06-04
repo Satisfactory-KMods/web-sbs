@@ -40,7 +40,7 @@ const BlueprintPackCard: FunctionComponent<BlueprintPackCardProps> = ( { Data, o
 						{ blueprintPack.name }
 					</span>
 					<span className="text-xs text-gray-400 block">
-						Creator: <Link to={ `/blueprint/user/${ owner._id }` } className="text-neutral-200 font-bold underline">{ owner.username }</Link>
+						Creator: { owner.username }
 					</span>
 				</div>
 				<div className="relative aspect-video">

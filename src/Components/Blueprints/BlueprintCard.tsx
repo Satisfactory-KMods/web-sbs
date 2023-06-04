@@ -33,13 +33,13 @@ const BlueprintCard: FunctionComponent<IBlueprintCardProps> = ( { Data, onToggle
 
 	return (
 		<div className="flex flex-col w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-			<Link to={ `/blueprint/${ Blueprint._id }` } className="flex-1 flex flex-col">
+			<Link to={ !Blueprint.SCIMId ? `/blueprint/${ Blueprint._id }` : `https://satisfactory-calculator.com/en/blueprints/index/details/id/${ Blueprint.SCIMId }` } target={ !Blueprint.SCIMId ? undefined : "_blank" } className="flex-1 flex flex-col">
 				<div className="p-3 border-b bg-gray-700 border-gray-700 rounded-t-lg text-neutral-200 truncate text-ellipsis overflow-hidden">
 					<span className="text-2xl">
 						{ Blueprint.name }
 					</span>
 					<span className="text-xs text-gray-400 block">
-						Creator: <Link to={ `/blueprint/user/${ owner.id }` } className="text-neutral-200 font-bold underline">{ owner.username }</Link>
+						Creator: { owner.username }
 					</span>
 				</div>
 				<div className="relative aspect-video">
@@ -59,7 +59,7 @@ const BlueprintCard: FunctionComponent<IBlueprintCardProps> = ( { Data, onToggle
 			<div className="p-3 border-t bg-gray-700 border-gray-700 flex">
 				<BlueprintRating className="flex-1" blueprintHook={ bpHook } />
 				<div className="flex flex-0">
-					{ allowedToEdit && <>
+					{ ( allowedToEdit && !Blueprint.SCIMId ) && <>
 						<Button onClick={ doBlacklist } color="red" size="small" className="p-1 px-3">
 							&nbsp;<HiTrash /> &nbsp;
 						</Button>

@@ -33,7 +33,6 @@ interface BlueprintPackModData {
 	totalRatingCount: number
 }
 
-
 interface BlueprintModData {
 	_id: string,
 	name: string,
@@ -50,8 +49,17 @@ interface BlueprintModData {
 	updatedAt: Date | string,
 	totalRating: number,
 	totalRatingCount: number,
+	SCIM: number,
 	images: string[],
-	iconData: IconData
+	iconData: {
+		color: {
+			r: number,
+			g: number,
+			b: number,
+			a: number
+		},
+		iconID: number
+	}
 }
 
 
@@ -86,6 +94,7 @@ export default function() {
 					totalRating: blueprint.totalRating,
 					totalRatingCount: blueprint.totalRatingCount,
 					images: blueprint.images,
+					SCIM: blueprint.SCIMId || 0,
 					iconData: blueprint.iconData!
 				} );
 			}

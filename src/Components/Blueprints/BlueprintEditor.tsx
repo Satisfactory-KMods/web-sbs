@@ -294,7 +294,7 @@ const BlueprintEditor: FunctionComponent<BlueprintEditorProps> = ( { defaultData
 				<div className="flex flex-col xl:col-span-2 w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
 					<div className="flex-1 flex flex-col mb-auto">
 						<div className="p-3 border-b bg-gray-900 border-gray-700 text-neutral-300 rounded-t-lg">
-							<BiUser className="inline me-1 text-xl pb-1" /> <b>Creator:</b> <Link to={ `/blueprint/user/${ user.Get._id }` } className="text-neutral-200 font-bold underline">{ user.Get.username }</Link>
+							<BiUser className="inline me-1 text-xl pb-1" /> <b>Creator:</b> { user.Get.username }
 							<div className="p-3 border-b bg-gray-900 border-gray-700 text-neutral-300">
 								<MdOutlinePhotoSizeSelectSmall className="inline me-1 text-xl pb-1" /> <b>Designer Size:</b> <span className="text-neutral-100">{ form.DesignerSize }</span>
 							</div>

@@ -27,7 +27,7 @@ export class BlueprintParser {
 	constructor( Name: string, sbp: Buffer, sbpcfg: Buffer ) {
 		this.CachedName = Name;
 		try {
-			this.Data = Parser.ParseBlueprintFiles( Name, sbp, sbpcfg );
+			this.Data = Parser.ParseBlueprintFiles( Name, sbp, sbpcfg, () => {} );
 			this.Success = true;
 		} catch( e ) {
 			if( e instanceof Error ) {

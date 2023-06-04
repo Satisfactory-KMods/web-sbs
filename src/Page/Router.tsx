@@ -62,14 +62,14 @@ const rootRouter = createBrowserRouter( [
 				path: "/terms/private",
 				lazy: async() => await import( "@page/terms/private/Page" )
 			},
-			{
+			/*{
 				path: "/blueprint/create",
 				lazy: async() => await import( "@page/blueprint/create/Page" ),
 				loader: async( { request, params } ) => {
 					const { loader } = await import( "@page/blueprint/create/Loader" );
 					return loader( { request, params } );
 				}
-			},
+			},*/
 			{
 				path: "/blueprint/edit/:blueprintId",
 				lazy: async() => await import( "@page/blueprint/edit/[blueprintId]" ),

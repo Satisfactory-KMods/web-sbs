@@ -1,4 +1,5 @@
 import { MWCleanMulterCache } from "@/server/src/Lib/Express.Lib";
+import { MakeRandomString } from "@kyri123/k-javascript-utils";
 import "@kyri123/k-javascript-utils/lib/useAddons";
 import { ERoles } from "@shared/Enum/ERoles";
 import bodyParser from "body-parser";
@@ -89,6 +90,17 @@ mongoose
 			NewUser.setPassword( "12345678" );
 			SystemLib.LogWarning( "start", " Default user was created. Kyrium | 12345678 | admin@kmods.de" );
 			await NewUser.save();
+		}
+
+		if( !await MongoUserAccount.findOne( { username: "Satisfactory - Calculator" } ) ) {
+			const SCIMUser = new MongoUserAccount();
+
+			SCIMUser.email = "SCIM@kmods.de";
+			SCIMUser.username = "Satisfactory - Calculator";
+			SCIMUser.role = ERoles.member;
+			SCIMUser.setPassword( MakeRandomString( 100, "$" ) );
+
+			await SCIMUser.save();
 		}
 
 		global.TaskManager = new TaskManagerClass();

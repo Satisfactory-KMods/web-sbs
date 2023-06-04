@@ -46,11 +46,10 @@ const Component: FunctionComponent = () => {
 
 	return (
 		<>
-			<BlueprintFilter filterSchema={ [ filter, setFilter ] } isFetching={ isFetching } doFetch={ doFetch } >
+			<BlueprintFilter hideTags filterSchema={ [ filter, setFilter ] } isFetching={ isFetching } doFetch={ doFetch } >
 				<span className="flex-1">
 					Blueprint Filter ({ TotalBlueprints })
 				</span>
-				{ loggedIn && <Button size="xs" color="green" onClick={ () => nav( "/blueprint/create" ) }><FaPlus className="me-2" /> Add a new blueprint</Button> }
 			</BlueprintFilter>
 			<PageManager MaxPage={ maxPage } Page={ currentPage } OnPageChange={ setPage } />
 

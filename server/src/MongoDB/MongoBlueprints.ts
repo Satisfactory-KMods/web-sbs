@@ -45,7 +45,8 @@ const ZodBlueprintBase = z.object( {
 	totalRating: z.number(),
 	totalRatingCount: z.number(),
 	tags: z.array( z.string() ).or( z.array( ZodTagSchema ) ),
-	images: z.array( z.string() )
+	images: z.array( z.string() ),
+	SCIMId: z.number().optional()
 } );
 
 const ZodBlueprintPackSchema = z.object( {
@@ -119,6 +120,7 @@ const BlueprintSchema = new mongoose.Schema( {
 		rating: { type: Number, required: true }
 	} ],
 	required: true },
+	SCIMId: { type: Number, required: false, default: 0 },
 	totalRating: { type: Number, required: true },
 	totalRatingCount: { type: Number, required: true },
 	DesignerSize: { type: String, required: true },
