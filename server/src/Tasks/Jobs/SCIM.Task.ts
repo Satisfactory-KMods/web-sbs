@@ -23,10 +23,10 @@ export default new JobTask(
 		);
 		const user = await MongoUserAccount.findOne( { username: "Satisfactory - Calculator" } );
 
-		if( !SystemLib.IsDevMode || !user ) {
+		/*if( !SystemLib.IsDevMode || !user ) {
 			SystemLib.DebugLog( "tasks", "Cancel SCIM Task" );
 			return;
-		}
+		}*/
 
 		const calledIds = new Set<string>();
 		const blacklist = new Set<string>( [
