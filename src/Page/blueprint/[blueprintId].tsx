@@ -74,7 +74,6 @@ const Component: FunctionComponent = () => {
 	}, [ blueprintParse?.header.itemCosts ] );
 
 	if( Blueprint.SCIMId || 0 > 1 ) {
-		console.log( Blueprint );
 		window.location.href = `https://satisfactory-calculator.com/en/blueprints/index/details/id/${ Blueprint.SCIMId }`;
 	}
 

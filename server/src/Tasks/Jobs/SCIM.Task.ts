@@ -144,6 +144,7 @@ export default new JobTask(
 								renameSync( getFilePathAndName( "jpg" ),  path.join( blueprintDir, `image_${ bpId }_0.jpg` ) );
 
 								if( await blueprint.save() ) {
+									await blueprint.updateModRefs();
 									await blueprint.updateBlueprintData();
 									SystemLib.DebugLog( "SCIM", `created/updated:`, originalName );
 								}
