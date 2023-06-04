@@ -73,6 +73,11 @@ const Component: FunctionComponent = () => {
 		return itemCosts.reduce( ( total, cost ) => total + cost[ 1 ], 0 );
 	}, [ blueprintParse?.header.itemCosts ] );
 
+	if( Blueprint.SCIMId || 0 > 1 ) {
+		console.log( Blueprint );
+		window.location.href = `https://satisfactory-calculator.com/en/blueprints/index/details/id/${ Blueprint.SCIMId }`;
+	}
+
 	return (
 		<div className="grid grid-cols-1 xl:grid-cols-5 gap-3">
 			<div className="xl:col-span-3 flex flex-col w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
