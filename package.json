@@ -2,7 +2,7 @@
   "packageManager": "^pnpm@8.5.1",
   "name": "vite-react-template",
   "private": true,
-  "version": "0.3.1",
+  "version": "0.4.0",
   "scripts": {
     "production": "NODE_ENV=production yarn server",
     "server": "ts-node --project ./server/tsconfig.json -r tsconfig-paths/register server/src/index.ts",
