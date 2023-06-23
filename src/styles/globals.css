@@ -1,0 +1,73 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body, html, .container-fluid #root, body > div {
+    height: 100%;
+} 
+
+.leaflet-tile {
+    @apply border-0;
+}
+
+.leaflet-container {
+    @apply rounded-lg;
+    background-color:rgba(255,0,0,0.0)!important;
+} 
+
+.bg-mam {
+    background: url('/_next/image?url=%2Fbg%2Fmam_tile.png&w=64&h=64&q=100') repeat;
+    opacity: .25;
+    animation-name: MOVE-BG;
+    animation-duration: 500s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
+
+@keyframes MOVE-BG {
+   from {
+        background-position: 0% 0%
+   }
+   to { 
+        background-position: 100% 100%
+   }
+}
+
+@layer components {
+    :root {
+        --secondary: rgb(31, 41, 55);
+        --primary: rgb(17, 21, 27);
+        --scrollbar-size: 5px;
+    }
+
+    /* Firefox */
+    * {
+        scrollbar-width: thin;
+        scrollbar-color: var(--secondary) var(--primary);
+    }
+
+    /* Chrome, Edge, and Safari */
+    *::-webkit-scrollbar {
+        width: var(--scrollbar-size);
+    }
+
+    *::-webkit-scrollbar-track {
+        background: var(--primary);
+        border-radius: 5px;
+    }
+
+    *::-webkit-scrollbar-thumb {
+        background-color: var(--secondary);
+        border-radius: 14px;
+        border: var(--scrollbar-size) solid var(--primary);
+    }
+}
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
