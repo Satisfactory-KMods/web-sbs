@@ -33,3 +33,6 @@ buildserver
 mount
 .npmrc
 tmp
+
+#old
+_old
