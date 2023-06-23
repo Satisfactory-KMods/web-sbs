@@ -28,7 +28,7 @@ class ZipHandler {
 	public async getOrCreatePack( id: string ): Promise<string | undefined> {
 		const data = await prisma.blueprintPacks.findUnique( { where: { id } } );
 		if( data ) {
-			const blueprints = await prisma.blueprints.findMany( { where: { id: { in: data.blueprintids } } } );
+			const blueprints = await prisma.blueprints.findMany( { where: { id: { in: data.blueprints } } } );
 			const zipDirPath = join( mountHandler.zipDir, data.id );
 			const stamps = this.toTimeStamps( blueprints );
 			const meta = this.getMeta( join( zipDirPath, "meta.json" ), stamps );

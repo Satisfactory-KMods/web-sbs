@@ -104,20 +104,20 @@ model Blueprints {
 }
 
 model BlueprintPacks {
-    id           String       @id @default(auto()) @map("_id") @db.ObjectId
-    createdAt    DateTime     @default(now())
-    updatedAt    DateTime     @updatedAt
-    userId       String       @db.ObjectId
-    blueprintids String[]     @db.ObjectId
-    mods         String[]
-    rating       ratingType[]
-    totalRating  Int
-    totalVotes   Int
-    downloadIps  String[]
-    downloads    Int
-    tagIds       String[]     @db.ObjectId
-    name         String
-    description  String
+    id          String       @id @default(auto()) @map("_id") @db.ObjectId
+    createdAt   DateTime     @default(now())
+    updatedAt   DateTime     @updatedAt
+    userId      String       @db.ObjectId
+    blueprints  String[]     @db.ObjectId
+    mods        String[]
+    rating      ratingType[]
+    totalRating Int
+    totalVotes  Int
+    downloadIps String[]
+    downloads   Int
+    tagIds      String[]     @db.ObjectId
+    name        String
+    description String
 
     user       User         @relation(fields: [userId], references: [id], onDelete: Cascade)
     Tags       Tags[]
