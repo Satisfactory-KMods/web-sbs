@@ -82,14 +82,13 @@ model Blueprints {
     description  String
     mods         String[]
     rating       RatingType[]
-    SCIMId       String?
+    SCIMId       Int?
     totalRating  Float
     totalVotes   Int
     designerSize String
     downloadIps  String[]
     downloads    Int
     images       String[]
-    inPacks      String[]     @db.ObjectId
     tagIds       String[]     @db.ObjectId
     originalName String
 
@@ -155,8 +154,8 @@ type IconDataType {
 }
 
 type ColorDataType {
-    r Int
-    g Int
-    b Int
-    a Int
+    r Float
+    g Float
+    b Float
+    a Float
 }

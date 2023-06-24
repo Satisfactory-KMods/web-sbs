@@ -1,9 +1,10 @@
-import { TaskManagerClass } from "./Tasks/TaskManager";
+import 'dotenv/config';
+import { TaskManagerClass } from "./taskManager/TaskManager";
 
 
 async function main() {
-	global.TaskManager = new TaskManagerClass();
-	await TaskManager.Init();
+	const taskManager = new TaskManagerClass();
+	await taskManager.init();
 }
 
 main();

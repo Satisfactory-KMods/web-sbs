@@ -22,7 +22,7 @@ export class JobTask {
 		this.interval = interval;
 		this.taskFunction = task;
 		this.task = setInterval( this.tick.bind( this ), this.interval );
-		this.tick().then( () => SystemLib.Log( "start", `Init run job:`, SystemLib.ToBashColor( "Red" ), this.jobName )
+		this.tick().then( () => console.info( "start", `Init run job:`, this.jobName )
 		);
 	}
 
@@ -71,24 +71,23 @@ export class TaskManagerClass {
 	public jobs: Record<string, JobTask> = {};
 
 	async init() {
-		for( const file of fs.readdirSync(
-			path.join( __dirname, "/tasks/jobs" )
-		) ) {
-			const Stats = fs.statSync(
-				path.join( __dirname, "/tasks/jobs", file )
+		for( const file of fs.readdirSync( path.join( __dirname, "jobs" ) ) ) {
+			const stats = fs.statSync(
+				path.join( __dirname, "jobs", file )
 			);
-			if( Stats.isFile() && file.endsWith( ".task.ts" ) ) {
+			if( stats.isFile() && file.endsWith( ".task.ts" ) ) {
 				const jobClass: JobTask = (
-					await import( path.join( __dirname, "/tasks/jobs", file ) )
+					await import( path.join( __dirname, "jobs", file ) )
 				).default as JobTask;
 				this.jobs[ jobClass.jobName ] = jobClass;
+				console.info( "Loaded Job:", jobClass.jobName );
 			}
 		}
 	}
 
 	tunTask( task: TTasksRunner, ResetTimer = false ) {
 		if( this.jobs[ task ] ) {
-			this.Jobs[ task ].ForceTask( ResetTimer );
+			this.jobs[ task ]?.forceTask( ResetTimer );
 		}
 	}
 }

@@ -1,30 +1,38 @@
-import { BlueprintClass } from "@/server/src/Lib/Blueprint.Class";
-import { BlueprintParser } from "@/server/src/Lib/BlueprintParser";
-import MongoBlueprints from "@/server/src/MongoDB/MongoBlueprints";
-import MongoUserAccount from "@/server/src/MongoDB/MongoUserAccount";
-import { EDesignerSize } from "@/src/Shared/Enum/EDesignerSize";
-import { JobTask } from "@server/Tasks/TaskManager";
+/* eslint-disable import/no-anonymous-default-export */
+import { prisma } from "@/server/db";
+import { JobTask } from "@/taskServer/taskManager/TaskManager";
+import { Blueprint, createNewBlueprint } from "@/utils/Blueprint";
+import { BlueprintReader } from "@/utils/BlueprintReader";
+import { mountHandler } from "@/utils/MoundHandler";
+import { DesignerSize } from "@/utils/enum/DesignerSize";
 import { copyFileSync, existsSync, mkdirSync, readFileSync, renameSync, rmSync } from "fs";
 import { writeFile } from "fs/promises";
 import fetch from 'node-fetch';
 import path from "path";
 
 
-const time = 3600000 * 24 / 2;
+const time = 3600000 * 24 / 12;
 
 export default new JobTask(
 	time,
 	"SCIM",
 	async() => {
-		SystemLib.Log( "tasks",
+		console.info( "tasks",
 			"Running Task",
-			SystemLib.ToBashColor( "Red" ),
 			"SCIM"
 		);
-		const user = await MongoUserAccount.findOne( { username: "Satisfactory - Calculator" } );
+		let user = ( await prisma.user.findFirst( { where: { name: "Satisfactory - Calculator" } } )! );
+		if( !user ) {
+			user = await prisma.user.create( {
+				data: {
+					name: "Satisfactory - Calculator",
+					email: "none@none.de"
+				}
+			} );
+		}
 
 		if( !user ) {
-			SystemLib.DebugLog( "tasks", "Cancel SCIM Task" );
+			console.info( "tasks", "Cancel SCIM Task" );
 			return;
 		}
 
@@ -40,15 +48,15 @@ export default new JobTask(
 				const asArr = pageContent.split( "\n" );
 				const ids = asArr
 					.filter( e => e.includes( "/de/blueprints/index/details/id" ) )
-					.map( e => e.match( /\/de\/blueprints\/index\/details\/id\/(\d+)/ )![ 1 ] );
+					.map( e => e.match( /\/de\/blueprints\/index\/details\/id\/(\d+)/ )![ 1 ]! );
 
-				for( const id of Array.from( new Set( ids ) ) ) {
-					SystemLib.DebugLog( "SCIM", "QueryID:", id, "| page:", page );
+				const results = await Promise.all( Array.from( new Set( ids ) ).map( async id => {
+					console.info( "SCIM", "QueryID:", id, "| page:", page );
 					if( blacklist.has( id ) ) {
-						continue;
+						return true;
 					}
 					if( calledIds.has( id ) ) {
-						break outLoop;
+						return false;
 					}
 					calledIds.add( id );
 					const fetchUrlSbp = `https://satisfactory-calculator.com/de/blueprints/index/download/id/${ id }`;
@@ -56,7 +64,7 @@ export default new JobTask(
 					const fetchSiteUrl = `https://satisfactory-calculator.com/de/blueprints/index/details/id/${ id }`;
 
 					let originalName: string | null = null;
-					const tmpDir = path.join( __MountDir, "tmp", "SCIM" );
+					const tmpDir = mountHandler.tempScim;
 					rmSync( tmpDir, { recursive: true, force: true } );
 
 					const getFilePathAndName = ( fileEnding: "sbp" | "sbpcfg" | "jpg" ): string => {
@@ -70,7 +78,7 @@ export default new JobTask(
 						const asArr = page.split( "\n" );
 						const idx = page.split( "\n" ).findIndex( e => e.includes( '"breadcrumb-item"' ) );
 						if( idx > -1 ) {
-							originalName = asArr[ idx + 1 ].replace( "</li>", "" ).trim().replace( /[/\\?%*:|"<>]/g, '' ).replace( '°', '' );
+							originalName = asArr[ idx + 1 ]?.replace( "</li>", "" ).trim().replace( /[/\\?%*:|"<>]/g, '' ).replace( '°', '' ) || "null";
 							const imageUrl = asArr.find( e => e.includes( "blueprintsInGame" ) )?.match( /\bhttps?:\/\/\S+/gi );
 							if( imageUrl && imageUrl[ 0 ] ) {
 								const fetchImageUrl = imageUrl[ 0 ].replaceAll( '"', "" );
@@ -81,88 +89,102 @@ export default new JobTask(
 									await writeFile( file, await response.buffer() ).catch( console.error );
 								} else {
 									copyFileSync( path.join( process.cwd(), "public/images/default", "default.jpg" ), file );
-									SystemLib.LogWarning( "SCIM", "default image used:", originalName );
+									console.info( "SCIM", "default image used:", originalName );
 								}
 							} else {
-								continue;
+								return true;
 							}
 						}
 					}
 
-
 					if( !originalName ) {
-						continue;
+						return true;
 					}
 
 					response = await fetch( fetchUrlSbpcfg, { timeout: 10000 } ).catch( console.error );
 					if( response ) {
 						await writeFile( getFilePathAndName( "sbpcfg" ), await response.buffer() );
 					} else {
-						continue;
+						return true;
 					}
 
 					response = await fetch( fetchUrlSbp, { timeout: 10000 } ).catch( console.error );
 					if( response ) {
 						await writeFile( getFilePathAndName( "sbp" ), await response.buffer() );
 					} else {
-						continue;
+						return true;
 					}
 
 					if( readFileSync( getFilePathAndName( "sbp" ) ).toString().startsWith( "<" ) || readFileSync( getFilePathAndName( "sbpcfg" ) ).toString().startsWith( "<" ) ) {
-						continue;
+						return true;
 					}
 
 					try {
-						const BP = new BlueprintParser( originalName, readFileSync( getFilePathAndName( "sbp" ) ), readFileSync( getFilePathAndName( "sbpcfg" ) ) );
-						if( BP?.Success ) {
-							if( !await MongoBlueprints.exists( { originalName, SCIMId: 0 } ) ) {
-								let blueprint = await MongoBlueprints.findOne( { originalName, SCIMId: { $gte: 0 } } );
-								if( !blueprint ) {
-									blueprint = new MongoBlueprints();
-									blueprint.originalName = originalName;
-									blueprint.DesignerSize = EDesignerSize.mk0;
-									blueprint.totalRating = 0;
-									blueprint.downloads = 0;
-									blueprint.totalRatingCount = 0;
-									blueprint.rating = [];
-									blueprint.tags = [];
-									blueprint.mods = [];
-									blueprint.images = [ `image_${ blueprint._id.toString() }_0.jpg` ];
-									blueprint.owner = user._id.toString();
-								}
-
-								blueprint.name = originalName;
-								blueprint.description = `Blueprint hosted by Satisfactory - Calculator`;
-								blueprint.SCIMId = parseInt( id );
-
-								const bpId = blueprint._id.toString();
-								const blueprintDir = path.join( __BlueprintDir, bpId );
-								existsSync( blueprintDir ) && rmSync( blueprintDir, { recursive: true } );
-								mkdirSync( blueprintDir, { recursive: true } );
-								renameSync( getFilePathAndName( "sbp" ), path.join( blueprintDir, `${ bpId }.sbp` ) );
-								renameSync( getFilePathAndName( "sbpcfg" ), path.join( blueprintDir, `${ bpId }.sbpcfg` ) );
-								renameSync( getFilePathAndName( "jpg" ),  path.join( blueprintDir, `image_${ bpId }_0.jpg` ) );
-
-								if( await blueprint.save() ) {
-									await blueprint.updateModRefs();
-									await blueprint.updateBlueprintData();
-									SystemLib.DebugLog( "SCIM", `created/updated:`, originalName );
-								}
+						const filePath = getFilePathAndName( "sbp" );
+						const fileName = filePath.split( "/" ).pop()!.replace( ".sbp", "" );
+						const BP = new BlueprintReader( filePath, fileName );
+						if( BP.success ) {
+							const bpDb = await prisma.blueprints.findFirst( { where: { SCIMId: parseInt( id ) } } );
+							let newBp: Blueprint;
+							if( !bpDb ) {
+								newBp = await createNewBlueprint( {
+									name: originalName,
+									description: `Blueprint hosted by Satisfactory - Calculator`,
+									originalName,
+									designerSize: DesignerSize.mk0,
+									userId: user!.id,
+									tagIds: [],
+									images: [],
+									SCIMId: parseInt( id )
+								} );
+							} else {
+								newBp = await Blueprint.create( bpDb );
 							}
-						}
 
-						for await ( const old of MongoBlueprints.find( { originalName: { $nin: Array.from( calledIds ), SCIMId: { $gte: 0 } } } ) ) {
-							const BpClass = await BlueprintClass.createClass( old._id.toString() );
-							if( BpClass ) {
-								SystemLib.Log( "SCIM", `removed:`, old.originalName );
-								await BpClass.remove();
-							}
+							await prisma.blueprints.update( {
+								where: { id: newBp.dbData.id },
+								data: {
+									images: [ `image_${ newBp.dbData.id }_0.jpg` ],
+									name: originalName,
+									description: `Blueprint hosted by Satisfactory - Calculator`,
+									originalName
+								}
+							} );
+
+							const blueprintDir = path.join( mountHandler.blueprintDir, newBp.dbData.id );
+							existsSync( blueprintDir ) && rmSync( blueprintDir, { recursive: true } );
+							mkdirSync( blueprintDir, { recursive: true } );
+
+							renameSync( getFilePathAndName( "sbp" ), path.join( blueprintDir, `${ newBp.dbData.id }.sbp` ) );
+							renameSync( getFilePathAndName( "sbpcfg" ), path.join( blueprintDir, `${ newBp.dbData.id }.sbpcfg` ) );
+							renameSync( getFilePathAndName( "jpg" ),  path.join( blueprintDir, `image_${ newBp.dbData.id }_0.jpg` ) );
+
+							await newBp.updateBlueprint().catch( () => {
+								calledIds.delete( id );
+								newBp.delete();
+								console.info( "SCIM", `removed:`, originalName );
+							} ).then( () => {
+								console.info( "SCIM", `created/updated:`, originalName );
+							} );
 						}
 					} catch( e ) {
-						continue;
+						return true;
 					}
+				} ) );
+
+				if( results.includes( false ) ) {
+					break outLoop;
 				}
 			}
+		}
+
+		for( const old of await prisma.blueprints.findMany( { where: {
+			originalName: { in: Array.from( calledIds ) },
+			SCIMId: { gte: 0 }
+		} } ) ) {
+			const bp = await Blueprint.create( old );
+			await bp.delete();
+			console.info( "SCIM", `removed:`, old.originalName );
 		}
 
 		//rmSync( tmpDir, { recursive: true, force: true } );

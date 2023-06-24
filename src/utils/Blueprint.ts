@@ -2,12 +2,14 @@ import { prisma } from "@/server/db";
 import { BlueprintReader } from "@/utils/BlueprintReader";
 import { kbotApi } from "@/utils/KBotApi";
 import { mountHandler } from '@/utils/MoundHandler';
+import type { BlueprintConfig } from '@etothepii/satisfactory-file-parser';
 import type { Blueprints, RatingType } from '@prisma/client';
+import { join } from "path";
 
 
 export type NewBlueprintData = Pick<Blueprints, 'SCIMId' | 'userId' | 'name' | 'description' | 'designerSize' | 'images' | 'tagIds' | 'originalName'>;
 
-export async function createNewBlueprint( data: NewBlueprintData ) {
+export async function createNewBlueprint( { userId, ...data }: NewBlueprintData ) {
 	const newBpData = await prisma.blueprints.create( {
 		data: {
 			...data,
@@ -19,7 +21,7 @@ export async function createNewBlueprint( data: NewBlueprintData ) {
 			totalRating: 0,
 			downloads: 0,
 			downloadIps: [] as string[],
-			inPacks: [] as string[],
+			user: { connect: { id: userId } },
 			iconData: {
 				iconID: 0,
 				color: {
@@ -85,6 +87,21 @@ export class Blueprint {
 		}
 	}
 
+	public async updateBlueprint() {
+		const blueprint = this.blueprint;
+		const bpConfig: BlueprintConfig = blueprint.blueprintData.config;
+		await prisma.blueprints.update( {
+			where: { id: this.blueprintId },
+			data: {
+				iconData: { set: {
+					iconID: bpConfig.iconID,
+					color: bpConfig.color
+				} }
+			}
+		} );
+		await this.updateMods();
+	}
+
 	public async updateMods() {
 		const bp = this.blueprint;
 		const mods = bp.getMods();
@@ -92,6 +109,15 @@ export class Blueprint {
 			where: { id: this.blueprintId },
 			data: { mods }
 		} );
+	}
+
+	public async delete() {
+		const bp = this.blueprint;
+		const packs = await prisma.blueprintPacks.findMany( { where: { blueprints: { has: this.blueprintId } } } );
+		for( const { id, blueprints } of packs ) {
+			await prisma.blueprintPacks.update( { where: { id }, data: { blueprints: blueprints.filter( e => e !== this.blueprintId ) } } );
+		}
+		await prisma.blueprints.delete( { where: { id: this.blueprintId } } );
 	}
 
 	public static async create( id: string | Blueprints ): Promise<Blueprint> {
@@ -109,6 +135,6 @@ export class Blueprint {
 	}
 
 	public get blueprint() {
-		return new BlueprintReader( mountHandler.blueprintDir, this.blueprintId, this.data?.originalName || this.blueprintId );
+		return new BlueprintReader( join( mountHandler.blueprintDir, this.blueprintId ), this.blueprintId, this.data?.originalName || this.blueprintId );
 	}
 }

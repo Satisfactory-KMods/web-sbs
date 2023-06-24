@@ -1,12 +1,12 @@
-import { env } from "@/env.mjs";
+import { env } from "@/env";
 import { prisma } from "@/server/db";
 import type { NextAuthSession } from "@/types/Next";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import type { GetServerSidePropsContext } from "next";
 import type { DefaultSession, NextAuthOptions } from "next-auth";
 import {
-	getServerSession,
-	getServerSession as originalGetServerSession
+    getServerSession,
+    getServerSession as originalGetServerSession
 } from "next-auth";
 import DiscordProvider from "next-auth/providers/discord";
 import { cookies, headers } from 'next/headers';

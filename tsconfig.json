@@ -1,4 +1,10 @@
 {
+  "ts-node": {
+    "files": true,
+    "compilerOptions": {
+      "module": "commonjs"
+    }
+  },
   "compilerOptions": {
     "target": "es2017",
     "lib": [
@@ -24,9 +30,6 @@
     "paths": {
       "@/*": [
         "./src/*"
-      ],
-      "@tasks/*": [
-        "./task-server/*"
       ]
     },
     "plugins": [
@@ -43,7 +46,7 @@
     "**/*.cjs",
     "**/*.mjs",
     ".next/types/**/*.ts"
-  ],
+, "src/env.ts"  ],
   "exclude": [
     "node_modules"
   ]

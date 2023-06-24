@@ -1,4 +1,4 @@
-import { env } from "@/env.mjs";
+import { env } from "@/env";
 import { join } from "path";
 
 
@@ -11,6 +11,14 @@ class MountHandler {
 
 	get zipDir() {
 		return join( this.mounDir, "files/Zips" );
+	}
+
+	get temp() {
+		return join( this.mounDir, "temp" );
+	}
+
+	get tempScim() {
+		return join( this.mounDir, "temp/scim" );
 	}
 }
 

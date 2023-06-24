@@ -1,4 +1,4 @@
-import { env } from "@/env.mjs";
+import { env } from "@/env";
 import type { KBotModApiResult } from "@/types/KBotApi";
 import type { Mods } from "@prisma/client";
 import { prisma } from './../server/db';

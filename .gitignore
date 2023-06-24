@@ -39,3 +39,6 @@ _old
 
 #nextjs
 .next
+
+#local
+mounts

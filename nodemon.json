@@ -1,0 +1,11 @@
+{
+  "watch": [
+    "src/taskServer/**/*.ts"
+  ],
+  "ext": "ts",
+  "ignore": [
+    "server/**/*.spec.ts",
+    "server/**/*.test.ts"
+  ],
+  "exec": "yarn server"
+}

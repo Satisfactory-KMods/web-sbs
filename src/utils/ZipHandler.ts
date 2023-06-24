@@ -1,4 +1,4 @@
-import { env } from "@/env.mjs";
+import { env } from "@/env";
 import { prisma } from "@/server/db";
 import type { Blueprints } from "@prisma/client";
 import * as compress from "compressing";
