@@ -1,4 +1,4 @@
-FROM nikolaik/python-nodejs:latest
+FROM node:18
 
 WORKDIR /
 
