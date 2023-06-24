@@ -16,22 +16,47 @@ export interface ZipMeta {
 const fileValidate = z.string().refine( v => v === "sbp" || v === "sbpcfg" );
 
 class ZipHandler {
-	public async getFileDownload( id: string, file: string ): Promise<[string, string] | undefined> {
+	public async getFileDownload( id: string, file: string, ip?: string ): Promise<[string, string] | undefined> {
 		fileValidate.parse( file );
 		const data = await prisma.blueprints.findUnique( { where: { id } } );
 		if( data ) {
+			if( ip && !data.downloadIps.includes( ip ) ) {
+				await prisma.blueprints.update( {
+					where: { id },
+					data: { downloads: data.downloads + 1, downloadIps: [ ...data.downloadIps, ip ] }
+				} );
+			}
 			return [ join( mountHandler.blueprintDir, data.id, data.id + "." + file ), data.originalName + "." + file ];
 		}
 		return undefined;
 	}
 
-	public async getOrCreatePack( id: string ): Promise<string | undefined> {
+	public async getOrCreatePack( id: string, ip?: string ): Promise<string | undefined> {
 		const data = await prisma.blueprintPacks.findUnique( { where: { id } } );
 		if( data ) {
 			const blueprints = await prisma.blueprints.findMany( { where: { id: { in: data.blueprints } } } );
 			const zipDirPath = join( mountHandler.zipDir, data.id );
 			const stamps = this.toTimeStamps( blueprints );
 			const meta = this.getMeta( join( zipDirPath, "meta.json" ), stamps );
+
+			if( ip ) {
+				for( const bp of blueprints ) {
+					if( !bp.downloadIps.includes( ip ) ) {
+						await prisma.blueprints.update( {
+							where: { id: bp.id },
+							data: { downloads: bp.downloads + 1, downloadIps: [ ...bp.downloadIps, ip ] }
+						} );
+					}
+				}
+
+				if( !data.downloadIps.includes( ip ) ) {
+					await prisma.blueprintPacks.update( {
+						where: { id },
+						data: { downloads: data.downloads + 1, downloadIps: [ ...data.downloadIps, ip ] }
+					} );
+				}
+			}
+
 			if( meta ) {
 				return meta.file;
 			} else {
@@ -45,12 +70,21 @@ class ZipHandler {
 		return undefined;
 	}
 
-	public async getOrCreateBlueprint( id: string ): Promise<string | undefined> {
+	public async getOrCreateBlueprint( id: string, ip?: string ): Promise<string | undefined> {
 		const data = await prisma.blueprints.findUnique( { where: { id } } );
 		if( data ) {
 			const zipDirPath = join( mountHandler.zipDir, data.id );
 			const stamps = this.toTimeStamps( [ data ] );
 			const meta = this.getMeta( join( zipDirPath, "meta.json" ), stamps );
+
+			if( ip && !data.downloadIps.includes( ip ) ) {
+				await prisma.blueprints.update( {
+					where: { id },
+					data: { downloads: data.downloads + 1, downloadIps: [ ...data.downloadIps, ip ] }
+				} );
+			}
+
+
 			if( meta ) {
 				return meta.file;
 			} else {

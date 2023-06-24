@@ -81,9 +81,9 @@ model Blueprints {
     name         String
     description  String
     mods         String[]
-    rating       ratingType[]
+    rating       RatingType[]
     SCIMId       String?
-    totalRating  Int
+    totalRating  Float
     totalVotes   Int
     designerSize String
     downloadIps  String[]
@@ -96,7 +96,7 @@ model Blueprints {
     blueprintPacksId String? @db.ObjectId
     modsId           String? @db.ObjectId
 
-    iconData       iconDataType
+    iconData       IconDataType
     user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
     Tags           Tags[]
     BlueprintPacks BlueprintPacks? @relation(fields: [blueprintPacksId], references: [id])
@@ -110,7 +110,7 @@ model BlueprintPacks {
     userId      String       @db.ObjectId
     blueprints  String[]     @db.ObjectId
     mods        String[]
-    rating      ratingType[]
+    rating      RatingType[]
     totalRating Int
     totalVotes  Int
     downloadIps String[]
@@ -144,17 +144,17 @@ model Mods {
     Blueprints Blueprints[]
 }
 
-type ratingType {
+type RatingType {
     userId String @db.ObjectId
     rating Int
 }
 
-type iconDataType {
+type IconDataType {
     iconID Int
-    color  colorDataType
+    color  ColorDataType
 }
 
-type colorDataType {
+type ColorDataType {
     r Int
     g Int
     b Int
