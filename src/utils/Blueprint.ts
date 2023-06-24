@@ -51,7 +51,7 @@ export class Blueprint {
 		this.blueprintId = id;
 	}
 
-	private async getData( forceReload?: boolean ) {
+	public async getData( forceReload?: boolean ) {
 		if( !this.data || !!forceReload ) {
 			this.data = await prisma.blueprints.findUnique( { where: { id: this.blueprintId } } );
 		}
@@ -112,10 +112,16 @@ export class Blueprint {
 	}
 
 	public async delete() {
-		const bp = this.blueprint;
 		const packs = await prisma.blueprintPacks.findMany( { where: { blueprints: { has: this.blueprintId } } } );
-		for( const { id, blueprints } of packs ) {
-			await prisma.blueprintPacks.update( { where: { id }, data: { blueprints: blueprints.filter( e => e !== this.blueprintId ) } } );
+		if( packs.length ) {
+			await Promise.all( packs.map( async pack => {
+				const blueprints = pack.blueprints.filter( e => e !== this.blueprintId );
+				if( !blueprints.length ) {
+					await prisma.blueprintPacks.delete( { where: { id: pack.id } } );
+					return;
+				}
+				await prisma.blueprintPacks.update( { where: { id: pack.id }, data: { blueprints } } );
+			} ) );
 		}
 		await prisma.blueprints.delete( { where: { id: this.blueprintId } } );
 	}
@@ -135,6 +141,6 @@ export class Blueprint {
 	}
 
 	public get blueprint() {
-		return new BlueprintReader( join( mountHandler.blueprintDir, this.blueprintId ), this.blueprintId, this.data?.originalName || this.blueprintId );
+		return new BlueprintReader( join( mountHandler.blueprintDir, this.blueprintId ), this.blueprintId );
 	}
 }

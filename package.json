@@ -1,6 +1,6 @@
 {
   "name": "SBS",
-  "version": "2.0.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "build": "yarn build:prisma && yarn build:lint && yarn build:next",

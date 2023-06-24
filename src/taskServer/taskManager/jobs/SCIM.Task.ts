@@ -3,12 +3,13 @@ import { prisma } from "@/server/db";
 import { JobTask } from "@/taskServer/taskManager/TaskManager";
 import { Blueprint, createNewBlueprint } from "@/utils/Blueprint";
 import { BlueprintReader } from "@/utils/BlueprintReader";
+import { kbotApi } from "@/utils/KBotApi";
 import { mountHandler } from "@/utils/MoundHandler";
 import { DesignerSize } from "@/utils/enum/DesignerSize";
 import { copyFileSync, existsSync, mkdirSync, readFileSync, renameSync, rmSync } from "fs";
 import { writeFile } from "fs/promises";
 import fetch from 'node-fetch';
-import path from "path";
+import path, { join } from "path";
 
 
 const time = 3600000 * 24 / 12;
@@ -36,6 +37,7 @@ export default new JobTask(
 			return;
 		}
 
+		const mods = new Set<string>();
 		const calledIds = new Set<string>();
 		const blacklist = new Set<string>( [
 			"3142", "2635"
@@ -51,7 +53,7 @@ export default new JobTask(
 					.map( e => e.match( /\/de\/blueprints\/index\/details\/id\/(\d+)/ )![ 1 ]! );
 
 				const results = await Promise.all( Array.from( new Set( ids ) ).map( async id => {
-					console.info( "SCIM", "QueryID:", id, "| page:", page );
+					//console.info( "SCIM", "QueryID:", id, "| page:", page );
 					if( blacklist.has( id ) ) {
 						return true;
 					}
@@ -65,7 +67,6 @@ export default new JobTask(
 
 					let originalName: string | null = null;
 					const tmpDir = mountHandler.tempScim;
-					rmSync( tmpDir, { recursive: true, force: true } );
 
 					const getFilePathAndName = ( fileEnding: "sbp" | "sbpcfg" | "jpg" ): string => {
 						!existsSync( tmpDir ) && mkdirSync( tmpDir, { recursive: true } );
@@ -115,14 +116,18 @@ export default new JobTask(
 						return true;
 					}
 
+					if( !existsSync( getFilePathAndName( "sbp" ) ) || !existsSync( getFilePathAndName( "sbpcfg" ) ) ) {
+						return true;
+					}
+
 					if( readFileSync( getFilePathAndName( "sbp" ) ).toString().startsWith( "<" ) || readFileSync( getFilePathAndName( "sbpcfg" ) ).toString().startsWith( "<" ) ) {
 						return true;
 					}
 
 					try {
-						const filePath = getFilePathAndName( "sbp" );
-						const fileName = filePath.split( "/" ).pop()!.replace( ".sbp", "" );
-						const BP = new BlueprintReader( filePath, fileName );
+						const filePath = getFilePathAndName( "sbp" ).split( /[\\/]/ );
+						const fileName = filePath.pop()!.replace( ".sbp", "" );
+						const BP = new BlueprintReader( join( filePath.join( "/" ) ), fileName );
 						if( BP.success ) {
 							const bpDb = await prisma.blueprints.findFirst( { where: { SCIMId: parseInt( id ) } } );
 							let newBp: Blueprint;
@@ -159,13 +164,21 @@ export default new JobTask(
 							renameSync( getFilePathAndName( "sbpcfg" ), path.join( blueprintDir, `${ newBp.dbData.id }.sbpcfg` ) );
 							renameSync( getFilePathAndName( "jpg" ),  path.join( blueprintDir, `image_${ newBp.dbData.id }_0.jpg` ) );
 
-							await newBp.updateBlueprint().catch( () => {
+							const success = await newBp.updateBlueprint().catch( () => {
 								calledIds.delete( id );
 								newBp.delete();
 								console.info( "SCIM", `removed:`, originalName );
-							} ).then( () => {
-								console.info( "SCIM", `created/updated:`, originalName );
-							} );
+								return true;
+							} ).then( () =>
+								//console.info( "SCIM", `created/updated:`, originalName );
+								 true
+							 );
+
+							for( const mod of ( ( await newBp.getData( true ) )?.mods || [] ) ) {
+								mods.add( mod );
+							}
+
+							return success;
 						}
 					} catch( e ) {
 						return true;
@@ -186,7 +199,8 @@ export default new JobTask(
 			await bp.delete();
 			console.info( "SCIM", `removed:`, old.originalName );
 		}
-
-		//rmSync( tmpDir, { recursive: true, force: true } );
+		rmSync( mountHandler.tempScim, { recursive: true, force: true } );
+		await prisma.mods.deleteMany( { where: { modRef: { notIn: Array.from( mods ) } } } );
+		await kbotApi.getMods( Array.from( mods ) );
 	}
 );

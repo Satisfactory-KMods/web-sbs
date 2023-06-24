@@ -1,6 +1,6 @@
 export interface KBotModApiResult {
 	success: boolean,
-	data: ApiMod[]
+	mods: ApiMod[]
 }
 
 export interface ApiMod extends MongoDBSchema {
