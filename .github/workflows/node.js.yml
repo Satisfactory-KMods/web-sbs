@@ -44,7 +44,7 @@ jobs:
       - name: 🔐 Authenticate with private NPM package
         run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
       - name: ✨ Install packages
-        run: yarn install
+        run: npm i
       - name: 📂 Copy env file
         run: cp .env.example .env
       - name: ⚡ Build App
@@ -72,7 +72,6 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.version.outputs.out }}
-      changelogfile: ${{ steps.changelogfile.outputs.out }}
     steps:
       - name: 🚚 Get latest code
         uses: actions/checkout@v3
