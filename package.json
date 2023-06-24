@@ -41,7 +41,6 @@
     "react-markdown": "^8.0.7",
     "rehype-raw": "^6.1.1",
     "remark-gfm": "^3.0.1",
-    "sharp": "^0.32.1",
     "slash": "^5.1.0",
     "superjson": "^1.12.3",
     "sweetalert2": "^11.7.12",
