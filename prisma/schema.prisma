@@ -144,7 +144,7 @@ model Mods {
 }
 
 type RatingType {
-    userId String @db.ObjectId
+    userId String
     rating Int
 }
 
