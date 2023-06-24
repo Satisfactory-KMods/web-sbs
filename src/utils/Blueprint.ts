@@ -76,7 +76,7 @@ export class Blueprint {
 		await this.getData( true );
 		if( this.data ) {
 			const maxRating = this.data.rating.length * 5;
-			const currentTotalRating = this.data.rating.reduce( ( total, { rating } ) => total + rating, 0 );
+			const currentTotalRating = this.data.rating.reduce( ( total, { scalars } ) => total + scalars.rating, 0 );
 			const totalRating = Math.round( currentTotalRating / maxRating * 5 * 100 ) / 100;
 			const totalVotes = this.data.rating.length;
 
