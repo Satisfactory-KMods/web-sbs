@@ -1,15 +1,15 @@
 //@ts-ignore
 import { Button, TextInput } from "@/components/Flowbite";
+import "@/styles/globals.css";
 import type { NextPageContext } from "next";
+import type { ErrorProps } from "next/error";
 import { useRouter } from "next/router";
 import type { FormEventHandler } from "react";
 import { useRef, useState } from "react";
 import { HiHome, HiSearch } from "react-icons/hi";
 
-import "@/styles/globals.css";
 
-
-function Error( { statusCode } ) {
+function Error( { statusCode }: ErrorProps ) {
 	const inputRef = useRef<HTMLInputElement>( null );
 	const router = useRouter();
 	const [ error, setError ] = useState( false );
