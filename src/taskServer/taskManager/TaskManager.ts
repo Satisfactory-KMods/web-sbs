@@ -71,14 +71,13 @@ export class TaskManagerClass {
 	public jobs: Record<string, JobTask> = {};
 
 	async init() {
-		for( const file of fs.readdirSync( path.join( __dirname, "jobs" ) ) ) {
-			const stats = fs.statSync(
-				path.join( __dirname, "jobs", file )
-			);
+		const jobDir = path.join( process.cwd(), "src/taskServer/taskManager/jobs" );
+		console.info( "Load jobs in dir", jobDir, fs.readdirSync( jobDir ).length );
+		for( const file of fs.readdirSync( jobDir ) ) {
+			console.info( "try to load job", path.join( jobDir, file ) );
+			const stats = fs.statSync( path.join( jobDir, file ) );
 			if( stats.isFile() && file.endsWith( ".task.ts" ) ) {
-				const jobClass: JobTask = (
-					await import( path.join( __dirname, "jobs", file ) )
-				).default as JobTask;
+				const jobClass: JobTask = ( await import( path.join( jobDir, file ) ) ).default as JobTask;
 				this.jobs[ jobClass.jobName ] = jobClass;
 				console.info( "Loaded Job:", jobClass.jobName );
 			}

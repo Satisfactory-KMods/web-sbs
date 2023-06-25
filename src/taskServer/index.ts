@@ -1,5 +1,5 @@
+import { TaskManagerClass } from "@/taskServer/taskManager/TaskManager";
 import 'dotenv/config';
-import { TaskManagerClass } from "./taskManager/TaskManager";
 
 
 async function main() {
