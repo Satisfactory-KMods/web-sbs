@@ -95,9 +95,16 @@ export default new JobTask(
 					const categories: string[] = Array.from( new Set<string>(
 						Array.from( content.matchAll( /<a\s+(?:[^>]*?\s+)?href=(["'])(.*?)\1/g ) )
 							.map( ( e: any ) => e[ 2 ]! as string )
-							.filter( ( e: any ) => e.includes( '/category' ) )
+							.filter( ( e: any ) => e.includes( '/user/' ) && e.includes( '/blueprints/index/' ) )
 							.map( ( e: any ) => e.split( "/" ).at( -1 )!.replace( '+', " " ) )
 					) );
+
+					const scimUser: string = Array.from( new Set<string>(
+						Array.from( content.matchAll( /<a\s+(?:[^>]*?\s+)?href=(["'])(.*?)\1/g ) )
+							.map( ( e: any ) => e[ 2 ]! as string )
+							.filter( ( e: any ) => e.includes( '/user/' ) && e.includes( '/blueprints/index/' ) )
+							.map( ( e: any ) => e.split( "/" ).at( -1 ) )
+					) )[ 0 ] ?? "Unknown";
 
 					const fetchUrlSbp = `https://satisfactory-calculator.com${ foundUrls.find( e => e.includes( "download/" ) )! }`;
 					const fetchUrlSbpcfg = `https://satisfactory-calculator.com${ foundUrls.find( e => e.includes( "download-cfg/" ) )! }`;
@@ -177,6 +184,7 @@ export default new JobTask(
 									designerSize: DesignerSize.mk0,
 									userId: user!.id,
 									categories,
+									scimUser,
 									images: [],
 									SCIMId: parseInt( id )
 								} );
@@ -212,6 +220,7 @@ export default new JobTask(
 									name: originalName,
 									description: `Blueprint hosted by Satisfactory - Calculator`,
 									categories,
+									scimUser,
 									originalName
 								}
 							} );

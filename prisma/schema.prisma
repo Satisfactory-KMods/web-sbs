@@ -82,6 +82,7 @@ model Blueprints {
     description  String
     mods         String[]
     categories   String[]
+    scimUser     String?
     rating       RatingType[]
     SCIMId       Int?
     totalRating  Float

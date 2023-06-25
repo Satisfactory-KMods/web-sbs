@@ -7,7 +7,7 @@ import type { Blueprints, RatingType } from '@prisma/client';
 import { join } from "path";
 
 
-export type NewBlueprintData = Pick<Blueprints, 'SCIMId' | 'userId' | 'name' | 'description' | 'designerSize' | 'images' | 'categories' | 'originalName'>;
+export type NewBlueprintData = Pick<Blueprints, 'SCIMId' | 'userId' | 'name' | 'description' | 'scimUser' | 'designerSize' | 'images' | 'categories' | 'originalName'>;
 
 export async function createNewBlueprint( { userId, ...data }: NewBlueprintData ) {
 	const newBpData = await prisma.blueprints.create( {
