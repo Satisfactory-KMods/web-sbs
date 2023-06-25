@@ -2,9 +2,9 @@ import { env } from "@/env";
 import { prisma } from "@/server/db";
 import type { Blueprints } from "@prisma/client";
 import * as compress from "compressing";
-import { createWriteStream, existsSync, mkdirSync, rmSync, writeFileSync } from "fs";
+import { copyFileSync, createWriteStream, existsSync, mkdirSync, rmSync, writeFileSync } from "fs";
 import { join } from "path";
-import z from "zod/lib";
+import z from "zod";
 import { mountHandler } from './MoundHandler';
 
 
@@ -98,6 +98,17 @@ class ZipHandler {
 		return undefined;
 	}
 
+	private renameToOriginal( id: string, originalName: string, end: '.sbp' | '.sbpcfg' ): string {
+		const filePath = join( mountHandler.blueprintDir, id );
+		const sourceFile = join( filePath, id + end );
+		const renameFile = join( filePath, originalName + end );
+		if( existsSync( renameFile ) ) {
+			rmSync( renameFile );
+		}
+		copyFileSync( sourceFile, renameFile );
+		return renameFile;
+	}
+
 	private async createZip( blueprints: Blueprints[], zipDirPath: string, zipDirFile: string, timeStamps: Record<string, number> ): Promise<string | undefined> {
 		if( existsSync( zipDirPath ) ) {
 			rmSync( zipDirPath, { recursive: true } );
@@ -105,26 +116,38 @@ class ZipHandler {
 		const filePath = join( zipDirPath, zipDirFile );
 		const zipStream = new compress.zip.Stream();
 
+		const removeFiles = new Set<string>();
+
 		for( const bp of blueprints ) {
-			const sbpDownloadFile = join( mountHandler.blueprintDir, bp.id, bp.id + ".sbp" );
-			const sbpcfgDownloadFile = join( mountHandler.blueprintDir, bp.id, bp.id + ".sbpcfg" );
-			zipStream.addEntry( sbpDownloadFile );
-			zipStream.addEntry( sbpcfgDownloadFile );
+			const sbpFile = this.renameToOriginal( bp.id, bp.originalName, '.sbp' );
+			const sbpcfgFile = this.renameToOriginal( bp.id, bp.originalName, '.sbpcfg' );
+			removeFiles.add( sbpFile );
+			removeFiles.add( sbpcfgFile );
+			zipStream.addEntry( sbpFile );
+			zipStream.addEntry( sbpcfgFile );
 		}
 
 		mkdirSync( zipDirPath, { recursive: true } );
 		const destStream = createWriteStream( filePath );
-		await new Promise<void>( ( resolve, reject ) => {
+		return await new Promise<undefined | string>( ( resolve, reject ) => {
 			zipStream.pipe( destStream ).on( "finish", () => {
-				writeFileSync( join( zipDirPath, `meta.log` ), JSON.stringify( {
-					file: zipDirFile,
+				writeFileSync( join( zipDirPath, `meta.json` ), JSON.stringify( {
+					file: join( zipDirPath, zipDirFile ),
 					timestamp: timeStamps
 				} ) );
-				resolve();
-			} ).on( "error", err => reject( new Error( "Blueprint Pack can't create: " + err.message ) ) );
-		} );
 
-		return undefined;
+				for( const file of removeFiles ) {
+					if( existsSync( file ) ) {
+						rmSync( file );
+					}
+				}
+
+				resolve( join( zipDirPath, zipDirFile ) );
+			} ).on( "error", err => {
+				console.error( "Blueprint Pack can't create: " + err.message );
+				reject( undefined );
+			} );
+		} );
 	}
 
 	private toTimeStamps( blueprints: Blueprints[] ): Record<string, number> {

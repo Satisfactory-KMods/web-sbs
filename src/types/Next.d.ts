@@ -1,3 +1,4 @@
+import type { NextApiRequest, NextApiResponse } from 'next';
 import type { Session } from "next-auth";
 import type { NextRequest } from "next/server";
 
@@ -9,6 +10,18 @@ export type NextContext<Params = any> = {
 	params: Params
 };
 export type NextRoute<Params = any> = ( request: NextRequest, context: NextContext<Params> ) => Promise<NextResponse | void>;
+
+export interface NextPageApiRequest<Params = any, Cookies = any> extends NextApiRequest {
+	query: Partial<{
+		[key: string]: string | string[]
+	}> & Params,
+	cookies: Partial<{
+		[key: string]: string | string[]
+	}> & Cookies
+}
+
+
+export type NextPageRoute<Params = any, Data = any, Cookies = any> = ( req: NextPageApiRequest<Params, Cookies>, res: NextApiResponse<Data> ) => any;
 
 interface SC<P = any> {
 	( props: P, context?: any ): Promise<React.ReactElement> | React.ReactElement,
