@@ -8,11 +8,12 @@ import { mountHandler } from "@/utils/MoundHandler";
 import { DesignerSize } from "@/utils/enum/DesignerSize";
 import { copyFileSync, existsSync, mkdirSync, readFileSync, renameSync, rmSync } from "fs";
 import { writeFile } from "fs/promises";
+import type { RequestInit } from 'node-fetch';
 import fetch from 'node-fetch';
 import path, { join } from "path";
 
 
-const time = 3600000 * 24 / 12;
+const time = 3600000 * 24 / 6;
 
 export default new JobTask(
 	time,
@@ -44,7 +45,15 @@ export default new JobTask(
 		] );
 		outLoop: for( let page = 1; page < 10000; page++ ) {
 			const fetchPageUrl = `https://satisfactory-calculator.com/de/blueprints/index/index/p/${ page }`;
-			const response = await fetch( fetchPageUrl, { timeout: 10000 } ).catch( console.error );
+			const fetchSettings: RequestInit = {
+				timeout: 10000,
+				follow: 20,
+				headers: {
+					"User-Agent": "Satisfactory - Calculator"
+				}
+			};
+
+			const response = await fetch( fetchPageUrl, fetchSettings ).catch( console.error );
 			if( response ) {
 				const pageContent = await response.text();
 				const asArr = pageContent.split( "\n" );
@@ -73,7 +82,7 @@ export default new JobTask(
 						return path.join( tmpDir, `${ originalName }.${ fileEnding }` );
 					};
 
-					let response = await fetch( fetchSiteUrl, { timeout: 10000 } ).catch( console.error );
+					let response = await fetch( fetchSiteUrl, fetchSettings ).catch( console.error );
 					if( response ) {
 						const page = await response.text();
 						const asArr = page.split( "\n" );
@@ -84,7 +93,7 @@ export default new JobTask(
 							if( imageUrl && imageUrl[ 0 ] ) {
 								const fetchImageUrl = imageUrl[ 0 ].replaceAll( '"', "" );
 
-								response = await fetch( fetchImageUrl, { timeout: 10000 } ).catch( () => {} );
+								response = await fetch( fetchImageUrl, fetchSettings ).catch( () => {} );
 								const file = getFilePathAndName( "jpg" );
 								if( response ) {
 									await writeFile( file, await response.buffer() ).catch( console.error );
@@ -102,14 +111,14 @@ export default new JobTask(
 						return true;
 					}
 
-					response = await fetch( fetchUrlSbpcfg, { timeout: 10000 } ).catch( console.error );
+					response = await fetch( fetchUrlSbpcfg, fetchSettings ).catch( console.error );
 					if( response ) {
 						await writeFile( getFilePathAndName( "sbpcfg" ), await response.buffer() );
 					} else {
 						return true;
 					}
 
-					response = await fetch( fetchUrlSbp, { timeout: 10000 } ).catch( console.error );
+					response = await fetch( fetchUrlSbp, fetchSettings ).catch( console.error );
 					if( response ) {
 						await writeFile( getFilePathAndName( "sbp" ), await response.buffer() );
 					} else {
