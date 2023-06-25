@@ -127,6 +127,7 @@ export default new JobTask(
 					try {
 						const filePath = getFilePathAndName( "sbp" ).split( /[\\/]/ );
 						const fileName = filePath.pop()!.replace( ".sbp", "" );
+						console.log( fileName, filePath.join( "/" ) );
 						const BP = new BlueprintReader( join( filePath.join( "/" ) ), fileName );
 						if( BP.success ) {
 							const bpDb = await prisma.blueprints.findFirst( { where: { SCIMId: parseInt( id ) } } );
@@ -163,6 +164,10 @@ export default new JobTask(
 							renameSync( getFilePathAndName( "sbp" ), path.join( blueprintDir, `${ newBp.dbData.id }.sbp` ) );
 							renameSync( getFilePathAndName( "sbpcfg" ), path.join( blueprintDir, `${ newBp.dbData.id }.sbpcfg` ) );
 							renameSync( getFilePathAndName( "jpg" ),  path.join( blueprintDir, `image_${ newBp.dbData.id }_0.jpg` ) );
+
+							console.log( getFilePathAndName( "sbp" ), path.join( blueprintDir, `${ newBp.dbData.id }.sbp` ) );
+							console.log( getFilePathAndName( "sbpcfg" ), path.join( blueprintDir, `${ newBp.dbData.id }.sbpcfg` ) );
+							console.log( getFilePathAndName( "jpg" ),  path.join( blueprintDir, `image_${ newBp.dbData.id }_0.jpg` ) );
 
 							const success = await newBp.updateBlueprint().catch( () => {
 								calledIds.delete( id );
