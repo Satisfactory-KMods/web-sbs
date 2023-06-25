@@ -10,7 +10,6 @@ export async function createNewBlueprintPack( data: NewBlueprintPackData ) {
 	const newBpData = await prisma.blueprintPacks.create( {
 		data: {
 			...data,
-			tagIds: [] as string[],
 			downloads: 0,
 			downloadIps: [] as string[],
 			createdAt: new Date(),
@@ -78,17 +77,17 @@ export class BlueprintPack {
 	public async updateTags() {
 		await this.getData( true );
 		const bps = await this.blueprints();
-		const tags = new Set<string>();
+		const categories = new Set<string>();
 
 		for( const bp of bps ) {
-			for( const tag of bp.dbData.tagIds ) {
-				tags.add( tag );
+			for( const tag of bp.dbData.categories ) {
+				categories.add( tag );
 			}
 		}
 
 		await prisma.blueprintPacks.update( {
 			where: { id: this.blueprintPackId },
-			data: { tagIds: Array.from( tags ) }
+			data: { categories: Array.from( categories ) }
 		} );
 	}
 

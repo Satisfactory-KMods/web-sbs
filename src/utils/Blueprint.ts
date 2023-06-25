@@ -7,7 +7,7 @@ import type { Blueprints, RatingType } from '@prisma/client';
 import { join } from "path";
 
 
-export type NewBlueprintData = Pick<Blueprints, 'SCIMId' | 'userId' | 'name' | 'description' | 'designerSize' | 'images' | 'tagIds' | 'originalName'>;
+export type NewBlueprintData = Pick<Blueprints, 'SCIMId' | 'userId' | 'name' | 'description' | 'designerSize' | 'images' | 'categories' | 'originalName'>;
 
 export async function createNewBlueprint( { userId, ...data }: NewBlueprintData ) {
 	const newBpData = await prisma.blueprints.create( {
@@ -105,9 +105,17 @@ export class Blueprint {
 	public async updateMods() {
 		const bp = this.blueprint;
 		const mods = bp.getMods();
+
+		let categories = this.data?.categories ?? [];
+		if( !mods.length && categories.includes( 'Modded' ) ) {
+			categories = categories.filter( e => e !== 'Modded' );
+		} else if( mods.length && !categories.includes( 'Modded' ) ) {
+			categories.push( 'Modded' );
+		}
+
 		await prisma.blueprints.update( {
 			where: { id: this.blueprintId },
-			data: { mods }
+			data: { mods, categories }
 		} );
 	}
 

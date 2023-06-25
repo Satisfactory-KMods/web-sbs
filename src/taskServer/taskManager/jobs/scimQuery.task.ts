@@ -8,6 +8,7 @@ import { mountHandler } from "@/utils/MoundHandler";
 import { DesignerSize } from "@/utils/enum/DesignerSize";
 import { copyFileSync, existsSync, mkdirSync, readFileSync, renameSync, rmSync } from "fs";
 import { writeFile } from "fs/promises";
+import Jimp from "jimp";
 import type { RequestInit } from 'node-fetch';
 import fetch from 'node-fetch';
 import path, { join } from "path";
@@ -39,6 +40,7 @@ export default new JobTask(
 		}
 
 		const mods = new Set<string>();
+		const allCategories = new Set<string>();
 		const calledIds = new Set<string>();
 		const blacklist = new Set<string>( [
 			"3142", "2635"
@@ -53,15 +55,17 @@ export default new JobTask(
 				}
 			};
 
-			const response = await fetch( fetchPageUrl, fetchSettings ).catch( console.error );
-			if( response ) {
-				const pageContent = await response.text();
-				const asArr = pageContent.split( "\n" );
-				const ids = asArr
-					.filter( e => e.includes( "/de/blueprints/index/details/id" ) )
-					.map( e => e.match( /\/de\/blueprints\/index\/details\/id\/(\d+)/ )![ 1 ]! );
+			const pageContent = await fetch( fetchPageUrl, fetchSettings ).then( e => e.text() ).catch( console.error );
+			if( pageContent ) {
+				// find all relative url from a on the page
+				const urls: string[] = Array.from( new Set<string>(
+					Array.from( pageContent.matchAll( /<a\s+(?:[^>]*?\s+)?href=(["'])(.*?)\1/g ) )
+						.map( ( e: any ) => e[ 2 ]! as string )
+						.filter( ( e: any ) => e.includes( '/blueprints/index/details/id' ) )
+				) );
 
-				const results = await Promise.all( Array.from( new Set( ids ) ).map( async id => {
+				const results = await Promise.all( urls.map( async url => {
+					const id = url.match( /\/blueprints\/index\/details\/id\/(\d+)/ )![ 1 ]!;
 					//console.info( "SCIM", "QueryID:", id, "| page:", page );
 					if( blacklist.has( id ) ) {
 						return true;
@@ -70,48 +74,72 @@ export default new JobTask(
 						return false;
 					}
 					calledIds.add( id );
-					const fetchUrlSbp = `https://satisfactory-calculator.com/de/blueprints/index/download/id/${ id }`;
-					const fetchUrlSbpcfg = `https://satisfactory-calculator.com/de/blueprints/index/download-cfg/id/${ id }`;
-					const fetchSiteUrl = `https://satisfactory-calculator.com/de/blueprints/index/details/id/${ id }`;
+
+					const content = await fetch( `https://satisfactory-calculator.com${ url }`, fetchSettings ).then( e => e.text() ).catch( console.error );
+					if( !content ) {
+						return true;
+					}
+
+					const foundUrls: string[] = Array.from( new Set<string>(
+						Array.from( content.matchAll( /<a\s+(?:[^>]*?\s+)?href=(["'])(.*?)\1/g ) )
+							.map( ( e: any ) => e[ 2 ]! as string )
+							.filter( ( e: any ) => e.includes( '/blueprints/index/download/' ) || e.includes( '/blueprints/index/download-cfg/' ) )
+					) );
+
+					const foundImageUrls: string[] = Array.from( new Set<string>(
+						Array.from( content.matchAll( /<img\s+(?:[^>]*?\s+)?src=(["'])(.*?)\1/g ) )
+							.map( ( e: any ) => e[ 2 ]! as string )
+							.filter( ( e: any ) => e.includes( 'data/blueprintsInGame' ) )
+					) );
+
+					const categories: string[] = Array.from( new Set<string>(
+						Array.from( content.matchAll( /<a\s+(?:[^>]*?\s+)?href=(["'])(.*?)\1/g ) )
+							.map( ( e: any ) => e[ 2 ]! as string )
+							.filter( ( e: any ) => e.includes( '/category' ) )
+							.map( ( e: any ) => e.split( "/" ).at( -1 )!.replace( '+', " " ) )
+					) );
+
+					const fetchUrlSbp = `https://satisfactory-calculator.com${ foundUrls.find( e => e.includes( "download/" ) )! }`;
+					const fetchUrlSbpcfg = `https://satisfactory-calculator.com${ foundUrls.find( e => e.includes( "download-cfg/" ) )! }`;
+
+					if( !fetchUrlSbp || !fetchUrlSbpcfg ) {
+						return false;
+					}
 
 					let originalName: string | null = null;
-					const tmpDir = mountHandler.tempScim;
-
-					const getFilePathAndName = ( fileEnding: "sbp" | "sbpcfg" | "jpg" ): string => {
-						!existsSync( tmpDir ) && mkdirSync( tmpDir, { recursive: true } );
-						return path.join( tmpDir, `${ originalName }.${ fileEnding }` );
-					};
-
-					let response = await fetch( fetchSiteUrl, fetchSettings ).catch( console.error );
-					if( response ) {
-						const page = await response.text();
-						const asArr = page.split( "\n" );
-						const idx = page.split( "\n" ).findIndex( e => e.includes( '"breadcrumb-item"' ) );
-						if( idx > -1 ) {
-							originalName = asArr[ idx + 1 ]?.replace( "</li>", "" ).trim().replace( /[/\\?%*:|"<>]/g, '' ).replace( '°', '' ) || "null";
-							const imageUrl = asArr.find( e => e.includes( "blueprintsInGame" ) )?.match( /\bhttps?:\/\/\S+/gi );
-							if( imageUrl && imageUrl[ 0 ] ) {
-								const fetchImageUrl = imageUrl[ 0 ].replaceAll( '"', "" );
-
-								response = await fetch( fetchImageUrl, fetchSettings ).catch( () => {} );
-								const file = getFilePathAndName( "jpg" );
-								if( response ) {
-									await writeFile( file, await response.buffer() ).catch( console.error );
-								} else {
-									copyFileSync( path.join( process.cwd(), "public/images/default", "default.jpg" ), file );
-									console.info( "SCIM", "default image used:", originalName );
-								}
-							} else {
-								return true;
-							}
-						}
+					const asArr = content.split( "\n" );
+					const idx = asArr.findIndex( e => e.includes( '"breadcrumb-item"' ) );
+					if( idx > -1 ) {
+						originalName = asArr[ idx + 1 ]?.replace( "</li>", "" ).trim().replace( /[/\\?%*:|"<>]/g, '' ).replace( '°', '' ) || "null";
 					}
+
+					const tmpDir = mountHandler.tempScim;
+					const imageFiles = new Set<string>();
+
+					const getFilePathAndName = ( fileEnding: "sbp" | "sbpcfg" | "jpg", id?: number ): string => {
+						!existsSync( tmpDir ) && mkdirSync( tmpDir, { recursive: true } );
+						return path.join( tmpDir, `${ originalName }${ id ?? '' }.${ fileEnding }` );
+					};
 
 					if( !originalName ) {
 						return true;
 					}
 
-					response = await fetch( fetchUrlSbpcfg, fetchSettings ).catch( console.error );
+					let imageId = 0;
+					for( const imgUrl of foundImageUrls ) {
+						const response = await fetch( imgUrl, fetchSettings ).catch( () => {} );
+						const file = getFilePathAndName( "jpg", imageId );
+						if( response ) {
+							await writeFile( file, await response.buffer() ).catch( console.error );
+							imageFiles.add( file );
+						} else {
+							copyFileSync( path.join( process.cwd(), "public/images/default", "default.jpg" ), file );
+							console.info( "SCIM", "default image used:", originalName );
+						}
+						imageId++;
+					}
+
+					let response = await fetch( fetchUrlSbpcfg, fetchSettings ).catch( console.error );
 					if( response ) {
 						await writeFile( getFilePathAndName( "sbpcfg" ), await response.buffer() );
 					} else {
@@ -148,7 +176,7 @@ export default new JobTask(
 									originalName,
 									designerSize: DesignerSize.mk0,
 									userId: user!.id,
-									tagIds: [],
+									categories,
 									images: [],
 									SCIMId: parseInt( id )
 								} );
@@ -156,40 +184,54 @@ export default new JobTask(
 								newBp = await Blueprint.create( bpDb );
 							}
 
-							await prisma.blueprints.update( {
-								where: { id: newBp.dbData.id },
-								data: {
-									images: [ `image_${ newBp.dbData.id }_0.jpg` ],
-									name: originalName,
-									description: `Blueprint hosted by Satisfactory - Calculator`,
-									originalName
-								}
-							} );
-
 							const blueprintDir = path.join( mountHandler.blueprintDir, newBp.dbData.id );
 							existsSync( blueprintDir ) && rmSync( blueprintDir, { recursive: true } );
 							mkdirSync( blueprintDir, { recursive: true } );
 
+							const images: string[] = [];
 							renameSync( getFilePathAndName( "sbp" ), path.join( blueprintDir, `${ newBp.dbData.id }.sbp` ) );
 							renameSync( getFilePathAndName( "sbpcfg" ), path.join( blueprintDir, `${ newBp.dbData.id }.sbpcfg` ) );
-							renameSync( getFilePathAndName( "jpg" ),  path.join( blueprintDir, `image_${ newBp.dbData.id }_0.jpg` ) );
+							for( let i = 0; i < imageFiles.size; i++ ) {
+								const filePath = getFilePathAndName( "jpg", i );
+								const targetFile = path.join( blueprintDir, `image_${ newBp.dbData.id }_${ i }.jpg` );
+								if( !existsSync( filePath ) ) {
+									continue;
+								}
 
-							//console.log( getFilePathAndName( "sbp" ), path.join( blueprintDir, `${ newBp.dbData.id }.sbp` ) );
-							//console.log( getFilePathAndName( "sbpcfg" ), path.join( blueprintDir, `${ newBp.dbData.id }.sbpcfg` ) );
-							//console.log( getFilePathAndName( "jpg" ),  path.join( blueprintDir, `image_${ newBp.dbData.id }_0.jpg` ) );
+								await Jimp.read( filePath )
+									.then( image => image.resize( Jimp.AUTO, 512 ).write( targetFile ) )
+									.then( () => images.push( `image_${ newBp.dbData.id }_${ i }.jpg` ) )
+									.then( () => rmSync( filePath ) )
+									.catch( console.error );
+							}
+
+							await prisma.blueprints.update( {
+								where: { id: newBp.dbData.id },
+								data: {
+									images,
+									name: originalName,
+									description: `Blueprint hosted by Satisfactory - Calculator`,
+									categories,
+									originalName
+								}
+							} );
 
 							const success = await newBp.updateBlueprint().catch( () => {
 								calledIds.delete( id );
 								newBp.delete();
 								console.info( "SCIM", `removed:`, originalName );
 								return true;
-							} ).then( () =>
-								//console.info( "SCIM", `created/updated:`, originalName );
-								 true
-							 );
+							} ).then( () => {
+								console.info( "SCIM", `created/updated:`, originalName, " > images", images.length );
+								return true;
+							 } );
 
 							for( const mod of ( ( await newBp.getData( true ) )?.mods || [] ) ) {
 								mods.add( mod );
+							}
+
+							for( const cat of categories ) {
+								allCategories.add( cat );
 							}
 
 							return success;
@@ -212,6 +254,14 @@ export default new JobTask(
 			const bp = await Blueprint.create( old );
 			await bp.delete();
 			console.info( "SCIM", `removed:`, old.originalName );
+		}
+
+		for( const name of allCategories ) {
+			await prisma.categories.upsert( {
+				where: { name },
+				update: {},
+				create: { name }
+			} );
 		}
 		rmSync( mountHandler.tempScim, { recursive: true, force: true } );
 		await prisma.mods.deleteMany( { where: { modRef: { notIn: Array.from( mods ) } } } );

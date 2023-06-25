@@ -59,11 +59,11 @@ model VerificationToken {
     @@unique([identifier, token])
 }
 
-model Tags {
-    id          String   @id @default(auto()) @map("_id") @db.ObjectId
-    createdAt   DateTime @default(now())
-    updatedAt   DateTime @updatedAt
-    DisplayName String
+model Categories {
+    id        String   @id @default(auto()) @map("_id") @db.ObjectId
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    name      String   @unique
 
     blueprintPacksId String?         @db.ObjectId
     blueprintsId     String?         @db.ObjectId
@@ -81,6 +81,7 @@ model Blueprints {
     name         String
     description  String
     mods         String[]
+    categories   String[]
     rating       RatingType[]
     SCIMId       Int?
     totalRating  Float
@@ -89,7 +90,6 @@ model Blueprints {
     downloadIps  String[]
     downloads    Int
     images       String[]
-    tagIds       String[]     @db.ObjectId
     originalName String
 
     blueprintPacksId String? @db.ObjectId
@@ -97,9 +97,9 @@ model Blueprints {
 
     iconData       IconDataType
     user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-    Tags           Tags[]
     BlueprintPacks BlueprintPacks? @relation(fields: [blueprintPacksId], references: [id])
     Mods           Mods?           @relation(fields: [modsId], references: [id])
+    Categories     Categories[]
 }
 
 model BlueprintPacks {
@@ -113,14 +113,14 @@ model BlueprintPacks {
     totalRating Int
     totalVotes  Int
     downloadIps String[]
+    categories  String[]
     downloads   Int
-    tagIds      String[]     @db.ObjectId
     name        String
     description String
 
     user       User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-    Tags       Tags[]
     Blueprints Blueprints[]
+    Categories Categories[]
 }
 
 model Mods {
@@ -139,8 +139,8 @@ model Mods {
     userId String? @db.ObjectId
 
     User       User?        @relation(fields: [userId], references: [id])
-    Tags       Tags[]
     Blueprints Blueprints[]
+    Categories Categories[]
 }
 
 type RatingType {
