@@ -16,7 +16,7 @@ const time = 3600000 * 24 / 12;
 
 export default new JobTask(
 	time,
-	"SCIM",
+	"SCIM Query",
 	async() => {
 		console.info( "tasks",
 			"Running Task",

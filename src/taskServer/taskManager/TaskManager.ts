@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 
 
-export type TTasksRunner = "MakeItCleanDeepCheck" | "MakeItClean" | "SCIM";
+export type TTasksRunner = "SCIM Query";
 
 export class JobTask {
 	public jobName = "";
