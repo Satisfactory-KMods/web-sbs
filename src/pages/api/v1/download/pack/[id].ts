@@ -1,6 +1,7 @@
 import type { NextPageRoute } from '@/types/Next';
 import { zipHandler } from '@/utils/ZipHandler';
 import { readFileSync } from 'fs';
+import NextCors from 'nextjs-cors';
 
 
 type QueryParams = {
@@ -23,6 +24,12 @@ const GET: NextPageRoute<QueryParams> = async( req, res ) => {
 };
 
 export const handler: NextPageRoute<QueryParams> = async( req, res ) => {
+	await NextCors( req, res, {
+		methods: [ 'GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE' ],
+		origin: '*',
+		optionsSuccessStatus: 200
+	} );
+
 	if( req.method === 'GET' ) {
 		return await GET( req, res );
 	}

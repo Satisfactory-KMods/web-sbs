@@ -1,25 +1,7 @@
-/*export const GET2: NextRoute<GetParams> = ( request, { params } ) => {
-	const [ id, image ] = params.image;
-	if( id && image ) {
-		const file = join( mountHandler.blueprintDir, id, image );
-		if( file.includes( mountHandler.blueprintDir ) && existsSync( file ) ) {
-			const stat = statSync( file );
-			return new Response( file, {
-				status: 200,
-				headers: {
-					'Content-Type': 'image/png'
-				}
-			} );
-		}
-	}
-	return new Response( 'Not Found', {
-		status: 404
-	} );
-};*/
-
 import type { NextPageRoute } from '@/types/Next';
 import { mountHandler } from '@/utils/MoundHandler';
 import { existsSync, readFileSync } from 'fs';
+import NextCors from 'nextjs-cors';
 import { join } from 'path';
 
 
@@ -41,7 +23,13 @@ const GET: NextPageRoute<QueryParams> = ( req, res ) => {
 	return res.status( 404 ).send( 'Not Found' );
 };
 
-export const handler: NextPageRoute<QueryParams> = ( req, res ) => {
+export const handler: NextPageRoute<QueryParams> = async( req, res ) => {
+	await NextCors( req, res, {
+		methods: [ 'GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE' ],
+		origin: '*',
+		optionsSuccessStatus: 200
+	} );
+
 	if( req.method === 'GET' ) {
 		return GET( req, res );
 	}
