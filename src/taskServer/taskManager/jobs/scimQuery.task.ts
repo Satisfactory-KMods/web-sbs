@@ -95,7 +95,7 @@ export default new JobTask(
 					const categories: string[] = Array.from( new Set<string>(
 						Array.from( content.matchAll( /<a\s+(?:[^>]*?\s+)?href=(["'])(.*?)\1/g ) )
 							.map( ( e: any ) => e[ 2 ]! as string )
-							.filter( ( e: any ) => e.includes( '/user/' ) && e.includes( '/blueprints/index/' ) )
+							.filter( ( e: any ) => e.includes( '/category/' ) )
 							.map( ( e: any ) => e.split( "/" ).at( -1 )!.replace( '+', " " ) )
 					) );
 
