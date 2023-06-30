@@ -29,7 +29,8 @@ export default new JobTask(
 			user = await prisma.user.create( {
 				data: {
 					name: "Satisfactory - Calculator",
-					email: "none@none.de"
+					email: "none@none.de",
+					apiKey: Math.random().toString()
 				}
 			} );
 		}

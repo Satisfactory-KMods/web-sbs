@@ -93,10 +93,11 @@ export class Blueprint {
 		await prisma.blueprints.update( {
 			where: { id: this.blueprintId },
 			data: {
-				iconData: { set: {
+				description: bpConfig.description,
+				iconData: {
 					iconID: bpConfig.iconID,
 					color: bpConfig.color
-				} }
+				}
 			}
 		} );
 		await this.updateMods();

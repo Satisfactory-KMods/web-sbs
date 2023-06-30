@@ -11,17 +11,18 @@ export type NextContext<Params = any> = {
 };
 export type NextRoute<Params = any> = ( request: NextRequest, context: NextContext<Params> ) => Promise<NextResponse | void>;
 
-export interface NextPageApiRequest<Params = any, Cookies = any> extends NextApiRequest {
+export interface NextPageApiRequest<Params = any, Body = any, Cookies = any> extends NextApiRequest {
 	query: Partial<{
 		[key: string]: string | string[]
 	}> & Params,
 	cookies: Partial<{
 		[key: string]: string | string[]
-	}> & Cookies
+	}> & Cookies,
+	body: Body
 }
 
 
-export type NextPageRoute<Params = any, Data = any, Cookies = any> = ( req: NextPageApiRequest<Params, Cookies>, res: NextApiResponse<Data> ) => any;
+export type NextPageRoute<Params = any, Body = any, Data = any, Cookies = any> = ( req: NextPageApiRequest<Params, Body, Cookies>, res: NextApiResponse<Data> ) => any;
 
 interface SC<P = any> {
 	( props: P, context?: any ): Promise<React.ReactElement> | React.ReactElement,
