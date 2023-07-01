@@ -9,10 +9,11 @@ import { join } from "path";
 
 export type NewBlueprintData = Pick<Blueprints, 'SCIMId' | 'userId' | 'name' | 'description' | 'scimUser' | 'designerSize' | 'images' | 'categories' | 'originalName'>;
 
-export async function createNewBlueprint( { userId, ...data }: NewBlueprintData ) {
+export async function createNewBlueprint( { userId, ...data }: NewBlueprintData, updateMods = false ) {
 	const newBpData = await prisma.blueprints.create( {
 		data: {
 			...data,
+			isModded: false,
 			mods: [] as string[],
 			createdAt: new Date(),
 			updatedAt: new Date(),
@@ -34,7 +35,9 @@ export async function createNewBlueprint( { userId, ...data }: NewBlueprintData 
 		}
 	} );
 	const bp = await Blueprint.create( newBpData );
-	bp.updateMods();
+	if( updateMods ) { 
+		bp.updateMods();
+	}
 	return bp;
 }
 
@@ -88,23 +91,23 @@ export class Blueprint {
 	}
 
 	public async updateBlueprint() {
-		const blueprint = this.blueprint;
+		const blueprint = this.blueprint();
 		const bpConfig: BlueprintConfig = blueprint.blueprintData.config;
 		await prisma.blueprints.update( {
 			where: { id: this.blueprintId },
 			data: {
 				description: bpConfig.description,
-				iconData: {
+				iconData: { update: {
 					iconID: bpConfig.iconID,
-					color: bpConfig.color
-				}
+					color: { update: bpConfig.color }
+				} }
 			}
 		} );
 		await this.updateMods();
 	}
 
 	public async updateMods() {
-		const bp = this.blueprint;
+		const bp = this.blueprint();
 		const mods = bp.getMods();
 
 		let categories = this.data?.categories ?? [];
@@ -113,10 +116,11 @@ export class Blueprint {
 		} else if( mods.length && !categories.includes( 'Modded' ) ) {
 			categories.push( 'Modded' );
 		}
+		const isModded = mods.length > 0;
 
 		await prisma.blueprints.update( {
 			where: { id: this.blueprintId },
-			data: { mods, categories }
+			data: { mods, categories, isModded }
 		} );
 	}
 
@@ -149,7 +153,7 @@ export class Blueprint {
 		return await kbotApi.getMods( this.data?.mods ?? [] );
 	}
 
-	public get blueprint() {
+	public blueprint() {
 		return new BlueprintReader( join( mountHandler.blueprintDir, this.blueprintId ), this.blueprintId );
 	}
 }

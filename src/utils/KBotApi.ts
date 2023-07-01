@@ -52,7 +52,7 @@ class KBotApi {
 						console.info( `Mod '${ modData.name }' already exists. Updating...}` );
 						await prisma.mods.update( { where: { modRef: modData.mod_reference }, data } );
 					} else {
-						console.info( `Mod '${ modData.name }' creating...}` );
+						console.info( `Mod '${ modData.name }' creating...` );
 						await prisma.mods.create( { data } );
 					}
 				} ) );

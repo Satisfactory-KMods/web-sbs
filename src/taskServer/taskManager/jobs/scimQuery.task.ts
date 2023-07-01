@@ -219,14 +219,16 @@ export default new JobTask(
 								data: {
 									images,
 									name: originalName,
-									description: `Blueprint hosted by Satisfactory - Calculator`,
+									description: BP.blueprintData.config.description,
 									categories,
 									scimUser,
-									originalName
+									originalName,
+									iconData: {
+										iconID: BP.blueprintData.config.iconID,
+										color: BP.blueprintData.config.color
+									}
 								}
-							} );
-
-							const success = await newBp.updateBlueprint().catch( () => {
+							} ).catch( () => {
 								calledIds.delete( id );
 								newBp.delete();
 								console.info( "SCIM", `removed:`, originalName );
@@ -244,7 +246,7 @@ export default new JobTask(
 								allCategories.add( cat );
 							}
 
-							return success;
+							return true;
 						}
 					} catch( e ) {
 						return true;
@@ -266,13 +268,25 @@ export default new JobTask(
 			console.info( "SCIM", `removed:`, old.originalName );
 		}
 
-		for( const name of allCategories ) {
-			await prisma.categories.upsert( {
-				where: { name },
-				update: {},
-				create: { name }
-			} );
-		}
+		Promise.all( ( await prisma.blueprints.findMany( {} ) ).map( async bp => {
+			const blueprintDir = path.join( mountHandler.blueprintDir, bp.id );
+			const bpClass = await Blueprint.create( bp );
+			if( !existsSync( blueprintDir ) ) {
+				await bpClass.delete();
+				console.info( "SCIM", `removed:`, bp.originalName );
+			} else {
+				await bpClass.updateMods().then( () => console.info( "SCIM", "updated:", bp.originalName ) ).catch( () => {
+					console.info( "SCIM", `removed:`, bp.originalName );
+					return bpClass.delete();
+				} );
+			}
+		} ) );
+
+		Promise.all( Array.from( allCategories ).map( async name => prisma.categories.upsert( {
+			where: { name },
+			update: {},
+			create: { name }
+		} ) ) );
 		rmSync( mountHandler.tempScim, { recursive: true, force: true } );
 		await prisma.mods.deleteMany( { where: { modRef: { notIn: Array.from( mods ) } } } );
 		await kbotApi.getMods( Array.from( mods ) );

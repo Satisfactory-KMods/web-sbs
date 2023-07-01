@@ -43,7 +43,7 @@ model User {
     email          String?          @unique
     emailVerified  DateTime?
     isAdmin        Boolean          @default(false)
-    apiKey         String
+    apiKey         String?
     image          String?
     accounts       Account[]
     sessions       Session[]
@@ -88,6 +88,7 @@ model Blueprints {
     SCIMId       Int
     totalRating  Float
     totalVotes   Int
+    isModded     Boolean?
     designerSize String
     downloadIps  String[]
     downloads    Int
