@@ -18,7 +18,13 @@ module.exports = {
 	},
 	plugins: ['react', 'import', 'jsx-a11y', 'react-hooks', '@typescript-eslint', 'prettier'],
 	rules: {
-		'prettier/prettier': 'error',
+		'@typescript-eslint/consistent-type-imports': 'error',
+		'prettier/prettier': [
+			'error',
+			{
+				endOfLine: 'auto'
+			}
+		],
 		'arrow-body-style': 'warn',
 		'prefer-arrow-callback': 'warn',
 		'no-console': ['warn', { allow: ['warn', 'info', 'error'] }],

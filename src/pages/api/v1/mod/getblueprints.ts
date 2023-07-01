@@ -4,6 +4,16 @@ import type { IconDataType } from '@prisma/client';
 import NextCors from 'nextjs-cors';
 import { z } from 'zod';
 
+interface SortType {
+	skip: number;
+	where?: {
+		[key: string]: any;
+	};
+	orderBy: {
+		[key: string]: 'asc' | 'desc';
+	};
+}
+
 export const filterSchema = z.object({
 	name: z.string().optional(),
 	sortBy: z
@@ -17,9 +27,10 @@ export const filterSchema = z.object({
 	onlyVanilla: z.boolean().optional()
 });
 
-export function buildFilterOptions(filter: z.infer<typeof filterSchema>, skip: string | number | undefined): any {
-	const result: any = {
-		orderBy: {} as any
+export function buildFilterOptions(filter: z.infer<typeof filterSchema>, skip?: string | number): SortType {
+	const result: SortType = {
+		orderBy: {},
+		skip: 0
 	};
 
 	if (filter) {
@@ -37,16 +48,14 @@ export function buildFilterOptions(filter: z.infer<typeof filterSchema>, skip: s
 			result.where.mods = { hasEvery: filter.mods };
 		}
 		if (filter.onlyVanilla !== undefined) {
-			// @ts-ignore because this key is fine here!
 			result.where.isModded = true;
 		}
 	} else {
 		result.orderBy.createdAt = 'desc';
 	}
 
-	result.skip = skip;
-	if (!skip) {
-		result.skip = 0;
+	if (skip) {
+		result.skip = parseInt(skip.toString());
 	}
 
 	return result;

@@ -1,14 +1,15 @@
 import type { DeepPartial, FlowbiteTheme } from '@/components/Flowbite';
 import { Flowbite } from '@/components/Flowbite';
 import { NextAuthProvider } from '@/components/NextAuth';
+import TopNavbar from '@/components/layout/TopNavbar';
 import { getAppSession } from '@/server/auth';
 import '@/styles/globals.css';
 import 'flowbite';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-	title: 'KMods: Satisfactory Plus Wiki',
-	description: 'Wiki for the mod Satifactory Plus'
+	title: 'KMods: Satisfactory Blueprint Storage',
+	description: 'SBS is a web application for sharing Satisfactory blueprints. (Blueprints are stored by SCIM)'
 };
 
 const theme: DeepPartial<FlowbiteTheme> = {};
@@ -28,6 +29,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 						theme
 					}}>
 					<NextAuthProvider>
+						<TopNavbar session={session} />
 						<div className='flex flex-col justify-between'>
 							<div className='mb-auto container mx-auto'>{children}</div>
 						</div>
