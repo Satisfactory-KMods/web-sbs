@@ -50,12 +50,16 @@ export const authOptions: NextAuthOptions = {
 
 /**
  * Wrapper for `getServerSession` so that you don't need to import the `authOptions` in every file.
- *
+ * @routing page
  * @see https://next-auth.js.org/configuration/nextjs
  */
 export const getServerAuthSession = (ctx: { req: GetServerSidePropsContext['req']; res: GetServerSidePropsContext['res'] }) => getServerSession(ctx.req, ctx.res, authOptions);
 
-// workaround for App directory > https://github.com/nextauthjs/next-auth/issues/7486#issuecomment-1543747325
+/**
+ * workaround for App directory
+ * @routing app
+ * @see https://github.com/nextauthjs/next-auth/issues/7486#issuecomment-1543747325
+ */
 export const getAppSession = async (): Promise<NextAuthSession> => {
 	const req = {
 		headers: Object.fromEntries(headers() as Headers),

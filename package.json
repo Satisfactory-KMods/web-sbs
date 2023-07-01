@@ -3,8 +3,8 @@
 	"version": "1.0.0",
 	"private": true,
 	"scripts": {
-		"build": "yarn build:prettier && yarn build:prisma && yarn build:lint && yarn build:next",
-		"build:prettier": "prettier --write .",
+		"build": "yarn build:prisma && yarn build:lint && yarn build:next",
+		"prettier": "prettier --write .",
 		"build:prisma": "prisma generate",
 		"build:lint": "eslint src --fix && next lint --fix",
 		"build:next": "next build",
