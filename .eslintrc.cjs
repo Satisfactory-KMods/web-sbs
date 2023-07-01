@@ -18,6 +18,7 @@ module.exports = {
 	},
 	plugins: ['react', 'import', 'jsx-a11y', 'react-hooks', '@typescript-eslint', 'prettier'],
 	rules: {
+		'no-empty-pattern': 'off',
 		'@typescript-eslint/consistent-type-imports': 'error',
 		'prettier/prettier': [
 			'error',

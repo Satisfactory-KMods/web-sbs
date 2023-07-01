@@ -1,9 +1,11 @@
 import type { DeepPartial, FlowbiteTheme } from '@/components/Flowbite';
 import { Flowbite } from '@/components/Flowbite';
 import { NextAuthProvider } from '@/components/NextAuth';
+import Foother from '@/components/layout/Foother';
 import TopNavbar from '@/components/layout/TopNavbar';
 import { getAppSession } from '@/server/auth';
 import '@/styles/globals.css';
+import { createImageUrl } from '@/utils/Image';
 import 'flowbite';
 import type { Metadata } from 'next';
 
@@ -20,7 +22,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 	return (
 		<html lang='en'>
 			<head>
-				<link rel='shortcut icon' href='/_next/image?url=/logo.webp&w=32&h=32&q=100' />
+				<link rel='shortcut icon' href={createImageUrl({ src: '/logo.webp' })} />
 			</head>
 			<body className='bg-neutral-100 dark:bg-gray-950'>
 				<Flowbite
@@ -29,9 +31,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 						theme
 					}}>
 					<NextAuthProvider>
-						<TopNavbar session={session} />
 						<div className='flex flex-col justify-between'>
-							<div className='mb-auto container mx-auto'>{children}</div>
+							<TopNavbar session={session} />
+							<div className='mb-auto flex-1 container mx-auto'>{children}</div>
+							<Foother />
 						</div>
 					</NextAuthProvider>
 				</Flowbite>
