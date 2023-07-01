@@ -2,7 +2,7 @@
  * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially useful
  * for Docker builds.
  */
-await import( "./src/build_env.mjs" );
+await import('./src/build_env.mjs');
 
 /** @type {import("next").NextConfig} */
 const config = {
@@ -14,9 +14,9 @@ const config = {
 	compress: true,
 	productionBrowserSourceMaps: false,
 	poweredByHeader: false,
-	transpilePackages: [ 'flowbite-react', "flowbite" ],
+	transpilePackages: ['flowbite-react', 'flowbite'],
 	images: {
-		domains: [ 'avatars.githubusercontent.com', 'cdn.discordapp.com', 'kyrium.space' ]
+		domains: ['avatars.githubusercontent.com', 'cdn.discordapp.com', 'kyrium.space']
 	},
 	/*compiler: {
 		removeConsole: {
@@ -25,7 +25,7 @@ const config = {
 	},*/
 	reactStrictMode: true,
 	experimental: {
-		serverComponentsExternalPackages: [ "typescript", "eslint", "lodash", "prisma", "ts-node", "@prisma/client" ],
+		serverComponentsExternalPackages: ['typescript', 'eslint', 'lodash', 'prisma', 'ts-node', '@prisma/client'],
 		serverActions: true
 	}
 };

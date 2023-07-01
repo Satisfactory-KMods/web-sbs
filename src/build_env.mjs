@@ -1,13 +1,12 @@
 /* eslint-disable no-undef */
 // small hack for build > we use .ts for the real env!
-import { createEnv } from "@t3-oss/env-nextjs";
-import { z } from "zod";
+import { createEnv } from '@t3-oss/env-nextjs';
+import { z } from 'zod';
 
-
-createEnv( {
+createEnv({
 	server: {
 		DATABASE_URL: z.string().url(),
-		NODE_ENV: z.enum( [ "development", "test", "production" ] ),
+		NODE_ENV: z.enum(['development', 'test', 'production']),
 		DISCORD_CLIENT_ID: z.string(),
 		NEXTAUTH_URL: z.string(),
 		NEXTAUTH_SECRET: z.string(),
@@ -15,13 +14,12 @@ createEnv( {
 		APIKey: z.string()
 	},
 
-	client: {
-	},
+	client: {},
 
 	/**
-   * You can't destruct `process.env` as a regular object in the Next.js edge runtimes (e.g.
-   * middlewares) or client-side so we need to destruct manually.
-   */
+	 * You can't destruct `process.env` as a regular object in the Next.js edge runtimes (e.g.
+	 * middlewares) or client-side so we need to destruct manually.
+	 */
 	runtimeEnv: {
 		DATABASE_URL: process.env.DATABASE_URL,
 		NODE_ENV: process.env.NODE_ENV,
@@ -33,4 +31,4 @@ createEnv( {
 	},
 
 	skipValidation: !!process.env.SKIP_ENV_VALIDATION
-} );
+});

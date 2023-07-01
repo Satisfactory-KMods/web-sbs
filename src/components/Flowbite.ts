@@ -2,7 +2,6 @@
 
 import { Accordion, Breadcrumb, Dropdown, Footer, Navbar, Tabs, Timeline } from 'flowbite-react';
 
-
 const TimelineMain = Timeline;
 const TimelineItem = Timeline.Item;
 const TimelinePoint = Timeline.Point;
@@ -44,5 +43,3 @@ const DropdownDivider = Dropdown.Divider;
 export { Alert, Badge, Button, Flowbite, Footer, Pagination, Select, TextInput, Textarea, Tooltip } from 'flowbite-react';
 export type { ButtonProps, DeepPartial, FlowbiteTheme, NavbarLinkProps, PaginationProps } from 'flowbite-react';
 export { AccordionContent, AccordionMain, AccordionPanel, AccordionTitle, BreadcrumbItem, BreadcrumbMain, DropdownDivider, DropdownHeader, DropdownItem, DropdownMain, FooterBrand, FooterCopyright, FooterDivider, FooterIcon, FooterLink, FooterLinkGroup, FooterMain, FooterTitle, NavbarBrand, NavbarCollapse, NavbarLink, NavbarMain, NavbarToggle, TabGroup, TabsItem, TimelineBody, TimelineContent, TimelineItem, TimelineMain, TimelinePoint, TimelineTime };
-
-
