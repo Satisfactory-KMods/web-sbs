@@ -2,7 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-    provider = "prisma-client-js"
+    provider        = "prisma-client-js"
+    previewFeatures = ["fullTextSearch", "fullTextIndex"]
 }
 
 datasource db {
@@ -95,14 +96,15 @@ model Blueprints {
     images       String[]
     originalName String
 
-    blueprintPacksId String? @db.ObjectId
-    modsId           String? @db.ObjectId
+    blueprintPacksId String?         @db.ObjectId
+    modsId           String?         @db.ObjectId
+    iconData         IconDataType
+    user             User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+    BlueprintPacks   BlueprintPacks? @relation(fields: [blueprintPacksId], references: [id])
+    Mods             Mods?           @relation(fields: [modsId], references: [id])
+    Categories       Categories[]
 
-    iconData       IconDataType
-    user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-    BlueprintPacks BlueprintPacks? @relation(fields: [blueprintPacksId], references: [id])
-    Mods           Mods?           @relation(fields: [modsId], references: [id])
-    Categories     Categories[]
+    @@fulltext([description, name, mods, categories])
 }
 
 model BlueprintPacks {
@@ -110,7 +112,7 @@ model BlueprintPacks {
     createdAt   DateTime     @default(now())
     updatedAt   DateTime     @updatedAt
     userId      String       @db.ObjectId
-    blueprints  String[]     @db.ObjectId 
+    blueprints  String[]     @db.ObjectId
     mods        String[]
     rating      RatingType[]
     totalRating Int
@@ -124,6 +126,8 @@ model BlueprintPacks {
     user       User         @relation(fields: [userId], references: [id], onDelete: Cascade)
     Blueprints Blueprints[]
     Categories Categories[]
+
+    @@fulltext([description, name, mods, categories])
 }
 
 model Mods {

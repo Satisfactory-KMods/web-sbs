@@ -32,6 +32,6 @@
 			}
 		]
 	},
-	"include": [".eslintrc.cjs", "next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.cjs", "**/*.mjs", ".next/types/**/*.ts", "src/env.ts"],
+	"include": [".eslintrc.cjs", "next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.cjs", "**/*.mjs", ".next/types/**/*.ts", "src/env.ts", "src/app/api/v2/blueprints/[id]"],
 	"exclude": ["node_modules"]
 }
