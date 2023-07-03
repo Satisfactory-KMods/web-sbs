@@ -6,14 +6,18 @@ import { NextResponse } from 'next/server';
 
 const GET: NextRoute = async (req) => {
 	try {
-		const { take, skip, search, order, orderBy, modded } = getSearchParams(req, {
-			take: 10,
-			skip: 0,
-			search: '',
-			order: [['asc', 'desc'], 'asc'],
-			orderBy: [['totalVotes', 'totalRating', 'downloads', 'mods', 'createdAt', 'updatedAt'], 'createdAt'],
-			modded: -1
-		});
+		const { take, skip, search, order, orderBy, modded } = getSearchParams(
+			req,
+			{
+				take: 10,
+				skip: 0,
+				search: '',
+				order: [['asc', 'desc'], 'asc'],
+				orderBy: [['totalVotes', 'totalRating', 'downloads', 'mods', 'createdAt', 'updatedAt'], 'createdAt'],
+				modded: -1
+			},
+			false
+		);
 
 		const where: any = {};
 		if (search.length > 0) {
