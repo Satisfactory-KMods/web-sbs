@@ -1,7 +1,6 @@
-import { headers } from 'next/headers';
 import type { NextRequest } from 'next/server';
 
-type Data<T = any> = { [P in keyof T]: T[P] extends any[] ? string : T[P] };
+type Data<T = any> = { [P in keyof T]: T[P] extends any[] ? string | number : T[P] };
 
 export function getSearchParams<T = any>(req: NextRequest, defaults: T, noThrow = true, skipInvalidKeys?: boolean): Data<T> {
 	const { searchParams } = new URL(req.url);

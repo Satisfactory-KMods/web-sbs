@@ -33,7 +33,7 @@ const GET: NextRoute = async (req) => {
 				take,
 				skip,
 				orderBy: {
-					[orderBy as any]: order
+					[orderBy]: order
 				}
 			})
 			.catch(() => new Error('Invalid Search'));

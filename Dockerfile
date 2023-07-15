@@ -5,13 +5,14 @@ RUN apt-get update && \
   rm -rf /var/lib/apt/lists/* && \
   python --version && \
   node -v && npm -v
+RUN npm i -G pnpm
 
 WORKDIR /
 
 COPY package.json ./
-COPY *.lock ./
+COPY *.yaml ./
 
-RUN npm i
+RUN pnpm install
 
 # Copy main configs
 COPY *.json ./
@@ -32,6 +33,6 @@ COPY ./public ./public
 COPY ./prisma ./prisma
 
 # create main files
-RUN yarn build
+RUN pnpm build
 
-CMD yarn start
+CMD pnpm start

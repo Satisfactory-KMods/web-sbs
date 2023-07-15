@@ -40,15 +40,15 @@ jobs:
               uses: actions/setup-node@v3
               with:
                   node-version: ${{ matrix.node-version }}
-                  cache: 'npm'
+                  cache: 'pnpm'
             - name: 🔐 Authenticate with private NPM package
               run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
             - name: ✨ Install packages
-              run: npm i
+              run: pnpm i
             - name: 📂 Copy env file
               run: cp .env.example .env
             - name: ⚡ Build App
-              run: yarn build
+              run: pnpm build
 
     deploy:
         needs: [test-app, test-docker]
