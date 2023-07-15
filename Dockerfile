@@ -12,7 +12,7 @@ WORKDIR /
 COPY package.json ./
 COPY *.yaml ./
 
-RUN pnpm install --frozen-lockfile --lockfile-only
+RUN pnpm install --frozen-lockfile
 
 # Copy main configs
 COPY *.json ./
