@@ -48,7 +48,7 @@ jobs:
             - name: 🔐 Authenticate with private NPM package
               run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
             - name: ✨ Install packages
-              run: pnpm i
+              run: pnpm install --frozen-lockfile --lockfile-only
             - name: 📂 Copy env file
               run: cp .env.example .env
             - name: ⚡ Build App
