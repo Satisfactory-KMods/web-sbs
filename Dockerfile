@@ -5,7 +5,7 @@ RUN apt-get update && \
   rm -rf /var/lib/apt/lists/* && \
   python --version && \
   node -v && npm -v
-RUN npm i -G pnpm
+RUN npm install -g pnpm
 
 WORKDIR /
 
