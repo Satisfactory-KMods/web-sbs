@@ -35,7 +35,4 @@ COPY ./prisma ./prisma
 # create main files
 RUN pnpm build
 
-# test
-RUN rm -r ./src
-
 CMD pnpm start
