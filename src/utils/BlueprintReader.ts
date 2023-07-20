@@ -1,13 +1,17 @@
-import type { Blueprint } from '@etothepii/satisfactory-file-parser';
-import { Parser } from '@etothepii/satisfactory-file-parser';
 import { readFileSync } from 'fs';
 import { isEqual } from 'lodash';
 import { join } from 'path';
+import type { Blueprint as OBlueprint } from 'update7-bp';
+import { Parser as OldParser } from 'update7-bp';
+import type { Blueprint } from 'update8-bp';
+import { Parser } from 'update8-bp';
+
+export type OldBlueprint = OBlueprint;
 
 /**
  * @description returns a list for all mods that have a object reference in this blueprint
  */
-export const findModsFromBlueprint = (blueprint: Blueprint | undefined) => {
+export const findModsFromBlueprint = (blueprint: Blueprint | OldBlueprint | undefined) => {
 	if (!blueprint) {
 		return [];
 	}
@@ -61,7 +65,7 @@ export class BlueprintReader {
 	private path: string;
 	private fileName: string;
 	private blueprintName: string;
-	private data: Blueprint | undefined;
+	private data: Blueprint | OldBlueprint | undefined;
 	private mods: string[] | undefined;
 
 	constructor(path: string, fileName: string, blueprintName?: string) {
@@ -75,7 +79,7 @@ export class BlueprintReader {
 		return !!this.blueprintName;
 	}
 
-	public get blueprintData(): Blueprint {
+	public get blueprintData(): Blueprint | OldBlueprint {
 		return this.data!;
 	}
 
@@ -86,11 +90,21 @@ export class BlueprintReader {
 		return this.mods;
 	}
 
-	private read(): Blueprint | undefined {
+	private read(): Blueprint | OldBlueprint | undefined {
 		try {
 			const sbp = readFileSync(join(this.path, this.fileName + '.sbp'));
 			const sbpcfg = readFileSync(join(this.path, this.fileName + '.sbpcfg'));
-			return Parser.ParseBlueprintFiles(this.blueprintName, sbp, sbpcfg);
+			try {
+				return Parser.ParseBlueprintFiles(this.blueprintName, sbp, sbpcfg);
+			} catch (e) {
+				try {
+					return OldParser.ParseBlueprintFiles(this.blueprintName, sbp, sbpcfg);
+				} catch (e) {
+					if (e instanceof Error) {
+						console.error(e.message);
+					}
+				}
+			}
 		} catch (e) {
 			if (e instanceof Error) {
 				console.error(e.message);

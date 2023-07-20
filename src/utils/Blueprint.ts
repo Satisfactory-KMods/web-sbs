@@ -2,9 +2,9 @@ import { prisma } from '@/server/db';
 import { BlueprintReader } from '@/utils/BlueprintReader';
 import { kbotApi } from '@/utils/KBotApi';
 import { mountHandler } from '@/utils/MoundHandler';
-import type { BlueprintConfig } from '@etothepii/satisfactory-file-parser';
 import type { Blueprints, RatingType } from '@prisma/client';
 import { join } from 'path';
+import type { BlueprintConfig } from 'update8-bp';
 
 export type NewBlueprintData = Pick<Blueprints, 'SCIMId' | 'userId' | 'name' | 'description' | 'scimUser' | 'designerSize' | 'images' | 'categories' | 'originalName'>;
 
