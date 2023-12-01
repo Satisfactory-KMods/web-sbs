@@ -83,6 +83,7 @@ jobs:
 
             - name: 'Create Release'
               run: |
+                  npm install -g semantic-release
                   export GH_TOKEN=${{ secrets.PAT }}
                   export GITHUB_TOKEN=${{ secrets.PAT }}
                   HUSKY=0 pnpm semantic-release
