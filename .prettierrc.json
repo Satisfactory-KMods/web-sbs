@@ -1,0 +1,15 @@
+{
+	"jsxSingleQuote": true,
+	"proseWrap": "never",
+	"quoteProps": "consistent",
+	"vueIndentScriptAndStyle": true,
+	"singleQuote": true,
+	"trailingComma": "none",
+	"useTabs": true,
+	"bracketSameLine": true,
+	"bracketSpacing": true,
+	"insertPragma": false,
+	"tabWidth": 4,
+	"printWidth": 150,
+	"plugins": ["prettier-plugin-organize-imports", "prettier-plugin-tailwindcss"]
+}

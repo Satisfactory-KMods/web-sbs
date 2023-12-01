@@ -1,28 +1,10 @@
 FROM node:alpine
 
-WORKDIR ./
+RUN npm install -g bun
 
-# Packages
-# COPY .npmrc ./
-COPY *.json ./
-COPY *.lock ./
-RUN yarn install
+WORKDIR /dist
+COPY . /dist
 
-# Copy main configs
-COPY *.ts ./
-COPY *.cts ./
-COPY *.mts ./
-COPY *.js ./
-COPY *.mts ./
-COPY *.cjs ./
-COPY *.html ./
+RUN bun run build
 
-# Copy source folder
-COPY ./src ./src
-COPY ./server ./server
-COPY ./public ./public
-
-# create main files
-RUN yarn build
-
-CMD yarn production
+CMD bun run production

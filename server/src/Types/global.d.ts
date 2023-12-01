@@ -1,18 +1,14 @@
-import type { systemLibClass } from "@server/Lib/System.Lib";
-import type { TaskManagerClass } from "@server/Tasks/TaskManager";
-import type core from "express";
-import type * as http from "http";
-
+import type { systemLibClass } from '@server/Lib/System.Lib';
+import type { TaskManagerClass } from '@server/Tasks/TaskManager';
+import type core from 'express';
+import type * as http from 'http';
 
 export declare global {
 	var DownloadIPCached: Map<string, string[]>;
 	var SystemLib: systemLibClass;
 	var Api: core.Express;
 	var Router: core.Router;
-	var HttpServer: http.Server<
-		typeof http.IncomingMessage,
-		typeof http.ServerResponse
-	>;
+	var HttpServer: http.Server<typeof http.IncomingMessage, typeof http.ServerResponse>;
 	var TaskManager: TaskManagerClass;
 
 	var __BaseDir: string;

@@ -1,20 +1,19 @@
-import type { IfClass } from "@shared/Types/helper";
-import type { BlueprintPackExtended } from "../MongoDB/MongoBlueprints";
-import { MongoBlueprintPacks } from "../MongoDB/MongoBlueprints";
-
+import type { IfClass } from '@shared/Types/helper';
+import type { BlueprintPackExtended } from '../MongoDB/MongoBlueprints';
+import { MongoBlueprintPacks } from '../MongoDB/MongoBlueprints';
 
 export class BlueprintPackClass<T extends boolean = false> {
 	private id: string;
 	private data: IfClass<T, BlueprintPackExtended> = null as IfClass<T, BlueprintPackExtended>;
 
-	private constructor( blueprintPackId: string ) {
+	private constructor(blueprintPackId: string) {
 		this.id = blueprintPackId;
 	}
 
-	static async createClass( blueprintId: string ): Promise<BlueprintPackClass<true> | undefined> {
-		const BP = new BlueprintPackClass( blueprintId );
+	static async createClass(blueprintId: string): Promise<BlueprintPackClass<true> | undefined> {
+		const BP = new BlueprintPackClass(blueprintId);
 		await BP.readData();
-		if( BP.isValid() ) {
+		if (BP.isValid()) {
 			return BP;
 		}
 		return undefined;
@@ -22,10 +21,14 @@ export class BlueprintPackClass<T extends boolean = false> {
 
 	public async readData() {
 		try {
-			this.data = ( await MongoBlueprintPacks.findById( this.id ).populate( [ { path: "owner", select: '-hash -apiKey -salt' }, 'blueprints', 'tags' ] ) ) as IfClass<T, BlueprintPackExtended>;
-		} catch( e ) {
-			if( e instanceof Error ) {
-				SystemLib.LogError( "blueprint", e.message );
+			this.data = (await MongoBlueprintPacks.findById(this.id).populate([
+				{ path: 'owner', select: '-hash -apiKey -salt' },
+				'blueprints',
+				'tags'
+			])) as IfClass<T, BlueprintPackExtended>;
+		} catch (e) {
+			if (e instanceof Error) {
+				SystemLib.LogError('blueprint', e.message);
 			}
 		}
 	}
@@ -39,12 +42,14 @@ export class BlueprintPackClass<T extends boolean = false> {
 	}
 
 	public async getDocument() {
-		return await MongoBlueprintPacks.findById( this.data?._id  ).populate( [ { path: "owner", select: '-hash -apiKey -salt' }, 'blueprints', 'tags' ] ).catch( () => {} );
+		return await MongoBlueprintPacks.findById(this.data?._id)
+			.populate([{ path: 'owner', select: '-hash -apiKey -salt' }, 'blueprints', 'tags'])
+			.catch(() => {});
 	}
 
 	public async remove() {
 		const docu = await this.getDocument();
-		if( await docu?.deleteOne() ) {
+		if (await docu?.deleteOne()) {
 			return true;
 		}
 		return false;
