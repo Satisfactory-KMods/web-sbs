@@ -1,13 +1,10 @@
 import { BlueprintClass } from '@/server/src/Lib/Blueprint.Class';
-import type { BlueprintData } from '@/server/src/MongoDB/MongoBlueprints';
 import MongoUserAccount from '@/server/src/MongoDB/MongoUserAccount';
-import type { ExpressRequest } from '@/server/src/Types/express';
 import type { EApiBlueprintUtils } from '@/src/Shared/Enum/EApiPath';
 import { errorResponse } from '@kyri123/lib';
 import MongoSessionToken from '@server/MongoDB/MongoSessionToken';
 import { User } from '@shared/Class/User.Class';
 import type { ERoles } from '@shared/Enum/ERoles';
-import type { NextFunction, Request, Response } from 'express';
 import fs from 'fs';
 import * as jwt from 'jsonwebtoken';
 import _ from 'lodash';
@@ -18,7 +15,7 @@ export function ApiUrl(Url: EApiBlueprintUtils | string) {
 	return EndUrl;
 }
 
-export async function MWAuth(req: Request, res: Response, next: NextFunction) {
+export async function MWAuth(req: any, res: any, next: any) {
 	const AuthHeader = req.headers['authorization'];
 	let Token: string | undefined = undefined;
 	try {
@@ -46,14 +43,14 @@ export async function MWAuth(req: Request, res: Response, next: NextFunction) {
 	return res.status(401).json(errorResponse('Unauthorized', res));
 }
 
-export async function MWCleanMulterCache(req: Request, res: Response, next: NextFunction) {
+export async function MWCleanMulterCache(req: any, res: any, next: any) {
 	if (req.files) {
 		if (Array.isArray(req.files)) {
 			for (const file of req.files) {
 				fs.existsSync(file.path) && fs.rmSync(file.path, { recursive: true });
 			}
 		} else {
-			for (const fileCluster of Object.values(req.files)) {
+			for (const fileCluster of Object.values<any>(req.files)) {
 				for (const file of fileCluster) {
 					fs.existsSync(file.path) && fs.rmSync(file.path, { recursive: true });
 				}
@@ -63,7 +60,7 @@ export async function MWCleanMulterCache(req: Request, res: Response, next: Next
 	next();
 }
 
-export async function MWPermission(req: Request, res: Response, next: NextFunction, Permission: ERoles) {
+export async function MWPermission(req: any, res: any, next: any, Permission: ERoles) {
 	if (req.body.UserClass && req.body.UserClass.HasPermission(Permission)) {
 		next();
 		return;
@@ -71,16 +68,7 @@ export async function MWPermission(req: Request, res: Response, next: NextFuncti
 	return res.status(401).json(errorResponse('Unauthorized', res));
 }
 
-export async function MWBlueprint(
-	req: ExpressRequest<{
-		blueprint: Omit<BlueprintData, '_id' | '__v'>;
-		blueprintName: string;
-		blueprintId: string | BlueprintClass<true>;
-		UserClass?: User;
-	}>,
-	res: Response,
-	next: NextFunction
-) {
+export async function MWBlueprint(req: any, res: any, next: any) {
 	if (req.body.blueprintName && req.body.blueprint && req.body.blueprintId && typeof req.body.blueprintId === 'string') {
 		const server = await BlueprintClass.createClass(req.body.blueprintId);
 		if (server && req.body.UserClass) {
@@ -93,7 +81,7 @@ export async function MWBlueprint(
 	return res.status(401).json(errorResponse('Unauthorized', res));
 }
 
-export async function MWRest(req: Request, res: Response, next: NextFunction) {
+export async function MWRest(req: any, res: any, next: any) {
 	const apiKey = req.header('x-api-key');
 	if (_.isEqual(apiKey, process.env.APIKey) && process.env.APIKey) {
 		return next();
@@ -103,7 +91,7 @@ export async function MWRest(req: Request, res: Response, next: NextFunction) {
 	return res.status(401).json({ error: 'Unauthorized' });
 }
 
-export async function MWRestUser(req: Request, res: Response, next: NextFunction) {
+export async function MWRestUser(req: any, res: any, next: any) {
 	const apiKey = req.header('x-account-key');
 	if (apiKey) {
 		const userDoc = await MongoUserAccount.findOne({ apiKey });
