@@ -8,7 +8,7 @@ Join our discord sever to talk about out mods and this bot. https://discord.gg/y
 
 ## 📝 License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 📝 Changelog
 
