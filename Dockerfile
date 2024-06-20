@@ -1,38 +1,8 @@
-FROM node:18-bullseye
+FROM node:20-alpine@sha256:66c7d989b6dabba6b4305b88f40912679aebd9f387a5b16ffa76dfb9ae90b060
 
-RUN apt-get update && \
-  apt-get install -y python-is-python3 python3 python3-dev python3-pip python3-virtualenv && \
-  rm -rf /var/lib/apt/lists/* && \
-  python --version && \
-  node -v && npm -v
-RUN npm install -g pnpm
+COPY .output /dist
+COPY server/utils/db/postgres/migrations /dist/server/utils/db/postgres/migrations
 
-WORKDIR /
+WORKDIR /dist
 
-COPY package.json ./
-COPY *.yaml ./
-
-RUN pnpm install --frozen-lockfile
-
-# Copy main configs
-COPY *.json ./
-
-COPY *.ts ./
-COPY *.cts ./
-COPY *.mts ./
-
-COPY *.js ./
-COPY *.cjs ./
-COPY *.mjs ./
-
-COPY .env ./
-
-# Copy source folder
-COPY ./src ./src
-COPY ./public ./public
-COPY ./prisma ./prisma
-
-# create main files
-RUN pnpm build
-
-CMD pnpm start
+CMD node server/index.mjs

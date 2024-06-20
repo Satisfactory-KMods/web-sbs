@@ -1,0 +1,137 @@
+name: Build, Push and Deploy
+
+on:
+    push:
+        branches:
+            - 'main'
+            - 'dev'
+            - 'next'
+
+env:
+    REGISTRY: ghcr.io
+    IMAGE_NAME: ${{ github.repository }}
+    DOCKERNAME: ${{ github.ref == 'refs/heads/main' && 'sbs' || 'dev-sbs' }}
+
+jobs:
+    prepare-and-build-app:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Set up Docker Buildx
+              uses: docker/setup-buildx-action@v3
+
+            - name: Install Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 20
+
+            - uses: pnpm/action-setup@v2
+              name: Install pnpm
+              with:
+                  version: 9
+                  run_install: false
+
+            - name: Get pnpm store directory
+              shell: bash
+              run: |
+                  echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+            - uses: actions/cache@v4
+              name: Setup pnpm cache
+              with:
+                  path: ${{ env.STORE_PATH }}
+                  key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+                  restore-keys: |
+                      ${{ runner.os }}-pnpm-store-
+
+            - name: 'Create Release'
+              if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+              env:
+                  GH_TOKEN: ${{ secrets.RELEASE }}
+                  GITHUB_TOKEN: ${{ secrets.RELEASE }}
+                  NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+                  HUSKY: 0
+                  NEXTAUTH_SECRET: "secret"
+                  DISCORD_CLIENT_SECRET: "secret"
+                  DISCORD_BOT_TOKEN: "secret"
+                  NEXTAUTH_URL: "secret"
+                  REDIS_PASSWORD: "secret"
+                  REDIS_HOST: "secret"
+                  REDIS_PORT: "1000"
+                  POSTGRES_PASSWORD: "secret"
+                  POSTGRES_USER: "secret"
+                  POSTGRES_DB: "secret"
+                  POSTGRES_HOST: "secret"
+                  POSTGRES_PORT: "1000"
+                  FICSIT_APP_API_URL: "https://api.ficsit.app/v2/query"
+                  FICSIT_APP_API_TOKEN: "secret"
+                  DISCORD_CLIENT_ID: ${{ github.ref == 'refs/heads/main' && '944331343700054056' || '1235530228701597778' }}
+              run: |
+                  pnpm add -g bun
+                  pnpm i
+                  pnpm semantic-release
+                  bun run build
+                  chmod 777 -R .output
+ 
+            - name: lint and type check
+              if: github.event_name != 'push' || github.ref != 'refs/heads/main'
+              env:
+                  NEXTAUTH_SECRET: "secret"
+                  DISCORD_CLIENT_SECRET: "secret"
+                  DISCORD_BOT_TOKEN: "secret"
+                  NEXTAUTH_URL: "secret"
+                  REDIS_PASSWORD: "secret"
+                  REDIS_HOST: "secret"
+                  REDIS_PORT: "1000"
+                  POSTGRES_PASSWORD: "secret"
+                  POSTGRES_USER: "secret"
+                  POSTGRES_DB: "secret"
+                  POSTGRES_HOST: "secret"
+                  POSTGRES_PORT: "1000"
+                  FICSIT_APP_API_URL: "https://api.ficsit.app/v2/query"
+                  FICSIT_APP_API_TOKEN: "secret"
+                  DISCORD_CLIENT_ID: ${{ github.ref == 'refs/heads/main' && '944331343700054056' || '1235530228701597778' }}
+              run: |
+                  pnpm add -g bun
+                  pnpm i
+                  bun run build
+                  chmod 777 -R .output
+
+            - name: Log into registry
+              if: github.event_name != 'pull_request'
+              uses: docker/login-action@0d4c9c5ea7693da7b068278f7b52bda2a190a446
+              with:
+                  registry: ${{ env.REGISTRY }}
+                  username: ${{ github.actor }}
+                  password: ${{ secrets.PAT }}
+
+            - name: Extract Docker metadata
+              id: meta
+              uses: docker/metadata-action@f7b4ed12385588c3f9bc252f0a2b520d83b52d48
+              with:
+                  images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+
+            - name: Build and push
+              uses: docker/build-push-action@v5
+              with:
+                  context: .
+                  push: ${{ github.event_name != 'pull_request' }}
+                  tags: ${{ steps.meta.outputs.tags }}
+                  labels: ${{ steps.meta.outputs.labels }}
+                  cache-from: type=gha
+                  cache-to: type=gha,mode=max
+
+            - name: Deploy
+              uses: appleboy/ssh-action@v1.0.3
+              with:
+                  host: ${{ secrets.SSH_HOST }}
+                  username: ${{ secrets.SSH_USER }}
+                  key: ${{ secrets.SSH_KEY }}
+                  port: 22
+                  script: |
+                      cd /home/apps/ 
+                      docker compose up -d --no-deps --pull always --build ${{ env.DOCKERNAME }}
+                      docker image prune --force
+                      sleep 60
+                      docker compose logs ${{ env.DOCKERNAME }}

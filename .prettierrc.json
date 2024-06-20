@@ -10,5 +10,7 @@
 	"bracketSpacing": true,
 	"insertPragma": false,
 	"tabWidth": 4,
-	"printWidth": 1000
+	"semi": true,
+	"printWidth": 100,
+	"plugins": ["prettier-plugin-organize-imports", "prettier-plugin-tailwindcss"]
 }

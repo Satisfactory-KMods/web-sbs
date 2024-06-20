@@ -1,0 +1,69 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+	font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+	--font-family: 'Inter var', sans-serif;
+	--font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+	--custom-primary-50: 236 253 245;
+	--custom-primary-100: 209 250 229;
+	--custom-primary-200: 167 243 208;
+	--custom-primary-300: 110 231 183;
+	--custom-primary-400: 52 211 153;
+	--custom-primary-500: 16 185 129;
+	--custom-primary-600: 5 150 105;
+	--custom-primary-700: 4 120 87;
+	--custom-primary-800: 6 95 70;
+	--custom-primary-900: 4 78 56;
+	--custom-primary-950: 2 44 34;
+	--custom-surface-0: 255 255 255;
+	--custom-surface-50: 248 250 252;
+	--custom-surface-100: 241 245 249;
+	--custom-surface-200: 226 232 240;
+	--custom-surface-300: 203 213 225;
+	--custom-surface-400: 148 163 184;
+	--custom-surface-500: 100 116 139;
+	--custom-surface-600: 71 85 105;
+	--custom-surface-700: 45 55 72;
+	--custom-surface-800: 30 41 59;
+	--custom-surface-900: 15 23 42;
+	--custom-surface-950: 3 6 23;
+	font-family:
+		Inter var,
+		sans-serif;
+	font-variation-settings: normal;
+}
+.nuxt-ui-scrollbars ::-webkit-scrollbar {
+	@apply h-[0.6em] w-[0.6em]  bg-transparent;
+}
+
+.nuxt-ui-scrollbars ::-webkit-scrollbar-track {
+	@apply bg-gray-100;
+	@apply rounded;
+}
+.nuxt-ui-scrollbars ::-webkit-scrollbar-thumb {
+	@apply bg-gray-300;
+	@apply rounded;
+}
+.nuxt-ui-scrollbars ::-webkit-scrollbar-thumb:hover {
+	@apply bg-gray-400;
+	@apply rounded;
+}
+.nuxt-ui-scrollbars.dark ::-webkit-scrollbar-track {
+	@apply bg-gray-800;
+	@apply rounded;
+}
+.nuxt-ui-scrollbars.dark ::-webkit-scrollbar-thumb {
+	@apply bg-gray-700;
+	@apply rounded;
+}
+.nuxt-ui-scrollbars.dark ::-webkit-scrollbar-thumb:hover {
+	@apply bg-gray-600;
+	@apply rounded;
+}
+
+#__nuxt,
+.full-wh {
+	@apply flex h-[100vh] max-h-[100vh] min-h-[100vh] w-[100vw] min-w-[100vw] max-w-[100vw] flex-col;
+}

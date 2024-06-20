@@ -1,16 +1,45 @@
 {
-	"typescript.preferences.importModuleSpecifier": "non-relative",
-	"files.autoSave": "onFocusChange",
-	"editor.formatOnSave": true,
+	// tailwind support
+	"css.customData": [".vscode/tailwind.json"],
+
+	// int
+	"editor.defaultFormatter": "esbenp.prettier-vscode",
+	"typescript.experimental.aiQuickFix": true,
+	"typescript.tsserver.maxTsServerMemory": 8192,
+	"editor.folding": true,
+
+	// typescript
+	"typescript.tsdk": "node_modules/typescript/lib",
+
+	// eslint & prettier
+	"eslint.workingDirectories": ["./backend", "./frontend"],
+	"prettier.configPath": ".prettierrc.json",
+
+	// save actions
+	"eslint.codeActionsOnSave.rules": null,
 	"editor.codeActionsOnSave": {
-		"source.fixAll": true,
-		"editor.formatOnSave": true
+		"formatOnSave": "explicit",
+		"source.fixAll": "explicit"
 	},
-	"[prisma]": {
-		"editor.defaultFormatter": "Prisma.prisma"
+	"eslint.validate": ["javascript"],
+	"eslint.format.enable": false,
+	"editor.showFoldingControls": "always",
+	"notebook.showFoldingControls": "always",
+	"editor.foldingImportsByDefault": false,
+	"editor.stickyScroll.defaultModel": "outlineModel",
+	"editor.foldingStrategy": "auto",
+
+	// tailwindcss
+	"tailwindCSS.experimental.configFile": "tailwind.config.ts",
+	"tailwindCSS.experimental.classRegex": [
+		["ui:\\s*{([^)]*)\\s*}", "[\"'`]([^\"'`]*).*?[\"'`]"],
+		["/\\*ui\\*/\\s*{([^;]*)}", ":\\s*[\"'`]([^\"'`]*).*?[\"'`]"]
+	],
+	"tailwindCSS.classAttributes": ["class", "className", "ngClass", "ui"],
+	"files.associations": {
+		"*.css": "tailwindcss"
 	},
-	"eslint.validate": ["typescript"],
-	"typescript.tsdk": "node_modules\\typescript\\lib",
-	"WillLuke.nextjs.addTypesOnSave": true,
-	"WillLuke.nextjs.hasPrompted": true
+	"editor.quickSuggestions": {
+		"strings": true
+	}
 }

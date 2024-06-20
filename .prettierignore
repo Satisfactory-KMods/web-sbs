@@ -1,6 +1,7 @@
-.next
-public
-_old
-readme.md
-build
-dist
+presets
+node_modules
+.nuxt
+.husky
+.output
+.github
+.git

@@ -1,0 +1,19 @@
+{
+	"$schema": "https://docs.renovatebot.com/renovate-schema.json",
+	"extends": [
+		"config:base",
+		"docker:pinDigests",
+		"group:allNonMajor",
+		":semanticCommits",
+		":prHourlyLimitNone",
+		":prConcurrentLimitNone"
+	],
+	"baseBranches": ["dev"],
+	"ignoreDeps": [
+		"@nuxt/image",
+		"@nuxtjs/mdc",
+		"sharp",
+		"typescript",
+		"next-auth"
+	]
+}
