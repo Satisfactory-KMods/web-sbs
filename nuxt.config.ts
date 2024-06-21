@@ -10,6 +10,7 @@ export default defineNuxtConfig({
 		compatibilityVersion: 4
 	},
 	modules: [
+		'@sidebase/nuxt-auth',
 		'@vueuse/nuxt',
 		'@nuxt/image',
 		'nuxt-icon',
