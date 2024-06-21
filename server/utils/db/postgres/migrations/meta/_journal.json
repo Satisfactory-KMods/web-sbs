@@ -36,6 +36,13 @@
       "when": 1718990707576,
       "tag": "0004_broad_black_widow",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1718991542172,
+      "tag": "0005_left_landau",
+      "breakpoints": true
     }
   ]
 }

@@ -3,6 +3,7 @@ import chunk from 'lodash/chunk';
 import { schedule } from 'node-cron';
 import { z } from 'zod';
 import { log } from '~/utils/logger';
+import { env } from '~~/env';
 import { BlueprintParser } from '~~/server/utils/blueprintParser';
 import { db } from '~~/server/utils/db/postgres/pg';
 import {
@@ -213,13 +214,15 @@ async function handler() {
  *  in the mod SBS
  * */
 export default function (cron: string, runOnInit: boolean) {
-	// Delay init run and install by 2 seconds
-	setTimeout(() => {
-		log('info', 'Scheduled Task installed:', 'SCIM', cron);
+	if (!!env.tasks.disableScim) {
+		log('tasks-warn', 'Scheduled Task disabled:', 'SCIM', cron);
+		return;
+	}
 
-		// install the task
-		schedule(cron, handler, {
-			runOnInit
-		});
-	}, 2000);
+	log('tasks', 'Scheduled Task installed:', 'SCIM', cron);
+
+	// install the task
+	schedule(cron, handler, {
+		runOnInit
+	});
 }

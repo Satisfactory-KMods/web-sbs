@@ -12,6 +12,17 @@ const zodStringOrNumber = z
 
 export const env = z
 	.object({
+		// Disable query from scrom
+		SCIM_DISABLE_TASK: z
+			.string()
+			.or(z.boolean())
+			.optional()
+			.transform((v) => {
+				if (typeof v === 'string') {
+					return v === 'true';
+				}
+				return v;
+			}),
 		// Auth secrete can generate using `openssl rand -hex 64`
 		NEXTAUTH_SECRET: z.string(),
 		// Discord client id & secret can be found in discord developer portal
@@ -36,6 +47,9 @@ export const env = z
 	})
 	.transform((env) => {
 		return {
+			tasks: {
+				disableScim: env.SCIM_DISABLE_TASK
+			},
 			version,
 			dev: process.env.NODE_ENV !== 'production',
 			ficsit: {
