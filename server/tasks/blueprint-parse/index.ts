@@ -1,7 +1,11 @@
 import chunk from 'lodash/chunk';
 import { schedule } from 'node-cron';
+import { z } from 'zod';
 import { log } from '~/utils/logger';
 import { BlueprintParser } from '~~/server/utils/blueprintParser';
+import { db } from '~~/server/utils/db/postgres/pg';
+import { BlueprintInsert, scBlueprint, zodIconData } from '~~/server/utils/db/postgres/schema';
+import { getOrCreateTags } from '~~/server/utils/db/query/tags';
 import {
 	calculatorBlueprintPage,
 	calculatorPages,
@@ -83,10 +87,11 @@ async function handler() {
 
 				const { foundImageUrls, categories, scimUser } = blueprintPage;
 
-				const { folder, remove: cancelBlueprint } = await downloadBlueprint(
-					blueprintId,
-					blueprintName
-				);
+				const {
+					folder,
+					remove: cancelBlueprint,
+					zipSize
+				} = await downloadBlueprint(blueprintId, blueprintName);
 
 				const reader = await BlueprintParser.create(folder, blueprintName);
 
@@ -95,7 +100,44 @@ async function handler() {
 					continue;
 				}
 
-				log(
+				const blueprintMods = reader.getMods();
+				const blueprint = reader.blueprintData;
+
+				const description = blueprint.config.description;
+				const iconData: z.input<typeof zodIconData> = {
+					iconID: blueprint.config.iconID,
+					color: blueprint.config.color
+				};
+
+				const blueprintInsert: BlueprintInsert = {
+					id: blueprintId,
+					name: blueprintName,
+					raw_name: blueprintName.replace(/(\_|\+)/g, ' '),
+					images: foundImageUrls,
+					size: zipSize,
+					description,
+					isModded: !!blueprintMods.length,
+					download: 0,
+					iconData
+				};
+
+				await db.transaction(async (trx) => {
+					await trx
+						.insert(scBlueprint)
+						.values(blueprintInsert)
+						.onConflictDoUpdate({
+							target: [scBlueprint.id],
+							set: blueprintInsert
+						});
+
+					if (blueprintMods.length) {
+						console.log(blueprintMods);
+					}
+
+					const tags = getOrCreateTags(categories, trx);
+				});
+
+				const mods = log(
 					'tasks',
 					`Downloaded ${++count}/${asArr.length} blueprints`,
 					blueprintId,

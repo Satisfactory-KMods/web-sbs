@@ -21,6 +21,26 @@ export const FileAdapter = new (class FileAdapter {
 		});
 	}
 
+	size(filePath: string) {
+		return fsp
+			.stat(filePath)
+			.then((stats) => {
+				return stats.size;
+			})
+			.catch(() => {
+				return 0;
+			});
+	}
+
+	async createWriteStream(filePath: string) {
+		const pathWithoutFile = filePath.split('/').slice(0, -1).join('/');
+		if (!fs.existsSync(pathWithoutFile)) {
+			await fsp.mkdir(pathWithoutFile, { recursive: true });
+		}
+
+		return fs.createWriteStream('path/to/destination.tar');
+	}
+
 	async write(data: string | Buffer, filePath: string) {
 		const pathWithoutFile = filePath.split('/').slice(0, -1).join('/');
 		if (!fs.existsSync(pathWithoutFile)) {

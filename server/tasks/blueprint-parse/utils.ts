@@ -1,5 +1,6 @@
 import { FileAdapter } from '#imports';
 import axios from 'axios';
+import compressing from 'compressing';
 import { join } from 'node:path';
 import { log } from '~/utils/logger';
 
@@ -57,9 +58,10 @@ export async function downloadBlueprint(blueprintId: string | number, blueprintN
 
 	const sbpPath = join(rootPath, String(blueprintId), `${blueprintName}.sbp`);
 	const sbpcfgPath = join(rootPath, String(blueprintId), `${blueprintName}.sbpcfg`);
+	const zipPath = join(rootPath, String(blueprintId), `${blueprintName}.zip`);
 
 	// /de/blueprints/index/details/id/5313/name/Water+Ring
-	const [sbp, sbpcfg] = await Promise.all([
+	let [sbp, sbpcfg] = await Promise.all([
 		calculatorBlueprintDownloader
 			.get(`/download/id/${blueprintId}/name/${blueprintName}`)
 			.then(async (r) => {
@@ -86,6 +88,17 @@ export async function downloadBlueprint(blueprintId: string | number, blueprintN
 			})
 	]);
 
+	if (sbp?.data && sbpcfg?.data) {
+		const zipStream = new compressing.zip.Stream();
+		zipStream.addEntry(sbpPath);
+		zipStream.addEntry(sbpcfgPath);
+		await FileAdapter.writeAxiosStream(zipStream, zipPath).catch((e) => {
+			log('tasks-error', 'Error writing zip', e.message);
+			sbp = { data: null };
+			sbpcfg = { data: null };
+		});
+	}
+
 	if (!sbp?.data || !sbpcfg?.data) {
 		await FileAdapter.remove(sbpPath.split('/').slice(0, -1).join('/'));
 	}
@@ -97,6 +110,8 @@ export async function downloadBlueprint(blueprintId: string | number, blueprintN
 		remove() {
 			return FileAdapter.remove(sbpPath.split('/').slice(0, -1).join('/'));
 		},
+		zip: zipPath,
+		zipSize: await FileAdapter.size(zipPath),
 		sbp: sbp?.data
 			? {
 					path: sbpPath,

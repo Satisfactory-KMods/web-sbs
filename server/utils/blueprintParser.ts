@@ -100,15 +100,17 @@ export class BlueprintParser<TOldBlueprint extends boolean = true> {
 		return !!this.blueprintName;
 	}
 
-	public get blueprintData(): Blueprint | OldBlueprint {
+	public get blueprintData() {
 		return this.data!;
 	}
 
-	public getMods(): string[] {
+	public getMods<TAsSet extends boolean = false>(
+		asSet?: TAsSet
+	): TAsSet extends true ? Set<string> : string[] {
 		if (this.mods === undefined) {
 			this.mods = findModsFromBlueprint(this.data);
 		}
-		return this.mods;
+		return (asSet ? new Set(this.mods) : this.mods) as any;
 	}
 
 	private async read(): Promise<Blueprint | OBlueprint> {
