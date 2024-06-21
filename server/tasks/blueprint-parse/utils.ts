@@ -108,7 +108,7 @@ export async function downloadBlueprint(blueprintId: string | number, blueprintN
 		blueprintName,
 		folder: sbpPath.split('/').slice(0, -1).join('/'),
 		remove() {
-			return FileAdapter.remove(sbpPath.split('/').slice(0, -1).join('/'));
+			return FileAdapter.remove(sbpPath.split('/').slice(0, -1).join('/')).catch(() => {});
 		},
 		zip: zipPath,
 		zipSize: await FileAdapter.size(zipPath),

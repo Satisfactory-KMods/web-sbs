@@ -1,10 +1,17 @@
+import { eq } from '@kmods/drizzle-pg';
 import chunk from 'lodash/chunk';
 import { schedule } from 'node-cron';
 import { z } from 'zod';
 import { log } from '~/utils/logger';
 import { BlueprintParser } from '~~/server/utils/blueprintParser';
 import { db } from '~~/server/utils/db/postgres/pg';
-import { BlueprintInsert, scBlueprint, zodIconData } from '~~/server/utils/db/postgres/schema';
+import {
+	BlueprintInsert,
+	scBlueprint,
+	scBlueprintMods,
+	scBlueprintTags,
+	zodIconData
+} from '~~/server/utils/db/postgres/schema';
 import { getOrCreateTags } from '~~/server/utils/db/query/tags';
 import {
 	calculatorBlueprintPage,
@@ -21,7 +28,7 @@ async function handler() {
 
 	// Fetch all blueprint pages
 	let page = 1;
-	while (page < 2) {
+	while (page < 200_000) {
 		const fetchPageUrl = `https://satisfactory-calculator.com/de/blueprints/index/index/p/${page}`;
 		log('tasks', `Fetching page ${page}`, fetchPageUrl);
 
@@ -34,7 +41,7 @@ async function handler() {
 					.filter((e: any) => !!e.match(/\/blueprints\/index\/details\/id/));
 			})
 			.catch((e) => {
-				log('error', 'Error fetching page', e.message);
+				log('tasks-error', 'Error fetching page', e.message);
 				return [] as string[];
 			});
 
@@ -54,7 +61,7 @@ async function handler() {
 
 	const asArr = Array.from(blueprintPages);
 	log('tasks', `found in total ${asArr.length} blueprints`);
-	const chunks = chunk(asArr, asArr.length / 5);
+	const chunks = chunk(asArr, Math.ceil(asArr.length / 2));
 
 	let count = 0;
 	await Promise.all(
@@ -69,7 +76,13 @@ async function handler() {
 				}
 
 				if (!blueprintName || Number.isNaN(blueprintId)) {
-					log('error', 'Invalid blueprint path:', path);
+					count++;
+					log(
+						'tasks-error',
+						`(${count}/${asArr.length})`,
+						'Invalid blueprint path:',
+						path
+					);
 					continue;
 				}
 
@@ -77,7 +90,7 @@ async function handler() {
 					.get(path)
 					.then((r) => parseInformationFromBlueprintConfig(r.data))
 					.catch((e) => {
-						log('error', 'Error fetching blueprint page', e.message);
+						log('tasks-error', 'Error fetching blueprint page', e.message);
 						return null;
 					});
 
@@ -96,6 +109,13 @@ async function handler() {
 				const reader = await BlueprintParser.create(folder, blueprintName);
 
 				if (!reader) {
+					count++;
+					log(
+						'tasks-error',
+						`Error downloading blueprint (${count}/${asArr.length})`,
+						blueprintId,
+						blueprintName
+					);
 					await cancelBlueprint();
 					continue;
 				}
@@ -112,38 +132,73 @@ async function handler() {
 				const blueprintInsert: BlueprintInsert = {
 					id: blueprintId,
 					name: blueprintName,
-					raw_name: blueprintName.replace(/(\_|\+)/g, ' '),
+					raw_name: decodeURIComponent(blueprintName).replace(/(\_|\+|(\%+d))/g, ' '),
 					images: foundImageUrls,
 					size: zipSize,
 					description,
 					isModded: !!blueprintMods.length,
 					download: 0,
-					iconData
+					iconData,
+					scimUser: scimUser
 				};
 
-				await db.transaction(async (trx) => {
-					await trx
-						.insert(scBlueprint)
-						.values(blueprintInsert)
-						.onConflictDoUpdate({
-							target: [scBlueprint.id],
-							set: blueprintInsert
-						});
+				await db
+					.transaction(async (trx) => {
+						const { download, ...set } = blueprintInsert;
 
-					if (blueprintMods.length) {
-						console.log(blueprintMods);
-					}
+						await trx
+							.insert(scBlueprint)
+							.values(blueprintInsert)
+							.onConflictDoUpdate({
+								target: [scBlueprint.id],
+								set
+							});
 
-					const tags = getOrCreateTags(categories, trx);
-				});
+						await trx
+							.delete(scBlueprintMods)
+							.where(eq(scBlueprintMods.id, blueprintId));
 
-				const mods = log(
-					'tasks',
-					`Downloaded ${++count}/${asArr.length} blueprints`,
-					blueprintId,
-					blueprintName,
-					{ foundImageUrls, categories, scimUser }
-				);
+						if (blueprintMods.length) {
+							await trx
+								.insert(scBlueprintMods)
+								.values(
+									blueprintMods.map((mod) => ({ id: blueprintId, mod_ref: mod }))
+								)
+								.onConflictDoNothing();
+						}
+
+						if (!!categories.length) {
+							const tags = await getOrCreateTags(categories, trx);
+
+							await trx
+								.delete(scBlueprintTags)
+								.where(eq(scBlueprintTags.id, blueprintId));
+							await trx
+								.insert(scBlueprintTags)
+								.values(tags.map(({ tag_id }) => ({ id: blueprintId, tag_id })))
+								.onConflictDoNothing();
+						}
+					})
+					.then(() => {
+						count++;
+						log(
+							'tasks',
+							`Inserted blueprint (${count}/${asArr.length})`,
+							blueprintId,
+							blueprintName
+						);
+					})
+					.catch(async (e) => {
+						count++;
+						log(
+							'tasks-error',
+							`Error inserting blueprint (${count}/${asArr.length})`,
+							e.message,
+							blueprintId,
+							blueprintName
+						);
+						await cancelBlueprint();
+					});
 			}
 		})
 	);
@@ -160,7 +215,7 @@ async function handler() {
 export default function (cron: string, runOnInit: boolean) {
 	// Delay init run and install by 2 seconds
 	setTimeout(() => {
-		log('info', 'Scheduled Task installed:', 'SCIM');
+		log('info', 'Scheduled Task installed:', 'SCIM', cron);
 
 		// install the task
 		schedule(cron, handler, {

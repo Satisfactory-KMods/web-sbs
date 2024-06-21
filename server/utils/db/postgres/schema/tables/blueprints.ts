@@ -22,16 +22,17 @@ export const zodIconData = z.object({
 
 export const scBlueprint = sbsSchema.table('blueprint', {
 	id: integer('id').primaryKey().notNull(),
-	name: varchar('name', { length: 1024 }).notNull(),
-	raw_name: varchar('raw_name', { length: 1024 }).notNull(),
+	name: varchar('name', { length: 2048 }).notNull(),
+	raw_name: varchar('raw_name', { length: 2048 }).notNull(),
 	images: colJson('images', z.string().array()).notNull(),
 	size: integer('size').notNull(),
-	description: varchar('description', { length: 1024 }).notNull(),
+	description: varchar('description', { length: 32768 }).notNull(),
 	created: colTimestamp('created').defaultNow().notNull(),
 	updated: colTimestamp('updated').defaultNow().notNull(),
 	isModded: boolean('is_modded').notNull(),
 	download: integer('download').notNull(),
-	iconData: colJson('icon_data', zodIconData).notNull()
+	iconData: colJson('icon_data', zodIconData).notNull(),
+	scimUser: varchar('scim_user', { length: 2048 }).notNull()
 });
 
 export type Blueprint = typeof scBlueprint.$inferSelect;

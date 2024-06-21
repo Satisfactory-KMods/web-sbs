@@ -1,0 +1,1 @@
+ALTER TABLE "sbs"."blueprint" ADD COLUMN "scim_user" varchar(1024) NOT NULL;

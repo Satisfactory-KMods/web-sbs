@@ -1,0 +1,1 @@
+ALTER TABLE "sbs"."blueprint" ALTER COLUMN "description" SET DATA TYPE varchar(32768);

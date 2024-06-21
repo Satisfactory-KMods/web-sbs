@@ -6,7 +6,7 @@ export function getOrCreateTags(names: string[], trx = db) {
 	return trx
 		.select()
 		.from(scTags)
-		.where(ilikeAny(scTags, names))
+		.where(ilikeAny(scTags.tag, names))
 		.allOrThrow()
 		.then(async (tags) => {
 			if (tags.length === names.length) return tags;
@@ -15,7 +15,8 @@ export function getOrCreateTags(names: string[], trx = db) {
 			const createdTags = await trx
 				.insert(scTags)
 				.values(notExist.map((tag) => ({ tag })))
-				.returning();
+				.returning()
+				.allOrThrow();
 
 			return tags.concat(createdTags);
 		})
@@ -24,6 +25,6 @@ export function getOrCreateTags(names: string[], trx = db) {
 				.insert(scTags)
 				.values(names.map((tag) => ({ tag })))
 				.returning()
-				.firstOrThrow();
+				.allOrThrow();
 		});
 }
