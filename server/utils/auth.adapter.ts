@@ -126,7 +126,7 @@ export const pgDrizzleAdapter: any = {
 				)
 				.returning()
 				.firstOrThrow();
-		} catch (err) {
+		} catch (_err) {
 			throw new Error('No verification token found.');
 		}
 	},

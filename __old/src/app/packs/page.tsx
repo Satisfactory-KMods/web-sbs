@@ -21,8 +21,11 @@ const Page: NextAppPage<any, SearchParams> = async ({ searchParams }) => {
 		modded: -1
 	});
 
-	const fetchParams = new SearchParamHandler({ ...params, skip: page * params.take });
-	const data = await fetch(apiUrl(headers(), 2, `packs`, { ...params, skip: page * params.take })).then((res) => res.json());
+	const _fetchParams = new SearchParamHandler({
+		...params,
+		skip: page * params.take
+	});
+	const _data = await fetch(apiUrl(headers(), 2, `packs`, { ...params, skip: page * params.take })).then((res) => res.json());
 
 	return <></>;
 };

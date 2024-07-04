@@ -17,7 +17,9 @@ const time = (3600000 * 24) / 6;
 
 export default new JobTask(time, 'SCIM Query', async () => {
 	console.info('tasks', 'Running Task', 'SCIM');
-	let user = await prisma.user.findFirst({ where: { name: 'Satisfactory - Calculator' } })!;
+	let user = await prisma.user.findFirst({
+		where: { name: 'Satisfactory - Calculator' }
+	})!;
 	if (!user) {
 		user = await prisma.user.create({
 			data: {
@@ -187,7 +189,9 @@ export default new JobTask(time, 'SCIM Query', async () => {
 						//console.log( fileName, filePath.join( "/" ) );
 						const BP = new BlueprintReader(join(filePath.join('/')), fileName);
 						if (BP.success) {
-							const bpDb = await prisma.blueprints.findFirst({ where: { SCIMId: parseInt(id) } });
+							const bpDb = await prisma.blueprints.findFirst({
+								where: { SCIMId: parseInt(id) }
+							});
 							let newBp: Blueprint;
 							if (!bpDb) {
 								newBp = await createNewBlueprint({
@@ -263,7 +267,7 @@ export default new JobTask(time, 'SCIM Query', async () => {
 
 							return true;
 						}
-					} catch (e) {
+					} catch (_e) {
 						return true;
 					}
 				})
@@ -315,6 +319,8 @@ export default new JobTask(time, 'SCIM Query', async () => {
 		)
 	);
 	rmSync(mountHandler.tempScim, { recursive: true, force: true });
-	await prisma.mods.deleteMany({ where: { modRef: { notIn: Array.from(mods) } } });
+	await prisma.mods.deleteMany({
+		where: { modRef: { notIn: Array.from(mods) } }
+	});
 	await kbotApi.getMods(Array.from(mods));
 });

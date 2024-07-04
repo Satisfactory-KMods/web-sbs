@@ -11,10 +11,18 @@ export function getOrCreateTags(names: string[], trx = db) {
 		.then(async (tags) => {
 			if (tags.length === names.length) return tags;
 
-			const notExist = names.filter((name) => !tags.some((tag) => tag.tag === name));
+			const notExist = names.filter((name) => {
+				return !tags.some((tag) => {
+					return tag.tag === name;
+				});
+			});
 			const createdTags = await trx
 				.insert(scTags)
-				.values(notExist.map((tag) => ({ tag })))
+				.values(
+					notExist.map((tag) => {
+						return { tag };
+					})
+				)
 				.returning()
 				.allOrThrow();
 
@@ -23,7 +31,11 @@ export function getOrCreateTags(names: string[], trx = db) {
 		.catch(async () => {
 			return await trx
 				.insert(scTags)
-				.values(names.map((tag) => ({ tag })))
+				.values(
+					names.map((tag) => {
+						return { tag };
+					})
+				)
 				.returning()
 				.allOrThrow();
 		});

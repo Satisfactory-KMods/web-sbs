@@ -92,11 +92,11 @@ export class BlueprintReader {
 
 	private read(): Blueprint | OldBlueprint | undefined {
 		try {
-			const sbp = readFileSync(join(this.path, this.fileName + '.sbp'));
-			const sbpcfg = readFileSync(join(this.path, this.fileName + '.sbpcfg'));
+			const sbp = readFileSync(join(this.path, `${this.fileName}.sbp`));
+			const sbpcfg = readFileSync(join(this.path, `${this.fileName}.sbpcfg`));
 			try {
 				return Parser.ParseBlueprintFiles(this.blueprintName, sbp, sbpcfg);
-			} catch (e) {
+			} catch (_e) {
 				try {
 					return OldParser.ParseBlueprintFiles(this.blueprintName, sbp, sbpcfg);
 				} catch (e) {

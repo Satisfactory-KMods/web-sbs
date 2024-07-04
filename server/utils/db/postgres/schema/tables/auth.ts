@@ -50,7 +50,9 @@ export const accounts = sbsSchema.table(
 	},
 	(account) => {
 		return {
-			compoundKey: primaryKey({ columns: [account.provider, account.providerAccountId] }),
+			compoundKey: primaryKey({
+				columns: [account.provider, account.providerAccountId]
+			}),
 			uniqueProviderId: uniqueIndex().on(account.providerAccountId)
 		};
 	}

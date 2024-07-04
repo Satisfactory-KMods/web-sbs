@@ -3,10 +3,10 @@
 	useHead({
 		title: 'KBot2',
 		htmlAttrs: {
-			class: `nuxt-ui-scrollbars`
+			class: 'nuxt-ui-scrollbars'
 		},
 		bodyAttrs: {
-			class: `bg-surface-50 dark:bg-surface-950 dark:text-white dark:text-opacity-75 text-black `
+			class: 'bg-surface-50 dark:bg-surface-950 dark:text-white dark:text-opacity-75 text-black '
 		}
 	});
 </script>

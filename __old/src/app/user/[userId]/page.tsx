@@ -5,8 +5,10 @@ import { getServerSession } from 'next-auth';
 
 const Page: NextAppPage<{ userId: string }> = async ({ params }) => {
 	const { userId } = params;
-	const blueprintPacks = await prisma.blueprintPacks.findMany({ where: { userId } });
-	const session = await getAppSession();
+	const _blueprintPacks = await prisma.blueprintPacks.findMany({
+		where: { userId }
+	});
+	const _session = await getAppSession();
 
 	return <></>;
 };

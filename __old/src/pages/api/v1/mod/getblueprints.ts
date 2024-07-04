@@ -97,14 +97,19 @@ const POST: NextPageRoute<any, BodyType> = async (req, res) => {
 	filterSchema.optional().parse(filterOptions);
 
 	const totalBlueprints = await prisma.blueprints.count({});
-	const bps = await prisma.blueprints.findMany({ take, ...buildFilterOptions(filterOptions, skip) });
+	const bps = await prisma.blueprints.findMany({
+		take,
+		...buildFilterOptions(filterOptions, skip)
+	});
 	const blueprints = await Promise.all(
 		bps.map<Promise<BlueprintModData>>(async (bp) => ({
 			_id: bp.id,
 			name: bp.name,
 			mods: bp.mods,
 			tags: (
-				await prisma.categories.findMany({ where: { name: { in: bp.categories } } })
+				await prisma.categories.findMany({
+					where: { name: { in: bp.categories } }
+				})
 			).map((e) => ({
 				_id: e.id,
 				DisplayName: e.name

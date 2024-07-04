@@ -23,7 +23,9 @@ export const findModsFromBlueprint = (blueprint: Blueprint | OldBlueprint | unde
 
 	findModsRecursive(blueprint, query);
 
-	return Array.from(query.mods).filter((e) => !isEqual('FactoryGame', e) && !isEqual('Game', e));
+	return Array.from(query.mods).filter((e) => {
+		return !isEqual('FactoryGame', e) && !isEqual('Game', e);
+	});
 };
 
 export const findModsRecursive = (
@@ -68,7 +70,7 @@ export class BlueprintParser<TOldBlueprint extends boolean = true> {
 	private blueprintName: string;
 	private data: TOldBlueprint extends true ? Blueprint : OldBlueprint;
 	private mods: string[] | undefined;
-	private old: boolean = false;
+	private old = false;
 
 	constructor(folder: string, fileName: string) {
 		this.folder = folder;
@@ -77,7 +79,8 @@ export class BlueprintParser<TOldBlueprint extends boolean = true> {
 		this.data = null as any;
 	}
 
-	static async create(folder: string, fileName: string) {
+	static create(folder: string, fileName: string) {
+		// eslint-disable-next-line no-async-promise-executor
 		return new Promise<BlueprintParser>(async (resolve, reject) => {
 			try {
 				const reader = new BlueprintParser(folder, fileName);
@@ -114,14 +117,14 @@ export class BlueprintParser<TOldBlueprint extends boolean = true> {
 	}
 
 	private async read(): Promise<Blueprint | OBlueprint> {
-		const sbp = await readFile(join(this.folder, this.fileName + '.sbp'));
-		const sbpcfg = await readFile(join(this.folder, this.fileName + '.sbpcfg'));
+		const sbp = await readFile(join(this.folder, `${this.fileName}.sbp`));
+		const sbpcfg = await readFile(join(this.folder, `${this.fileName}.sbpcfg`));
 		try {
 			const parsed = Parser.ParseBlueprintFiles(this.blueprintName, sbp, sbpcfg);
 			this.old = false;
 			this.data = parsed as any;
 			return parsed;
-		} catch (e) {
+		} catch (_e) {
 			try {
 				const parsed = OldParser.ParseBlueprintFiles(this.blueprintName, sbp, sbpcfg);
 				this.old = true;

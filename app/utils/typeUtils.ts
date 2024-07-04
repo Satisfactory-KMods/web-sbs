@@ -25,5 +25,3 @@ export type RemoveNullFromAll<T> = Simplify<{
 }>;
 
 export type { Simplify } from '@kmods/drizzle-pg';
-
-export {};

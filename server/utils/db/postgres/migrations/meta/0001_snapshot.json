@@ -1,235 +1,215 @@
 {
-  "id": "4084b939-3dad-463f-a1b8-33a50cda2762",
-  "prevId": "7ca4a323-e7fc-44e0-a526-18b8ab2e9dc0",
-  "version": "7",
-  "dialect": "postgresql",
-  "tables": {
-    "sbs.blueprint": {
-      "name": "blueprint",
-      "schema": "sbs",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "integer",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "name": {
-          "name": "name",
-          "type": "varchar(1024)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "raw_name": {
-          "name": "raw_name",
-          "type": "varchar(1024)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "images": {
-          "name": "images",
-          "type": "json",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "size": {
-          "name": "size",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "description": {
-          "name": "description",
-          "type": "varchar(1024)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "created": {
-          "name": "created",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "updated": {
-          "name": "updated",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "is_modded": {
-          "name": "is_modded",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "download": {
-          "name": "download",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "icon_data": {
-          "name": "icon_data",
-          "type": "json",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "scim_user": {
-          "name": "scim_user",
-          "type": "varchar(1024)",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "sbs.blueprint_mods": {
-      "name": "blueprint_mods",
-      "schema": "sbs",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "mod_ref": {
-          "name": "mod_ref",
-          "type": "varchar(128)",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "blueprint_mods_id_blueprint_id_fk": {
-          "name": "blueprint_mods_id_blueprint_id_fk",
-          "tableFrom": "blueprint_mods",
-          "tableTo": "blueprint",
-          "schemaTo": "sbs",
-          "columnsFrom": [
-            "id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "blueprint_mods_id_mod_ref_pk": {
-          "name": "blueprint_mods_id_mod_ref_pk",
-          "columns": [
-            "id",
-            "mod_ref"
-          ]
-        }
-      },
-      "uniqueConstraints": {}
-    },
-    "sbs.blueprint_tags": {
-      "name": "blueprint_tags",
-      "schema": "sbs",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "tag_id": {
-          "name": "tag_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "blueprint_tags_id_blueprint_id_fk": {
-          "name": "blueprint_tags_id_blueprint_id_fk",
-          "tableFrom": "blueprint_tags",
-          "tableTo": "blueprint",
-          "schemaTo": "sbs",
-          "columnsFrom": [
-            "id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "blueprint_tags_tag_id_tags_tag_id_fk": {
-          "name": "blueprint_tags_tag_id_tags_tag_id_fk",
-          "tableFrom": "blueprint_tags",
-          "tableTo": "tags",
-          "schemaTo": "sbs",
-          "columnsFrom": [
-            "tag_id"
-          ],
-          "columnsTo": [
-            "tag_id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "blueprint_tags_id_tag_id_pk": {
-          "name": "blueprint_tags_id_tag_id_pk",
-          "columns": [
-            "id",
-            "tag_id"
-          ]
-        }
-      },
-      "uniqueConstraints": {}
-    },
-    "sbs.tags": {
-      "name": "tags",
-      "schema": "sbs",
-      "columns": {
-        "tag_id": {
-          "name": "tag_id",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "tag": {
-          "name": "tag",
-          "type": "varchar(1024)",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "tags_tag_unique": {
-          "name": "tags_tag_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "tag"
-          ]
-        }
-      }
-    }
-  },
-  "enums": {},
-  "schemas": {
-    "sbs": "sbs"
-  },
-  "_meta": {
-    "columns": {},
-    "schemas": {},
-    "tables": {}
-  }
+	"id": "4084b939-3dad-463f-a1b8-33a50cda2762",
+	"prevId": "7ca4a323-e7fc-44e0-a526-18b8ab2e9dc0",
+	"version": "7",
+	"dialect": "postgresql",
+	"tables": {
+		"sbs.blueprint": {
+			"name": "blueprint",
+			"schema": "sbs",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "integer",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"name": {
+					"name": "name",
+					"type": "varchar(1024)",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"raw_name": {
+					"name": "raw_name",
+					"type": "varchar(1024)",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"images": {
+					"name": "images",
+					"type": "json",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"size": {
+					"name": "size",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"description": {
+					"name": "description",
+					"type": "varchar(1024)",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"created": {
+					"name": "created",
+					"type": "timestamp with time zone",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				},
+				"updated": {
+					"name": "updated",
+					"type": "timestamp with time zone",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				},
+				"is_modded": {
+					"name": "is_modded",
+					"type": "boolean",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"download": {
+					"name": "download",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"icon_data": {
+					"name": "icon_data",
+					"type": "json",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"scim_user": {
+					"name": "scim_user",
+					"type": "varchar(1024)",
+					"primaryKey": false,
+					"notNull": true
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {}
+		},
+		"sbs.blueprint_mods": {
+			"name": "blueprint_mods",
+			"schema": "sbs",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"mod_ref": {
+					"name": "mod_ref",
+					"type": "varchar(128)",
+					"primaryKey": false,
+					"notNull": true
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"blueprint_mods_id_blueprint_id_fk": {
+					"name": "blueprint_mods_id_blueprint_id_fk",
+					"tableFrom": "blueprint_mods",
+					"tableTo": "blueprint",
+					"schemaTo": "sbs",
+					"columnsFrom": ["id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {
+				"blueprint_mods_id_mod_ref_pk": {
+					"name": "blueprint_mods_id_mod_ref_pk",
+					"columns": ["id", "mod_ref"]
+				}
+			},
+			"uniqueConstraints": {}
+		},
+		"sbs.blueprint_tags": {
+			"name": "blueprint_tags",
+			"schema": "sbs",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"tag_id": {
+					"name": "tag_id",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"blueprint_tags_id_blueprint_id_fk": {
+					"name": "blueprint_tags_id_blueprint_id_fk",
+					"tableFrom": "blueprint_tags",
+					"tableTo": "blueprint",
+					"schemaTo": "sbs",
+					"columnsFrom": ["id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				},
+				"blueprint_tags_tag_id_tags_tag_id_fk": {
+					"name": "blueprint_tags_tag_id_tags_tag_id_fk",
+					"tableFrom": "blueprint_tags",
+					"tableTo": "tags",
+					"schemaTo": "sbs",
+					"columnsFrom": ["tag_id"],
+					"columnsTo": ["tag_id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {
+				"blueprint_tags_id_tag_id_pk": {
+					"name": "blueprint_tags_id_tag_id_pk",
+					"columns": ["id", "tag_id"]
+				}
+			},
+			"uniqueConstraints": {}
+		},
+		"sbs.tags": {
+			"name": "tags",
+			"schema": "sbs",
+			"columns": {
+				"tag_id": {
+					"name": "tag_id",
+					"type": "serial",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"tag": {
+					"name": "tag",
+					"type": "varchar(1024)",
+					"primaryKey": false,
+					"notNull": true
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {
+				"tags_tag_unique": {
+					"name": "tags_tag_unique",
+					"nullsNotDistinct": false,
+					"columns": ["tag"]
+				}
+			}
+		}
+	},
+	"enums": {},
+	"schemas": {
+		"sbs": "sbs"
+	},
+	"_meta": {
+		"columns": {},
+		"schemas": {},
+		"tables": {}
+	}
 }

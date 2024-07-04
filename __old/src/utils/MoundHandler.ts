@@ -2,7 +2,7 @@ import { env } from '@/env';
 import { join } from 'path';
 
 class MountHandler {
-	private mounDir = process.cwd() + '/mounts';
+	private mounDir = `${process.cwd()}/mounts`;
 
 	get blueprintDir() {
 		return join(this.mounDir, 'files/Blueprints');

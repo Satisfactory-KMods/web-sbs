@@ -35,7 +35,7 @@
 	font-variation-settings: normal;
 }
 .nuxt-ui-scrollbars ::-webkit-scrollbar {
-	@apply h-[0.6em] w-[0.6em]  bg-transparent;
+	@apply h-[0.6em] w-[0.6em] bg-transparent;
 }
 
 .nuxt-ui-scrollbars ::-webkit-scrollbar-track {

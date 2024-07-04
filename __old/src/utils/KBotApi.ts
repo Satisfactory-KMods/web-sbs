@@ -15,7 +15,9 @@ class KBotApi {
 	}
 
 	private async getModsInternal(modRefs: string[]): Promise<Mods[]> {
-		const foundMods = await prisma.mods.findMany({ where: { modRef: { in: modRefs } } });
+		const foundMods = await prisma.mods.findMany({
+			where: { modRef: { in: modRefs } }
+		});
 		const invalidModsDatas = modRefs.filter((modRef) => !foundMods.find((mod) => mod.modRef === modRef && mod.updatedAt.valueOf() >= Date.now() - 24 * 60 * 60 * 1000));
 
 		if (invalidModsDatas.length) {
@@ -48,9 +50,16 @@ class KBotApi {
 							hidden: modData.hidden,
 							sourceUrl: modData.source_url
 						};
-						if (await prisma.mods.findUnique({ where: { modRef: modData.mod_reference } })) {
+						if (
+							await prisma.mods.findUnique({
+								where: { modRef: modData.mod_reference }
+							})
+						) {
 							console.info(`Mod '${modData.name}' already exists. Updating...}`);
-							await prisma.mods.update({ where: { modRef: modData.mod_reference }, data });
+							await prisma.mods.update({
+								where: { modRef: modData.mod_reference },
+								data
+							});
 						} else {
 							console.info(`Mod '${modData.name}' creating...`);
 							await prisma.mods.create({ data });

@@ -55,7 +55,9 @@ export class Blueprint {
 
 	public async getData(forceReload?: boolean) {
 		if (!this.data || !!forceReload) {
-			this.data = await prisma.blueprints.findUnique({ where: { id: this.blueprintId } });
+			this.data = await prisma.blueprints.findUnique({
+				where: { id: this.blueprintId }
+			});
 		}
 		return this.data;
 	}
@@ -126,7 +128,9 @@ export class Blueprint {
 	}
 
 	public async delete() {
-		const packs = await prisma.blueprintPacks.findMany({ where: { blueprints: { has: this.blueprintId } } });
+		const packs = await prisma.blueprintPacks.findMany({
+			where: { blueprints: { has: this.blueprintId } }
+		});
 		if (packs.length) {
 			await Promise.all(
 				packs.map(async (pack) => {
@@ -135,7 +139,10 @@ export class Blueprint {
 						await prisma.blueprintPacks.delete({ where: { id: pack.id } });
 						return;
 					}
-					await prisma.blueprintPacks.update({ where: { id: pack.id }, data: { blueprints } });
+					await prisma.blueprintPacks.update({
+						where: { id: pack.id },
+						data: { blueprints }
+					});
 				})
 			);
 		}

@@ -1,8 +1,8 @@
-import { prisma } from '@/server/db';
-import type { NextRoute } from '@/types/Next';
-import { nextRouteError } from '@/utils/api/data';
-import { getSearchParams } from '@/utils/api/params';
-import { NextResponse } from 'next/server';
+import { prisma } from "@/server/db";
+import type { NextRoute } from "@/types/Next";
+import { nextRouteError } from "@/utils/api/data";
+import { getSearchParams } from "@/utils/api/params";
+import { NextResponse } from "next/server";
 
 const GET: NextRoute = async (req) => {
 	try {
@@ -11,17 +11,32 @@ const GET: NextRoute = async (req) => {
 			{
 				take: 10,
 				skip: 0,
-				search: '',
-				order: [['asc', 'desc'], 'asc'],
-				orderBy: [['totalVotes', 'totalRating', 'downloads', 'mods', 'createdAt', 'updatedAt'], 'createdAt'],
-				modded: -1
+				search: "",
+				order: [["asc", "desc"], "asc"],
+				orderBy: [
+					[
+						"totalVotes",
+						"totalRating",
+						"downloads",
+						"mods",
+						"createdAt",
+						"updatedAt",
+					],
+					"createdAt",
+				],
+				modded: -1,
 			},
-			false
+			false,
 		);
 
 		const where: any = {};
 		if (search.length > 0) {
-			where.OR = [{ name: { contains: search } }, { description: { contains: search } }, { categories: { has: search } }, { mods: { has: search } }];
+			where.OR = [
+				{ name: { contains: search } },
+				{ description: { contains: search } },
+				{ categories: { has: search } },
+				{ mods: { has: search } },
+			];
 		}
 		if (modded >= 0) {
 			where.isModded = modded === 1;
@@ -33,10 +48,10 @@ const GET: NextRoute = async (req) => {
 				take,
 				skip,
 				orderBy: {
-					[orderBy]: order
-				}
+					[orderBy]: order,
+				},
 			})
-			.catch(() => new Error('Invalid Search'));
+			.catch(() => new Error("Invalid Search"));
 		const max = await prisma.blueprints.count().catch(() => 0);
 		return NextResponse.json({ data, max });
 	} catch (e) {
@@ -44,7 +59,7 @@ const GET: NextRoute = async (req) => {
 			return nextRouteError(e.message, 400);
 		}
 	}
-	return nextRouteError('Unknown Error', 500);
+	return nextRouteError("Unknown Error", 500);
 };
 
 export { GET };

@@ -16,34 +16,34 @@ export enum LogLevel {
 	/**
 	 * Log level for silent
 	 */
-	SILENT,
+	SILENT = 0,
 	/**
 	 * Log level for log
 	 */
-	LOG,
+	LOG = 1,
 	/**
 	 * Log level for info
 	 */
-	INFO,
+	INFO = 2,
 	/**
 	 * Log level for debug
 	 */
-	DRIZZLE,
-	DEBUG,
+	DRIZZLE = 3,
+	DEBUG = 4,
 	/**
 	 * Log level for warnings
 	 */
-	WARN,
+	WARN = 5,
 	/**
 	 * Log level for errors
 	 */
-	ERROR,
+	ERROR = 6,
 	/**
 	 * Log level for fatal
 	 * Fatal is the highest log level and will exit the process
 	 * @note FATAL will also always log to console.error
 	 */
-	FATAL
+	FATAL = 7
 }
 
 export interface LoggerOptions {

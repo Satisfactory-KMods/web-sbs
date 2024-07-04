@@ -2,7 +2,7 @@ import { prisma } from '@/server/db';
 import type { NextPageRoute } from '@/types/Next';
 import NextCors from 'nextjs-cors';
 
-const POST: NextPageRoute = async (req, res) => {
+const POST: NextPageRoute = async (_req, res) => {
 	res.status(200).json({
 		tags: (await prisma.categories.findMany({})).map((e) => ({
 			_id: e.id,

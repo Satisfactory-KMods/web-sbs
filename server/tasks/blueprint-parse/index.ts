@@ -1,18 +1,12 @@
-import { eq } from '@kmods/drizzle-pg';
-import chunk from 'lodash/chunk';
+import { count, eq } from '@kmods/drizzle-pg';
 import { schedule } from 'node-cron';
-import { z } from 'zod';
+import type { z } from 'zod';
 import { log } from '~/utils/logger';
 import { env } from '~~/env';
 import { BlueprintParser } from '~~/server/utils/blueprintParser';
 import { db } from '~~/server/utils/db/postgres/pg';
-import {
-	BlueprintInsert,
-	scBlueprint,
-	scBlueprintMods,
-	scBlueprintTags,
-	zodIconData
-} from '~~/server/utils/db/postgres/schema';
+import type { BlueprintInsert, zodIconData } from '~~/server/utils/db/postgres/schema';
+import { scBlueprint, scBlueprintMods, scBlueprintTags } from '~~/server/utils/db/postgres/schema';
 import { getOrCreateTags } from '~~/server/utils/db/query/tags';
 import {
 	calculatorBlueprintPage,
@@ -25,7 +19,17 @@ async function handler() {
 	log('info', 'Running Task');
 
 	const blacklist = new Set([3142, 2635]);
-	const blueprintPages = new Set<string>();
+	let blueprintPages = new Set<string>();
+
+	const totalBlueprints = await db
+		.select({
+			count: count()
+		})
+		.from(scBlueprint)
+		.first()
+		.then((r) => {
+			return r?.count ?? 0;
+		});
 
 	// Fetch all blueprint pages
 	let page = 1;
@@ -35,11 +39,17 @@ async function handler() {
 
 		const pageContent = await calculatorPages
 			.get(String(page))
-			.then((r) => r.data)
+			.then((r) => {
+				return r.data;
+			})
 			.then((r) => {
 				return Array.from(r.matchAll(/<a\s+(?:[^>]*?\s+)?href=(["'])(.*?)\1/g))
-					.map((e: any) => e[2]! as string)
-					.filter((e: any) => !!e.match(/\/blueprints\/index\/details\/id/));
+					.map((e: any) => {
+						return e[2]! as string;
+					})
+					.filter((e: any) => {
+						return !!e.match(/\/blueprints\/index\/details\/id/);
+					});
 			})
 			.catch((e) => {
 				log('tasks-error', 'Error fetching page', e.message);
@@ -60,13 +70,32 @@ async function handler() {
 		page++;
 	}
 
+	// limit the amount of blueprints to download
+	// to 400 (should be enough for all new blueprints)
+	// but only if we have more than half of the blueprints (so we should have a up to date database)
+	const halfCount = Math.ceil(blueprintPages.size / 2) * 20;
+	if (totalBlueprints >= halfCount) {
+		const newSet = new Set<string>();
+		const bparr = Array.from(blueprintPages);
+
+		for (let i = 0; i < 400; i++) {
+			const blueprint = bparr.at(i);
+			if (blueprint) {
+				newSet.add(blueprint);
+			} else {
+				break;
+			}
+		}
+
+		blueprintPages = newSet;
+	}
+
 	const asArr = Array.from(blueprintPages);
 	log('tasks', `found in total ${asArr.length} blueprints`);
-	const chunks = chunk(asArr, Math.ceil(asArr.length / 2));
 
-	let count = 0;
+	let c = 0;
 	await Promise.all(
-		chunks.map(async (chunk) => {
+		asArr.map(async (chunk) => {
 			for (const path of chunk) {
 				const blueprintName = path.split('/').pop();
 				const blueprintId = Number(path.split('/').slice(-3)[0]);
@@ -77,21 +106,18 @@ async function handler() {
 				}
 
 				if (!blueprintName || Number.isNaN(blueprintId)) {
-					count++;
-					log(
-						'tasks-error',
-						`(${count}/${asArr.length})`,
-						'Invalid blueprint path:',
-						path
-					);
+					c++;
+					log('tasks-error', `(${c}/${asArr.length})`, 'Invalid blueprint path:', path);
 					continue;
 				}
 
 				const blueprintPage = await calculatorBlueprintPage
 					.get(path)
-					.then((r) => parseInformationFromBlueprintConfig(r.data))
+					.then((r) => {
+						return parseInformationFromBlueprintConfig(r.data);
+					})
 					.catch((e) => {
-						log('tasks-error', 'Error fetching blueprint page', e.message);
+						log('tasks-error', 'Error fetching blueprint page:', e);
 						return null;
 					});
 
@@ -110,10 +136,10 @@ async function handler() {
 				const reader = await BlueprintParser.create(folder, blueprintName);
 
 				if (!reader) {
-					count++;
+					c++;
 					log(
 						'tasks-error',
-						`Error downloading blueprint (${count}/${asArr.length})`,
+						`Error downloading blueprint (${c}/${asArr.length})`,
 						blueprintId,
 						blueprintName
 					);
@@ -133,7 +159,8 @@ async function handler() {
 				const blueprintInsert: BlueprintInsert = {
 					id: blueprintId,
 					name: blueprintName,
-					raw_name: decodeURIComponent(blueprintName).replace(/(\_|\+|(\%+d))/g, ' '),
+					// eslint-disable-next-line no-useless-escape
+					raw_name: decodeURIComponent(blueprintName).replace(/(_|\+|(\%+d))/g, ' '),
 					images: foundImageUrls,
 					size: zipSize,
 					description,
@@ -163,12 +190,17 @@ async function handler() {
 							await trx
 								.insert(scBlueprintMods)
 								.values(
-									blueprintMods.map((mod) => ({ id: blueprintId, mod_ref: mod }))
+									blueprintMods.map((mod) => {
+										return {
+											id: blueprintId,
+											mod_ref: mod
+										};
+									})
 								)
 								.onConflictDoNothing();
 						}
 
-						if (!!categories.length) {
+						if (categories.length) {
 							const tags = await getOrCreateTags(categories, trx);
 
 							await trx
@@ -176,24 +208,28 @@ async function handler() {
 								.where(eq(scBlueprintTags.id, blueprintId));
 							await trx
 								.insert(scBlueprintTags)
-								.values(tags.map(({ tag_id }) => ({ id: blueprintId, tag_id })))
+								.values(
+									tags.map(({ tag_id }) => {
+										return { id: blueprintId, tag_id };
+									})
+								)
 								.onConflictDoNothing();
 						}
 					})
 					.then(() => {
-						count++;
+						c++;
 						log(
 							'tasks',
-							`Inserted blueprint (${count}/${asArr.length})`,
+							`Inserted blueprint (${c}/${asArr.length})`,
 							blueprintId,
 							blueprintName
 						);
 					})
 					.catch(async (e) => {
-						count++;
+						c++;
 						log(
 							'tasks-error',
-							`Error inserting blueprint (${count}/${asArr.length})`,
+							`Error inserting blueprint (${c}/${asArr.length})`,
 							e.message,
 							blueprintId,
 							blueprintName
@@ -204,7 +240,7 @@ async function handler() {
 		})
 	);
 
-	log('tasks', `Finished Task successfully downloaded ${count} blueprints`);
+	log('tasks', `Finished Task successfully downloaded ${c} blueprints`);
 }
 
 /**
@@ -214,7 +250,7 @@ async function handler() {
  *  in the mod SBS
  * */
 export default function (cron: string, runOnInit: boolean) {
-	if (!!env.tasks.disableScim) {
+	if (env.tasks.disableScim) {
 		log('tasks-warn', 'Scheduled Task disabled:', 'SCIM', cron);
 		return;
 	}

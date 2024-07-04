@@ -22,10 +22,13 @@ class ZipHandler {
 			if (ip && !data.downloadIps.includes(ip)) {
 				await prisma.blueprints.update({
 					where: { id },
-					data: { downloads: data.downloads + 1, downloadIps: [...data.downloadIps, ip] }
+					data: {
+						downloads: data.downloads + 1,
+						downloadIps: [...data.downloadIps, ip]
+					}
 				});
 			}
-			return [join(mountHandler.blueprintDir, data.id, data.id + '.' + file), data.originalName + '.' + file];
+			return [join(mountHandler.blueprintDir, data.id, `${data.id}.${file}`), `${data.originalName}.${file}`];
 		}
 		return undefined;
 	}
@@ -33,7 +36,9 @@ class ZipHandler {
 	public async getOrCreatePack(id: string, ip?: string): Promise<string | undefined> {
 		const data = await prisma.blueprintPacks.findUnique({ where: { id } });
 		if (data) {
-			const blueprints = await prisma.blueprints.findMany({ where: { id: { in: data.blueprints } } });
+			const blueprints = await prisma.blueprints.findMany({
+				where: { id: { in: data.blueprints } }
+			});
 			const zipDirPath = join(mountHandler.zipDir, data.id);
 			const stamps = this.toTimeStamps(blueprints);
 			const meta = this.getMeta(join(zipDirPath, 'meta.json'), stamps);
@@ -43,7 +48,10 @@ class ZipHandler {
 					if (!bp.downloadIps.includes(ip)) {
 						await prisma.blueprints.update({
 							where: { id: bp.id },
-							data: { downloads: bp.downloads + 1, downloadIps: [...bp.downloadIps, ip] }
+							data: {
+								downloads: bp.downloads + 1,
+								downloadIps: [...bp.downloadIps, ip]
+							}
 						});
 					}
 				}
@@ -51,7 +59,10 @@ class ZipHandler {
 				if (!data.downloadIps.includes(ip)) {
 					await prisma.blueprintPacks.update({
 						where: { id },
-						data: { downloads: data.downloads + 1, downloadIps: [...data.downloadIps, ip] }
+						data: {
+							downloads: data.downloads + 1,
+							downloadIps: [...data.downloadIps, ip]
+						}
 					});
 				}
 			}
@@ -59,7 +70,7 @@ class ZipHandler {
 			if (meta) {
 				return meta.file;
 			} else {
-				return await this.createZip(blueprints, zipDirPath, data.id + '.zip', stamps).catch((e) => {
+				return await this.createZip(blueprints, zipDirPath, `${data.id}.zip`, stamps).catch((e) => {
 					console.error(e);
 					return undefined;
 				});
@@ -78,14 +89,17 @@ class ZipHandler {
 			if (ip && !data.downloadIps.includes(ip)) {
 				await prisma.blueprints.update({
 					where: { id },
-					data: { downloads: data.downloads + 1, downloadIps: [...data.downloadIps, ip] }
+					data: {
+						downloads: data.downloads + 1,
+						downloadIps: [...data.downloadIps, ip]
+					}
 				});
 			}
 
 			if (meta) {
 				return meta.file;
 			} else {
-				return await this.createZip([data], zipDirPath, data.id + '.zip', stamps).catch((e) => {
+				return await this.createZip([data], zipDirPath, `${data.id}.zip`, stamps).catch((e) => {
 					console.error(e);
 					return undefined;
 				});
@@ -146,7 +160,7 @@ class ZipHandler {
 					resolve(join(zipDirPath, zipDirFile));
 				})
 				.on('error', (err) => {
-					console.error("Blueprint Pack can't create: " + err.message);
+					console.error(`Blueprint Pack can't create: ${err.message}`);
 					reject(undefined);
 				});
 		});
@@ -156,7 +170,7 @@ class ZipHandler {
 		return blueprints.reduce<Record<string, number>>((last, bp) => ({ ...last, [bp.id]: bp.updatedAt.valueOf() }), {});
 	}
 
-	private getMeta(metaDirPath: string, timeStamps: Record<string, number>): ZipMeta | undefined {
+	private getMeta(metaDirPath: string, _timeStamps: Record<string, number>): ZipMeta | undefined {
 		if (existsSync(metaDirPath)) {
 			const meta = join(metaDirPath, 'meta.json');
 			if (existsSync(meta)) {

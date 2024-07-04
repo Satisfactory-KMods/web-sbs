@@ -1,4 +1,9 @@
-export type ImageProps = { src?: string | null; w?: number; h?: number; q?: number };
+export type ImageProps = {
+	src?: string | null;
+	w?: number;
+	h?: number;
+	q?: number;
+};
 
 export function createImageUrl({ src, w = 64, h = 64, q = 100 }: ImageProps) {
 	if (!src) return undefined;

@@ -9,11 +9,5 @@
 		":prConcurrentLimitNone"
 	],
 	"baseBranches": ["dev"],
-	"ignoreDeps": [
-		"@nuxt/image",
-		"@nuxtjs/mdc",
-		"sharp",
-		"typescript",
-		"next-auth"
-	]
+	"ignoreDeps": ["@nuxt/image", "@nuxtjs/mdc", "sharp", "typescript", "next-auth"]
 }

@@ -20,7 +20,7 @@ const GET: NextPageRoute<QueryParams> = async (req, res) => {
 			if (bpZipFile) {
 				const [downloadPath, filename] = bpZipFile;
 				res.setHeader('Content-Type', 'application/zip');
-				res.setHeader('Content-Disposition', 'attachment; filename=' + encodeURI(filename));
+				res.setHeader('Content-Disposition', `attachment; filename=${encodeURI(filename)}`);
 				return res.send(readFileSync(downloadPath));
 			}
 			return res.status(404).send('Not Found');

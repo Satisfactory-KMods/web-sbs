@@ -8,17 +8,27 @@ export function parseInformationFromBlueprintConfig(content: string) {
 	const foundImageUrls: string[] = Array.from(
 		new Set<string>(
 			Array.from(content.matchAll(/<img\s+(?:[^>]*?\s+)?src=(["'])(.*?)\1/g))
-				.map((e: any) => e[2]! as string)
-				.filter((e: any) => e.includes('data/blueprintsInGame'))
+				.map((e: any) => {
+					return e[2]! as string;
+				})
+				.filter((e: any) => {
+					return e.includes('data/blueprintsInGame');
+				})
 		)
 	);
 
 	const categories: string[] = Array.from(
 		new Set<string>(
 			Array.from(content.matchAll(/<a\s+(?:[^>]*?\s+)?href=(["'])(.*?)\1/g))
-				.map((e: any) => e[2]! as string)
-				.filter((e: any) => e.includes('/category/'))
-				.map((e: any) => e.split('/').at(-1)!.replace('+', ' '))
+				.map((e: any) => {
+					return e[2]! as string;
+				})
+				.filter((e: any) => {
+					return e.includes('/category/');
+				})
+				.map((e: any) => {
+					return e.split('/').at(-1)!.replace('+', ' ');
+				})
 		)
 	);
 
@@ -26,9 +36,15 @@ export function parseInformationFromBlueprintConfig(content: string) {
 		Array.from(
 			new Set<string>(
 				Array.from(content.matchAll(/<a\s+(?:[^>]*?\s+)?href=(["'])(.*?)\1/g))
-					.map((e: any) => e[2]! as string)
-					.filter((e: any) => e.includes('/user/') && e.includes('/blueprints/index/'))
-					.map((e: any) => e.split('/').at(-1))
+					.map((e: any) => {
+						return e[2]! as string;
+					})
+					.filter((e: any) => {
+						return e.includes('/user/') && e.includes('/blueprints/index/');
+					})
+					.map((e: any) => {
+						return e.split('/').at(-1);
+					})
 			)
 		)[0] ?? 'Unknown';
 
@@ -38,19 +54,19 @@ export function parseInformationFromBlueprintConfig(content: string) {
 export const calculatorPages = axios.create({
 	baseURL: 'https://satisfactory-calculator.com/de/blueprints/index/index/p/',
 	responseType: 'text',
-	timeout: 10000
+	timeout: 7500
 });
 
 export const calculatorBlueprintPage = axios.create({
 	baseURL: 'https://satisfactory-calculator.com',
 	responseType: 'text',
-	timeout: 10000
+	timeout: 7500
 });
 
 export const calculatorBlueprintDownloader = axios.create({
 	baseURL: 'https://satisfactory-calculator.com/de/blueprints/index',
 	responseType: 'arraybuffer',
-	timeout: 10000
+	timeout: 7500
 });
 
 export async function downloadBlueprint(blueprintId: string | number, blueprintName: string) {
@@ -81,7 +97,7 @@ export async function downloadBlueprint(blueprintId: string | number, blueprintN
 				return r;
 			})
 			.catch((e) => {
-				log('tasks-error', 'Error fetching blueprint cfg', e.message);
+				log('tasks-error', 'Error fetching blueprint cfg', e);
 				return {
 					data: null
 				};

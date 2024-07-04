@@ -1,488 +1,449 @@
 {
-  "id": "df38ac6b-5aa7-43fb-a9f5-6cd6f3aabd12",
-  "prevId": "08948f04-7091-43e0-8f49-48c875f81934",
-  "version": "7",
-  "dialect": "postgresql",
-  "tables": {
-    "sbs.account": {
-      "name": "account",
-      "schema": "sbs",
-      "columns": {
-        "userId": {
-          "name": "userId",
-          "type": "bigint",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "type": {
-          "name": "type",
-          "type": "enum_adapter_auth_type",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "provider": {
-          "name": "provider",
-          "type": "varchar(1024)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "providerAccountId": {
-          "name": "providerAccountId",
-          "type": "bigint",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "refresh_token": {
-          "name": "refresh_token",
-          "type": "varchar(1024)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "access_token": {
-          "name": "access_token",
-          "type": "varchar(1024)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "expires_at": {
-          "name": "expires_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "token_type": {
-          "name": "token_type",
-          "type": "varchar(1024)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "scope": {
-          "name": "scope",
-          "type": "varchar(1024)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "id_token": {
-          "name": "id_token",
-          "type": "varchar(1024)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "session_state": {
-          "name": "session_state",
-          "type": "varchar(1024)",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {
-        "account_providerAccountId_index": {
-          "name": "account_providerAccountId_index",
-          "columns": [
-            {
-              "expression": "providerAccountId",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": true,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
-      "foreignKeys": {
-        "account_userId_user_id_fk": {
-          "name": "account_userId_user_id_fk",
-          "tableFrom": "account",
-          "tableTo": "user",
-          "schemaTo": "sbs",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "account_provider_providerAccountId_pk": {
-          "name": "account_provider_providerAccountId_pk",
-          "columns": [
-            "provider",
-            "providerAccountId"
-          ]
-        }
-      },
-      "uniqueConstraints": {}
-    },
-    "sbs.session": {
-      "name": "session",
-      "schema": "sbs",
-      "columns": {
-        "sessionToken": {
-          "name": "sessionToken",
-          "type": "varchar(1024)",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "userId": {
-          "name": "userId",
-          "type": "bigint",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "expires": {
-          "name": "expires",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "session_userId_user_id_fk": {
-          "name": "session_userId_user_id_fk",
-          "tableFrom": "session",
-          "tableTo": "user",
-          "schemaTo": "sbs",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "sbs.user": {
-      "name": "user",
-      "schema": "sbs",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "bigserial",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "name": {
-          "name": "name",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "email": {
-          "name": "email",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "emailVerified": {
-          "name": "emailVerified",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "image": {
-          "name": "image",
-          "type": "varchar(1024)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "hoster": {
-          "name": "hoster",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "sbs.verificationToken": {
-      "name": "verificationToken",
-      "schema": "sbs",
-      "columns": {
-        "identifier": {
-          "name": "identifier",
-          "type": "varchar(1024)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "token": {
-          "name": "token",
-          "type": "varchar(1024)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "expires": {
-          "name": "expires",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "verificationToken_identifier_token_pk": {
-          "name": "verificationToken_identifier_token_pk",
-          "columns": [
-            "identifier",
-            "token"
-          ]
-        }
-      },
-      "uniqueConstraints": {}
-    },
-    "sbs.blueprint": {
-      "name": "blueprint",
-      "schema": "sbs",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "integer",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "name": {
-          "name": "name",
-          "type": "varchar(2048)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "raw_name": {
-          "name": "raw_name",
-          "type": "varchar(2048)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "images": {
-          "name": "images",
-          "type": "json",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "size": {
-          "name": "size",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "description": {
-          "name": "description",
-          "type": "varchar(32768)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "created": {
-          "name": "created",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "updated": {
-          "name": "updated",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "is_modded": {
-          "name": "is_modded",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "download": {
-          "name": "download",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "icon_data": {
-          "name": "icon_data",
-          "type": "json",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "scim_user": {
-          "name": "scim_user",
-          "type": "varchar(2048)",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "sbs.blueprint_mods": {
-      "name": "blueprint_mods",
-      "schema": "sbs",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "mod_ref": {
-          "name": "mod_ref",
-          "type": "varchar(128)",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "blueprint_mods_id_blueprint_id_fk": {
-          "name": "blueprint_mods_id_blueprint_id_fk",
-          "tableFrom": "blueprint_mods",
-          "tableTo": "blueprint",
-          "schemaTo": "sbs",
-          "columnsFrom": [
-            "id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "blueprint_mods_id_mod_ref_pk": {
-          "name": "blueprint_mods_id_mod_ref_pk",
-          "columns": [
-            "id",
-            "mod_ref"
-          ]
-        }
-      },
-      "uniqueConstraints": {}
-    },
-    "sbs.blueprint_tags": {
-      "name": "blueprint_tags",
-      "schema": "sbs",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "tag_id": {
-          "name": "tag_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "blueprint_tags_id_blueprint_id_fk": {
-          "name": "blueprint_tags_id_blueprint_id_fk",
-          "tableFrom": "blueprint_tags",
-          "tableTo": "blueprint",
-          "schemaTo": "sbs",
-          "columnsFrom": [
-            "id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "blueprint_tags_tag_id_tags_tag_id_fk": {
-          "name": "blueprint_tags_tag_id_tags_tag_id_fk",
-          "tableFrom": "blueprint_tags",
-          "tableTo": "tags",
-          "schemaTo": "sbs",
-          "columnsFrom": [
-            "tag_id"
-          ],
-          "columnsTo": [
-            "tag_id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "blueprint_tags_id_tag_id_pk": {
-          "name": "blueprint_tags_id_tag_id_pk",
-          "columns": [
-            "id",
-            "tag_id"
-          ]
-        }
-      },
-      "uniqueConstraints": {}
-    },
-    "sbs.tags": {
-      "name": "tags",
-      "schema": "sbs",
-      "columns": {
-        "tag_id": {
-          "name": "tag_id",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "tag": {
-          "name": "tag",
-          "type": "varchar(1024)",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "tags_tag_unique": {
-          "name": "tags_tag_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "tag"
-          ]
-        }
-      }
-    }
-  },
-  "enums": {
-    "public.enum_adapter_auth_type": {
-      "name": "enum_adapter_auth_type",
-      "schema": "public",
-      "values": [
-        "oauth",
-        "oidc",
-        "email",
-        "webauthn"
-      ]
-    }
-  },
-  "schemas": {
-    "sbs": "sbs"
-  },
-  "_meta": {
-    "columns": {},
-    "schemas": {},
-    "tables": {}
-  }
+	"id": "df38ac6b-5aa7-43fb-a9f5-6cd6f3aabd12",
+	"prevId": "08948f04-7091-43e0-8f49-48c875f81934",
+	"version": "7",
+	"dialect": "postgresql",
+	"tables": {
+		"sbs.account": {
+			"name": "account",
+			"schema": "sbs",
+			"columns": {
+				"userId": {
+					"name": "userId",
+					"type": "bigint",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"type": {
+					"name": "type",
+					"type": "enum_adapter_auth_type",
+					"typeSchema": "public",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"provider": {
+					"name": "provider",
+					"type": "varchar(1024)",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"providerAccountId": {
+					"name": "providerAccountId",
+					"type": "bigint",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"refresh_token": {
+					"name": "refresh_token",
+					"type": "varchar(1024)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"access_token": {
+					"name": "access_token",
+					"type": "varchar(1024)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"expires_at": {
+					"name": "expires_at",
+					"type": "timestamp with time zone",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"token_type": {
+					"name": "token_type",
+					"type": "varchar(1024)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"scope": {
+					"name": "scope",
+					"type": "varchar(1024)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"id_token": {
+					"name": "id_token",
+					"type": "varchar(1024)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"session_state": {
+					"name": "session_state",
+					"type": "varchar(1024)",
+					"primaryKey": false,
+					"notNull": false
+				}
+			},
+			"indexes": {
+				"account_providerAccountId_index": {
+					"name": "account_providerAccountId_index",
+					"columns": [
+						{
+							"expression": "providerAccountId",
+							"isExpression": false,
+							"asc": true,
+							"nulls": "last"
+						}
+					],
+					"isUnique": true,
+					"concurrently": false,
+					"method": "btree",
+					"with": {}
+				}
+			},
+			"foreignKeys": {
+				"account_userId_user_id_fk": {
+					"name": "account_userId_user_id_fk",
+					"tableFrom": "account",
+					"tableTo": "user",
+					"schemaTo": "sbs",
+					"columnsFrom": ["userId"],
+					"columnsTo": ["id"],
+					"onDelete": "cascade",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {
+				"account_provider_providerAccountId_pk": {
+					"name": "account_provider_providerAccountId_pk",
+					"columns": ["provider", "providerAccountId"]
+				}
+			},
+			"uniqueConstraints": {}
+		},
+		"sbs.session": {
+			"name": "session",
+			"schema": "sbs",
+			"columns": {
+				"sessionToken": {
+					"name": "sessionToken",
+					"type": "varchar(1024)",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"userId": {
+					"name": "userId",
+					"type": "bigint",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"expires": {
+					"name": "expires",
+					"type": "timestamp with time zone",
+					"primaryKey": false,
+					"notNull": true
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"session_userId_user_id_fk": {
+					"name": "session_userId_user_id_fk",
+					"tableFrom": "session",
+					"tableTo": "user",
+					"schemaTo": "sbs",
+					"columnsFrom": ["userId"],
+					"columnsTo": ["id"],
+					"onDelete": "cascade",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {}
+		},
+		"sbs.user": {
+			"name": "user",
+			"schema": "sbs",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "bigserial",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"name": {
+					"name": "name",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"email": {
+					"name": "email",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"emailVerified": {
+					"name": "emailVerified",
+					"type": "timestamp with time zone",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"image": {
+					"name": "image",
+					"type": "varchar(1024)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"hoster": {
+					"name": "hoster",
+					"type": "boolean",
+					"primaryKey": false,
+					"notNull": true,
+					"default": false
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {}
+		},
+		"sbs.verificationToken": {
+			"name": "verificationToken",
+			"schema": "sbs",
+			"columns": {
+				"identifier": {
+					"name": "identifier",
+					"type": "varchar(1024)",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"token": {
+					"name": "token",
+					"type": "varchar(1024)",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"expires": {
+					"name": "expires",
+					"type": "timestamp with time zone",
+					"primaryKey": false,
+					"notNull": true
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {},
+			"compositePrimaryKeys": {
+				"verificationToken_identifier_token_pk": {
+					"name": "verificationToken_identifier_token_pk",
+					"columns": ["identifier", "token"]
+				}
+			},
+			"uniqueConstraints": {}
+		},
+		"sbs.blueprint": {
+			"name": "blueprint",
+			"schema": "sbs",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "integer",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"name": {
+					"name": "name",
+					"type": "varchar(2048)",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"raw_name": {
+					"name": "raw_name",
+					"type": "varchar(2048)",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"images": {
+					"name": "images",
+					"type": "json",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"size": {
+					"name": "size",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"description": {
+					"name": "description",
+					"type": "varchar(32768)",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"created": {
+					"name": "created",
+					"type": "timestamp with time zone",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				},
+				"updated": {
+					"name": "updated",
+					"type": "timestamp with time zone",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				},
+				"is_modded": {
+					"name": "is_modded",
+					"type": "boolean",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"download": {
+					"name": "download",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"icon_data": {
+					"name": "icon_data",
+					"type": "json",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"scim_user": {
+					"name": "scim_user",
+					"type": "varchar(2048)",
+					"primaryKey": false,
+					"notNull": true
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {}
+		},
+		"sbs.blueprint_mods": {
+			"name": "blueprint_mods",
+			"schema": "sbs",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"mod_ref": {
+					"name": "mod_ref",
+					"type": "varchar(128)",
+					"primaryKey": false,
+					"notNull": true
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"blueprint_mods_id_blueprint_id_fk": {
+					"name": "blueprint_mods_id_blueprint_id_fk",
+					"tableFrom": "blueprint_mods",
+					"tableTo": "blueprint",
+					"schemaTo": "sbs",
+					"columnsFrom": ["id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {
+				"blueprint_mods_id_mod_ref_pk": {
+					"name": "blueprint_mods_id_mod_ref_pk",
+					"columns": ["id", "mod_ref"]
+				}
+			},
+			"uniqueConstraints": {}
+		},
+		"sbs.blueprint_tags": {
+			"name": "blueprint_tags",
+			"schema": "sbs",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"tag_id": {
+					"name": "tag_id",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"blueprint_tags_id_blueprint_id_fk": {
+					"name": "blueprint_tags_id_blueprint_id_fk",
+					"tableFrom": "blueprint_tags",
+					"tableTo": "blueprint",
+					"schemaTo": "sbs",
+					"columnsFrom": ["id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				},
+				"blueprint_tags_tag_id_tags_tag_id_fk": {
+					"name": "blueprint_tags_tag_id_tags_tag_id_fk",
+					"tableFrom": "blueprint_tags",
+					"tableTo": "tags",
+					"schemaTo": "sbs",
+					"columnsFrom": ["tag_id"],
+					"columnsTo": ["tag_id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {
+				"blueprint_tags_id_tag_id_pk": {
+					"name": "blueprint_tags_id_tag_id_pk",
+					"columns": ["id", "tag_id"]
+				}
+			},
+			"uniqueConstraints": {}
+		},
+		"sbs.tags": {
+			"name": "tags",
+			"schema": "sbs",
+			"columns": {
+				"tag_id": {
+					"name": "tag_id",
+					"type": "serial",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"tag": {
+					"name": "tag",
+					"type": "varchar(1024)",
+					"primaryKey": false,
+					"notNull": true
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {
+				"tags_tag_unique": {
+					"name": "tags_tag_unique",
+					"nullsNotDistinct": false,
+					"columns": ["tag"]
+				}
+			}
+		}
+	},
+	"enums": {
+		"public.enum_adapter_auth_type": {
+			"name": "enum_adapter_auth_type",
+			"schema": "public",
+			"values": ["oauth", "oidc", "email", "webauthn"]
+		}
+	},
+	"schemas": {
+		"sbs": "sbs"
+	},
+	"_meta": {
+		"columns": {},
+		"schemas": {},
+		"tables": {}
+	}
 }

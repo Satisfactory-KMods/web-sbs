@@ -39,7 +39,9 @@ export class BlueprintPack {
 
 	private async getData(forceReload?: boolean) {
 		if (!this.data || !!forceReload) {
-			this.data = await prisma.blueprintPacks.findUnique({ where: { id: this.blueprintPackId } });
+			this.data = await prisma.blueprintPacks.findUnique({
+				where: { id: this.blueprintPackId }
+			});
 		}
 		return this.data;
 	}

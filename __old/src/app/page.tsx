@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { BsHouse } from 'react-icons/bs';
 import { FaBoxes, FaGamepad } from 'react-icons/fa';
 
-const take = 5;
+const _take = 5;
 
 const Page: NextAppPage = () => {
 	const router = useRouter();

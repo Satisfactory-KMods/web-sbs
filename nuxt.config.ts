@@ -6,44 +6,53 @@ import Aura from './themes/aura.js';
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-	future: {
-		compatibilityVersion: 4
+ future: {
+					compatibilityVersion: 4
 	},
-	modules: [
-		'@sidebase/nuxt-auth',
-		'@vueuse/nuxt',
-		'@nuxt/image',
-		'nuxt-icon',
-		'@nuxtjs/color-mode',
-		'@primevue/nuxt-module',
-		'@pinia/nuxt',
-		'@pinia-plugin-persistedstate/nuxt',
-		'@nuxtjs/tailwindcss'
+
+ modules: [
+					'@sidebase/nuxt-auth',
+					'@vueuse/nuxt',
+					'@nuxt/image',
+					'@nuxt/icon',
+					'@nuxtjs/color-mode',
+					'@primevue/nuxt-module',
+					'@pinia/nuxt',
+					'@pinia-plugin-persistedstate/nuxt',
+					'@nuxtjs/tailwindcss'
 	],
-	colorMode: {
-		classSuffix: '',
-		preference: 'light'
+
+ colorMode: {
+					classSuffix: '',
+					preference: 'light'
 	},
-	primevue: {
-		importTheme: { from: resolve(__dirname, 'themes/aura.js') },
-		options: {
-			theme: Aura,
-			ripple: true,
-			unstyled: false
-		}
+
+ primevue: {
+					importTheme: { from: resolve(__dirname, 'themes/aura.js') },
+					options: {
+									theme: Aura,
+									ripple: true,
+									unstyled: false
+					}
 	},
-	vite: {
-		plugins: [ViteYaml()]
+
+ vite: {
+					plugins: [ViteYaml()]
 	},
-	alias: {
-		cookie: 'cookie'
+
+ alias: {
+					cookie: 'cookie'
 	},
-	css: ['~/assets/css/tailwind.css', 'primeicons/primeicons.css'],
-	tailwindcss: {
-		cssPath: '~/assets/css/tailwind.css'
+
+ css: ['~/assets/css/tailwind.css', 'primeicons/primeicons.css'],
+
+ tailwindcss: {
+					cssPath: '~/assets/css/tailwind.css'
 	},
-	pages: true,
-	devtools: { enabled: true },
-	components,
-	nitro
+
+ pages: true,
+ devtools: { enabled: true },
+ components,
+ nitro,
+ compatibilityDate: '2024-07-04'
 });
